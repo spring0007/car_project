@@ -83,7 +83,7 @@ public class BubbleTextView extends androidx.appcompat.widget.AppCompatTextView 
 
         final Resources res = getContext().getResources();
         mFocusedOutlineColor = mFocusedGlowColor = mPressedOutlineColor = mPressedGlowColor =
-            res.getColor(android.R.color.holo_blue_light);
+                res.getColor(android.R.color.holo_blue_light);
 
         setShadowLayer(SHADOW_LARGE_RADIUS, 0.0f, SHADOW_Y_OFFSET, SHADOW_LARGE_COLOUR);
     }
@@ -94,12 +94,12 @@ public class BubbleTextView extends androidx.appcompat.widget.AppCompatTextView 
         setCompoundDrawablesWithIntrinsicBounds(null,
                 d,
                 null, null);
-       
+
         setText(info.title);
-        
+
 //        E/AAAAAAAAAAAAAAAAAAAAAAA( 6552): info.title-------蓝牙
-        Log.e("AAAAAAAAAAAAAAAAAAAAAAA", "info.title-------"+info.title+"\n"+"info------------"+info);
-        
+        Log.e("AAAAAAAAAAAAAAAAAAAAAAA", "info.title-------" + info.title + "\n" + "info------------" + info);
+
         setTag(info);
     }
 
@@ -168,7 +168,7 @@ public class BubbleTextView extends androidx.appcompat.widget.AppCompatTextView 
      * Draw this BubbleTextView into the given Canvas.
      *
      * @param destCanvas the canvas to draw on
-     * @param padding the horizontal and vertical padding to use when drawing
+     * @param padding    the horizontal and vertical padding to use when drawing
      */
     private void drawWithPadding(Canvas destCanvas, int padding) {
         final Rect clipRect = mTempRect;
@@ -176,7 +176,7 @@ public class BubbleTextView extends androidx.appcompat.widget.AppCompatTextView 
 
         // adjust the clip rect so that we don't include the text label
         clipRect.bottom =
-            getExtendedPaddingTop() - (int) BubbleTextView.PADDING_V + getLayout().getLineTop(0);
+                getExtendedPaddingTop() - (int) BubbleTextView.PADDING_V + getLayout().getLineTop(0);
 
         // Draw the View into the bitmap.
         // The translate of scrollX and scrollY is necessary when drawing TextViews, because
@@ -286,7 +286,7 @@ public class BubbleTextView extends androidx.appcompat.widget.AppCompatTextView 
             final int scrollY = getScrollY();
 
             if (mBackgroundSizeChanged) {
-                background.setBounds(0, 0,  getRight() - getLeft(), getBottom() - getTop());
+                background.setBounds(0, 0, getRight() - getLeft(), getBottom() - getTop());
                 mBackgroundSizeChanged = false;
             }
 

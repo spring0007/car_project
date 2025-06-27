@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2012 The Android Open Source Project
 *
@@ -18,6 +17,7 @@
 -->
 
 <resources>
+
     <style name="ClingButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -29,6 +29,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/cling_button_bg</item>
     </style>
+
     <style name="ClingTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -39,6 +40,7 @@
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
+
     <style name="ClingText">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">#FFFFFF</item>

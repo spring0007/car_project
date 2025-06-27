@@ -98,19 +98,20 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <include
                 layout="@layout/gongban"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="80dp"/>
+                android:layout_marginBottom="80dp" />
 
             <include
                 layout="@layout/hotset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"/>
+                android:layout_gravity="bottom|center" />
         </FrameLayout>
 
         <include

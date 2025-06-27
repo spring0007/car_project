@@ -110,7 +110,8 @@ public class FocusHelper {
                     }
                 }
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -131,7 +132,7 @@ public class FocusHelper {
      * Handles key events in a PageViewExtendedLayout containing PagedViewWidgets.
      */
     static boolean handlePagedViewGridLayoutWidgetKeyEvent(PagedViewWidget w, int keyCode,
-            KeyEvent e) {
+                                                           KeyEvent e) {
 
         final PagedViewGridLayout parent = (PagedViewGridLayout) w.getParent();
         final PagedView container = (PagedView) parent.getParent();
@@ -268,7 +269,8 @@ public class FocusHelper {
                 }
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -428,7 +430,8 @@ public class FocusHelper {
                 }
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -482,7 +485,8 @@ public class FocusHelper {
                 }
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -546,7 +550,8 @@ public class FocusHelper {
                 // Do nothing
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -565,7 +570,7 @@ public class FocusHelper {
      * from top left to bottom right.
      */
     private static ArrayList<View> getCellLayoutChildrenSortedSpatially(CellLayout layout,
-            ViewGroup parent) {
+                                                                        ViewGroup parent) {
         // First we order each the CellLayout children by their x,y coordinates
         final int cellCountX = layout.getCountX();
         final int count = parent.getChildCount();
@@ -585,10 +590,11 @@ public class FocusHelper {
         });
         return views;
     }
+
     /**
-     * Private helper method to find the index of the next BubbleTextView or FolderIcon in the 
+     * Private helper method to find the index of the next BubbleTextView or FolderIcon in the
      * direction delta.
-     * 
+     *
      * @param delta either -1 or 1 depending on the direction we want to search
      */
     private static View findIndexOfIcon(ArrayList<View> views, int i, int delta) {
@@ -604,24 +610,27 @@ public class FocusHelper {
         }
         return null;
     }
+
     private static View getIconInDirection(CellLayout layout, ViewGroup parent, int i,
-            int delta) {
+                                           int delta) {
         final ArrayList<View> views = getCellLayoutChildrenSortedSpatially(layout, parent);
         return findIndexOfIcon(views, i, delta);
     }
+
     private static View getIconInDirection(CellLayout layout, ViewGroup parent, View v,
-            int delta) {
+                                           int delta) {
         final ArrayList<View> views = getCellLayoutChildrenSortedSpatially(layout, parent);
         return findIndexOfIcon(views, views.indexOf(v), delta);
     }
+
     /**
-     * Private helper method to find the next closest BubbleTextView or FolderIcon in the direction 
+     * Private helper method to find the next closest BubbleTextView or FolderIcon in the direction
      * delta on the next line.
-     * 
+     *
      * @param delta either -1 or 1 depending on the line and direction we want to search
      */
     private static View getClosestIconOnLine(CellLayout layout, ViewGroup parent, View v,
-            int lineDelta) {
+                                             int lineDelta) {
         final ArrayList<View> views = getCellLayoutChildrenSortedSpatially(layout, parent);
         final CellLayout.LayoutParams lp = (CellLayout.LayoutParams) v.getLayoutParams();
         final int cellCountY = layout.getCountY();
@@ -808,7 +817,8 @@ public class FocusHelper {
                 }
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }
@@ -891,7 +901,8 @@ public class FocusHelper {
                 }
                 wasHandled = true;
                 break;
-            default: break;
+            default:
+                break;
         }
         return wasHandled;
     }

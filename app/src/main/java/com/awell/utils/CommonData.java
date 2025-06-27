@@ -40,7 +40,7 @@ public class CommonData {
 
     /**
      * GPS车速
-     *  数据key
+     * 数据key
      */
     public static final String BROADCAST_GPS_SPEED = "awell.gps.speed";
     public static final String FLAG_KM_MILE = "kmOrMile";
@@ -50,19 +50,21 @@ public class CommonData {
 
     /**
      * 获取当前车速单位
-     *      data == 0；公里/小时
-     *      data == 1；英里/小时
+     * data == 0；公里/小时
+     * data == 1；英里/小时
      */
     static IAwellApi mawellapi;
-    public static IAwellApi getAwellApi(){
-        if (mawellapi == null){
+
+    public static IAwellApi getAwellApi() {
+        if (mawellapi == null) {
             mawellapi = IAwellApi.Stub.asInterface(ServiceManager.getService("AwellAutoApi"));
         }
         return mawellapi;
     }
-    public static void readDataToMeta(byte[] data,int offset){
+
+    public static void readDataToMeta(byte[] data, int offset) {
         try {
-            int size = getAwellApi().awellmetafile_read(data, offset, data.length,1);
+            int size = getAwellApi().awellmetafile_read(data, offset, data.length, 1);
 //            LogUtil.i(size == data.length ? "awellmetafile_read success !!!!!! = " + size : "awellmetafile_read fail !!!!!! = " + size);
         } catch (RemoteException e) {
             e.printStackTrace();

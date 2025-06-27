@@ -27,16 +27,17 @@ import java.util.EnumSet;
 
 public class LauncherViewPropertyAnimator extends Animator implements AnimatorListener {
     enum Properties {
-            TRANSLATION_X,
-            TRANSLATION_Y,
-            SCALE_X,
-            SCALE_Y,
-            ROTATION_Y,
-            ALPHA,
-            START_DELAY,
-            DURATION,
-            INTERPOLATOR
+        TRANSLATION_X,
+        TRANSLATION_Y,
+        SCALE_X,
+        SCALE_Y,
+        ROTATION_Y,
+        ALPHA,
+        START_DELAY,
+        DURATION,
+        INTERPOLATOR
     }
+
     EnumSet<Properties> mPropertiesToSet = EnumSet.noneOf(Properties.class);
     ViewPropertyAnimator mViewPropertyAnimator;
     View mTarget;

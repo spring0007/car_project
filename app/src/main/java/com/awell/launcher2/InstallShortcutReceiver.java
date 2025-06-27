@@ -62,7 +62,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
         String name;
 
         public PendingInstallShortcutInfo(Intent rawData, String shortcutName,
-                Intent shortcutIntent) {
+                                          Intent shortcutIntent) {
             data = rawData;
             name = shortcutName;
             launchIntent = shortcutIntent;
@@ -105,10 +105,12 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     static void enableInstallQueue() {
         mUseInstallQueue = true;
     }
+
     static void disableAndFlushInstallQueue(Context context) {
         mUseInstallQueue = false;
         flushInstallQueue(context);
     }
+
     static void flushInstallQueue(Context context) {
         Iterator<PendingInstallShortcutInfo> iter = mInstallQueue.iterator();
         while (iter.hasNext()) {
@@ -118,7 +120,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     }
 
     private static void processInstallShortcut(Context context,
-            PendingInstallShortcutInfo pendingInfo) {
+                                               PendingInstallShortcutInfo pendingInfo) {
         String spKey = LauncherApplication.getSharedPreferencesKey();
         SharedPreferences sp = context.getSharedPreferences(spKey, Context.MODE_PRIVATE);
 
@@ -160,8 +162,8 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     }
 
     private static boolean installShortcut(Context context, Intent data, ArrayList<ItemInfo> items,
-            String name, Intent intent, final int screen, boolean shortcutExists,
-            final SharedPreferences sharedPrefs, int[] result) {
+                                           String name, Intent intent, final int screen, boolean shortcutExists,
+                                           final SharedPreferences sharedPrefs, int[] result) {
         int[] tmpCoordinates = new int[2];
         if (findEmptyCell(context, items, tmpCoordinates, screen)) {
             if (intent != null) {
@@ -171,7 +173,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
                         intent.getCategories() != null &&
                         intent.getCategories().contains(Intent.CATEGORY_LAUNCHER)) {
                     intent.addFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 }
 
                 // By default, we allow for duplicate entries (located in
@@ -193,9 +195,9 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
                         public void run() {
                             synchronized (savedNewApps) {
                                 sharedPrefs.edit()
-                                           .putInt(NEW_APPS_PAGE_KEY, screen)
-                                           .putStringSet(NEW_APPS_LIST_KEY, savedNewApps)
-                                           .commit();
+                                        .putInt(NEW_APPS_PAGE_KEY, screen)
+                                        .putStringSet(NEW_APPS_LIST_KEY, savedNewApps)
+                                        .commit();
                             }
                         }
                     }.start();
@@ -222,7 +224,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
     }
 
     private static boolean findEmptyCell(Context context, ArrayList<ItemInfo> items, int[] xy,
-            int screen) {
+                                         int screen) {
         final int xCount = LauncherModel.getCellCountX();
         final int yCount = LauncherModel.getCellCountY();
         boolean[][] occupied = new boolean[xCount][yCount];

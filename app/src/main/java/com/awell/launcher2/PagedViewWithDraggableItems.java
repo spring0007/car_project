@@ -40,7 +40,7 @@ import android.widget.Toast;
  *
  */
 public abstract class PagedViewWithDraggableItems extends PagedView
-    implements View.OnLongClickListener, View.OnTouchListener {
+        implements View.OnLongClickListener, View.OnTouchListener {
     private View mLastTouchedItem;
     private boolean mIsDragging;
     private boolean mIsDragEnabled;
@@ -127,46 +127,48 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         // Return if global dragging is not enabled
         if (!mLauncher.isDraggingEnabled()) return false; */
 
-    	ApplicationInfo appInfo = (ApplicationInfo) v.getTag();
-		String packageName=appInfo.getPackageName();
-		PackageInfo pInfo = null;
-		try {
-			pInfo = mLauncher.getPackageManager().getPackageInfo(packageName, 0);
-			if(!isUserApp(pInfo)){//判断是否是系统应用，
-				Toast.makeText(mLauncher, getResources().getString(R.string.uninstall_system_app),Toast.LENGTH_SHORT).show();
-				return true; 
-			}
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}  
-		uninstallAPK(packageName);
-		return true;
+        ApplicationInfo appInfo = (ApplicationInfo) v.getTag();
+        String packageName = appInfo.getPackageName();
+        PackageInfo pInfo = null;
+        try {
+            pInfo = mLauncher.getPackageManager().getPackageInfo(packageName, 0);
+            if (!isUserApp(pInfo)) {//判断是否是系统应用，
+                Toast.makeText(mLauncher, getResources().getString(R.string.uninstall_system_app), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        uninstallAPK(packageName);
+        return true;
     }
-    
-    public boolean isSystemApp(PackageInfo pInfo) {  
-    	Log.i("TAG", "isSystemApp ApplicationInfo.DOWNLOADED_FLAG = " + ApplicationInfo.DOWNLOADED_FLAG + ", flag = " +pInfo.applicationInfo.flags);
-        return ((pInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0);  
-    }  
-  
-    public boolean isSystemUpdateApp(PackageInfo pInfo) {  
-    	Log.i("TAG", "isSystemApp ApplicationInfo.UPDATED_SYSTEM_APP_FLAG = " + ApplicationInfo.UPDATED_SYSTEM_APP_FLAG + ", flag = " +pInfo.applicationInfo.flags);
-        return ((pInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);  
-    }  
+
+    public boolean isSystemApp(PackageInfo pInfo) {
+        Log.i("TAG", "isSystemApp ApplicationInfo.DOWNLOADED_FLAG = " + ApplicationInfo.DOWNLOADED_FLAG + ", flag = " + pInfo.applicationInfo.flags);
+        return ((pInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0);
+    }
+
+    public boolean isSystemUpdateApp(PackageInfo pInfo) {
+        Log.i("TAG", "isSystemApp ApplicationInfo.UPDATED_SYSTEM_APP_FLAG = " + ApplicationInfo.UPDATED_SYSTEM_APP_FLAG + ", flag = " + pInfo.applicationInfo.flags);
+        return ((pInfo.applicationInfo.flags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0);
+    }
+
     /**
      * 判断是否是系统应用
+     *
      * @param pInfo
      * @return
      */
-    public boolean isUserApp(PackageInfo pInfo) {  
-    	
-        return (!isSystemApp(pInfo) && !isSystemUpdateApp(pInfo));  
-    } 
-    
-    public void uninstallAPK(String packageName){  
-        Uri uri=Uri.parse("package:"+packageName);  
-        Intent intent=new Intent(Intent.ACTION_DELETE,uri);  
-        mLauncher.startActivity(intent);  
-    } 
+    public boolean isUserApp(PackageInfo pInfo) {
+
+        return (!isSystemApp(pInfo) && !isSystemUpdateApp(pInfo));
+    }
+
+    public void uninstallAPK(String packageName) {
+        Uri uri = Uri.parse("package:" + packageName);
+        Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        mLauncher.startActivity(intent);
+    }
 
 
     /*
@@ -224,10 +226,13 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         super.onDetachedFromWindow();
     }
 
-    /** Show the scrolling indicators when we move the page */
+    /**
+     * Show the scrolling indicators when we move the page
+     */
     protected void onPageBeginMoving() {
         showScrollingIndicator(false);
     }
+
     protected void onPageEndMoving() {
         hideScrollingIndicator(false);
     }

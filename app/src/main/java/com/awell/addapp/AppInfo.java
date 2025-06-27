@@ -6,7 +6,6 @@ public class AppInfo {
     public int uid;
 
 
-
     public int flags;
     public String label;//应用名称
     public String package_name;//应用包名
@@ -27,6 +26,7 @@ public class AppInfo {
     public void setFlags(int flags) {
         this.flags = flags;
     }
+
     public int getUid() {
         return uid;
     }
@@ -51,12 +51,19 @@ public class AppInfo {
         this.package_name = package_name;
     }
 
-    public Drawable getIcon() {return icon;}
+    public Drawable getIcon() {
+        return icon;
+    }
+
     public void setIcon(Drawable icon) {
         this.icon = icon;
     }
 
-    public Drawable getIcon_bg() {return icon_bg;}
+    public Drawable getIcon_bg() {
+        return icon_bg;
+    }
 
-    public void setIcon_bg(Drawable icon_bg) {this.icon_bg = icon_bg;}
+    public void setIcon_bg(Drawable icon_bg) {
+        this.icon_bg = icon_bg;
+    }
 }

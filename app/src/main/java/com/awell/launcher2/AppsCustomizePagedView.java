@@ -2035,7 +2035,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems
                         || str.equals("com.aispeech.aios")
                 ) {
 
-                }else if(str.contains("com.awell.launcher")){
+                } else if (str.contains("com.awell.launcher")) {
 
                 } else {
                     if (str.equals("com.awell.localmusic")) {
@@ -2158,19 +2158,20 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems
         updatePageCounts();
         invalidateOnDataChange();
     }
+
     public void setApps(ArrayList<ApplicationInfo> list) {
-		mApps.clear();
-		String[] excludePackageArray = getContext().getResources().getStringArray(R.array.excludePackageList);
-		List<String> excludePackageList = Arrays.asList(excludePackageArray);
-		for (ApplicationInfo a : list) {
-			Log.d(TAG,"setApps--getPackageName="+a.componentName.getPackageName());
-			Log.d(TAG,"setApps--getClassName="+a.componentName.getClassName());
-	        if (excludePackageList!=null
-                    &&(excludePackageList.contains(a.componentName.getPackageName())||excludePackageList.contains(a.componentName.getClassName()))){
-	            continue;
-	        }
-			mApps.add(a);
-		}
+        mApps.clear();
+        String[] excludePackageArray = getContext().getResources().getStringArray(R.array.excludePackageList);
+        List<String> excludePackageList = Arrays.asList(excludePackageArray);
+        for (ApplicationInfo a : list) {
+            Log.d(TAG, "setApps--getPackageName=" + a.componentName.getPackageName());
+            Log.d(TAG, "setApps--getClassName=" + a.componentName.getClassName());
+            if (excludePackageList != null
+                    && (excludePackageList.contains(a.componentName.getPackageName()) || excludePackageList.contains(a.componentName.getClassName()))) {
+                continue;
+            }
+            mApps.add(a);
+        }
 
         Collections.sort(mApps, LauncherModel.getAppNameComparator());
         updatePageCounts();

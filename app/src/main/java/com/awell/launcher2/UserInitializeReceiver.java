@@ -45,7 +45,7 @@ public class UserInitializeReceiver extends BroadcastReceiver {
         addWallpapers(resources, packageName, R.array.extra_wallpapers, list);
         WallpaperManager wpm = (WallpaperManager) context.getSystemService(
                 Context.WALLPAPER_SERVICE);
-        for (int i=1; i<list.size(); i++) {
+        for (int i = 1; i < list.size(); i++) {
             int resid = list.get(i);
             if (!wpm.hasResourceWallpaper(resid)) {
                 try {
@@ -58,7 +58,7 @@ public class UserInitializeReceiver extends BroadcastReceiver {
     }
 
     private void addWallpapers(Resources resources, String packageName, int resid,
-            ArrayList<Integer> outList) {
+                               ArrayList<Integer> outList) {
         final String[] extras = resources.getStringArray(resid);
         for (String extra : extras) {
             int res = resources.getIdentifier(extra, "drawable", packageName);

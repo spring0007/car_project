@@ -45,7 +45,7 @@ import com.awell.launcher.R;
  */
 final class Utilities {
     @SuppressWarnings("unused")
-    static Boolean FLAG=true;
+    static Boolean FLAG = true;
     private static final String TAG = "Launcher.Utilities";
 
     private static int sIconWidth = -1;
@@ -62,18 +62,19 @@ final class Utilities {
 
     private static int[] sfOtherBG = {
             R.drawable.sf_other_app1
-            ,R.drawable.sf_other_app1
-            ,R.drawable.sf_other_app3
-            ,R.drawable.sf_other_app4
-            ,R.drawable.sf_other_app5
-            };
+            , R.drawable.sf_other_app1
+            , R.drawable.sf_other_app3
+            , R.drawable.sf_other_app4
+            , R.drawable.sf_other_app5
+    };
 
 
     static {
         sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,
                 Paint.FILTER_BITMAP_FLAG));
     }
-    static int sColors[] = { 0xffff0000, 0xff00ff00, 0xff0000ff };
+
+    static int sColors[] = {0xffff0000, 0xff00ff00, 0xff0000ff};
     static int sColorIndex = 0;
 
     /**
@@ -81,7 +82,7 @@ final class Utilities {
      * icon bitmaps that are stored in the database (which were 74x74 pixels at hdpi size)
      * to the proper size (48dp)
      */
-    static Bitmap createIconBitmap(Bitmap icon, Context context,String packageName) {
+    static Bitmap createIconBitmap(Bitmap icon, Context context, String packageName) {
         int textureWidth = sIconTextureWidth;
         int textureHeight = sIconTextureHeight;
         int sourceWidth = icon.getWidth();
@@ -98,14 +99,14 @@ final class Utilities {
         } else {
             // Icon is too small, render to a larger bitmap
             final Resources resources = context.getResources();
-            return createIconBitmap(new BitmapDrawable(resources, icon), context,packageName);
+            return createIconBitmap(new BitmapDrawable(resources, icon), context, packageName);
         }
     }
 
     /**
      * Returns a bitmap suitable for the all apps view.
      */
-    static Bitmap createIconBitmap(Drawable icon, Context context,String packageName) {
+    static Bitmap createIconBitmap(Drawable icon, Context context, String packageName) {
 
         int sourceWidth = icon.getIntrinsicWidth();
         int sourceHeight = icon.getIntrinsicHeight();
@@ -119,9 +120,9 @@ final class Utilities {
                 synchronized (packageName) {
                     if (packageName.equals(IconCache.mHomePackageName_lehang[i])) {
                         BitmapDrawable bd = (BitmapDrawable) icon;
-                        FLAG=false;
+                        FLAG = false;
 //    						return bd.getBitmap();
-                        return drawableToBitmap(icon,sIconTextureWidth,sIconTextureHeight);
+                        return drawableToBitmap(icon, sIconTextureWidth, sIconTextureHeight);
                     }
                 }
             }
@@ -165,16 +166,16 @@ final class Utilities {
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
 
-            width = sIconTextureWidth/3*2;
-            height = sIconTextureHeight/3*2;
+            width = sIconTextureWidth / 3 * 2;
+            height = sIconTextureHeight / 3 * 2;
 
             final Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
                     Bitmap.Config.ARGB_8888);
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
 
-            final int left = (textureWidth-width) / 2;
-            final int top = (textureHeight-height) / 2;
+            final int left = (textureWidth - width) / 2;
+            final int top = (textureHeight - height) / 2;
 
             @SuppressWarnings("all") // suppress dead code warning
             final boolean debug = false;
@@ -184,30 +185,28 @@ final class Utilities {
                 if (++sColorIndex >= sColors.length) sColorIndex = 0;
                 Paint debugPaint = new Paint();
                 debugPaint.setColor(0xffcccc00);
-                canvas.drawRect(left, top, left+width, top+height, debugPaint);
+                canvas.drawRect(left, top, left + width, top + height, debugPaint);
             }
 
 
             //增加图标背景图片 OWL
-            if (true)
-            {
+            if (true) {
                 Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(),
                         sfOtherBG[(new Random()).nextInt(5)]);
                 int backWidth = backBitmap.getWidth();
                 int backHeight = backBitmap.getHeight();
-                if(backWidth != sIconWidth || backHeight != sIconHeight) {
+                if (backWidth != sIconWidth || backHeight != sIconHeight) {
                     Matrix matrix = new Matrix();
-                    matrix.postScale((float)sIconWidth/backWidth, (float)sIconHeight/backHeight);
+                    matrix.postScale((float) sIconWidth / backWidth, (float) sIconHeight / backHeight);
                     canvas.drawBitmap(Bitmap.createBitmap(backBitmap, 0, 0, backWidth, backHeight, matrix, true),
                             0.0f, 0.0f, null);
-                }else
-                {
+                } else {
                     canvas.drawBitmap(backBitmap, 0.0f, 0.0f, null);
                 }
             }
 
             sOldBounds.set(icon.getBounds());
-            icon.setBounds(left, top, left+width, top+height);
+            icon.setBounds(left, top, left + width, top + height);
             icon.draw(canvas);
             icon.setBounds(sOldBounds);
             canvas.setBitmap(null);
@@ -245,11 +244,10 @@ final class Utilities {
      * The size of the thumbnail is defined by the dimension
      * android.R.dimen.launcher_application_icon_size.
      *
-     * @param bitmap The bitmap to get a thumbnail of.
+     * @param bitmap  The bitmap to get a thumbnail of.
      * @param context The application's context.
-     *
      * @return A thumbnail for the specified bitmap or the bitmap itself if the
-     *         thumbnail could not be created.
+     * thumbnail could not be created.
      */
     static Bitmap resampleIconBitmap(Bitmap bitmap, Context context) {
         synchronized (sCanvas) { // we share the statics :-(
@@ -261,7 +259,7 @@ final class Utilities {
                 return bitmap;
             } else {
                 final Resources resources = context.getResources();
-                return createIconBitmap(new BitmapDrawable(resources, bitmap), context,"");
+                return createIconBitmap(new BitmapDrawable(resources, bitmap), context, "");
             }
         }
     }
@@ -302,7 +300,9 @@ final class Utilities {
         sDisabledPaint.setAlpha(0x88);
     }
 
-    /** Only works for positive numbers. */
+    /**
+     * Only works for positive numbers.
+     */
     static int roundToPow2(int n) {
         int orig = n;
         n >>= 1;
@@ -325,9 +325,9 @@ final class Utilities {
         return new Random(System.currentTimeMillis()).nextInt(1 << 24);
     }
 
-    public static Bitmap drawableToBitmap(Drawable drawable,int Width,int Height) {
+    public static Bitmap drawableToBitmap(Drawable drawable, int Width, int Height) {
 
-        Bitmap bitmap = Bitmap.createBitmap(Width,Height,
+        Bitmap bitmap = Bitmap.createBitmap(Width, Height,
                 drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
                         : Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
@@ -339,6 +339,7 @@ final class Utilities {
 
     /**
      * created 20210708
+     *
      * @param src
      * @param dests
      * @return

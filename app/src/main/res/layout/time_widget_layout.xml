@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_time"
     android:layout_width="244dp"
@@ -11,35 +10,37 @@
     <com.awell.ctrlview.MyQAnalogClock
         android:layout_width="244dp"
         android:layout_height="243dp" />
-       <!-- <TextClock
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:format12Hour="hh:mm:ss a"
-            android:format24Hour="HH:mm:ss"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextClock
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:format12Hour="yyyy/MM/dd"
-                android:format24Hour="yyyy/MM/dd"
-                android:textColor="@android:color/white"
-                android:textSize="30sp" />
-            <TextClock
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:layout_marginStart="15dp"
-                android:format12Hour="EEEE"
-                android:format24Hour="EEEE"
-                android:textColor="@android:color/white"
-                android:textSize="30sp" />
+    <!-- <TextClock
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="10dp"
+         android:format12Hour="hh:mm:ss a"
+         android:format24Hour="HH:mm:ss"
+         android:textColor="@android:color/white"
+         android:textSize="24sp" />-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        </LinearLayout>
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:format12Hour="yyyy/MM/dd"
+            android:format24Hour="yyyy/MM/dd"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="15dp"
+            android:format12Hour="EEEE"
+            android:format24Hour="EEEE"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />
+
     </LinearLayout>
+</LinearLayout>

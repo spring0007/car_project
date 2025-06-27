@@ -95,7 +95,7 @@ public class Cling extends FrameLayout {
 
             mPunchThroughGraphic = r.getDrawable(R.drawable.cling);
             mPunchThroughGraphicCenterRadius =
-                r.getDimensionPixelSize(R.dimen.clingPunchThroughGraphicCenterRadius);
+                    r.getDimensionPixelSize(R.dimen.clingPunchThroughGraphicCenterRadius);
             mAppIconSize = r.getDimensionPixelSize(R.dimen.app_icon_size);
             mRevealRadius = r.getDimensionPixelSize(R.dimen.reveal_radius) * 1f;
             mButtonBarHeight = r.getDimensionPixelSize(R.dimen.button_bar_height);
@@ -131,8 +131,8 @@ public class Cling extends FrameLayout {
             final int cornerYOffset = (int) (scale * 10);
             return new int[]{getMeasuredWidth() - cornerXOffset, cornerYOffset};
         } else if (mDrawIdentifier.equals(ALLAPPS_PORTRAIT) ||
-                   mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
-                   mDrawIdentifier.equals(ALLAPPS_LARGE)) {
+                mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
+                mDrawIdentifier.equals(ALLAPPS_LARGE)) {
             return mPositionData;
         }
         return new int[]{-1, -1};
@@ -162,11 +162,11 @@ public class Cling extends FrameLayout {
     @Override
     public boolean onTouchEvent(android.view.MotionEvent event) {
         if (mDrawIdentifier.equals(WORKSPACE_PORTRAIT) ||
-            mDrawIdentifier.equals(WORKSPACE_LANDSCAPE) ||
-            mDrawIdentifier.equals(WORKSPACE_LARGE) ||
-            mDrawIdentifier.equals(ALLAPPS_PORTRAIT) ||
-            mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
-            mDrawIdentifier.equals(ALLAPPS_LARGE)) {
+                mDrawIdentifier.equals(WORKSPACE_LANDSCAPE) ||
+                mDrawIdentifier.equals(WORKSPACE_LARGE) ||
+                mDrawIdentifier.equals(ALLAPPS_PORTRAIT) ||
+                mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
+                mDrawIdentifier.equals(ALLAPPS_LARGE)) {
 
             int[] positions = getPunchThroughPositions();
             for (int i = 0; i < positions.length; i += 2) {
@@ -177,8 +177,8 @@ public class Cling extends FrameLayout {
                 }
             }
         } else if (mDrawIdentifier.equals(FOLDER_PORTRAIT) ||
-                   mDrawIdentifier.equals(FOLDER_LANDSCAPE) ||
-                   mDrawIdentifier.equals(FOLDER_LARGE)) {
+                mDrawIdentifier.equals(FOLDER_LANDSCAPE) ||
+                mDrawIdentifier.equals(FOLDER_LARGE)) {
             Folder f = mLauncher.getWorkspace().getOpenFolder();
             if (f != null) {
                 Rect r = new Rect();
@@ -189,7 +189,9 @@ public class Cling extends FrameLayout {
             }
         }
         return true;
-    };
+    }
+
+    ;
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
@@ -241,15 +243,15 @@ public class Cling extends FrameLayout {
                 cy = positions[i + 1];
                 if (cx > -1 && cy > -1) {
                     c.drawCircle(cx, cy, mRevealRadius, mErasePaint);
-                    mPunchThroughGraphic.setBounds(cx - dw/2, cy - dh/2, cx + dw/2, cy + dh/2);
+                    mPunchThroughGraphic.setBounds(cx - dw / 2, cy - dh / 2, cx + dw / 2, cy + dh / 2);
                     mPunchThroughGraphic.draw(c);
                 }
             }
 
             // Draw the hand graphic in All Apps
             if (mDrawIdentifier.equals(ALLAPPS_PORTRAIT) ||
-                mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
-                mDrawIdentifier.equals(ALLAPPS_LARGE)) {
+                    mDrawIdentifier.equals(ALLAPPS_LANDSCAPE) ||
+                    mDrawIdentifier.equals(ALLAPPS_LARGE)) {
                 if (mHandTouchGraphic == null) {
                     mHandTouchGraphic = getResources().getDrawable(R.drawable.hand);
                 }
@@ -267,5 +269,7 @@ public class Cling extends FrameLayout {
 
         // Draw the rest of the cling
         super.dispatchDraw(canvas);
-    };
+    }
+
+    ;
 }

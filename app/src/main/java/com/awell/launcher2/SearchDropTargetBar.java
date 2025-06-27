@@ -106,7 +106,7 @@ public class SearchDropTargetBar extends FrameLayout implements DragController.D
         mDeleteDropTarget.setSearchDropTargetBar(this);
 
         mEnableDropDownDropTargets =
-            getResources().getBoolean(R.bool.config_useDropTargetDownTransition);
+                getResources().getBoolean(R.bool.config_useDropTargetDownTransition);
 
         // Create the various fade animations
         if (mEnableDropDownDropTargets) {
@@ -149,6 +149,7 @@ public class SearchDropTargetBar extends FrameLayout implements DragController.D
         }
         mIsSearchBarHidden = false;
     }
+
     public void hideSearchBar(boolean animated) {
         if (mIsSearchBarHidden) return;
         if (animated) {
@@ -171,6 +172,7 @@ public class SearchDropTargetBar extends FrameLayout implements DragController.D
     public int getTransitionInDuration() {
         return sTransitionInDuration;
     }
+
     public int getTransitionOutDuration() {
         return sTransitionOutDuration;
     }
@@ -200,7 +202,7 @@ public class SearchDropTargetBar extends FrameLayout implements DragController.D
             // Restore the QSB search bar, and animate out the drop target bar
             prepareStartAnimation(mDropTargetBar);
             mDropTargetBarAnim.reverse();
- 
+
             if (!mIsSearchBarHidden) {
                 prepareStartAnimation(mQSBSearchBar);
                 mQSBSearchBarAnim.reverse();

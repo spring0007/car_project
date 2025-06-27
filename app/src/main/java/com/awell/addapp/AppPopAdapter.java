@@ -15,17 +15,19 @@ import com.awell.launcher.R;
 
 import java.util.List;
 
-public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder>{
+public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder> {
 
     private Context mContext;
     private List<AppInfo> contentList;
+
     public void setContentList(List<AppInfo> contentList) {
         this.contentList.clear();
         this.contentList.addAll(contentList);
     }
+
     private AddSelectAppCallback addSelectAppCallback;
 
-    public AppPopAdapter(Context context, List<AppInfo> contentList, AddSelectAppCallback addSelectAppCallback){
+    public AppPopAdapter(Context context, List<AppInfo> contentList, AddSelectAppCallback addSelectAppCallback) {
         this.contentList = contentList;
         this.mContext = context;
         this.addSelectAppCallback = addSelectAppCallback;
@@ -34,7 +36,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item2,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item2, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -58,7 +60,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
             return true;
         });*/
 
-        holder.ll_item.setOnClickListener(vie ->{
+        holder.ll_item.setOnClickListener(vie -> {
             /*Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
             mContext.startActivity(intent);*/
             addSelectAppCallback.addAppInfo(appInfo);
@@ -72,7 +74,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
         return contentList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private RelativeLayout ll_item;
         private ImageView iv_app_icon;

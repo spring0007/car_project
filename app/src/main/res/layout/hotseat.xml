@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,8 +12,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<com.awell.launcher2.Hotseat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.awell.launcher2.Hotseat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -23,6 +21,7 @@
     launcher:cellCountX="@integer/hotseat_cell_count_land"
     launcher:cellCountY="1"
     tools:ignore="MissingDefaultResource">
+
     <com.awell.launcher2.CellLayout
         android:id="@+id/layout"
         android:layout_width="wrap_content"
@@ -31,7 +30,7 @@
         android:paddingLeft="@dimen/button_bar_width_left_padding"
         android:paddingRight="@dimen/button_bar_width_right_padding"
         android:paddingTop="@dimen/button_bar_height_top_padding"
-        android:paddingBottom="@dimen/button_bar_height_bottom_padding_land"		
+        android:paddingBottom="@dimen/button_bar_height_bottom_padding_land"
         launcher:cellWidth="90dp"
         launcher:cellHeight="110dp"
         launcher:widthGap="3dp"

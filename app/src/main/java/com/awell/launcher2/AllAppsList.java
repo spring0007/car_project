@@ -33,16 +33,24 @@ import android.util.Log;
  */
 class AllAppsList {
     public static final int DEFAULT_APPLICATIONS_NUMBER = 42;
-    
-    /** The list off all apps. */
+
+    /**
+     * The list off all apps.
+     */
     public ArrayList<ApplicationInfo> data =
             new ArrayList<ApplicationInfo>(DEFAULT_APPLICATIONS_NUMBER);
-    /** The list of apps that have been added since the last notify() call. */
+    /**
+     * The list of apps that have been added since the last notify() call.
+     */
     public ArrayList<ApplicationInfo> added =
             new ArrayList<ApplicationInfo>(DEFAULT_APPLICATIONS_NUMBER);
-    /** The list of apps that have been removed since the last notify() call. */
+    /**
+     * The list of apps that have been removed since the last notify() call.
+     */
     public ArrayList<ApplicationInfo> removed = new ArrayList<ApplicationInfo>();
-    /** The list of apps that have been modified since the last notify() call. */
+    /**
+     * The list of apps that have been modified since the last notify() call.
+     */
     public ArrayList<ApplicationInfo> modified = new ArrayList<ApplicationInfo>();
 
     private IconCache mIconCache;
@@ -57,17 +65,17 @@ class AllAppsList {
     /**
      * Add the supplied ApplicationInfo objects to the list, and enqueue it into the
      * list to broadcast when notify() is called.
-     *
+     * <p>
      * If the app is already in the list, doesn't add it.
      */
     public void add(ApplicationInfo info) {
         if (findActivity(data, info.componentName)) {
             return;
-        }      
+        }
         data.add(info);
         added.add(info);
     }
-    
+
     public void clear() {
         data.clear();
         // TODO: do we clear these too?
@@ -117,7 +125,7 @@ class AllAppsList {
     /**
      * Add and remove icons for this package which has been updated.
      */
-    public void updatePackage(Context context, String packageName) {    	
+    public void updatePackage(Context context, String packageName) {
         final List<ResolveInfo> matches = findActivitiesForPackage(context, packageName);
         if (matches.size() > 0) {
             // Find disabled/removed activities and remove them from data and add them
@@ -197,7 +205,7 @@ class AllAppsList {
      */
     private static boolean findActivity(ArrayList<ApplicationInfo> apps, ComponentName component) {
         final int N = apps.size();
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             final ApplicationInfo info = apps.get(i);
             if (info.componentName.equals(component)) {
                 return true;
@@ -210,7 +218,7 @@ class AllAppsList {
      * Find an ApplicationInfo object for the given packageName and className.
      */
     private ApplicationInfo findApplicationInfoLocked(String packageName, String className) {
-        for (ApplicationInfo info: data) {
+        for (ApplicationInfo info : data) {
             final ComponentName component = info.intent.getComponent();
             if (packageName.equals(component.getPackageName())
                     && className.equals(component.getClassName())) {

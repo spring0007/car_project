@@ -38,7 +38,7 @@ import com.awell.launcher.R;
 import java.util.ArrayList;
 
 public class AppsCustomizeTabHost extends TabHost implements LauncherTransitionable,
-        TabHost.OnTabChangeListener  {
+        TabHost.OnTabChangeListener {
     static final String LOG_TAG = "AppsCustomizeTabHost";
 
     private static final String APPS_TAB_TAG = "APPS";
@@ -60,11 +60,11 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
         super(context, attrs);
         mLayoutInflater = LayoutInflater.from(context);
         mRelayoutAndMakeVisible = new Runnable() {
-                public void run() {
-                    mTabs.requestLayout();
-                    mTabsContainer.setAlpha(1f);
-                }
-            };
+            public void run() {
+                mTabs.requestLayout();
+                mTabsContainer.setAlpha(1f);
+            }
+        };
     }
 
     /**
@@ -80,9 +80,11 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
         setCurrentTabByTag(getTabTagForContentType(type));
         setOnTabChangedListener(this);
     }
+
     void selectAppsTab() {
         setContentTypeImmediate(AppsCustomizePagedView.ContentType.Applications);
     }
+
     void selectWidgetsTab() {
         setContentTypeImmediate(AppsCustomizePagedView.ContentType.Widgets);
     }
@@ -158,14 +160,16 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
         }
     }
 
-     public boolean onInterceptTouchEvent(MotionEvent ev) {
-         // If we are mid transitioning to the workspace, then intercept touch events here so we
-         // can ignore them, otherwise we just let all apps handle the touch events.
-         if (mInTransition && mTransitioningToWorkspace) {
-             return true;
-         }
-         return super.onInterceptTouchEvent(ev);
-     };
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // If we are mid transitioning to the workspace, then intercept touch events here so we
+        // can ignore them, otherwise we just let all apps handle the touch events.
+        if (mInTransition && mTransitioningToWorkspace) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    ;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -269,6 +273,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
                         mAnimationBuffer.setVisibility(View.GONE);
                         mAnimationBuffer.removeAllViews();
                     }
+
                     @Override
                     public void onAnimationCancel(Animator animation) {
                         mAnimationBuffer.setVisibility(View.GONE);

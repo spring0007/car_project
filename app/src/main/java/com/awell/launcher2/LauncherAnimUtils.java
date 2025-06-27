@@ -81,7 +81,7 @@ public class LauncherAnimUtils {
     }
 
     public static ObjectAnimator ofPropertyValuesHolder(Object target,
-            PropertyValuesHolder... values) {
+                                                        PropertyValuesHolder... values) {
         ObjectAnimator anim = new ObjectAnimator();
         anim.setTarget(target);
         anim.setValues(values);

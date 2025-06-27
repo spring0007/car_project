@@ -5,5 +5,6 @@ package com.awell.addapp;
  */
 public interface AddSelectAppCallback {
     void addAppInfo(AppInfo appInfo);
+
     void removeAppInfo(String packageName);
 }

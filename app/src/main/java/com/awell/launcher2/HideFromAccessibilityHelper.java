@@ -107,7 +107,7 @@ public class HideFromAccessibilityHelper implements OnHierarchyChangeListener {
     private boolean hasAncestorOfType(View v, Class c) {
         return v != null &&
                 (v.getClass().equals(c) ||
-                 (v.getParent() instanceof ViewGroup &&
-                  hasAncestorOfType((ViewGroup) v.getParent(), c)));
+                        (v.getParent() instanceof ViewGroup &&
+                                hasAncestorOfType((ViewGroup) v.getParent(), c)));
     }
 }

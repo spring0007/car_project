@@ -307,9 +307,11 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             int relOffset = getRelativeChildOffset(mCurrentPage);
             newX = offset - relOffset;
         }
-        Log.e(TAG, "pageview updateCurrentPageScroll newX = " + newX);
-//        scrollTo(newX, 0);
-        scrollTo(1, 0);// by jxy 每次进入allapp的时候都默认进入第一屏
+        if (DEBUG) {
+            Log.i(TAG, "updateCurrentPageScroll: newX = " + newX + " getPageCount=>" + getPageCount() + " this =>" + this);
+        }
+        scrollTo(newX, 0);
+        //scrollTo(1, 0);// by jxy 每次进入allapp的时候都默认进入第一屏
         mScroller.setFinalX(newX);
         mScroller.forceFinished(true);
     }

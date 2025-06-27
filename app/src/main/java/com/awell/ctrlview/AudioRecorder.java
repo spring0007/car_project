@@ -1,4 +1,5 @@
 package com.awell.ctrlview;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
 import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +29,8 @@ import android.os.Looper;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-public class AudioRecorder{
+
+public class AudioRecorder {
 
     private static final int SAMPLE_RATE = 44100;    // 44.1kHz
     private static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO; // 单声道
@@ -42,33 +46,35 @@ public class AudioRecorder{
     private long lastUpdateTime = 0;
 
     public AudioRecorder(SpetrumView spetrumView) {
-        this.mSpetrumView=spetrumView;
+        this.mSpetrumView = spetrumView;
         this.executorService = Executors.newSingleThreadExecutor();
         this.mainHandler = new Handler(Looper.getMainLooper());
         initAudioRecord();
     }
+
     private void initAudioRecord() {
         int minBufferSize = AudioRecord.getMinBufferSize(
-            SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT
+                SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT
         );
         if (minBufferSize == 0) {
             throw new RuntimeException("Invalid audio configuration");
         }
 
         audioRecord = new AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            minBufferSize * 2
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE,
+                CHANNEL_CONFIG,
+                AUDIO_FORMAT,
+                minBufferSize * 2
         );
     }
+
     public void startRecording() {
         if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) {
             throw new IllegalStateException("AudioRecord not initialized");
         }
         audioRecord.startRecording();
-		isRecording = true;
+        isRecording = true;
         executorService.execute(new SpectrumProcessor());
     }
 
@@ -77,7 +83,7 @@ public class AudioRecorder{
             audioRecord.stop();
             audioRecord.release();
             audioRecord = null;
-            isRecording= false;
+            isRecording = false;
         }
         executorService.shutdown();
     }
@@ -96,20 +102,20 @@ public class AudioRecorder{
 
                 // 将short数组转为复数数组（实部为左声道+右声道/2，虚部为0）
                 for (int i = 0; i < audioData.length; i++) {
-                    fftBuffer[2*i] = (byte) audioData[i]; // 实部
-                    fftBuffer[2*i + 1] = 0;             // 虚部
+                    fftBuffer[2 * i] = (byte) audioData[i]; // 实部
+                    fftBuffer[2 * i + 1] = 0;             // 虚部
                 }
 
                 // 执行FFT（需自己实现或使用库）
-                FFT fft = new FFT(BUFFER_SIZE*2);
+                FFT fft = new FFT(BUFFER_SIZE * 2);
                 fft.forward(fftBuffer);
 
                 // 提取频谱幅度（dB值）
                 double[] magnitudes = new double[BUFFER_SIZE / 2];
                 for (int i = 0; i < magnitudes.length; i++) {
-                    double real = fftBuffer[2*i];
-                    double imag = fftBuffer[2*i + 1];
-                    double magnitude = Math.sqrt(real*real + imag*imag);
+                    double real = fftBuffer[2 * i];
+                    double imag = fftBuffer[2 * i + 1];
+                    double magnitude = Math.sqrt(real * real + imag * imag);
                     magnitudes[i] = 20 * Math.log10(magnitude); // 转换为dB
                 }
 

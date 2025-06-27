@@ -2,90 +2,102 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-        <FrameLayout
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
+
+        <ImageView
+            android:id="@+id/hotset_bg"
             android:layout_width="match_parent"
-            android:layout_height="143dp"
-            android:layout_gravity="bottom"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/hotseat_bg" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="bottom">
+
+            <View
+                android:id="@+id/start_space"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
+
             <ImageView
-                android:id="@+id/hotset_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
+                android:id="@+id/hotset_video"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:scaleType="fitCenter"
-                android:src="@drawable/hotseat_bg" />
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:src="@drawable/hotset_video" />
+
+            <ImageView
+                android:id="@+id/hotset_navi"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hotset_navi" />
+
+            <ImageView
+                android:id="@+id/hotset_allapp"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hotset_all_app" />
+
+            <ImageView
+                android:id="@+id/hotset_setting"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hotset_setting" />
+
+            <ImageView
+                android:id="@+id/hotset_bluetooth"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hotset_bt" />
+
+            <ImageView
+                android:id="@+id/hotset_moshi"
+                android:layout_width="56dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hotset_moshi"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/end_space"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="bottom">
-                <View
-                    android:id="@+id/start_space"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
-                <ImageView
-                    android:id="@+id/hotset_video"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_video" />
-                <ImageView
-                    android:id="@+id/hotset_navi"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_navi" />
-                <ImageView
-                    android:id="@+id/hotset_allapp"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_all_app" />
-                <ImageView
-                    android:id="@+id/hotset_setting"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_setting" />
-                <ImageView
-                    android:id="@+id/hotset_bluetooth"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_bt"/>
-                <ImageView
-                    android:id="@+id/hotset_moshi"
-                    android:layout_width="56dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/hotset_moshi"
-                    android:visibility="gone"/>
-                <View
-                    android:id="@+id/end_space"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
+                android:layout_weight="2" />
 
 
-                <ImageView
-                    android:id="@+id/hotset_dianhua"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:src="@drawable/hotset_dianhua"
-                    android:visibility="gone"/>
-                <include
-                    layout="@layout/speed_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="5"
-                    android:visibility="gone"/>
-            </LinearLayout>
-        </FrameLayout>
+            <ImageView
+                android:id="@+id/hotset_dianhua"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:src="@drawable/hotset_dianhua"
+                android:visibility="gone" />
+
+            <include
+                layout="@layout/speed_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:visibility="gone" />
+        </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

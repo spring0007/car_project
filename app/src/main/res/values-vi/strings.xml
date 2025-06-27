@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -17,8 +16,7 @@
 */
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="application_name" msgid="8424725141379931883">"Trình khởi chạy"</string>
     <string name="home" msgid="5921706419368316758">"Trang chủ"</string>
     <string name="uid_name" msgid="3371120195364560632">"Ứng dụng Lõi Android"</string>
@@ -113,18 +111,18 @@
     <string name="custom_workspace_cling_description_2" msgid="2758258454975288377"></string>
 
 
-    <string name="main_allapp" >ứng dụng</string>
-    <string name="main_radio" >Đài</string>
-    <string name="main_navi" >dẫn đường</string>
-    <string name="main_music" >Âm nhạc</string>
-    <string name="main_setting" >thiết lập</string>
-    <string name="main_bt" >Bluetooth</string>
+    <string name="main_allapp">ứng dụng</string>
+    <string name="main_radio">Đài</string>
+    <string name="main_navi">dẫn đường</string>
+    <string name="main_music">Âm nhạc</string>
+    <string name="main_setting">thiết lập</string>
+    <string name="main_bt">Bluetooth</string>
 
-    <string name="widget_music_title" >Âm nhạc</string>
-    <string name="widget_radio_title" >Đài</string>
-    <string name="widget_kwplay_title" >Âm nhạc</string>
-    <string name="widget_bt_title" >Âm nhạc</string>
-    <string name="widget_music_name" >Tên bài hát</string>
+    <string name="widget_music_title">Âm nhạc</string>
+    <string name="widget_radio_title">Đài</string>
+    <string name="widget_kwplay_title">Âm nhạc</string>
+    <string name="widget_bt_title">Âm nhạc</string>
+    <string name="widget_music_name">Tên bài hát</string>
 
     <string name="main_music_tv">âm</string>
     <string name="main_navi_tv">Comment</string>

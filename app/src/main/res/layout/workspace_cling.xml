@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,28 +12,31 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<com.awell.launcher2.Cling
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.awell.launcher2.Cling xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     launcher:drawIdentifier="workspace_landscape"
     tools:ignore="MissingDefaultResource">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="40dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 style="@style/ClingTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/workspace_cling_title" />
+
             <TextView
                 style="@style/ClingText"
                 android:layout_width="match_parent"
@@ -42,6 +44,7 @@
                 android:text="@string/workspace_cling_move_item" />
         </LinearLayout>
     </FrameLayout>
+
     <TextView
         style="@style/ClingText"
         android:layout_width="180dp"
@@ -50,6 +53,7 @@
         android:layout_gravity="right|center_vertical"
         android:gravity="right"
         android:text="@string/workspace_cling_open_all_apps" />
+
     <Button
         style="@style/ClingButton"
         android:layout_width="wrap_content"

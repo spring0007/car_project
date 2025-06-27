@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -17,8 +16,7 @@
 */
 -->
 
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- General -->
     <skip />
     <!-- Application name -->
@@ -93,11 +91,11 @@ s -->
     <!-- Error message when user tries to drop an invalid item on the hotseat -->
     <string name="invalid_hotseat_item">This widget is too large for the hotseat.</string>
     <!-- Message displayed when a shortcut is created by an external application -->
-    <string name="shortcut_installed">Shortcut \"<xliff:g id="name" example="Browser">%s</xliff:g>\" created.</string>
+    <string name="shortcut_installed">Shortcut \"<xliff:g example="Browser" id="name">%s</xliff:g>\" created.</string>
     <!-- Message displayed when a shortcut is uninstalled by an external application -->
-    <string name="shortcut_uninstalled">Shortcut \"<xliff:g id="name" example="Browser">%s</xliff:g>\" was removed.</string>
+    <string name="shortcut_uninstalled">Shortcut \"<xliff:g example="Browser" id="name">%s</xliff:g>\" was removed.</string>
     <!-- Message displayed when an external application attemps to create a shortcut that already exists -->
-    <string name="shortcut_duplicate">Shortcut \"<xliff:g id="name" example="Browser">%s</xliff:g>\" already exists.</string>
+    <string name="shortcut_duplicate">Shortcut \"<xliff:g example="Browser" id="name">%s</xliff:g>\" already exists.</string>
 
     <!-- Title of dialog when user is selecting shortcut to add to homescreen -->
     <string name="title_select_shortcut">Choose shortcut</string>
@@ -197,7 +195,7 @@ s -->
         shortcuts in Home.</string>
 
     <!-- Widgets: -->
-    <skip />    
+    <skip />
 
     <!-- Text to show user in place of a gadget when we can't display it properly -->
     <string name="gadget_error_text">Problem loading widget</string>
@@ -251,7 +249,7 @@ s -->
 
     <!-- Folder accessibility -->
     <!-- The format string for when a folder is opened, speaks the dimensions -->
-    <string name="folder_opened">Folder opened, <xliff:g id="width" example="5">%1$d</xliff:g> by <xliff:g id="height" example="3">%2$d</xliff:g></string>
+    <string name="folder_opened">Folder opened, <xliff:g example="5" id="width">%1$d</xliff:g> by <xliff:g example="3" id="height">%2$d</xliff:g></string>
     <!-- Instruction that clicking outside will close folder -->
     <string name="folder_tap_to_close">Touch to close folder</string>
     <!-- Instruction that clicking outside will commit folder rename -->
@@ -259,9 +257,9 @@ s -->
     <!-- Indication that folder closed -->
     <string name="folder_closed">Folder closed</string>
     <!-- Folder renamed format -->
-    <string name="folder_renamed">Folder renamed to <xliff:g id="name" example="Games">%1$s</xliff:g></string>
+    <string name="folder_renamed">Folder renamed to <xliff:g example="Games" id="name">%1$s</xliff:g></string>
     <!-- Folder name format -->
-    <string name="folder_name_format">Folder: <xliff:g id="name" example="Games">%1$s</xliff:g></string>
+    <string name="folder_name_format">Folder: <xliff:g example="Games" id="name">%1$s</xliff:g></string>
 
     <!-- Strings used in device overlays -->
 
@@ -274,13 +272,9 @@ s -->
     <string name="custom_workspace_cling_title_2"></string>
     <!-- Dummy string [CHAR_LIMIT=60] -->
     <string name="custom_workspace_cling_description_2"></string>
-    
-    
 
-    
-    
-    
-    	<string name="brake_warntitle">Parking Brake Warning</string> 
+
+    <string name="brake_warntitle">Parking Brake Warning</string>
     <string name="moreapp">More App</string>
     <string name="cdwidgetready">Click to play</string>
     <string name="low_temp_tips">22~32℃</string>
@@ -292,17 +286,17 @@ s -->
     <string name="onlinemusic"> online music </string>
     <string name="onlineradio">FM radio</string>
     <string name="navi">Navigation </string>
-    <string name="super_cd">Super CD</string>  
-    <string name="temp_unit">℃</string> 
-    <string name="temp_fanwei">12-28℃</string> 
+    <string name="super_cd">Super CD</string>
+    <string name="temp_unit">℃</string>
+    <string name="temp_fanwei">12-28℃</string>
     <string name="weather_city">ShenZhen</string>
     <string name="city">City- -</string>
     <string name="listen_news">Online News</string>
     <string name="Please_access_router_sim_card">Please access router sim card</string>
-    
+
     <string name="click_play_music">Click To Play</string>
     <string name="music_artist">Artist</string>
-     <string name="navi_title">Navi</string>
+    <string name="navi_title">Navi</string>
     <string name="music_title">Music</string>
     <string name="radio_title">Radio</string>
     <string name="bt_title">BT</string>
@@ -312,10 +306,10 @@ s -->
     <string name="string_divider">:</string>
     <string name="string_singer">深圳</string>
     <string name="string_gang">/</string>
-    
-    <string name="weather_simple">cloudy</string>  
+
+    <string name="weather_simple">cloudy</string>
     <string name="uninstall_system_app">Can\'t uninstall system apps</string>
-        <string name="navi_xy">Navigation</string>
+    <string name="navi_xy">Navigation</string>
     <string name="music_xy">Music</string>
     <string name="bt_xy">Bluetooth</string>
     <string name="radio_xy">Radio</string>
@@ -324,8 +318,8 @@ s -->
     <string name="radio_AM">KHz</string>
     <string name="settings_xy">Setting</string>
     <string name="super_cd_xy">Super CD</string>
-     <string name="vido">vido</string>
-    
+    <string name="vido">vido</string>
+
 
     <string name="wind">Wind speed--</string>
     <string name="wind_one">Wind speed H</string>
@@ -335,42 +329,42 @@ s -->
     <string name="air_one">Air quality H</string>
     <string name="air_two">Air quality M</string>
     <string name="air_there">Air qualit L</string>
-    
-      <string name="zixun">Cloud information</string>
+
+    <string name="zixun">Cloud information</string>
     <string name="yule">cloud entainment</string>
     <string name="fuwu">Cloud Service</string>
     <string name="anquan">cloud security</string>
-    
-     <string name="tianqi">Weather</string>
+
+    <string name="tianqi">Weather</string>
     <string name="news">News</string>
     <string name="gushi">Stock market</string>
-    
-         <string name="kuwoyinyue">Koowomusic</string>
+
+    <string name="kuwoyinyue">Koowomusic</string>
     <string name="ximalaya">Himalaya</string>
     <string name="aiqiyi">QIY</string>
     <string name="shouyiji">Radio</string>
-    
-     <string name="jiyuan">SOS</string>
+
+    <string name="jiyuan">SOS</string>
     <string name="xiaoxi">BCMS</string>
     <string name="chexian">Suto insurance</string>
-    
-     <string name="chekuang">Vehicle condition</string>
+
+    <string name="chekuang">Vehicle condition</string>
     <string name="jiluyi"> Car DVR</string>
     <string name="baojing">Alarm</string>
 
-    <string name="main_allapp" >AllApp</string>
-    <string name="main_radio" >Radio</string>
-    <string name="main_navi" >Navi</string>
-    <string name="main_music" >Music</string>
-    <string name="main_setting" >Settings</string>
-    <string name="main_bt" >Bluetooth</string>
+    <string name="main_allapp">AllApp</string>
+    <string name="main_radio">Radio</string>
+    <string name="main_navi">Navi</string>
+    <string name="main_music">Music</string>
+    <string name="main_setting">Settings</string>
+    <string name="main_bt">Bluetooth</string>
 
 
-    <string name="widget_music_title" >Music</string>
-    <string name="widget_radio_title" >Radio</string>
-    <string name="widget_kwplay_title" >KwPlay</string>
-    <string name="widget_bt_title" >Bt Music</string>
-    <string name="widget_music_name" >Song Name</string>
+    <string name="widget_music_title">Music</string>
+    <string name="widget_radio_title">Radio</string>
+    <string name="widget_kwplay_title">KwPlay</string>
+    <string name="widget_bt_title">Bt Music</string>
+    <string name="widget_music_name">Song Name</string>
     <string name="main_music_tv">Music</string>
     <string name="main_navi_tv">Navi</string>
     <string name="main_Radio_tv">Radio</string>

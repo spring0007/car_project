@@ -8,7 +8,7 @@ import android.widget.SeekBar;
 
 public class VerticalSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
 
-	public VerticalSeekBar(Context context) {
+    public VerticalSeekBar(Context context) {
         super(context);
     }
 
@@ -31,10 +31,10 @@ public class VerticalSeekBar extends androidx.appcompat.widget.AppCompatSeekBar 
     }
 
     protected void onDraw(Canvas c) {
-    	//��SeekBarתת90��
+        //��SeekBarתת90��
         c.rotate(-90);
         //����ת�����ͼ�ƶ�����
-        c.translate(-getHeight(),0);
+        c.translate(-getHeight(), 0);
         super.onDraw(c);
     }
 
@@ -48,10 +48,10 @@ public class VerticalSeekBar extends androidx.appcompat.widget.AppCompatSeekBar 
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_UP:
-            	int i=0;
-            	//��ȡ�����ľ���
-            	i=getMax() - (int) (getMax() * event.getY() / getHeight());
-            	//���ý���
+                int i = 0;
+                //��ȡ�����ľ���
+                i = getMax() - (int) (getMax() * event.getY() / getHeight());
+                //���ý���
                 setProgress(i);
                 //ÿ���϶�SeekBar�������
                 onSizeChanged(getWidth(), getHeight(), 0, 0);
@@ -62,6 +62,6 @@ public class VerticalSeekBar extends androidx.appcompat.widget.AppCompatSeekBar 
         }
         return true;
     }
-	
+
 
 }

@@ -44,7 +44,7 @@ public class FrequencyTextView extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(!implement) return;
+        if (!implement) return;
         implement = false;
 
         int[] i;
@@ -53,7 +53,7 @@ public class FrequencyTextView extends TextView {
         }else {
             i = new int[]{0xFFff8c00, 0xFF1277BE};
         }*/
-        i = new int[]{0x99775ee6,0xaaffffff, 0x99c9beff};
+        i = new int[]{0x99775ee6, 0xaaffffff, 0x99c9beff};
         mLinearGradient = new LinearGradient(0, 0, getMeasuredWidth(), getMeasuredHeight(),
                 i, null, Shader.TileMode.REPEAT);
         Paint mPaint = getPaint();

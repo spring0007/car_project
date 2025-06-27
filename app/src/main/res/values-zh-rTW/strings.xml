@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -17,8 +16,7 @@
 */
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="application_name" msgid="8424725141379931883">"啟動器"</string>
     <string name="home" msgid="5921706419368316758">"住家"</string>
     <string name="uid_name" msgid="3371120195364560632">"Android 核心應用程式"</string>
@@ -123,7 +121,7 @@
     <string name="air_one">空氣質量優</string>
     <string name="air_two">空氣質量好</string>
     <string name="air_there">空氣質量差</string>
-<!--    <string name="air_null">未連接</string>-->
+    <!--    <string name="air_null">未連接</string>-->
     <string name="weather_simple">多雲</string>
     <string name="click_play_music">請選擇音樂</string>
     <string name="navi_title">導航</string>
@@ -162,16 +160,16 @@
     <string name="jiluyi">記錄儀</string>
     <string name="baojing">報警</string>
 
-    <string name="main_allapp" >應用</string>
-    <string name="main_radio" >收音機</string>
-    <string name="main_navi" >導航</string>
-    <string name="main_music" >音樂</string>
-    <string name="main_setting" >設置</string>
-    <string name="main_bt" >藍牙</string>
+    <string name="main_allapp">應用</string>
+    <string name="main_radio">收音機</string>
+    <string name="main_navi">導航</string>
+    <string name="main_music">音樂</string>
+    <string name="main_setting">設置</string>
+    <string name="main_bt">藍牙</string>
 
-    <string name="widget_music_title" >音樂</string>
-    <string name="widget_radio_title" >收音機</string>
-    <string name="widget_kwplay_title" >酷我音樂</string>
-    <string name="widget_bt_title" >藍牙音樂</string>
-    <string name="widget_music_name" >歌曲名</string>
+    <string name="widget_music_title">音樂</string>
+    <string name="widget_radio_title">收音機</string>
+    <string name="widget_kwplay_title">酷我音樂</string>
+    <string name="widget_bt_title">藍牙音樂</string>
+    <string name="widget_music_name">歌曲名</string>
 </resources>

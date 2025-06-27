@@ -14,5 +14,5 @@
         android:layout_height="400dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 </LinearLayout>

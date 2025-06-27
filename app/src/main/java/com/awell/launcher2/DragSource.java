@@ -22,7 +22,6 @@ import com.awell.launcher2.DropTarget.DragObject;
 
 /**
  * Interface defining an object that can originate a drag.
- *
  */
 public interface DragSource {
     /**

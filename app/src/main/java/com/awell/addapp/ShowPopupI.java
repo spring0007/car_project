@@ -5,5 +5,6 @@ package com.awell.addapp;
  */
 public interface ShowPopupI {
     void showPopup();
+
     void hidePopup();
 }

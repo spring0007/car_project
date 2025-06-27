@@ -25,14 +25,14 @@ public class CustomRelativeLayout extends RelativeLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         super.dispatchTouchEvent(ev);
-        if(ev.getAction() == MotionEvent.ACTION_DOWN){
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             setAlpha(0.4f);
             return true;
         }
-        if(ev.getAction() == MotionEvent.ACTION_UP){
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
             setAlpha(1f);
         }
-        if(ev.getAction() == MotionEvent.ACTION_CANCEL){
+        if (ev.getAction() == MotionEvent.ACTION_CANCEL) {
             setAlpha(1f);
         }
         return false;

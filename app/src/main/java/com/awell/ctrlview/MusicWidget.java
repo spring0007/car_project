@@ -156,7 +156,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 setImageIcon(currentMedia);
             } else if (phoneMode.contains("auto")) {
                 //currentMedia = CARPLAY;
-                if(icon_music_img!=null) {
+                if (icon_music_img != null) {
                     icon_music_img.setImageResource(R.drawable.icon_autoplay_img);
                 }
             }
@@ -197,55 +197,56 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                     setMusicNameTextView((String) msg.obj, CARPLAY);
                     break;
                 case SocketThread.MESSAGE_RECEIVE_TIME:
-                    setMusicSeekBar((int) msg.obj, mCarPlayTotalTime,OTHER_MUSIC);
+                    setMusicSeekBar((int) msg.obj, mCarPlayTotalTime, OTHER_MUSIC);
                     break;
                 default:
                     break;
             }
         }
     };
-/*
-    private void getKwMusicApi() {
-        kwapi = KWAPI.getKWAPI();
-        boolean kwFlag = kwapi.bindAutoSdkService(mContext);
-        Log.e(TAG, "kwFlag = " + kwFlag);
-        kwapi.registerPlayerStatusListener(mContext, (playerStatus, music) -> {
-            if (music == null) return;
-            Log.e(TAG, "image URL = " + music.imageURL);
 
-            Log.e(TAG, "playerStatus = " + playerStatus.name());
-            if (playerStatus.equals(PlayerStatus.PLAYING)) {
-                setCurMusicState(true, KUMUSIC);
-                if (mMusicNameTextView != null && music.name != null)
-                    setMusicNameTextView(music.name, KUMUSIC);
+    /*
+        private void getKwMusicApi() {
+            kwapi = KWAPI.getKWAPI();
+            boolean kwFlag = kwapi.bindAutoSdkService(mContext);
+            Log.e(TAG, "kwFlag = " + kwFlag);
+            kwapi.registerPlayerStatusListener(mContext, (playerStatus, music) -> {
+                if (music == null) return;
+                Log.e(TAG, "image URL = " + music.imageURL);
 
-                if (mArtistNameTextView != null && music.artist != null)
-                    setArtistNameTextView(music.artist, KUMUSIC);
-            } else if (playerStatus.equals(PlayerStatus.PAUSE)) {
-                setCurMusicState(false, KUMUSIC);
-            }
+                Log.e(TAG, "playerStatus = " + playerStatus.name());
+                if (playerStatus.equals(PlayerStatus.PLAYING)) {
+                    setCurMusicState(true, KUMUSIC);
+                    if (mMusicNameTextView != null && music.name != null)
+                        setMusicNameTextView(music.name, KUMUSIC);
 
-            kwapi.getSongPicUrl(music, new OnGetSongImgUrlListener() {
-                @Override
-                public void onGetSongImgUrlSucessed(Music music, String s) {
-                    Log.i(TAG, "music = " + music.toString());
-                    Log.i(TAG, "music = " + s);
-//                    setPlayImage(s);
+                    if (mArtistNameTextView != null && music.artist != null)
+                        setArtistNameTextView(music.artist, KUMUSIC);
+                } else if (playerStatus.equals(PlayerStatus.PAUSE)) {
+                    setCurMusicState(false, KUMUSIC);
                 }
 
-                @Override
-                public void onGetSongImgUrlFailed(Music music, int i) {
-                    Log.i(TAG, "music = " + music.toString());
-                    Log.i(TAG, "music = " + i);
-                }
+                kwapi.getSongPicUrl(music, new OnGetSongImgUrlListener() {
+                    @Override
+                    public void onGetSongImgUrlSucessed(Music music, String s) {
+                        Log.i(TAG, "music = " + music.toString());
+                        Log.i(TAG, "music = " + s);
+    //                    setPlayImage(s);
+                    }
+
+                    @Override
+                    public void onGetSongImgUrlFailed(Music music, int i) {
+                        Log.i(TAG, "music = " + music.toString());
+                        Log.i(TAG, "music = " + i);
+                    }
+                });
             });
-        });
-        //监听酷我退出
-        kwapi.registerExitListener(() -> {
+            //监听酷我退出
+            kwapi.registerExitListener(() -> {
 
-        });
-    }
-*/
+            });
+        }
+    */
     public Bitmap drawCircleView(Bitmap bitmap) {
         bitmap = Bitmap.createScaledBitmap(bitmap, 118, 118, true);
         Bitmap bm = Bitmap.createBitmap(180, 186, Config.ARGB_8888);
@@ -293,7 +294,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 } else if (currentMedia == CARPLAY) {
                     //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
                     Launcher.mMediaListener.skipToNext();
-                } else if (currentMedia == OTHER_MUSIC){
+                } else if (currentMedia == OTHER_MUSIC) {
                     Launcher.mMediaListener.skipToNext();
                 }
                 break;
@@ -308,7 +309,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 } else if (currentMedia == CARPLAY) {
                     //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
                     Launcher.mMediaListener.skipToPrevious();
-                } else if (currentMedia == OTHER_MUSIC){
+                } else if (currentMedia == OTHER_MUSIC) {
                     Launcher.mMediaListener.skipToPrevious();
                 }
                 break;
@@ -317,7 +318,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                     //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
                     if (musicState) {
                         Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
-                    }else {
+                    } else {
                         Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
                     }
                 } else if (currentMedia == BT) {
@@ -334,7 +335,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 } else if (currentMedia == CARPLAY) {
                     //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
                     Launcher.mMediaListener.togglePlayPause();
-                } else if (currentMedia == OTHER_MUSIC){
+                } else if (currentMedia == OTHER_MUSIC) {
                     Launcher.mMediaListener.togglePlayPause();
                 }
                 break;
@@ -357,7 +358,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                     startActivity("cn.kuwo.kwmusiccar", "cn.kuwo.kwmusiccar.MainActivity");
                 } else if (currentMedia == CARPLAY) {
                     startActivity("com.zjinnova.zlink", "com.zjinnova.android.zlink.features.main.MainActivity");*/
-                } else if(currentMedia == OTHER_MUSIC&&!TextUtils.isEmpty(currentPlayingPackage)){
+                } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
                     launchAppByPackageName(mContext, currentPlayingPackage);
                 }
                 break;
@@ -367,23 +368,23 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void stopLoadAnim() {
-        if(ivLoadnim_bar!=null) {
+        if (ivLoadnim_bar != null) {
             ivLoadnim_bar.setPivotX(0);
             ivLoadnim_bar.setPivotY(0);
             ivLoadnim_bar.setRotation(-10);
         }
-        if(objectAnimator!=null) {
+        if (objectAnimator != null) {
             objectAnimator.cancel();
         }
     }
 
     public void startLoadAnim() {
-        if(ivLoadnim_bar!=null) {
+        if (ivLoadnim_bar != null) {
             ivLoadnim_bar.setPivotX(0);
             ivLoadnim_bar.setPivotY(0);
             ivLoadnim_bar.setRotation(0);
         }
-        if(objectAnimator!=null) {
+        if (objectAnimator != null) {
             objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
             objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
             objectAnimator.setStartDelay(1000);
@@ -415,22 +416,22 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        Log.d(TAG,"setMusicNameTextView = " + flag+"--musicname="+musicname+"--mMusicNameTextView="+mMusicNameTextView+"--currentMedia="+currentMedia);
+        Log.d(TAG, "setMusicNameTextView = " + flag + "--musicname=" + musicname + "--mMusicNameTextView=" + mMusicNameTextView + "--currentMedia=" + currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
-            if(!TextUtils.isEmpty(musicname)){
+            if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
-            }else{
+            } else {
                 mMusicNameTextView.setText(getResources().getString(R.string.click_play_music));
             }
         }
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        Log.d(TAG, "setArtistNameTextView = " + flag+"--artistName="+artistName+"--mArtistNameTextView="+mArtistNameTextView);
-        if (mArtistNameTextView != null && currentMedia == flag){
-            if(!TextUtils.isEmpty(artistName)){
+        Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
+        if (mArtistNameTextView != null && currentMedia == flag) {
+            if (!TextUtils.isEmpty(artistName)) {
                 mArtistNameTextView.setText(artistName);
-            }else{
+            } else {
                 mArtistNameTextView.setText(getResources().getString(R.string.music_artist));
             }
         }
@@ -456,7 +457,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
-        if(currentMedia == flag) {
+        if (currentMedia == flag) {
             if (bar != null) {
                 bar.setMax(totalProgress);
                 bar.setProgress(curProgress);
@@ -490,7 +491,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setCurMusicState(boolean musicState, int flag) {
-        Log.e(TAG, "flag = " + flag+"--currentMedia="+currentMedia);
+        Log.e(TAG, "flag = " + flag + "--currentMedia=" + currentMedia);
         if (currentMedia == flag) {
             setCurMusicState(musicState);
         }
@@ -521,15 +522,15 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         //if (/*index == BT || */index == KUMUSIC) {
         //    ll_time_layout_music.setVisibility(INVISIBLE);
         //} else {
-            ll_time_layout_music.setVisibility(VISIBLE);
+        ll_time_layout_music.setVisibility(VISIBLE);
         //}
 
         //if (index == CARPLAY) {
         //    ll_control_layout_music.setVisibility(INVISIBLE);
         //    ll_name_layout_music.setVisibility(INVISIBLE);
         //} else {
-            ll_control_layout_music.setVisibility(VISIBLE);
-            ll_name_layout_music.setVisibility(VISIBLE);
+        ll_control_layout_music.setVisibility(VISIBLE);
+        ll_name_layout_music.setVisibility(VISIBLE);
         //}
 
 
@@ -546,16 +547,16 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         if (packName.contains("localmusic")) {//本地音乐
             if ("start".equals(status)) {
                 currentMedia = MUSIC;
-                currentPlayingPackage=packName;
+                currentPlayingPackage = packName;
                 setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
 
             }
-        } else if (packName.contains("com.awell.bluetooth")||packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
+        } else if (packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
-                currentPlayingPackage=packName;
+                currentPlayingPackage = packName;
                 setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
@@ -579,10 +580,10 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             } else if ("stop".equals(status)) {
 
             }*/
-        } else if (!TextUtils.isEmpty(packName)&&curMedia>BT) {
+        } else if (!TextUtils.isEmpty(packName) && curMedia > BT) {
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-                currentPlayingPackage=packName;
+                currentPlayingPackage = packName;
                 setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
@@ -677,7 +678,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 //        return drawableToBitmap(context.getResources().getDrawable(R.mipmap.ablum_default_bg));
         return null;
     }
-    private void keyDealToZlink(int keycode){
+
+    private void keyDealToZlink(int keycode) {
         Intent intent = new Intent();
         intent.setAction("com.zjinnova.zlink");
         intent.setPackage("com.zjinnova.zlink");
@@ -686,6 +688,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         intent.putExtra("specFuncCode", keycode);
         mContext.sendBroadcast(intent);
     }
+
     public static boolean launchAppByPackageName(Context context, String packageName) {
         PackageManager pm = context.getPackageManager();
         // 检查应用是否安装
@@ -707,6 +710,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             return false;
         }
     }
+
     public static boolean isMusicApp(Context context, String packageName) {
         // 检查是否响应音频文件播放
         PackageManager pm = context.getPackageManager();

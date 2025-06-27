@@ -80,7 +80,7 @@ public class UninstallShortcutReceiver extends BroadcastReceiver {
     }
 
     private static void processUninstallShortcut(Context context,
-            PendingUninstallShortcutInfo pendingInfo) {
+                                                 PendingUninstallShortcutInfo pendingInfo) {
         String spKey = LauncherApplication.getSharedPreferencesKey();
         SharedPreferences sharedPrefs = context.getSharedPreferences(spKey, Context.MODE_PRIVATE);
 
@@ -93,7 +93,7 @@ public class UninstallShortcutReceiver extends BroadcastReceiver {
     }
 
     private static void removeShortcut(Context context, Intent data,
-            final SharedPreferences sharedPrefs) {
+                                       final SharedPreferences sharedPrefs) {
         Intent intent = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
         String name = data.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
         boolean duplicate = data.getBooleanExtra(Launcher.EXTRA_SHORTCUT_DUPLICATE, true);
@@ -101,8 +101,8 @@ public class UninstallShortcutReceiver extends BroadcastReceiver {
         if (intent != null && name != null) {
             final ContentResolver cr = context.getContentResolver();
             Cursor c = cr.query(LauncherSettings.Favorites.CONTENT_URI,
-                new String[] { LauncherSettings.Favorites._ID, LauncherSettings.Favorites.INTENT },
-                LauncherSettings.Favorites.TITLE + "=?", new String[] { name }, null);
+                    new String[]{LauncherSettings.Favorites._ID, LauncherSettings.Favorites.INTENT},
+                    LauncherSettings.Favorites.TITLE + "=?", new String[]{name}, null);
 
             final int intentIndex = c.getColumnIndexOrThrow(LauncherSettings.Favorites.INTENT);
             final int idIndex = c.getColumnIndexOrThrow(LauncherSettings.Favorites._ID);

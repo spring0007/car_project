@@ -13,12 +13,13 @@ public class MyDbHelper extends SQLiteOpenHelper {
             "packagename text)";
     private String sqlContact2 = "create table showapp2(_id integer primary key autoincrement," +
             "packagename text)";
-   /* private String sqlCallHistory =  "create table callhistory(_id integer primary key autoincrement," +
-            "name text,number text,type integer)";
-*/
+
+    /* private String sqlCallHistory =  "create table callhistory(_id integer primary key autoincrement," +
+             "name text,number text,type integer)";
+ */
     public MyDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
-        Log.d("MyDbHelper","public MyDbHelper(");
+        Log.d("MyDbHelper", "public MyDbHelper(");
 
     }
 
@@ -26,13 +27,13 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(sqlContact);
         db.execSQL(sqlContact2);
-        Log.d("MyDbHelper","onCreate");
+        Log.d("MyDbHelper", "onCreate");
 //        db.execSQL(sqlCallHistory);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d("MyDbHelper","onUpgrade");
+        Log.d("MyDbHelper", "onUpgrade");
 //        db.execSQL("drop table if exists showapp");
 //        db.execSQL("drop table if exists Category");
 //        onCreate(db);

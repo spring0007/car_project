@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <!--  <item android:drawable="@drawable/cd_d" android:state_focused="true" android:state_pressed="false"/>
-    <item android:drawable="@drawable/cd_d" android:state_focused="false" android:state_pressed="true"/>
-    <item android:drawable="@drawable/super_cd_xy"/>
- -->
+    <!--  <item android:drawable="@drawable/cd_d" android:state_focused="true" android:state_pressed="false"/>
+     <item android:drawable="@drawable/cd_d" android:state_focused="false" android:state_pressed="true"/>
+     <item android:drawable="@drawable/super_cd_xy"/>
+  -->
 </selector>

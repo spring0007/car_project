@@ -49,9 +49,9 @@ public class HolographicViewHelper {
             FastBitmapDrawable outlineD = new FastBitmapDrawable(outline);
 
             StateListDrawable states = new StateListDrawable();
-            states.addState(new int[] {android.R.attr.state_pressed}, outlineD);
-            states.addState(new int[] {android.R.attr.state_focused}, outlineD);
-            states.addState(new int[] {}, originalD);
+            states.addState(new int[]{android.R.attr.state_pressed}, outlineD);
+            states.addState(new int[]{android.R.attr.state_focused}, outlineD);
+            states.addState(new int[]{}, originalD);
             v.setImageDrawable(states);
         }
     }
@@ -76,7 +76,7 @@ public class HolographicViewHelper {
 
         canvas.setBitmap(b);
         canvas.save();
-            d.draw(canvas);
+        d.draw(canvas);
         canvas.restore();
         canvas.setBitmap(null);
 
@@ -94,7 +94,7 @@ public class HolographicViewHelper {
 
         canvas.setBitmap(b);
         canvas.save();
-            d.draw(canvas);
+        d.draw(canvas);
         canvas.restore();
         canvas.drawColor(mHighlightColor, PorterDuff.Mode.SRC_IN);
         canvas.setBitmap(null);

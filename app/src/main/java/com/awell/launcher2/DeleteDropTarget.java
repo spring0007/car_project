@@ -61,14 +61,14 @@ public class DeleteDropTarget extends ButtonDropTarget {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        
+
         // Get the drawable
         mOriginalTextColor = getTextColors();
 
         // Get the hover color
         Resources r = getResources();
         mHoverColor = r.getColor(R.color.delete_target_hover_tint);
-        mUninstallDrawable = (TransitionDrawable) 
+        mUninstallDrawable = (TransitionDrawable)
                 r.getDrawable(R.drawable.uninstall_target_selector);
         mRemoveDrawable = (TransitionDrawable) r.getDrawable(R.drawable.remove_target_selector);
 
@@ -91,17 +91,17 @@ public class DeleteDropTarget extends ButtonDropTarget {
     private boolean isAllAppsApplication(DragSource source, Object info) {
         return (source instanceof AppsCustomizePagedView) && (info instanceof ApplicationInfo);
     }
+
     // add by jxy p判断是否是widget的icon
-    private boolean isAPPWidget(Object info)
-  	{
-      	return (info instanceof LauncherAppWidgetInfo);
-  	}
+    private boolean isAPPWidget(Object info) {
+        return (info instanceof LauncherAppWidgetInfo);
+    }
+
     // add by jxy p判断是否是workspace的icon
-	private boolean isShortcut(Object info)
-	{
-    	 return (info instanceof ShortcutInfo);
-	}
-	
+    private boolean isShortcut(Object info) {
+        return (info instanceof ShortcutInfo);
+    }
+
     private boolean isAllAppsWidget(DragSource source, Object info) {
         if (source instanceof AppsCustomizePagedView) {
             if (info instanceof PendingAddItemInfo) {
@@ -115,15 +115,19 @@ public class DeleteDropTarget extends ButtonDropTarget {
         }
         return false;
     }
+
     private boolean isDragSourceWorkspaceOrFolder(DragObject d) {
         return (d.dragSource instanceof Workspace) || (d.dragSource instanceof Folder);
     }
+
     private boolean isWorkspaceOrFolderApplication(DragObject d) {
         return isDragSourceWorkspaceOrFolder(d) && (d.dragInfo instanceof ShortcutInfo);
     }
+
     private boolean isWorkspaceOrFolderWidget(DragObject d) {
         return isDragSourceWorkspaceOrFolder(d) && (d.dragInfo instanceof LauncherAppWidgetInfo);
     }
+
     private boolean isWorkspaceFolder(DragObject d) {
         return (d.dragSource instanceof Workspace) && (d.dragInfo instanceof FolderInfo);
     }
@@ -132,6 +136,7 @@ public class DeleteDropTarget extends ButtonDropTarget {
         mCurrentDrawable.startTransition(mTransitionDuration);
         setTextColor(mHoverColor);
     }
+
     private void resetHoverColor() {
         mCurrentDrawable.resetTransition();
         setTextColor(mOriginalTextColor);
@@ -152,49 +157,39 @@ public class DeleteDropTarget extends ButtonDropTarget {
         if (isAllAppsWidget(source, info)) {
             isVisible = false;
         }
-        
+
         //add by jxy 长按图标不显示移除图标
-        if(isShortcut(info))
-        {
-        	ShortcutInfo appInfo = (ShortcutInfo) info;
-			String packageName=appInfo.getPackageName();
-				for (int i = 0; i < IconCache.SettingsPackageName.length; i++)	
-				{						
-					if (packageName.equals(IconCache.SettingsPackageName[i]))
-					{
-						mSearchDropTargetBar.setVisibility(View.GONE);
-						isVisible=false;
-						isDelete=false;
-					}
-				}
-			if(isDelete)
-			{
-	        	isVisible=true;
-	        	mSearchDropTargetBar.setVisibility(View.VISIBLE);
-			}
-        }
-        else if(isAPPWidget(info))
-        {
-        	LauncherAppWidgetInfo appWidgetInfo=(LauncherAppWidgetInfo)info;
-        	if(appWidgetInfo.id==1||appWidgetInfo.id==2)
-        	{
-        		isDelete=false;
-        		isVisible=false;
-        		mSearchDropTargetBar.setVisibility(View.GONE);
-        	}
-        	if(isDelete)
-			{
-	        	isVisible=true;
-	        	mSearchDropTargetBar.setVisibility(View.VISIBLE);
-			}
-        }
-        else
-        {
-        	isVisible=true;
-        	mSearchDropTargetBar.setVisibility(View.VISIBLE);
+        if (isShortcut(info)) {
+            ShortcutInfo appInfo = (ShortcutInfo) info;
+            String packageName = appInfo.getPackageName();
+            for (int i = 0; i < IconCache.SettingsPackageName.length; i++) {
+                if (packageName.equals(IconCache.SettingsPackageName[i])) {
+                    mSearchDropTargetBar.setVisibility(View.GONE);
+                    isVisible = false;
+                    isDelete = false;
+                }
+            }
+            if (isDelete) {
+                isVisible = true;
+                mSearchDropTargetBar.setVisibility(View.VISIBLE);
+            }
+        } else if (isAPPWidget(info)) {
+            LauncherAppWidgetInfo appWidgetInfo = (LauncherAppWidgetInfo) info;
+            if (appWidgetInfo.id == 1 || appWidgetInfo.id == 2) {
+                isDelete = false;
+                isVisible = false;
+                mSearchDropTargetBar.setVisibility(View.GONE);
+            }
+            if (isDelete) {
+                isVisible = true;
+                mSearchDropTargetBar.setVisibility(View.VISIBLE);
+            }
+        } else {
+            isVisible = true;
+            mSearchDropTargetBar.setVisibility(View.VISIBLE);
         }
         //end
-        
+
         // If we are dragging an application from AppsCustomize, only show the control if we can
         // delete the app (it was downloaded), and rename the string to "uninstall" in such a case
         if (isAllAppsApplication(source, info)) {
@@ -218,7 +213,7 @@ public class DeleteDropTarget extends ButtonDropTarget {
         ((ViewGroup) getParent()).setVisibility(isVisible ? View.VISIBLE : View.GONE);
         if (getText().length() > 0) {
             setText(isUninstall ? R.string.delete_target_uninstall_label
-                : R.string.delete_target_label);
+                    : R.string.delete_target_label);
         }
     }
 
@@ -309,7 +304,7 @@ public class DeleteDropTarget extends ButtonDropTarget {
      * Creates an animation from the current drag view to the delete trash icon.
      */
     private AnimatorUpdateListener createFlingToTrashAnimatorListener(final DragLayer dragLayer,
-            DragObject d, PointF vel, ViewConfiguration config) {
+                                                                      DragObject d, PointF vel, ViewConfiguration config) {
         final Rect to = getIconRect(d.dragView.getMeasuredWidth(), d.dragView.getMeasuredHeight(),
                 mCurrentDrawable.getIntrinsicWidth(), mCurrentDrawable.getIntrinsicHeight());
         final Rect from = new Rect();
@@ -375,7 +370,7 @@ public class DeleteDropTarget extends ButtonDropTarget {
         private final TimeInterpolator mAlphaInterpolator = new DecelerateInterpolator(0.75f);
 
         public FlingAlongVectorAnimatorUpdateListener(DragLayer dragLayer, PointF vel, Rect from,
-                long startTime, float friction) {
+                                                      long startTime, float friction) {
             mDragLayer = dragLayer;
             mVelocity = vel;
             mFrom = from;
@@ -410,10 +405,13 @@ public class DeleteDropTarget extends ButtonDropTarget {
             mVelocity.y *= mFriction;
             mPrevTime = curTime;
         }
-    };
+    }
+
+    ;
+
     private AnimatorUpdateListener createFlingAlongVectorAnimatorListener(final DragLayer dragLayer,
-            DragObject d, PointF vel, final long startTime, final int duration,
-            ViewConfiguration config) {
+                                                                          DragObject d, PointF vel, final long startTime, final int duration,
+                                                                          ViewConfiguration config) {
         final Rect from = new Rect();
         dragLayer.getViewRectRelativeToSelf(d.dragView, from);
 

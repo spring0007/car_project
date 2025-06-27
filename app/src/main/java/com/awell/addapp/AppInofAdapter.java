@@ -18,11 +18,12 @@ import com.awell.launcher.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHolder>{
+public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHolder> {
 
     private Context mContext;
 
     private List<AppInfo> contentList = new ArrayList<>();
+
     public void setContentList(List<AppInfo> contentList) {
         this.contentList.clear();
         this.contentList.addAll(contentList);
@@ -32,7 +33,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
     private ShowPopupI showPopupI;
     private AddSelectAppCallback addSelectAppCallback;
 
-    public AppInofAdapter(Context context, List<AppInfo> contentList, ShowPopupI showPopupI, AddSelectAppCallback addSelectAppCallback){
+    public AppInofAdapter(Context context, List<AppInfo> contentList, ShowPopupI showPopupI, AddSelectAppCallback addSelectAppCallback) {
         this.contentList.addAll(contentList);
         this.mContext = context;
         this.showPopupI = showPopupI;
@@ -42,7 +43,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
@@ -51,7 +52,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AppInfo appInfo = contentList.get(position);
-        if(appInfo==null) return;
+        if (appInfo == null) return;
         holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
         holder.tv_app_name.setText(appInfo.getLabel());
         holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
@@ -63,13 +64,13 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
             return true;
         });
 
-        holder.iv_app_layout.setOnClickListener(vie ->{
+        holder.iv_app_layout.setOnClickListener(vie -> {
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
             mContext.startActivity(intent);
         });
 
-        if (position == contentList.size() - 1){
-            holder.iv_app_layout.setOnClickListener(vie ->{
+        if (position == contentList.size() - 1) {
+            holder.iv_app_layout.setOnClickListener(vie -> {
                 showPopupI.showPopup();
             });
 
@@ -88,11 +89,11 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         return contentList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private RelativeLayout iv_app_layout;
         private LinearLayout ll_item;
-        private ImageView iv_app_icon,iv_app_icon_bg;
+        private ImageView iv_app_icon, iv_app_icon_bg;
         private TextView tv_app_name;
 //        private ImageView iv_app_icon_bg;
 

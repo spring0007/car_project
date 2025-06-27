@@ -18,7 +18,6 @@ package com.awell.launcher2;
 
 /**
  * M: Screen scroll effect.
- *
  */
 public interface ScreenEffect {
     boolean isSupportCycleSlidingScreen();

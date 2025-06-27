@@ -38,7 +38,7 @@ public class MyQAnalogClock extends View {
     BitmapDrawable bmdHourNight;
     BitmapDrawable bmdMinute;
     BitmapDrawable bmdMinuteNight;
-//    BitmapDrawable bmdSecond;
+    //    BitmapDrawable bmdSecond;
     BitmapDrawable bmdDial;
 
     Paint mPaint;
@@ -72,7 +72,7 @@ public class MyQAnalogClock extends View {
 
     public void MyQAnalogClock1(Context context, String sTime_Zone) {
         value = Settings.System.getInt(context.getContentResolver(), "launcherTypeDN", 0);
-        Log.i("MyQAnalogClock","value=="+value);
+        Log.i("MyQAnalogClock", "value==" + value);
         sTimeZoneString = sTime_Zone;
 
 //        mBmpHour = BitmapFactory.decodeResource(getResources(),
@@ -131,7 +131,7 @@ public class MyQAnalogClock extends View {
         tickHandler.post(tickRunnable);
     }
 
-    public void setValue(int value){
+    public void setValue(int value) {
         this.value = value;
         invalidate();
     }
@@ -152,7 +152,7 @@ public class MyQAnalogClock extends View {
         mHeigh = MeasureSpec.getSize(heightMeasureSpec);
         if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
             //默认大小 200*200
-           // setMeasuredDimension(100, 100);
+            // setMeasuredDimension(100, 100);
             setMeasuredDimension(280, 280);
         } else if (widthSpecMode == MeasureSpec.AT_MOST) {
             setMeasuredDimension(mHeigh, mHeigh);
@@ -179,17 +179,17 @@ public class MyQAnalogClock extends View {
         float minuteRotate = minute * 6.0f;
         float secondRotate = second * 6.0f;
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        PaintFlagsDrawFilter  pfd= new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG|Paint.FILTER_BITMAP_FLAG);
+        PaintFlagsDrawFilter pfd = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         canvas.setDrawFilter(pfd);
-        int diameter = Math.min(getWidth(),getHeight());
-        int radiuos = diameter/2;
+        int diameter = Math.min(getWidth(), getHeight());
+        int radiuos = diameter / 2;
 //        bmdDial.setBounds(0,
 //                0,
 //                diameter,
 //                diameter);
 //        bmdDial.draw(canvas);
 
-        if(value == 0){
+        if (value == 0) {
             canvas.save();
             canvas.rotate(hourRotate, radiuos, radiuos);
             bmdHour.setBounds(0
@@ -198,7 +198,7 @@ public class MyQAnalogClock extends View {
                     , diameter);
             bmdHour.draw(canvas);
             canvas.restore();
-        }else if(value == 1){
+        } else if (value == 1) {
             canvas.save();
             canvas.rotate(hourRotate, radiuos, radiuos);
             bmdHourNight.setBounds(0
@@ -209,7 +209,7 @@ public class MyQAnalogClock extends View {
             canvas.restore();
         }
 
-        if(value == 0){
+        if (value == 0) {
             canvas.save();
             canvas.rotate(minuteRotate, radiuos, radiuos);
             bmdMinute.setBounds(0
@@ -218,7 +218,7 @@ public class MyQAnalogClock extends View {
                     , diameter);
             bmdMinute.draw(canvas);
             canvas.restore();
-        }else if(value == 1){
+        } else if (value == 1) {
             canvas.save();
             canvas.rotate(minuteRotate, radiuos, radiuos);
             bmdMinuteNight.setBounds(0

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -17,10 +16,7 @@
 */
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="ExtraTranslation">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="application_name" msgid="8424725141379931883">"пускатель"</string>
     <string name="home" msgid="5921706419368316758">"Основной экран"</string>
     <string name="uid_name" msgid="3371120195364560632">"Android центральное применение"</string>
@@ -53,8 +49,8 @@
     <string name="title_select_shortcut" msgid="1873670208166882222">"выбрать комбинацию клавиш"</string>
     <string name="title_select_application" msgid="1793455815754848652">"Выбор приложения"</string>
     <string name="all_apps_button_label" msgid="2578400570124163469">"применение"</string>
-<!--    <string name="settings_button_label" msgid="2578400570124163469">"Настройки"</string>-->
-<!--    <string name="auto_navi_button_label" msgid="2578400570124163469">"навигация"</string>-->
+    <!--    <string name="settings_button_label" msgid="2578400570124163469">"Настройки"</string>-->
+    <!--    <string name="auto_navi_button_label" msgid="2578400570124163469">"навигация"</string>-->
     <string name="all_apps_home_button_label" msgid="1022222300329398558">"Основной экран"</string>
     <string name="delete_zone_label_workspace" msgid="7153615831493049150">"Удалить"</string>
     <string name="delete_zone_label_all_apps" msgid="6664588234817475108">"разгрузка"</string>
@@ -99,7 +95,7 @@
     <string name="workspace_cling_title" msgid="738396473989890567">"ваш главный экран"</string>
     <string name="workspace_cling_move_item" msgid="791013895761065070">"здесь можно разместить свое любимое приложение。"</string>
     <string name="workspace_cling_open_all_apps" msgid="2459977609848572588">"для просмотра всех приложений, пожалуйста, потрогайте круг。"</string>
-        <string name="all_apps_cling_title" msgid="2559734712581447107">"Выберите приложения"</string>
+    <string name="all_apps_cling_title" msgid="2559734712581447107">"Выберите приложения"</string>
     <string name="all_apps_cling_add_item" msgid="5665035103260318891">"для добавления приложения к главному экрану нажмите и удерживайте Приложение。"</string>
     <string name="folder_cling_title" msgid="4308949882377840953">"использовать папку для обработки приложений"</string>
     <string name="folder_cling_move_item" msgid="270598675060435169">"чтобы переместить приложение, нажмите и удерживайте Приложение。"</string>
@@ -125,7 +121,7 @@
     <string name="air_one">превосходный качество воздуха</string>
     <string name="air_two">хорошее качество воздуха</string>
     <string name="air_there">разность качество воздуха</string>
-<!--    <string name="air_null">не подключаться</string>-->
+    <!--    <string name="air_null">не подключаться</string>-->
     <string name="weather_simple">облачный</string>
     <string name="click_play_music">выберите песню</string>
     <string name="navi_title">навигация</string>
@@ -164,16 +160,16 @@
     <string name="jiluyi">регистрирующий прибор</string>
     <string name="baojing">тревога</string>
 
-    <string name="main_allapp" >применение</string>
-    <string name="main_radio" >радио</string>
-    <string name="main_navi" >навигация</string>
-    <string name="main_music" >музыка</string>
-    <string name="main_setting" >Настройки</string>
-    <string name="main_bt" >синий зуб</string>
+    <string name="main_allapp">применение</string>
+    <string name="main_radio">радио</string>
+    <string name="main_navi">навигация</string>
+    <string name="main_music">музыка</string>
+    <string name="main_setting">Настройки</string>
+    <string name="main_bt">синий зуб</string>
 
-    <string name="widget_music_title" >музыка</string>
-    <string name="widget_radio_title" >радио</string>
-    <string name="widget_kwplay_title" >увлекательная музыка</string>
-    <string name="widget_bt_title" >Bluetooth Music</string>
-    <string name="widget_music_name" >название песни</string>
+    <string name="widget_music_title">музыка</string>
+    <string name="widget_radio_title">радио</string>
+    <string name="widget_kwplay_title">увлекательная музыка</string>
+    <string name="widget_bt_title">Bluetooth Music</string>
+    <string name="widget_music_name">название песни</string>
 </resources>

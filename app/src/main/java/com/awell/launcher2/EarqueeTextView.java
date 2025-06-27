@@ -27,13 +27,16 @@ public class EarqueeTextView extends androidx.appcompat.widget.AppCompatTextView
     public EarqueeTextView(Context context) {
         super(context);
     }
+
     public EarqueeTextView(Context context, AttributeSet attrs,
                            int defStyle) {
         super(context, attrs, defStyle);
     }
+
     public EarqueeTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     @Override
     public boolean isFocused() {
         return true;

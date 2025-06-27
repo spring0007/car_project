@@ -89,9 +89,9 @@ class SymmetricalLinearTween {
         public void run() {
             long base = mBase;
             long now = SystemClock.uptimeMillis();
-            long diff = now-base;
+            long diff = now - base;
             int duration = mDuration;
-            float val = diff/(float)duration;
+            float val = diff / (float) duration;
             if (!mDirection) {
                 val = 1.0f - val;
             }
@@ -103,8 +103,8 @@ class SymmetricalLinearTween {
             float old = mValue;
             mValue = val;
             mCallback.onTweenValueChanged(val, old);
-            int frame = (int)(diff / FRAME_TIME);
-            long next = base + ((frame+1)*FRAME_TIME);
+            int frame = (int) (diff / FRAME_TIME);
+            long next = base + ((frame + 1) * FRAME_TIME);
             if (diff < duration) {
                 mHandler.postAtTime(this, next);
             }

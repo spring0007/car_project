@@ -18,10 +18,10 @@ package com.awell.launcher2;
 
 /**
  * Handles scrolling while dragging
- *
  */
 public interface DragScroller {
     void scrollLeft();
+
     void scrollRight();
 
     /**

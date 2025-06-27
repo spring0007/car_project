@@ -12,7 +12,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/rainbow_01"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_main_xiaodeng"
@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
         android:src="@drawable/off"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_gps_speed"
@@ -38,7 +38,8 @@
         android:shadowColor="#66000000"
         android:shadowRadius="10"
         android:shadowDx="-5"
-        android:shadowDy="-5"/>
+        android:shadowDy="-5" />
+
     <TextView
         android:id="@+id/tv_gps_speed_unit"
         android:layout_width="wrap_content"
@@ -52,5 +53,5 @@
         android:shadowColor="#88000000"
         android:shadowRadius="2"
         android:shadowDx="-3"
-        android:shadowDy="-3"/>
+        android:shadowDy="-3" />
 </RelativeLayout>

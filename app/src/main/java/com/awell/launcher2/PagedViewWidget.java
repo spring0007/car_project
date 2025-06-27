@@ -97,7 +97,7 @@ public class PagedViewWidget extends LinearLayout {
     }
 
     public void applyFromAppWidgetProviderInfo(AppWidgetProviderInfo info,
-            int maxWidth, int[] cellSpan) {
+                                               int maxWidth, int[] cellSpan) {
         mIsAppWidget = true;
         final ImageView image = (ImageView) findViewById(R.id.widget_preview);
         if (maxWidth > -1) {
@@ -137,7 +137,7 @@ public class PagedViewWidget extends LinearLayout {
 
     void applyPreview(FastBitmapDrawable preview, int index) {
         final PagedViewWidgetImageView image =
-            (PagedViewWidgetImageView) findViewById(R.id.widget_preview);
+                (PagedViewWidgetImageView) findViewById(R.id.widget_preview);
         if (preview != null) {
             image.mAllowRequestLayout = false;
             image.setImageDrawable(preview);
@@ -161,6 +161,7 @@ public class PagedViewWidget extends LinearLayout {
 
     interface ShortPressListener {
         void onShortPress(View v);
+
         void cleanUpShortPress(View v);
     }
 
@@ -188,7 +189,7 @@ public class PagedViewWidget extends LinearLayout {
      */
     private void removeShortPressCallback() {
         if (mPendingCheckForShortPress != null) {
-          removeCallbacks(mPendingCheckForShortPress);
+            removeCallbacks(mPendingCheckForShortPress);
         }
     }
 

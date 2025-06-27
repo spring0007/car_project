@@ -63,9 +63,9 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         // setup default cell parameters
         Resources resources = context.getResources();
         mOriginalCellWidth = mCellWidth =
-            resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
+                resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
         mOriginalCellHeight = mCellHeight =
-            resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
+                resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
         mCellCountX = LauncherModel.getCellCountX();
         mCellCountY = LauncherModel.getCellCountY();
         mOriginalWidthGap = mOriginalHeightGap = mWidthGap = mHeightGap = -1;
@@ -110,7 +110,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     }
 
     public boolean addViewToCellLayout(View child, int index, int childId,
-            PagedViewCellLayout.LayoutParams params) {
+                                       PagedViewCellLayout.LayoutParams params) {
         final PagedViewCellLayout.LayoutParams lp = params;
 
         // Generate an id for each view, this assumes we have at most 256x256 cells
@@ -183,7 +183,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
 
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSpecSize =  MeasureSpec.getSize(heightMeasureSpec);
+        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
         if (widthSpecMode == MeasureSpec.UNSPECIFIED || heightSpecMode == MeasureSpec.UNSPECIFIED) {
             throw new RuntimeException("CellLayout cannot have UNSPECIFIED dimensions");
@@ -198,7 +198,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
             int hFreeSpace = hSpace - (mCellCountX * mOriginalCellWidth);
             int vFreeSpace = vSpace - (mCellCountY * mOriginalCellHeight);
             mWidthGap = Math.min(mMaxGap, numWidthGaps > 0 ? (hFreeSpace / numWidthGaps) : 0);
-            mHeightGap = Math.min(mMaxGap,numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
+            mHeightGap = Math.min(mMaxGap, numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
 
             mChildren.setGap(mWidthGap, mHeightGap);
         } else {
@@ -211,9 +211,9 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         int newHeight = heightSpecSize;
         if (widthSpecMode == MeasureSpec.AT_MOST) {
             newWidth = getPaddingLeft() + getPaddingRight() + (mCellCountX * mCellWidth) +
-                ((mCellCountX - 1) * mWidthGap);
+                    ((mCellCountX - 1) * mWidthGap);
             newHeight = getPaddingTop() + getPaddingBottom() + (mCellCountY * mCellHeight) +
-                ((mCellCountY - 1) * mHeightGap);
+                    ((mCellCountY - 1) * mHeightGap);
             setMeasuredDimension(newWidth, newHeight);
         }
 
@@ -221,11 +221,11 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             int childWidthMeasureSpec =
-                MeasureSpec.makeMeasureSpec(newWidth - getPaddingLeft() -
-                        getPaddingRight(), MeasureSpec.EXACTLY);
+                    MeasureSpec.makeMeasureSpec(newWidth - getPaddingLeft() -
+                            getPaddingRight(), MeasureSpec.EXACTLY);
             int childheightMeasureSpec =
-                MeasureSpec.makeMeasureSpec(newHeight - getPaddingTop() -
-                        getPaddingBottom(), MeasureSpec.EXACTLY);
+                    MeasureSpec.makeMeasureSpec(newHeight - getPaddingTop() -
+                            getPaddingBottom(), MeasureSpec.EXACTLY);
             child.measure(childWidthMeasureSpec, childheightMeasureSpec);
         }
 
@@ -256,7 +256,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             child.layout(getPaddingLeft(), getPaddingTop(),
-                r - l - getPaddingRight(), b - t - getPaddingBottom());
+                    r - l - getPaddingRight(), b - t - getPaddingBottom());
         }
     }
 
@@ -308,7 +308,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         int spanX = (width + smallerSize) / smallerSize;
         int spanY = (height + smallerSize) / smallerSize;
 
-        return new int[] { spanX, spanY };
+        return new int[]{spanX, spanY};
     }
 
     /**
@@ -351,9 +351,11 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         return n;
     }
 
-    /** Returns an estimated center position of the cell at the specified index */
+    /**
+     * Returns an estimated center position of the cell at the specified index
+     */
     public int[] estimateCellPosition(int x, int y) {
-        return new int[] {
+        return new int[]{
                 getPaddingLeft() + (x * mCellWidth) + (x * mWidthGap) + (mCellWidth / 2),
                 getPaddingTop() + (y * mCellHeight) + (y * mHeightGap) + (mCellHeight / 2)
         };
@@ -472,7 +474,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         }
 
         public void setup(int cellWidth, int cellHeight, int widthGap, int heightGap,
-                int hStartPadding, int vStartPadding) {
+                          int hStartPadding, int vStartPadding) {
 
             final int myCellHSpan = cellHSpan;
             final int myCellVSpan = cellVSpan;
@@ -503,15 +505,19 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
 
         public String toString() {
             return "(" + this.cellX + ", " + this.cellY + ", " +
-                this.cellHSpan + ", " + this.cellVSpan + ")";
+                    this.cellHSpan + ", " + this.cellVSpan + ")";
         }
     }
 }
 
 interface Page {
     public int getPageChildCount();
+
     public View getChildOnPageAt(int i);
+
     public void removeAllViewsOnPage();
+
     public void removeViewOnPageAt(int i);
+
     public int indexOfChildOnPage(View v);
 }

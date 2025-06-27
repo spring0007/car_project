@@ -6,6 +6,7 @@
     android:clickable="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:layout_marginBottom="8dp"
         android:paddingStart="1dp"
@@ -19,6 +20,5 @@
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:layout_width="26dp"
-        android:layout_height="26dp">
-    </TextView>
+        android:layout_height="26dp"></TextView>
 </LinearLayout>

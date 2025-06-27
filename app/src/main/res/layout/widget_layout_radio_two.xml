@@ -9,6 +9,7 @@
     android:paddingEnd="30dp"
     android:gravity="center"
     tools:ignore="MissingDefaultResource">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -27,8 +28,9 @@
             android:layout_width="200dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:gravity="bottom|center_horizontal"/>
+            android:gravity="bottom|center_horizontal" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/radio_rl"
         android:layout_width="match_parent"
@@ -41,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:src="@drawable/sf_radio_pre" />
+
         <TextView
             android:id="@+id/tv_radio_am_fm"
             android:layout_width="52dp"
@@ -53,6 +56,7 @@
             android:textColor="#000000"
             android:textDirection="locale"
             android:textSize="32sp" />
+
         <com.awell.ctrlview.FrequencyTextView
             android:id="@+id/tv_radio_freq"
             android:layout_width="160dp"
@@ -75,7 +79,7 @@
             android:textColor="@android:color/black"
             android:textDirection="locale"
             android:textSize="30sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_radio_next"
@@ -98,6 +102,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/radio_bar_icon_bg" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/radio_control_ll"
         android:layout_width="match_parent"

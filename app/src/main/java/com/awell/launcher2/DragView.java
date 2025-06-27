@@ -58,13 +58,13 @@ public class DragView extends View {
      * The registration point is the point inside our view that the touch events should
      * be centered upon.
      *
-     * @param launcher The Launcher instance
-     * @param bitmap The view that we're dragging around.  We scale it up when we draw it.
+     * @param launcher      The Launcher instance
+     * @param bitmap        The view that we're dragging around.  We scale it up when we draw it.
      * @param registrationX The x coordinate of the registration point.
      * @param registrationY The y coordinate of the registration point.
      */
     public DragView(Launcher launcher, Bitmap bitmap, int registrationX, int registrationY,
-            int left, int top, int width, int height, final float initialScale) {
+                    int left, int top, int width, int height, final float initialScale) {
         super(launcher);
         mDragLayer = launcher.getDragLayer();
         mInitialScale = initialScale;
@@ -242,8 +242,8 @@ public class DragView extends View {
      * Create a window containing this view and show it.
      *
      * @param windowToken obtained from v.getWindowToken() from one of your views
-     * @param touchX the x coordinate the user touched in DragLayer coordinates
-     * @param touchY the y coordinate the user touched in DragLayer coordinates
+     * @param touchX      the x coordinate the user touched in DragLayer coordinates
+     * @param touchY      the y coordinate the user touched in DragLayer coordinates
      */
     public void show(int touchX, int touchY) {
         mDragLayer.addView(this);
@@ -258,10 +258,10 @@ public class DragView extends View {
         setTranslationY(touchY - mRegistrationY);
         // Post the animation to skip other expensive work happening on the first frame
         post(new Runnable() {
-                public void run() {
-                    mAnim.start();
-                }
-            });
+            public void run() {
+                mAnim.start();
+            }
+        });
     }
 
     public void cancelAnimation() {

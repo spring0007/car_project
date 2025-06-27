@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /* Copyright 2008, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,20 +37,20 @@
          the cling in XML files. -->
     <declare-styleable name="Cling">
         <!-- Used to identify how to draw the cling bg -->
-        <attr name="drawIdentifier" format="string"  />
+        <attr name="drawIdentifier" format="string" />
     </declare-styleable>
 
     <!-- Workspace specific attributes. These attributes are used to customize
          the workspace in XML files. -->
     <declare-styleable name="Workspace">
         <!-- The first screen the workspace should display. -->
-        <attr name="defaultScreen" format="integer"  />
+        <attr name="defaultScreen" format="integer" />
         <!-- The number of horizontal cells in the CellLayout -->
-        <attr name="cellCountX" format="integer"  />
+        <attr name="cellCountX" format="integer" />
         <!-- The number of vertical cells in the CellLayout -->
-        <attr name="cellCountY" format="integer"  />
+        <attr name="cellCountY" format="integer" />
     </declare-styleable>
-    
+
     <!-- Hotseat specific attributes. These attributes are used to customize
          the hotseat in XML files. -->
     <declare-styleable name="Hotseat">
@@ -65,9 +64,9 @@
          a CellLayout view in XML files. -->
     <declare-styleable name="CellLayout">
         <!-- The width of a single cell -->
-        <attr name="cellWidth" format="dimension"  />
+        <attr name="cellWidth" format="dimension" />
         <!-- The height of a single cell -->
-        <attr name="cellHeight" format="dimension"  />
+        <attr name="cellHeight" format="dimension" />
         <!-- An override for the width and height gap to allow users to specify
              a specific size for the page using spacing instead of resolving the
              spacing from the width of the page -->
@@ -149,7 +148,7 @@
         <attr name="y" format="string" />
         <attr name="spanX" format="string" />
         <attr name="spanY" format="string" />
-        <attr name="icon" format="reference" />  
+        <attr name="icon" format="reference" />
         <!--<attr name="title" format="reference" />-->
         <attr name="uri" format="string" />
     </declare-styleable>
@@ -159,15 +158,13 @@
     </declare-styleable>
 
     <!-- Only used in the device overlays -->
-    <declare-styleable name="CustomClingTitleText">
-    </declare-styleable>
-    <declare-styleable name="CustomClingText">
-    </declare-styleable>
-    
+    <declare-styleable name="CustomClingTitleText"></declare-styleable>
+    <declare-styleable name="CustomClingText"></declare-styleable>
+
     <declare-styleable name="RoundAngleImageView">
-		<attr name="roundWidth" format="dimension" />
-		<attr name="roundHeight" format="dimension" />
-	</declare-styleable>
+        <attr name="roundWidth" format="dimension" />
+        <attr name="roundHeight" format="dimension" />
+    </declare-styleable>
 
     <declare-styleable name="WaveformView">
         <attr name="rect_width" format="dimension" />

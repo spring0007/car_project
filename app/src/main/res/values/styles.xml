@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -18,11 +17,11 @@
 -->
 
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="Theme.WallpaperPicker" parent="@android:style/Theme.Holo.NoActionBar">
-    </style>
+
+    <style name="Theme.WallpaperPicker" parent="@android:style/Theme.Holo.NoActionBar"></style>
 
     <style name="Theme" parent="@android:style/Theme.Holo.Wallpaper.NoTitleBar">
-    <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
+        <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
     </style>
 
     <style name="Hotset_Text">
@@ -32,13 +31,14 @@
         <item name="android:gravity">bottom|center_horizontal</item>
         <item name="android:textSize">23sp</item>
     </style>
+
     <style name="Home_zhuye">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">20dp</item>
     </style>
 
-    
+
     <style name="ClingButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -50,6 +50,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/cling_button_bg</item>
     </style>
+
     <style name="ClingTitleText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -60,6 +61,7 @@
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
+
     <style name="ClingText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -83,8 +85,8 @@
         <item name="android:shadowRadius">2.0</item>
         <item name="android:shadowColor">#B0000000</item>
     </style>
-    
-        <style name="HotSeat_rtd">
+
+    <style name="HotSeat_rtd">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center</item>
@@ -112,20 +114,21 @@
         <item name="android:paddingTop">@dimen/app_icon_padding_top</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
-    
-       <style name="HotSeat_rtd.Landscape">
+
+    <style name="HotSeat_rtd.Landscape">
         <item name="android:drawablePadding">@dimen/app_icon_drawable_padding_land</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">@dimen/app_icon_padding_top</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
-    
+
 
     <style name="WorkspaceIcon.Portrait.Folder">
         <item name="android:drawablePadding">0dp</item>
         <item name="android:paddingTop">@dimen/folder_icon_padding_top</item>
     </style>
+
     <style name="WorkspaceIcon.Landscape.Folder">
         <item name="android:drawablePadding">0dp</item>
         <item name="android:paddingTop">0dp</item>
@@ -142,6 +145,7 @@
         <item name="android:paddingRight">0dp</item>
         <item name="android:drawablePadding">2dp</item>
     </style>
+
     <style name="WorkspaceIcon.Landscape.AppsCustomize">
         <item name="android:background">@null</item>
         <item name="android:paddingTop">4dp</item>
@@ -157,21 +161,25 @@
         <item name="android:paddingLeft">@dimen/qsb_padding_left</item>
         <item name="android:paddingRight">@dimen/qsb_padding_right</item>
     </style>
+
     <style name="SearchDropTargetBar">
         <item name="android:orientation">horizontal</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">bottom|center_horizontal</item>
     </style>
+
     <style name="SearchButton">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:paddingTop">@dimen/toolbar_button_vertical_padding</item>
         <item name="android:paddingBottom">@dimen/toolbar_button_vertical_padding</item>
     </style>
+
     <style name="DropTargetButtonContainer">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
     </style>
+
     <style name="DropTargetButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
@@ -204,6 +212,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
+
     <style name="TabIndicator.AppsCustomize">
         <!-- Overridden in values-land -->
     </style>
@@ -213,15 +222,16 @@
         <item name="android:paddingRight">5dp</item>
         <item name="android:textColor">@color/workspace_all_apps_and_delete_zone_text_color</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:shadowColor">@color/workspace_all_apps_and_delete_zone_text_shadow_color</item>
+        <item name="android:shadowColor">
+            @color/workspace_all_apps_and_delete_zone_text_shadow_color
+        </item>
         <item name="android:shadowDx">0.0</item>
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">2.0</item>
     </style>
 
     <!-- Overridden in device overlays -->
-    <style name="CustomClingTitleText">
-    </style>
-    <style name="CustomClingText">
-    </style>
+    <style name="CustomClingTitleText"></style>
+
+    <style name="CustomClingText"></style>
 </resources>

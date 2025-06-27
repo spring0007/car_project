@@ -94,12 +94,13 @@ public class HolographicOutlineHelper {
      * bitmap.
      */
     void applyExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, int thickness) {
+                                       int outlineColor, int thickness) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, true,
                 thickness);
     }
+
     void applyExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, boolean clipAlpha, int thickness) {
+                                       int outlineColor, boolean clipAlpha, int thickness) {
 
         // We start by removing most of the alpha channel so as to ignore shadows, and
         // other types of partial transparency when defining the shape of the object
@@ -198,23 +199,23 @@ public class HolographicOutlineHelper {
     }
 
     void applyExtraThickExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                                 int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, EXTRA_THICK);
     }
 
     void applyThickExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                            int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, THICK);
     }
 
     void applyMediumExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor, boolean clipAlpha) {
+                                             int outlineColor, boolean clipAlpha) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, clipAlpha,
                 MEDIUM);
     }
 
     void applyMediumExpensiveOutlineWithBlur(Bitmap srcDst, Canvas srcDstCanvas, int color,
-            int outlineColor) {
+                                             int outlineColor) {
         applyExpensiveOutlineWithBlur(srcDst, srcDstCanvas, color, outlineColor, MEDIUM);
     }
 

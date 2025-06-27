@@ -18,7 +18,9 @@ package com.awell.launcher2;
 
 interface TweenCallback {
     void onTweenValueChanged(float value, float oldValue);
+
     void onTweenStarted();
+
     void onTweenFinished();
 }
 

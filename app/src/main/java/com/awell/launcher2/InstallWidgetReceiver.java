@@ -49,11 +49,11 @@ public class InstallWidgetReceiver {
     // Currently not exposed.  Put into Intent when we want to make it public.
     // TEMP: Should we call this "EXTRA_APPWIDGET_PROVIDER"?
     public static final String EXTRA_APPWIDGET_COMPONENT =
-        "com.awell.launcher.extra.widget.COMPONENT";
+            "com.awell.launcher.extra.widget.COMPONENT";
     public static final String EXTRA_APPWIDGET_CONFIGURATION_DATA_MIME_TYPE =
-        "com.awell.launcher.extra.widget.CONFIGURATION_DATA_MIME_TYPE";
+            "com.awell.launcher.extra.widget.CONFIGURATION_DATA_MIME_TYPE";
     public static final String EXTRA_APPWIDGET_CONFIGURATION_DATA =
-        "com.awell.launcher.extra.widget.CONFIGURATION_DATA";
+            "com.awell.launcher.extra.widget.CONFIGURATION_DATA";
 
     /**
      * A simple data class that contains per-item information that the adapter below can reference.
@@ -82,8 +82,8 @@ public class InstallWidgetReceiver {
         private int[] mTargetLayoutPos;
 
         public WidgetListAdapter(Launcher l, String mimeType, ClipData data,
-                List<WidgetMimeTypeHandlerData> list, CellLayout target,
-                int targetScreen, int[] targetPos) {
+                                 List<WidgetMimeTypeHandlerData> list, CellLayout target,
+                                 int targetScreen, int[] targetPos) {
             mLauncher = l;
             mMimeType = mimeType;
             mClipData = data;
@@ -133,7 +133,7 @@ public class InstallWidgetReceiver {
 
             // Use the convert-view where possible
             if (convertView == null) {
-              //  convertView = mInflater.inflate(R.layout.external_widget_drop_list_item, parent,false);
+                //  convertView = mInflater.inflate(R.layout.external_widget_drop_list_item, parent,false);
             }
 
             final WidgetMimeTypeHandlerData data = mActivities.get(position);
@@ -142,15 +142,15 @@ public class InstallWidgetReceiver {
 
             // Set the icon
             Drawable d = resolveInfo.loadIcon(packageManager);
-           // ImageView i = (ImageView) convertView.findViewById(R.id.provider_icon);
-           // i.setImageDrawable(d);
+            // ImageView i = (ImageView) convertView.findViewById(R.id.provider_icon);
+            // i.setImageDrawable(d);
 
             // Set the text
             final CharSequence component = resolveInfo.loadLabel(packageManager);
             final int[] widgetSpan = new int[2];
             mTargetLayout.rectToCell(widgetInfo.minWidth, widgetInfo.minHeight, widgetSpan);
-           // TextView t = (TextView) convertView.findViewById(R.id.provider);
-           // t.setText(context.getString(R.string.external_drop_widget_pick_format,
+            // TextView t = (TextView) convertView.findViewById(R.id.provider);
+            // t.setText(context.getString(R.string.external_drop_widget_pick_format,
             //        component, widgetSpan[0], widgetSpan[1]));
 
             return convertView;

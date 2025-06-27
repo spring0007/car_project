@@ -63,7 +63,7 @@ class ApplicationInfo extends ItemInfo {
      * Must not hold the Context.
      */
     public ApplicationInfo(PackageManager pm, ResolveInfo info, IconCache iconCache,
-            HashMap<Object, CharSequence> labelCache) {
+                           HashMap<Object, CharSequence> labelCache) {
         final String packageName = info.activityInfo.applicationInfo.packageName;
 
         this.componentName = new ComponentName(packageName, info.activityInfo.name);
@@ -97,8 +97,10 @@ class ApplicationInfo extends ItemInfo {
         firstInstallTime = info.firstInstallTime;
     }
 
-    /** Returns the package name that the shortcut's intent will resolve to, or an empty string if
-     *  none exists. */
+    /**
+     * Returns the package name that the shortcut's intent will resolve to, or an empty string if
+     * none exists.
+     */
     String getPackageName() {
         return super.getPackageName(intent);
     }
@@ -107,7 +109,7 @@ class ApplicationInfo extends ItemInfo {
      * Creates the application intent based on a component name and various launch flags.
      * Sets {@link #itemType} to {@link LauncherSettings.BaseLauncherColumns#ITEM_TYPE_APPLICATION}.
      *
-     * @param className the class name of the component representing the intent
+     * @param className   the class name of the component representing the intent
      * @param launchFlags the launch flags
      */
     final void setActivity(ComponentName className, int launchFlags) {
@@ -124,9 +126,9 @@ class ApplicationInfo extends ItemInfo {
     }
 
     public static void dumpApplicationInfoList(String tag, String label,
-            ArrayList<ApplicationInfo> list) {
+                                               ArrayList<ApplicationInfo> list) {
         Log.d(tag, label + " size=" + list.size());
-        for (ApplicationInfo info: list) {
+        for (ApplicationInfo info : list) {
             Log.d(tag, "   title=\"" + info.title + "\" iconBitmap="
                     + info.iconBitmap + " firstInstallTime="
                     + info.firstInstallTime);
@@ -136,16 +138,15 @@ class ApplicationInfo extends ItemInfo {
     public ShortcutInfo makeShortcut() {
         return new ShortcutInfo(this);
     }
-    
+
     //zxzhang
-	private int level;
-	
-	public Integer getLevel()
-	{
-		return level;
-	}
-	public void setLevel(Integer level1)
-	{
-		this.level = level1;
-	}
+    private int level;
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level1) {
+        this.level = level1;
+    }
 }

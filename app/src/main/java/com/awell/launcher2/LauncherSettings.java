@@ -112,9 +112,8 @@ class LauncherSettings {
         /**
          * The content:// style URL for a given row, identified by its id.
          *
-         * @param id The row id.
+         * @param id     The row id.
          * @param notify True to send a notification is the content changes.
-         *
          * @return The unique content URL for the specified row.
          */
         static Uri getContentUri(long id, boolean notify) {
@@ -173,12 +172,12 @@ class LauncherSettings {
         static final int ITEM_TYPE_FOLDER = 2;
 
         /**
-        * The favorite is a live folder
-        *
-        * Note: live folders can no longer be added to Launcher, and any live folders which
-        * exist within the launcher database will be ignored when loading.  That said, these
-        * entries in the database may still exist, and are not automatically stripped.
-        */
+         * The favorite is a live folder
+         * <p>
+         * Note: live folders can no longer be added to Launcher, and any live folders which
+         * exist within the launcher database will be ignored when loading.  That said, these
+         * entries in the database may still exist, and are not automatically stripped.
+         */
         static final int ITEM_TYPE_LIVE_FOLDER = 3;
 
         /**
@@ -207,7 +206,7 @@ class LauncherSettings {
          * <P>Type: INTEGER</P>
          */
         static final String APPWIDGET_ID = "appWidgetId";
-        
+
         /**
          * Indicates whether this favorite is an application-created shortcut or not.
          * If the value is 0, the favorite is not an application-created shortcut, if the

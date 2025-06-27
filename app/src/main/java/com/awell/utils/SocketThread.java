@@ -1,4 +1,5 @@
 package com.awell.utils;
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -24,9 +25,9 @@ public class SocketThread {
     public static final int MESSAGE_SUCCEED = 1;
     public static final int MESSAGE_RECEIVE_TIME = 2;
     public static final int MESSAGE_RECEIVE_WORE = 3;
-    public static final int MESSAGE_RECEIVE_SONGER= 4;
-    public static final int MESSAGE_RECEIVE_TIME_TOTAL= 5;
-    public static final int MESSAGE_RECEIVE_TIME_STATUS= 6;
+    public static final int MESSAGE_RECEIVE_SONGER = 4;
+    public static final int MESSAGE_RECEIVE_TIME_TOTAL = 5;
+    public static final int MESSAGE_RECEIVE_TIME_STATUS = 6;
 
     private Handler handler;
     private Socket socket;
@@ -40,13 +41,13 @@ public class SocketThread {
     private boolean isWholePackage = false;
     private Thread inOUtThread = null;
     private boolean disConnect;
-    public SocketThread(Integer port, Handler handler, String phoneMode){
+
+    public SocketThread(Integer port, Handler handler, String phoneMode) {
         this.port = port;
         this.phoneMode = phoneMode;
         this.handler = handler;
         new Socket_thread().start();
     }
-
 
 
     /**
@@ -62,11 +63,11 @@ public class SocketThread {
                 //连接服务器，此处会一直处于阻塞，直到连接成功
                 socket = new Socket(InetAddress.getLocalHost(), 1555);
                 //阻塞停止，表示连接成功
-                Log.e(TAG,  "zlink连接成功 port" +  port + " phoneMode: " + phoneMode );
+                Log.e(TAG, "zlink连接成功 port" + port + " phoneMode: " + phoneMode);
 
                 setMessage("连接成功", MESSAGE_SUCCEED);
             } catch (Exception e) {
-                Log.e(TAG,  "zlink连接服务器时异常 ");
+                Log.e(TAG, "zlink连接服务器时异常 ");
                 setMessage("连接服务器时异常", MESSAGE_ERROR);
                 e.printStackTrace();
                 return;
@@ -76,16 +77,16 @@ public class SocketThread {
                 outStream = socket.getOutputStream();
                 inStream = socket.getInputStream();
             } catch (Exception e) {
-                Log.e(TAG,  "zlink获取输入输出流异常");
+                Log.e(TAG, "zlink获取输入输出流异常");
                 setMessage("获取输入输出流异常", MESSAGE_ERROR);
                 e.printStackTrace();
                 return;
             }
 //            Log.e(TAG,  "MESSAGE_RECEIVE Socket_thread" + Thread.currentThread().getName());
             try {
-                inOUtThread =  new Inx();
+                inOUtThread = new Inx();
                 inOUtThread.start();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
 
             }
@@ -114,7 +115,7 @@ public class SocketThread {
 //                    Log.e(TAG,  "MESSAGE_RECEIVE bu: "+ Arrays.toString(bu));
 //                    String strdread = new String(bu).trim();
 //                    Log.e(TAG,  "MESSAGE_RECEIVE strread: "+ strdread);
-                    if(phoneMode.contains("carplay")) {
+                    if (phoneMode.contains("carplay")) {
                         if (bu[0] == 10) {
                             if (bu[11] == 0) {
                                 int curLengt = 12;
@@ -153,7 +154,7 @@ public class SocketThread {
                                             break;
                                     }
                                     curLengt = curLengt + packgeLen;
-                                    if(bu.length -1 < curLengt + 4){
+                                    if (bu.length - 1 < curLengt + 4) {
                                         break;
                                     }
                                 }
@@ -193,7 +194,7 @@ public class SocketThread {
 
                                     }
                                     curLengt = curLengt + packgeLen;
-                                    if(bu.length - 1 < curLengt + 4){
+                                    if (bu.length - 1 < curLengt + 4) {
                                         break;
                                     }
                                 }
@@ -201,52 +202,52 @@ public class SocketThread {
                             }
                         }
                     }
-                    if(phoneMode.contains("auto")){
-                        if(count == 1024){
+                    if (phoneMode.contains("auto")) {
+                        if (count == 1024) {
                             isWholePackage = true;
-                        }else if(count != 1024 && isWholePackage && bu[count-5] == 48){
+                        } else if (count != 1024 && isWholePackage && bu[count - 5] == 48) {
                             isWholePackage = false;
                             int totalTime = 0;
-                            int value1 = bu[count -4];
-                            int value2 = bu[count -3];
+                            int value1 = bu[count - 4];
+                            int value2 = bu[count - 3];
 //                            Log.e(TAG,  "MESSAGE_RECEIVE value1: "+ value1 +" value2: " +value2);
 
-                            if(value2 == 32){
+                            if (value2 == 32) {
                                 totalTime = value1;
 
-                            }else if(32 > value2 && value2 > 0){
-                                totalTime = (128 + value1 ) + value2 * 128;
+                            } else if (32 > value2 && value2 > 0) {
+                                totalTime = (128 + value1) + value2 * 128;
                             }
 //                            Log.e(TAG,  "MESSAGE_RECEIVE totalTime: "+ totalTime);
-                            setMessage(totalTime*1000, MESSAGE_RECEIVE_TIME_TOTAL);
+                            setMessage(totalTime * 1000, MESSAGE_RECEIVE_TIME_TOTAL);
 
                         }
 
-                        if(bu[0] == 5 && bu[1] == 0){
+                        if (bu[0] == 5 && bu[1] == 0) {
                             isAutoPalyInfo = true;
                             byte[] b2 = new byte[2];
-                            System.arraycopy(bu,  5, b2, 0, 2);
-                            int time = bytesToShort2(b2,0);
+                            System.arraycopy(bu, 5, b2, 0, 2);
+                            int time = bytesToShort2(b2, 0);
 //                            Log.e(TAG,  "MESSAGE_RECEIVE AA time:"+ time);
-                            if(bu[8] == 10){
-                                byte[]  b7 = new byte[bu.length - 8];
-                                System.arraycopy(bu,  8, b7, 0, bu.length - 8);
+                            if (bu[8] == 10) {
+                                byte[] b7 = new byte[bu.length - 8];
+                                System.arraycopy(bu, 8, b7, 0, bu.length - 8);
                                 bu = b7;
 //                                Log.e(TAG,  "MESSAGE_RECEIVE bu7: "+ Arrays.toString(bu));
                             }
                         }
-                        if(isAutoPalyInfo && bu[0] == 10){
+                        if (isAutoPalyInfo && bu[0] == 10) {
                             isAutoPalyInfo = false;
                             int curLengt = 0;
                             boolean flag = true;
-                            while(flag){
-                                int packgeLen = bu[curLengt+1];
-                                if (packgeLen <= 0 || bu.length < packgeLen + curLengt  ){
+                            while (flag) {
+                                int packgeLen = bu[curLengt + 1];
+                                if (packgeLen <= 0 || bu.length < packgeLen + curLengt) {
                                     break;
                                 }
                                 int index = bu[curLengt];
 //                                Log.e(TAG,  "MESSAGE_RECEIVE curLengt: "+ packgeLen + " index: "+ index);
-                                switch (index){
+                                switch (index) {
                                     case 10:                     //MediaItemTitle
                                         byte[] b2 = new byte[packgeLen];
                                         System.arraycopy(bu, curLengt + 2, b2, 0, packgeLen);
@@ -272,60 +273,61 @@ public class SocketThread {
                                     case 34:
                                         byte[] b5 = new byte[4];
                                         System.arraycopy(bu, curLengt + 1, b5, 0, 4);
-                                        Log.e(TAG,  "MESSAGE_RECEIVE index strread 34 b50: "+ b5[0] );
-                                        Log.e(TAG,  "MESSAGE_RECEIVE index strread 34 b51: "+ b5[1] );
-                                        short time1 = bytesToShort2(b5,0);
-                                        int time = bytesToInt2(b5,0);
+                                        Log.e(TAG, "MESSAGE_RECEIVE index strread 34 b50: " + b5[0]);
+                                        Log.e(TAG, "MESSAGE_RECEIVE index strread 34 b51: " + b5[1]);
+                                        short time1 = bytesToShort2(b5, 0);
+                                        int time = bytesToInt2(b5, 0);
                                         flag = false;
 //                                    setMessage(artist, MESSAGE_RECEIVE_SONGER);
 //                                        Log.e(TAG,  "MESSAGE_RECEIVE index strread 34: "+ time );
 //                                        Log.e(TAG,  "MESSAGE_RECEIVE index strread 34 t: "+ time1 );
                                         break;
-                                    default:break;
+                                    default:
+                                        break;
                                 }
-                                curLengt  = curLengt + packgeLen + 2;
+                                curLengt = curLengt + packgeLen + 2;
                             }
                         }
-                        if(!isWholePackage && bu[0] == 4){
-                            if(bu[9] == 2){
-                                if(!isPlaying){
+                        if (!isWholePackage && bu[0] == 4) {
+                            if (bu[9] == 2) {
+                                if (!isPlaying) {
                                     setMessage(2, MESSAGE_RECEIVE_TIME_STATUS);
                                     isPlaying = true;
                                 }
-                            }else if(bu[9] == 3){
+                            } else if (bu[9] == 3) {
                                 isPlaying = false;
                                 setMessage(0, MESSAGE_RECEIVE_TIME_STATUS);
 
                             }
-                            if(bu[25] == 24){
+                            if (bu[25] == 24) {
                                 int curTime = 0;
                                 int value1 = bu[26];
                                 int value2 = bu[27];
 //                                Log.e(TAG,  "MESSAGE_RECEIVE curTime value1: "+ value1 +" value2: " +value2);
-                                if(value2 == 32){
+                                if (value2 == 32) {
                                     curTime = value1;
 
-                                }else if(32 > value2 && value2 > 0){
-                                    curTime = (128 + value1 ) + value2 * 128;
+                                } else if (32 > value2 && value2 > 0) {
+                                    curTime = (128 + value1) + value2 * 128;
                                 }
-                                setMessage(curTime*1000, MESSAGE_RECEIVE_TIME);
+                                setMessage(curTime * 1000, MESSAGE_RECEIVE_TIME);
 
 //                                Log.e(TAG,  "MESSAGE_RECEIVE curTime: "+ curTime );
 
                             }
                         }
-                        if(!isWholePackage && bu[0] == 8 && bu[17] == 24){
+                        if (!isWholePackage && bu[0] == 8 && bu[17] == 24) {
                             int curTime = 0;
                             int value1 = bu[18];
                             int value2 = bu[19];
 //                            Log.e(TAG,  "MESSAGE_RECEIVE curTime8 value1: "+ value1 +" value2: " +value2);
-                            if(value2 == 32){
+                            if (value2 == 32) {
                                 curTime = value1;
 
-                            }else if(32 > value2 && value2 > 0){
-                                curTime = (128 + value1 ) + value2 * 128;
+                            } else if (32 > value2 && value2 > 0) {
+                                curTime = (128 + value1) + value2 * 128;
                             }
-                            setMessage(curTime*1000, MESSAGE_RECEIVE_TIME);
+                            setMessage(curTime * 1000, MESSAGE_RECEIVE_TIME);
 
 //                            Log.e(TAG,  "MESSAGE_RECEIVE curTime8: "+ curTime );
 
@@ -342,19 +344,20 @@ public class SocketThread {
 
     public static short bytesToShort2(byte[] src, int offset) {
         short value;
-        value = (short) ( ((src[offset] & 0xFF)<<8)
-                |(src[offset+1] & 0xFF));
+        value = (short) (((src[offset] & 0xFF) << 8)
+                | (src[offset + 1] & 0xFF));
         return value;
     }
 
     public static int bytesToInt2(byte[] src, int offset) {
         int value;
-        value = (int) ( ((src[offset] & 0xFF)<<24)
-                |((src[offset+1] & 0xFF)<<16)
-                |((src[offset+2] & 0xFF)<<8)
-                |(src[offset+3] & 0xFF));
+        value = (int) (((src[offset] & 0xFF) << 24)
+                | ((src[offset + 1] & 0xFF) << 16)
+                | ((src[offset + 2] & 0xFF) << 8)
+                | (src[offset + 3] & 0xFF));
         return value;
     }
+
     /**
      * 断开连接
      */
@@ -366,25 +369,26 @@ public class SocketThread {
                 inStream.close();
                 socket.close();
                 socket = null;
-                Log.e(TAG,  "断开连接zlink");
+                Log.e(TAG, "断开连接zlink");
 
                 setMessage("断开连接时发生错误", MESSAGE_ERROR);
 
             } catch (Exception e) {
-                Log.e(TAG,  "zlink断开连接时发生错误");
+                Log.e(TAG, "zlink断开连接时发生错误");
 
                 setMessage("断开连接时发生错误", MESSAGE_ERROR);
             }
         }
     }
 
-    private void setMessage(String obj, int arg1){
+    private void setMessage(String obj, int arg1) {
         Message message = new Message();
         message.arg1 = arg1;
         message.obj = obj;
         handler.sendMessage(message);
     }
-    private void setMessage(int obj, int arg1){
+
+    private void setMessage(int obj, int arg1) {
         Message message = new Message();
         message.arg1 = arg1;
         message.obj = obj;

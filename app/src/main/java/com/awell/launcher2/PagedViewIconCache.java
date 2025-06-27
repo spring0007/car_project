@@ -37,6 +37,7 @@ public class PagedViewIconCache {
             AppWidgetProviderInfoKey,
             ResolveInfoKey
         }
+
         private final ComponentName mComponentName;
         private final Type mType;
 
@@ -44,12 +45,14 @@ public class PagedViewIconCache {
             mComponentName = info.componentName;
             mType = Type.ApplicationInfoKey;
         }
+
         public Key(ResolveInfo info) {
             final ComponentInfo ci = info.activityInfo != null ? info.activityInfo :
-                info.serviceInfo;
+                    info.serviceInfo;
             mComponentName = new ComponentName(ci.packageName, ci.name);
             mType = Type.ResolveInfoKey;
         }
+
         public Key(AppWidgetProviderInfo info) {
             mComponentName = info.provider;
             mType = Type.AppWidgetProviderInfoKey;
@@ -58,6 +61,7 @@ public class PagedViewIconCache {
         private ComponentName getComponentName() {
             return mComponentName;
         }
+
         public boolean isKeyType(Type t) {
             return (mType == t);
         }
@@ -70,6 +74,7 @@ public class PagedViewIconCache {
             }
             return super.equals(o);
         }
+
         @Override
         public int hashCode() {
             return getComponentName().hashCode();
@@ -84,6 +89,7 @@ public class PagedViewIconCache {
         }
         mIconOutlineCache.clear();
     }
+
     private void retainAll(HashSet<Key> keysToKeep, Key.Type t) {
         HashSet<Key> keysToRemove = new HashSet<Key>(mIconOutlineCache.keySet());
         keysToRemove.removeAll(keysToKeep);
@@ -94,7 +100,10 @@ public class PagedViewIconCache {
             }
         }
     }
-    /** Removes all the keys to applications that aren't in the passed in collection */
+
+    /**
+     * Removes all the keys to applications that aren't in the passed in collection
+     */
     public void retainAllApps(ArrayList<ApplicationInfo> keys) {
         HashSet<Key> keysSet = new HashSet<Key>();
         for (ApplicationInfo info : keys) {
@@ -102,7 +111,10 @@ public class PagedViewIconCache {
         }
         retainAll(keysSet, Key.Type.ApplicationInfoKey);
     }
-    /** Removes all the keys to shortcuts that aren't in the passed in collection */
+
+    /**
+     * Removes all the keys to shortcuts that aren't in the passed in collection
+     */
     public void retainAllShortcuts(List<ResolveInfo> keys) {
         HashSet<Key> keysSet = new HashSet<Key>();
         for (ResolveInfo info : keys) {
@@ -110,7 +122,10 @@ public class PagedViewIconCache {
         }
         retainAll(keysSet, Key.Type.ResolveInfoKey);
     }
-    /** Removes all the keys to widgets that aren't in the passed in collection */
+
+    /**
+     * Removes all the keys to widgets that aren't in the passed in collection
+     */
     public void retainAllAppWidgets(List<AppWidgetProviderInfo> keys) {
         HashSet<Key> keysSet = new HashSet<Key>();
         for (AppWidgetProviderInfo info : keys) {
@@ -118,15 +133,18 @@ public class PagedViewIconCache {
         }
         retainAll(keysSet, Key.Type.AppWidgetProviderInfoKey);
     }
+
     public void addOutline(Key key, Bitmap b) {
         mIconOutlineCache.put(key, b);
     }
+
     public void removeOutline(Key key) {
         if (mIconOutlineCache.containsKey(key)) {
             mIconOutlineCache.get(key).recycle();
             mIconOutlineCache.remove(key);
         }
     }
+
     public Bitmap getOutline(Key key) {
         return mIconOutlineCache.get(key);
     }

@@ -44,7 +44,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
         mWallpaperManager = WallpaperManager.getInstance(context);
     }
 
-    public void setCellDimensions(int cellWidth, int cellHeight, int widthGap, int heightGap ) {
+    public void setCellDimensions(int cellWidth, int cellHeight, int widthGap, int heightGap) {
         mCellWidth = cellWidth;
         mCellHeight = cellHeight;
         mWidthGap = widthGap;
@@ -91,7 +91,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
             measureChild(child);
         }
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightSpecSize =  MeasureSpec.getSize(heightMeasureSpec);
+        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
         setMeasuredDimension(widthSpecSize, heightSpecSize);
     }
 

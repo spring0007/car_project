@@ -137,7 +137,7 @@ public class LauncherApplication extends Application {
 
     public static boolean isScreenLandscape(Context context) {
         return context.getResources().getConfiguration().orientation ==
-            Configuration.ORIENTATION_LANDSCAPE;
+                Configuration.ORIENTATION_LANDSCAPE;
     }
 
     public static float getScreenDensity() {

@@ -152,6 +152,7 @@ import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
+import com.awell.ui.UIActivity;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
 import com.awell.ctrlview.WaveformView;
@@ -159,6 +160,7 @@ import com.awell.ctrlview.VisualizerView;
 import com.awell.ctrlview.SpetrumView;
 import com.awell.ctrlview.AudioRecorder;
 import com.awell.ctrlview.NewCalendar;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileDescriptor;
@@ -206,7 +208,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private final int REQUEST_BIND_APPWIDGET = 11;
 
     static final String EXTRA_SHORTCUT_DUPLICATE = "duplicate";
-    static final int SCREEN_COUNT = 5;
+    /**
+     * hxw change 5 to 0
+     */
+    static final int SCREEN_COUNT = 0;
     static final int DEFAULT_SCREEN = 2;
 
     private final String PREFERENCES = "launcher.preferences";
@@ -240,8 +245,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private final String RUNTIME_STATE_PENDING_ADD_WIDGET_INFO = "launcher.add_widget_info";
 
     private final String TOOLBAR_ICON_METADATA_NAME = "com.awell.launcher.toolbar_icon";
-    private final String TOOLBAR_SEARCH_ICON_METADATA_NAME = "com.awell.launcher.toolbar_search_icon";
-    private final String TOOLBAR_VOICE_SEARCH_ICON_METADATA_NAME = "com.awell.launcher.toolbar_voice_search_icon";
+    private static final String TOOLBAR_SEARCH_ICON_METADATA_NAME = "com.awell.launcher.toolbar_search_icon";
+    private static final String TOOLBAR_VOICE_SEARCH_ICON_METADATA_NAME = "com.awell.launcher.toolbar_voice_search_icon";
     private boolean isSpeehONorOFFflag;
 
     public final String ACTION_SEND_TO_CANBUS = "com.acloud.intent.android.XY.ANDROID.CANBUSDISPINFO1";
@@ -254,16 +259,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         NONE, WORKSPACE, APPS_CUSTOMIZE, APPS_CUSTOMIZE_SPRING_LOADED
     }
 
-    ;
-
     private State mState = State.WORKSPACE;
     private AnimatorSet mStateAnimation;
     private AnimatorSet mDividerAnimator;
 
     static final int APPWIDGET_HOST_ID = 1024;
-    private final int EXIT_SPRINGLOADED_MODE_SHORT_TIMEOUT = 300;
-    private final int EXIT_SPRINGLOADED_MODE_LONG_TIMEOUT = 600;
-    private final int SHOW_CLING_DURATION = 550;
+    private static final int EXIT_SPRINGLOADED_MODE_SHORT_TIMEOUT = 300;
+    private static final int EXIT_SPRINGLOADED_MODE_LONG_TIMEOUT = 600;
+    private static final int SHOW_CLING_DURATION = 550;
     private final int DISMISS_CLING_DURATION = 250;
 
     public static final Object sLock = new Object();
@@ -271,7 +274,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     // How long to wait before the new-shortcut animation automatically pans the
     // workspace
-    private static int NEW_APPS_ANIMATION_INACTIVE_TIMEOUT_SECONDS = 10;
+    private static final int NEW_APPS_ANIMATION_INACTIVE_TIMEOUT_SECONDS = 10;
 
     private final BroadcastReceiver mCloseSystemDialogsReceiver = new CloseSystemDialogsIntentReceiver();
     private final ContentObserver mWidgetObserver = new AppWidgetResetObserver();
@@ -287,10 +290,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private AppWidgetManager mAppWidgetManager;
     private LauncherAppWidgetHost mAppWidgetHost;
 
-    private ItemInfo mPendingAddInfo = new ItemInfo();
+    private final ItemInfo mPendingAddInfo = new ItemInfo();
     private AppWidgetProviderInfo mPendingAddWidgetInfo;
 
-    private int[] mTmpAddItemCellCoordinates = new int[2];
+    private final int[] mTmpAddItemCellCoordinates = new int[2];
 
     private FolderInfo mFolderInfo;
 
@@ -299,6 +302,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     private SearchDropTargetBar mSearchDropTargetBar;
     private AppsCustomizeTabHost mAppsCustomizeTabHost;
+    /**
+     * 二级菜单图标
+     */
     private AppsCustomizePagedView mAppsCustomizeContent;
     private boolean mAutoAdvanceRunning = false;
 
@@ -325,17 +331,17 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     private static LocaleConfiguration sLocaleConfiguration = null;
 
-    private static HashMap<Long, FolderInfo> sFolders = new HashMap<Long, FolderInfo>();
+    private static final HashMap<Long, FolderInfo> sFolders = new HashMap<Long, FolderInfo>();
 
     private Intent mAppMarketIntent = null;
 
     // Related to the auto-advancing of widgets
     private final int ADVANCE_MSG = 1;
     private final int mAdvanceInterval = 20000;
-    private final int mAdvanceStagger = 250;
+    private static final int mAdvanceStagger = 250;
     private long mAutoAdvanceSentTime;
     private long mAutoAdvanceTimeLeft = -1;
-    private HashMap<View, AppWidgetProviderInfo> mWidgetsToAdvance = new HashMap<View, AppWidgetProviderInfo>();
+    private final HashMap<View, AppWidgetProviderInfo> mWidgetsToAdvance = new HashMap<View, AppWidgetProviderInfo>();
 
     private final int mRestoreScreenOrientationDelay = 500;
 
@@ -387,6 +393,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private MediaBrowserCompat mMediaBrowser;
     private Context mContext;
     public static MediaNotificationListener mMediaListener;
+
     public static void setSettingOrAndroidPage(Boolean boolean1) {
         isSettingOrAndroidPage = boolean1;
     }
@@ -433,7 +440,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG,"onCreate start ...");
+        Log.i(TAG, "onCreate start ...");
         if (DEBUG_STRICT_MODE) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork() // or
                     // .detectAll()
@@ -480,10 +487,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
         checkForLocaleChange();
         setContentView(R.layout.launcher);
-        Log.i(TAG,"onCreate setContentView ...");
+        Log.i(TAG, "onCreate setContentView ...");
         setupViews();
         // showFirstRunWorkspaceCling();
-        Log.i(TAG,"onCreate setupViews ...");
+        Log.i(TAG, "onCreate setupViews ...");
         registerContentObservers();
 
         lockAllApps();
@@ -513,7 +520,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 mModel.startLoader(true, mWorkspace.getCurrentPage());
             }
         }
-        Log.i(TAG,"onCreate setupViews2 ...");
+        Log.i(TAG, "onCreate setupViews2 ...");
         if (!mModel.isAllAppsLoaded()) {
             ViewGroup appsCustomizeContentParent = (ViewGroup) mAppsCustomizeContent.getParent();
             mInflater.inflate(R.layout.apps_customize_progressbar, appsCustomizeContentParent);
@@ -535,17 +542,18 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         startBinding();
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-              handler.removeMessages(SPEEDHOME);
-              handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
         updateSpeedUnitText();
-        Log.i(TAG,"onCreate end ...");
+        Log.i(TAG, "onCreate end ...");
 
         Intent serviceIntent = new Intent(this, MediaNotificationListener.class);
         startForegroundService(serviceIntent);
     }
 
     private final int SPEEDHOME = 20;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -895,11 +903,24 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         updateGlobalIcons();
 
         Log.i(TAG, "onResume()=====mState=" + mState);
+        /* hxw delete
         if (mState == State.WORKSPACE) {
             showWorkspace(true);
         }
+         */
         updateGotoPageButtonStatus();
 
+        startUIActivity();
+
+    }
+
+    /**
+     * start UI activity
+     */
+    private void startUIActivity() {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(this, UIActivity.class));
+        startActivity(intent);
     }
 
     @Override
@@ -1063,24 +1084,25 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         @Override
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange);
-            Log.i(TAG,"selfChange = " + selfChange + "uri = " + uri);
-            if(uri.equals(someSettingUri)){
+            Log.i(TAG, "selfChange = " + selfChange + "uri = " + uri);
+            if (uri.equals(someSettingUri)) {
 //                int value = Settings.System.getInt(getContentResolver(), "launcherTypeDN", 0);
 //                Log.d(TAG,"launcherTypeDN: "+ value);
 //                dayNightImages(value == 1 ? 1 : 0);
 //                handler.removeMessages(SWTWALLPAPER);
 //                handler.obtainMessage(SWTWALLPAPER, value, 0).sendToTarget();
-            }else if(uri.equals(radioUri)){
-                int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(),"RadioIsLocOrDX", 0);
-                Log.i(TAG,"mIsLocOrDX = " + mIsLocOrDX);
-                if(mIsLocOrDX == 0){
+            } else if (uri.equals(radioUri)) {
+                int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 0);
+                Log.i(TAG, "mIsLocOrDX = " + mIsLocOrDX);
+                if (mIsLocOrDX == 0) {
                     tvRadioDxLoc.setText(R.string.radio_loc);
-                }else if(mIsLocOrDX == 1){
+                } else if (mIsLocOrDX == 1) {
                     tvRadioDxLoc.setText(R.string.radio_dx);
                 }
             }
         }
     };
+
     public void handleMediaPlaybackResult(String value1, String value2, int value3, int value4) {
         if (mMediaListener == null) {
             return;
@@ -1090,10 +1112,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         boolean isStartCommand = "start".equals(value2);
         boolean isStopCommand = "stop".equals(value2);
         boolean isValidPackage = !TextUtils.isEmpty(value1);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage+"--value2="+value2);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand+"-isStopCommand="+isStopCommand);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
         // 处理本地音乐的特殊情况
-        if (isValidPackage && (value1.contains("localmusic")||value1.contains("com.awell.bluetooth")||value1.contains("/system/bin/gocsdk")) && isStartCommand) {
+        if (isValidPackage && (value1.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains("/system/bin/gocsdk")) && isStartCommand) {
             mMediaListener.removeCallbacks();
             return;
         }
@@ -1107,7 +1129,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // 处理开始播放的情况
         if (isValidPackage && isStartCommand) {
             // 当前没有播放或切换到新包时，更新并启动回调
-            if(oldPlayingPackage!=null&&!oldPlayingPackage.equals(value1)) {
+            if (oldPlayingPackage != null && !oldPlayingPackage.equals(value1)) {
                 mMediaListener.togglePause();//有些播放器未暂停，手动暂停
                 mMediaListener.removeCallbacks();
             }
@@ -1117,8 +1139,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             //Log.i(TAG, "0000----Switched to new package: " + value1);
         }
     }
+
     public static AwellLibrary mediaLibrary;
-    private AwellLibrary.OnDataListener awellLibraryDataListener = new AwellLibrary.OnDataListener() {
+    private final AwellLibrary.OnDataListener awellLibraryDataListener = new AwellLibrary.OnDataListener() {
         @Override
         public void onResult(Bundle bundle) {
             llMusic.post(() -> {
@@ -1134,14 +1157,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         //if(value1!=null&&!value1.contains("localmusic")&&"start".equals(value2)){
                         //    value4=MusicWidget.OTHER_MUSIC;
                         //}
-                        Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + value1 + " " + value2 + " " + value3+" "+value4);
+                        Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + value1 + " " + value2 + " " + value3 + " " + value4);
                         Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + mMediaListener.getCurrentPlayingPackage());
                         //handleMediaPlaybackResult(value1,value2,value3,value4);
                         boolean isStartCommand = "start".equals(value2);
                         boolean isStopCommand = "stop".equals(value2);
                         boolean isValidPackage = !TextUtils.isEmpty(value1);
-                        boolean isLocalMusicPackage = (value1.contains("localmusic")||value1.contains("com.awell.bluetooth")||value1.contains("/system/bin/gocsdk"));
-                        if(isValidPackage&&mMediaListener!=null) {
+                        boolean isLocalMusicPackage = (value1.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains("/system/bin/gocsdk"));
+                        if (isValidPackage && mMediaListener != null) {
                             if (isLocalMusicPackage && isStartCommand) {
                                 mMediaListener.removeCallbacks();
                             } else if (!isLocalMusicPackage
@@ -1151,11 +1174,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                                 llMusic.setCurMusicState(false, MusicWidget.OTHER_MUSIC);
                             }
                         }
-                        llMusic.switchMediaController(value1, value2, value3,value4);
-                        if("com.awell.radio".equals(value1)){
-                            if("start".equals(value2)) {
+                        llMusic.switchMediaController(value1, value2, value3, value4);
+                        if ("com.awell.radio".equals(value1)) {
+                            if ("start".equals(value2)) {
                                 mWaveformView.startAnimation();
-                            }else{
+                            } else {
                                 mWaveformView.stopAnimation();
                             }
                         }
@@ -1171,7 +1194,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         }
                     }
                     break;
-                    case AwellTool.MUSIC.PLAY_NAME:{
+                    case AwellTool.MUSIC.PLAY_NAME: {
                         // 音乐监听 PLAY_NAME 返回三个参数
                         // VALUE_M1 = (String)歌曲名称
                         // VALUE_M2 = (String)歌手名称
@@ -1184,9 +1207,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         if (llMusic != null) {
                             llMusic.setMusicNameTextView(value1, MusicWidget.MUSIC);
                             llMusic.setArtistNameTextView(value2, MusicWidget.MUSIC);
-                            if("NO_MUSIC_LIST".equals(value1)
-                                    &&"NO_MUSIC_LIST".equals(value2)
-                                    &&"NO_MUSIC_LIST".equals(value3)){
+                            if ("NO_MUSIC_LIST".equals(value1)
+                                    && "NO_MUSIC_LIST".equals(value2)
+                                    && "NO_MUSIC_LIST".equals(value3)) {
                                 llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                                 llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
                             }
@@ -1199,7 +1222,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         String[] strs = value1.split(" , ");
                         long long1 = Long.parseLong(strs[0]);
                         long long2 = Long.parseLong(strs[1]);
-                        llMusic.setPlayImage(long1,long2);
+                        llMusic.setPlayImage(long1, long2);
                     }
                     break;
                     case AwellTool.MUSIC.PLAY_TIME: {
@@ -1210,7 +1233,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         long value2 = bundle.getLong(AwellTool.VALUE_M2);
                         Log.i(TAG, "onResult---MUSIC_PLAY_TIME : " + value1 + "-" + value2);
                         if (llMusic != null) {
-                            llMusic.setMusicSeekBar((int) value1, (int) value2,MusicWidget.MUSIC);
+                            llMusic.setMusicSeekBar((int) value1, (int) value2, MusicWidget.MUSIC);
                         }
                     }
                     break;
@@ -1223,7 +1246,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         }
                     }
                     break;
-                    case AwellTool.BT.PLAY_NAME:{
+                    case AwellTool.BT.PLAY_NAME: {
                         // 音乐监听 PLAY_NAME 返回三个参数
                         // VALUE_M1 = (String)歌曲名称
                         // VALUE_M2 = (String)歌手名称
@@ -1242,11 +1265,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         // 音乐监听 PLAY_TIME 返回两个参数
                         // VALUE_M1 = (long)当期时间 单位秒
                         // VALUE_M2 = (long)总时间 单位秒
-                        long value1 = bundle.getInt(AwellTool.VALUE_M1)*1000;
-                        long value2 = bundle.getInt(AwellTool.VALUE_M2)*1000;
+                        long value1 = bundle.getInt(AwellTool.VALUE_M1) * 1000;
+                        long value2 = bundle.getInt(AwellTool.VALUE_M2) * 1000;
                         Log.i(TAG, "onResult---BT_MUSIC_PLAY_TIME : " + value1 + "-" + value2);
                         if (llMusic != null) {
-                            llMusic.setMusicSeekBar((int) value1, (int) value2,MusicWidget.BT);
+                            llMusic.setMusicSeekBar((int) value1, (int) value2, MusicWidget.BT);
                         }
                     }
                     break;
@@ -1279,21 +1302,21 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         if (llMusic != null) {
                             int currentMedia = MusicWidget.OTHER_MUSIC;
 
-                            if("NO_MUSIC_LIST".equals(value1)
-                                    &&"NO_MUSIC_LIST".equals(value2)
-                                    &&"NO_MUSIC_LIST".equals(value3)){
+                            if ("NO_MUSIC_LIST".equals(value1)
+                                    && "NO_MUSIC_LIST".equals(value2)
+                                    && "NO_MUSIC_LIST".equals(value3)) {
                                 llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), currentMedia);
                                 llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), currentMedia);
                             }
 
-                            if(value1!=null&&!TextUtils.isEmpty(value1)){
+                            if (value1 != null && !TextUtils.isEmpty(value1)) {
                                 llMusic.setMusicNameTextView(value1, currentMedia);
-                            }else{
+                            } else {
                                 llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), currentMedia);
                             }
-                            if(value2!=null&&!TextUtils.isEmpty(value2)){
+                            if (value2 != null && !TextUtils.isEmpty(value2)) {
                                 llMusic.setArtistNameTextView(value2, currentMedia);
-                            }else{
+                            } else {
                                 llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), currentMedia);
                             }
                         }
@@ -1317,7 +1340,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         long value2 = bundle.getLong(AwellTool.VALUE_M2);
                         Log.i(TAG, "onResult---OTHER_MUSIC_TIME : " + value1 + "-" + value2);
                         if (llMusic != null) {
-                            llMusic.setMusicSeekBar((int) value1, (int) value2,MusicWidget.OTHER_MUSIC);
+                            llMusic.setMusicSeekBar((int) value1, (int) value2, MusicWidget.OTHER_MUSIC);
                         }
                     }
                     break;
@@ -1395,10 +1418,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         findView();
         handler.removeMessages(INITVIEW);
 //        handler.obtainMessage(INITVIEW).sendToTarget();
-        handler.sendEmptyMessageDelayed(INITVIEW,0);
+        handler.sendEmptyMessageDelayed(INITVIEW, 0);
     }
 
-    private void findView(){
+    private void findView() {
         /*viewPager = findViewById(R.id.viewpager);
         dots = new ImageView[dotsId.length];
         for (int i = 0; i < dotsId.length; i++) {
@@ -1409,7 +1432,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         viewpagerLayout3 = getLayoutInflater().inflate(R.layout.homepage_3, null);*/
 
         llMusic = findViewById(R.id.music_widget_layout);
-        musicName=llMusic.findViewById(R.id.music_widget_music_name);
+        musicName = llMusic.findViewById(R.id.music_widget_music_name);
         /*
         date_bg_rl_h = viewpagerLayout2.findViewById(R.id.date_bg_rl_h);
         date_bg_rl_m = viewpagerLayout2.findViewById(R.id.date_bg_rl_m);
@@ -1494,6 +1517,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private ImageView[] dots;
     private PagerAdapter pagerAdapter;
     private final int INITVIEW = 111;
+
     private void initViewPager() {
         viewsList = new ArrayList<>();
         viewsList.add(viewpagerLayout1);
@@ -1546,38 +1570,40 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private MusicWidget llMusic;
-    private RelativeLayout date_bg_rl_h,date_bg_rl_m;
-    private TextClock date_bg_tc_h,date_bg_tc_m,date_bg_tc_mm;
-    private TextView date_bg_tv_h,date_bg_tv_m;
+    private RelativeLayout date_bg_rl_h, date_bg_rl_m;
+    private TextClock date_bg_tc_h, date_bg_tc_m, date_bg_tc_mm;
+    private TextView date_bg_tv_h, date_bg_tv_m;
     //private TextView musicName;
     private EarqueeTextView musicName;
+
     private void initMusicWidget() {
         llMusic.setActivity(this, llMusic);
     }
 
     private LinearLayout radio_rl, radio_control_ll;
-    private ImageView radioPreIv,radioNextIv,radio_iv;
+    private ImageView radioPreIv, radioNextIv, radio_iv;
     private FrequencyTextView tv_radio_freq;
-    private TextView tv_radio_am_fm,tv_radio_freq_unit;
-    private Button tvRadioButAFM,iv_radio_setSearch,tvRadioDxLoc;
+    private TextView tv_radio_am_fm, tv_radio_freq_unit;
+    private Button tvRadioButAFM, iv_radio_setSearch, tvRadioDxLoc;
 
     private VisualizerView mWaveformView;
 
     private LinearLayout mMusicEntry;
+
     private void initRadioWidget() {
-        int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(),"RadioIsLocOrDX", 1);
-        int mIsFMOrAM = android.provider.Settings.System.getInt(getContentResolver(),"RadioIsFMOrAM", 0);
-        Log.d(TAG,"mIsFMOrAM:" +mIsFMOrAM + " mIsLocOrDX:"+mIsLocOrDX);
-        if(mIsLocOrDX == 0){
+        int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 1);
+        int mIsFMOrAM = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsFMOrAM", 0);
+        Log.d(TAG, "mIsFMOrAM:" + mIsFMOrAM + " mIsLocOrDX:" + mIsLocOrDX);
+        if (mIsLocOrDX == 0) {
             tvRadioDxLoc.setText(R.string.radio_loc);
-        }else if(mIsLocOrDX == 1){
+        } else if (mIsLocOrDX == 1) {
             tvRadioDxLoc.setText(R.string.radio_dx);
         }
-        if(mIsFMOrAM == 0){
+        if (mIsFMOrAM == 0) {
             tv_radio_am_fm.setText("FM");
             tvRadioButAFM.setText("FM");
             tv_radio_freq_unit.setText("MHz");
-        }else if(mIsFMOrAM == 1){
+        } else if (mIsFMOrAM == 1) {
             tv_radio_am_fm.setText("AM");
             tvRadioButAFM.setText("AM");
             tv_radio_freq_unit.setText("KHz");
@@ -1587,7 +1613,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     }
 
-    private MyQAnalogClock myQAnalogClock,myQAnalogClock1;
+    private MyQAnalogClock myQAnalogClock, myQAnalogClock1;
     private int[] time_ll_id = new int[]{R.id.time_ll_one, R.id.time_ll_two,
             R.id.time_ll_three, R.id.time_ll_four};
     private LinearLayout[] time_ll;
@@ -1598,9 +1624,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private View contentView, layoutView3;
     private NewCalendar calendar;
     private RelativeLayout time_widget_change;
-    private LinearLayout time_ll_one,small_calendar_layout;
+    private LinearLayout time_ll_one, small_calendar_layout;
     private ImageView biaopan_one_iv;
-    private TextClock page2_date_m,page2_date_d,small_calendar_month,small_calendar_day,small_calendar_year;
+    private TextClock page2_date_m, page2_date_d, small_calendar_month, small_calendar_day, small_calendar_year;
+
     private void initClock() {
         layoutView3 = LayoutInflater.from(this).inflate(R.layout.layout_pop_time_widget, null);
         time_img = new ImageView[time_img_id.length];
@@ -1627,6 +1654,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private PopupWindow popupWindow3;
+
     private void showPopupTimeWidget() {
         View view = layoutView3;
         popupWindow3 = new PopupWindow(view, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
@@ -1854,7 +1882,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     private void initCarView() {
 
-        ivLampSwitchBg.postDelayed(() -> accRecor = false,8 * 1000);
+        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
 
         if (Settings.System.getInt(getContentResolver(), "Headlamp", 0) == 1)
             ivLampSwitchBg.setImageResource(R.drawable.open);
@@ -1866,6 +1894,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private AnimationDrawable animationDrawableTwo;
+
     private void addCarAnim() {
         ivAnimTwo.setBackgroundResource(R.drawable.sf_speed_line_two);
         animationDrawableTwo = (AnimationDrawable) ivAnimTwo.getBackground();
@@ -1881,6 +1910,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private void speedhome() {
         Log.i(TAG, "speed come in");
         mHandlerSpeed = new Handler() {
@@ -1908,7 +1938,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                                 tvGPSSpeed.setText(speed_mile + "");
                                 tvGPSSpeedUnit.setText("mph");
                             }
-                            if(animationDrawableTwo!=null) {
+                            if (animationDrawableTwo != null) {
                                 if (speed_km > 0 || speed_mile > 0) {
                                     animationDrawableTwo.start();
                                 } else {
@@ -1921,7 +1951,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         break;
                     case MSG_CLEAR_SPEED:
                         tvGPSSpeed.setText("" + 0);
-                        if(animationDrawableTwo!=null) {
+                        if (animationDrawableTwo != null) {
                             animationDrawableTwo.stop();
                         }
                         break;
@@ -1989,7 +2019,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
     int[] sf_add2_dID = {R.drawable.sf_add2_d, R.drawable.sf_add2_n};
 
-    private void dayNightImages(int dayNight){
+    private void dayNightImages(int dayNight) {
         hotset_moshi.setImageResource(hotset_moshiID[dayNight]);
         //viewpagerLayout1.setBackgroundResource(sf_widget_musicID[dayNight]);
         //viewpagerLayout2.setBackgroundResource(sf_widget_musicID[dayNight]);
@@ -2048,21 +2078,23 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     int[] wallpaperID = {R.drawable.wallpaper_00, R.drawable.wallpaper_01};
     private final int SWTWALLPAPER = 50;
-    private void setWallpaper(int dayNight){
+
+    private void setWallpaper(int dayNight) {
         try {
             Log.i(TAG, "dayNight = " + dayNight);
             wallpaperManager.setResource(wallpaperID[dayNight]);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private Handler handler = new Handler(){
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
         @Override
-        public void handleMessage( Message msg) {
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Log.i(TAG,"handlerNew msg.what = " + msg.what);
-            switch (msg.what){
+            Log.i(TAG, "handlerNew msg.what = " + msg.what);
+            switch (msg.what) {
                 case 100:
                     break;
                 case INITVIEW:
@@ -2073,7 +2105,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     initCarView();
                     int value = Settings.System.getInt(getContentResolver(), "launcherTypeDN", 0);
                     dayNightImages(value == 1 ? 1 : 0);
-					
+
                     //handler.removeMessages(INITADDAPPVIEW);
                     //handler.sendEmptyMessageDelayed(INITADDAPPVIEW, 1000);
                     break;
@@ -2094,7 +2126,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             }
         }
     };
-
 
 
     // workspace 页码图标
@@ -2511,6 +2542,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -3104,12 +3136,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             mAppWidgetHost.startListening();
         }
     }
+
     /**
      * 生成指定长度的随机频谱数据（字符串数组）
      *
-     * @param length    数据长度（≥16）
-     * @param minValue  最小值（含）
-     * @param maxValue  最大值（含）
+     * @param length             数据长度（≥16）
+     * @param minValue           最小值（含）
+     * @param maxValue           最大值（含）
      * @param nonZeroProbability 非零值的概率（0~1）
      * @return 随机数据数组
      */
@@ -3195,7 +3228,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
 
         for (int i = 0; i < time_img_id.length; i++) {
-            if (v.getId() == time_img_id[i]){
+            if (v.getId() == time_img_id[i]) {
                 setTimeWidgetVisible(i);
                 setTimeWidgetIndex(i);
                 break;
@@ -3606,47 +3639,46 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     public boolean onLongClick(View v) {
-        if (v.getId() == R.id.time_widget_change){
+        if (v.getId() == R.id.time_widget_change) {
             //showPopupTimeWidget();
-        }else if (v.getId() == R.id.all_apps_cling){
+        } else if (v.getId() == R.id.all_apps_cling) {
 
-        }else {
+        } else {
 
 
+            if (!isDraggingEnabled()) return false;
+            if (isWorkspaceLocked()) return false;
+            if (mState != State.WORKSPACE) return false;
 
-        if (!isDraggingEnabled()) return false;
-        if (isWorkspaceLocked()) return false;
-        if (mState != State.WORKSPACE) return false;
+            if (!(v instanceof CellLayout)) {
+                v = (View) v.getParent().getParent();
+            }
 
-        if (!(v instanceof CellLayout)) {
-            v = (View) v.getParent().getParent();
-        }
+            resetAddInfo();
+            CellLayout.CellInfo longClickCellInfo = (CellLayout.CellInfo) v.getTag();
+            // This happens when long clicking an item with the dpad/trackball
+            if (longClickCellInfo == null) {
+                return true;
+            }
 
-        resetAddInfo();
-        CellLayout.CellInfo longClickCellInfo = (CellLayout.CellInfo) v.getTag();
-        // This happens when long clicking an item with the dpad/trackball
-        if (longClickCellInfo == null) {
-            return true;
-        }
+            // The hotseat touch handling does not go through Workspace, and we
+            // always allow long press
+            // on hotseat items.
+            final View itemUnderLongClick = longClickCellInfo.cell;
+            boolean allowLongPress = isHotseatLayout(v) || mWorkspace.allowLongPress();
+            if (allowLongPress && !mDragController.isDragging()) {
+                if (itemUnderLongClick == null) {
+                    // User long pressed on empty space
+                    mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
+                    startWallpaper();
+                } else {
 
-        // The hotseat touch handling does not go through Workspace, and we
-        // always allow long press
-        // on hotseat items.
-        final View itemUnderLongClick = longClickCellInfo.cell;
-        boolean allowLongPress = isHotseatLayout(v) || mWorkspace.allowLongPress();
-        if (allowLongPress && !mDragController.isDragging()) {
-            if (itemUnderLongClick == null) {
-                // User long pressed on empty space
-                mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
-                startWallpaper();
-            } else {
-
-                if (!(itemUnderLongClick instanceof Folder)) {
-                    // User long pressed on an item
-                    // mWorkspace.startDrag(longClickCellInfo); //鍙栨秷闀挎寜鐐瑰嚮鏄剧ず鏇存崲澹佺焊
+                    if (!(itemUnderLongClick instanceof Folder)) {
+                        // User long pressed on an item
+                        // mWorkspace.startDrag(longClickCellInfo); //鍙栨秷闀挎寜鐐瑰嚮鏄剧ず鏇存崲澹佺焊
+                    }
                 }
             }
-        }
         }
         return true;
     }
@@ -4117,7 +4149,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     void showAllApps(boolean animated) {
         DragController.setUnInstallState(false); // by jxy
         mAppsCustomizeContent.setVisibility(View.VISIBLE); // by jxy
-        if (mState != State.WORKSPACE) return;
+        if (mState != State.WORKSPACE)
+            return;
 
         showAppsCustomizeHelper(animated, false);
         mAppsCustomizeTabHost.requestFocus();
@@ -4370,7 +4403,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private boolean updateGlobalSearchIcon() {
-        if (true) return false;
+        if (true)
+            return false;
 
         final ImageView searchButton = (ImageView) findViewById(R.id.search_button);
         final View voiceButton = findViewById(R.id.voice_button);
@@ -5162,12 +5196,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     }
 
-    private void updateSpeedUnitText(){
+    private void updateSpeedUnitText() {
         byte[] unit = new byte[1];
         CommonData.readDataToMeta(unit, 0x84);
         int unitData = unit[0];
         Log.e(TAG, "unit Data = " + unitData);
-        if(tvGPSSpeedUnit!=null) {
+        if (tvGPSSpeedUnit != null) {
             if (unitData == 0) {
                 tvGPSSpeedUnit.setText("KM/h");
             } else if (unitData == 1) {
@@ -5215,7 +5249,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     ivLampSwitchBg.setImageResource(R.drawable.off);
             } else if (action.equals(CommonData.ACTION_ACC_ON)) {
                 if (ivLampSwitchBg != null)
-                    ivLampSwitchBg.postDelayed(() -> accRecor = false,8 * 1000);
+                    ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
             } else if (action.equals(CommonData.ACTION_ACC_OFF)) {
                 accRecor = true;
             } else if (action.equals(CommonData.BROADCAST_MEDIA_EXIT)) {
@@ -5223,25 +5257,25 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
 
                 }
-            }else if("com.zjinnova.zlink".equals(action)){
+            } else if ("com.zjinnova.zlink".equals(action)) {
                 String zlinStatus = intent.getStringExtra("status");
                 String phoneMode = intent.getStringExtra("phoneMode");
-                Log.d(TAG,"zlinStatus:" +zlinStatus);
-                if(zlinStatus == null){
+                Log.d(TAG, "zlinStatus:" + zlinStatus);
+                if (zlinStatus == null) {
                     return;
                 }
                 llMusic.getCarPlayData(zlinStatus, phoneMode);
-            }else if (action.equals("android.launcher.show.allApp")){
+            } else if (action.equals("android.launcher.show.allApp")) {
                 Log.d(TAG, "mainReceiver:" + intent.getAction());
                 canbus_set_dis = getCanBusState();
                 showAllApps(true);
                 setSettingOrAndroidPage(true);
                 mModel.startLoader(true, -1);
-            }else if (action.equals("CANBUS_CHANGE_SPEED_Unit")){
+            } else if (action.equals("CANBUS_CHANGE_SPEED_Unit")) {
                 updateSpeedUnitText();
-            }else if("top_session_package_change".equals(action)) {
+            } else if ("top_session_package_change".equals(action)) {
                 String sessionTopPkg = intent.getStringExtra("top_package");
-                handleMediaPlaybackResult(sessionTopPkg,"start",3,4);
+                handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
                 Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
             }
 
