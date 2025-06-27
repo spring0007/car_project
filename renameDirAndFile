@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# 使用 find 查找$1目录下所有名称包含 Awell 的目录或文件
+find "$1" -depth -name "*awell*" | while read -r item; do
+    # 获取目录或文件的父目录
+    parent_dir=$(dirname "$item")
+    # 获取目录或文件的新名称（替换 Awell 为 Awell）
+    new_name=$(basename "$item" | sed 's/awell/awell/g')
+    # 重命名目录或文件
+    mv "$item" "$parent_dir/$new_name"
+done

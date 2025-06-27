@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:focusable="false"
+    android:clickable="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_marginBottom="8dp"
+        android:paddingStart="1dp"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:clickable="false"
+        android:id="@+id/itemTv"
+        android:gravity="center"
+        android:fontFamily="@font/harmonyos_sans_sc_regular"
+        android:background="@android:color/transparent"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_width="26dp"
+        android:layout_height="26dp">
+    </TextView>
+</LinearLayout>

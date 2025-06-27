@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/rainbow_01" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_02" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_03" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_04" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_05" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_06" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_07" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_08" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_09" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_10" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_11" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_12" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_13" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_14" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_15" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_16" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_17" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_18" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_19" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_20" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_21" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_22" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_23" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_24" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_25" android:duration="80"/>
+    <item android:drawable="@drawable/rainbow_26" android:duration="80"/>
+
+
+</animation-list>

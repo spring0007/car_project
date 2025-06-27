@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<favorites xmlns:launcher="http://schemas.android.com/apk/res-auto" >
+
+    <!-- Far-left screen [0] -->
+
+
+    <!-- Left screen [1] -->
+    <!-- <favorite -->
+    <!-- launcher:packageName="com.autonavi.xmgd.navigator" -->
+    <!-- launcher:className="com.autonavi.xmgd.navigator.Warn" -->
+    <!-- launcher:screen="1" -->
+    <!-- launcher:x="0" -->
+    <!-- launcher:y="1" /> -->
+    <!-- <favorite
+        launcher:className="com.acloud.stub.news.QtActivity"
+        launcher:packageName="com.acloud.stub.news"
+        launcher:screen="0"
+        launcher:x="4"
+        launcher:y="0" /> -->
+    <!-- <favorite -->
+    <!-- launcher:packageName="com.acloud.stub.cdplay" -->
+    <!-- launcher:className="com.acloud.stub.cdplay.QtActivity" -->
+    <!-- launcher:screen="3" -->
+    <!-- launcher:x="0" -->
+    <!-- launcher:y="0" /> -->
+    <!-- <favorite
+        launcher:className="com.acloud.stub.newonlineradio.QtActivity"
+        launcher:packageName="com.acloud.stub.newonlineradio"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.autochips.HDMI.HDMIActivity"
+        launcher:packageName="com.autochips.HDMI"
+        launcher:screen="2"
+        launcher:x="0"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.acloud.stub.newonlinemusic.QtActivity"
+        launcher:packageName="com.acloud.stub.newonlinemusic"
+        launcher:screen="0"
+        launcher:x="1"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.pve.onekeysos.OneKeySosView"
+        launcher:packageName="com.pve.onekeysos"
+        launcher:screen="2"
+        launcher:x="1"
+        launcher:y="0" />
+    <favorite
+    launcher:packageName="com.acloud.stub.localmusic"
+    launcher:className="com.acloud.stub.localmusic.QtActivity"
+    launcher:screen="2"
+    launcher:x="2"
+    launcher:y="0" />
+    
+         <favorite 
+         launcher:packageName="com.pve.onekeynavi"
+        launcher:className="com.pve.onekeynavi.OneKeyNaviView"              
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="1" />
+   
+    Middle screen [1]
+    
+     launcher:packageName="title.navi"
+        launcher:className="title.navi.main.Waiting"   
+   
+    <favorite
+    launcher:packageName="com.acloud.stub.localradio"
+    launcher:className="com.acloud.stub.localradio.QtActivity"
+    launcher:screen="2"
+    launcher:x="3"
+    launcher:y="0" />
+
+    <favorite
+        launcher:className="com.autochips.avin.AVInActivity"
+        launcher:packageName="com.autochips.avin"
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.android.browser.BrowserActivity"
+        launcher:packageName="com.android.browser"
+        launcher:screen="0"
+        launcher:x="2"
+        launcher:y="0" />
+    <favorite
+    launcher:packageName="com.autochips.bluetooth"
+    launcher:className="com.autochips.bluetooth.MainBluetoothActivity"
+    launcher:screen="2"
+    launcher:x="5"
+    launcher:y="0" />
+    <favorite
+        launcher:className="com.acloud.stub.cdplay.QtActivity"
+        launcher:packageName="com.acloud.stub.cdplay"
+        launcher:screen="0"
+        launcher:x="5"
+        launcher:y="0" /> -->
+    <!--
+          <favorite
+      launcher:packageName="com.wifi.pnp.player"
+        launcher:className="com.wifi.pnp.car.PhoneMusicActivity"
+        launcher:screen="2"
+        launcher:x="3"
+        launcher:y="0" />
+    <favorite
+      launcher:packageName="com.tencent.mm"
+        launcher:className="com.tencent.mm.ui.LauncherUI"
+        launcher:screen="2"
+        launcher:x="3"
+        launcher:y="0" />
+    
+    <favorite
+      launcher:packageName="com.tencent.mobileqq"
+        launcher:className="com.tencent.mobileqq.activity.SplashActivity"
+        launcher:screen="2"
+        launcher:x="4"
+        launcher:y="0" />
+        
+    <favorite
+      launcher:packageName="com.UCMobile"
+        launcher:className="com.UCMobile.main.UCMobile"
+        launcher:screen="2"
+        launcher:x="0"
+        launcher:y="1" />
+    -->
+
+
+    <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
+
+    <favorite
+        launcher:className="com.acloud.stub.video.QtActivity"
+        launcher:container="-101"
+        launcher:packageName="com.acloud.stub.video"
+        launcher:screen="2"
+        launcher:x="2"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.acloud.stub.localradio.QtActivity"
+        launcher:container="-101"
+        launcher:packageName="com.acloud.stub.localradio"
+        launcher:screen="1"
+        launcher:x="1"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.autochips.bluetooth.MainBluetoothActivity"
+        launcher:container="-101"
+        launcher:packageName="com.autochips.bluetooth"
+        launcher:screen="5"
+        launcher:x="5"
+        launcher:y="0" />
+    <favorite
+        launcher:className="com.acloud.stub.localmusic.QtActivity"
+        launcher:container="-101"
+        launcher:packageName="com.acloud.stub.localmusic"
+        launcher:screen="4"
+        launcher:x="4"
+        launcher:y="0" />
+    <favorite
+        launcher:className="cld.navi.c2739.mainframe.NaviMainActivity"   
+        launcher:container="-101"
+        launcher:packageName="cld.navi.c2739.mainframe"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="0" />
+<!--     <favorite
+        launcher:className="com.pve.naviguide.NaviguideMainView"
+        launcher:container="-101"
+        launcher:packageName="com.pve.naviguide"
+        launcher:screen="0"
+        launcher:x="0"
+        launcher:y="0" /> -->
+    <favorite
+        launcher:className="com.android.settings.Settings"
+        launcher:container="-101"
+        launcher:packageName="com.android.settings"
+        launcher:screen="6"
+        launcher:x="6"
+        launcher:y="0" />
+
+</favorites>

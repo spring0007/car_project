@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/homepage_2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sf_widget_music_bg"
+    tools:ignore="MissingDefaultResource">
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/date_bg_rl_h"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="6"
+        android:background="@drawable/date_bg">
+
+        <TextClock
+            android:id="@+id/date_bg_tc_h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-32dp"
+            android:fontFamily="@font/bahnschrift"
+            android:format12Hour="hh"
+            android:format24Hour="HH"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textScaleX="0.8"
+            android:textSize="320sp" />
+
+        <TextView
+            android:id="@+id/date_bg_tv_h"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_centerInParent="true"
+            android:background="#D5D7DD" />
+
+        <TextClock
+            android:id="@+id/date_ee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bahnschrift"
+            android:layout_alignParentBottom="true"
+            android:format12Hour="EEEE"
+            android:format24Hour="EEEE"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/holo_red_dark"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:textSize="34sp" />
+
+        <TextClock
+            android:id="@+id/date_bg_tc_mm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bahnschrift"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/date_ee"
+            android:format12Hour="MMM"
+            android:format24Hour="MMM"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:textSize="34sp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/date_bg_rl_m"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="6"
+        android:background="@drawable/date_bg">
+
+        <TextClock
+            android:id="@+id/date_bg_tc_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-32dp"
+            android:fontFamily="@font/bahnschrift"
+            android:format12Hour="mm"
+            android:format24Hour="mm"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textScaleX="0.8"
+            android:textSize="320sp" />
+
+        <TextView
+            android:id="@+id/date_bg_tv_m"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_centerInParent="true"
+            android:background="#D5D7DD" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+</LinearLayout>

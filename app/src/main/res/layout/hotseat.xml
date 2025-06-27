@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2011 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<com.awell.launcher2.Hotseat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="4dp"
+    launcher:cellCountX="@integer/hotseat_cell_count_land"
+    launcher:cellCountY="1"
+    tools:ignore="MissingDefaultResource">
+    <com.awell.launcher2.CellLayout
+        android:id="@+id/layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:paddingLeft="@dimen/button_bar_width_left_padding"
+        android:paddingRight="@dimen/button_bar_width_right_padding"
+        android:paddingTop="@dimen/button_bar_height_top_padding"
+        android:paddingBottom="@dimen/button_bar_height_bottom_padding_land"		
+        launcher:cellWidth="90dp"
+        launcher:cellHeight="110dp"
+        launcher:widthGap="3dp"
+        launcher:heightGap="0dp"
+        launcher:maxGap="@dimen/workspace_max_gap" />
+</com.awell.launcher2.Hotseat>

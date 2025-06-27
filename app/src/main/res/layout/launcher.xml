@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/launcher"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    tools:ignore="MissingDefaultResource">
+
+    <!-- 顶部进入设置界面 -->
+    <!-- 设置小按钮 -->
+
+    <!-- <include
+         android:id="@+id/topbar"
+         android:layout_width="match_parent"
+         android:layout_height="40dp"
+         android:layout_alignParentBottom="true"
+         android:layout_marginBottom="320dp"
+         layout="@layout/newtopstatusbar_lehang"
+         android:visibility="gone" />-->
+
+    <com.awell.launcher2.DragLayer
+        android:id="@+id/drag_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+
+        <!-- 小圆点 -->
+
+        <include
+            android:id="@+id/mIndicatorDots"
+            layout="@layout/indicatordots"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/indicatorDots_height"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginLeft="6dp"
+            android:layout_marginBottom="@dimen/button_bar_height_plus_padding_land"
+            android:paddingTop="0dp"
+            android:visibility="gone" />
+
+        <!-- The workspace contains 5 screens of cells -->
+
+        <com.awell.launcher2.Workspace
+            android:id="@+id/workspace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="0dp"
+            launcher:cellCountX="@integer/cell_count_x"
+            launcher:cellCountY="@integer/cell_count_y"
+            launcher:defaultScreen="0"
+            launcher:pageSpacing="@dimen/workspace_page_spacing"
+            launcher:scrollIndicatorPaddingLeft="@dimen/qsb_bar_height"
+            launcher:scrollIndicatorPaddingRight="@dimen/button_bar_height">
+
+            <include
+                android:id="@+id/cell6"
+                layout="@layout/workspace_screen" />
+
+            <!--
+                <include
+                android:id="@+id/cell1"
+                layout="@layout/workspace_screen" />
+
+            <include
+                android:id="@+id/cell2"
+                layout="@layout/workspace_screen" />
+            -->
+
+
+            <!-- <include -->
+            <!-- android:id="@+id/cell3" -->
+            <!-- layout="@layout/workspace_screen" /> -->
+        </com.awell.launcher2.Workspace>
+        <!-- android:paddingBottom="@dimen/workspace_bottom_padding" -->
+
+
+        <!-- 主页面滑动的图标以及allapps -->
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/gongban"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="80dp"/>
+
+            <include
+                layout="@layout/hotset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"/>
+        </FrameLayout>
+
+        <include
+            android:id="@+id/qsb_divider"
+            layout="@layout/workspace_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="@dimen/qsb_bar_height"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/dock_divider"
+            layout="@layout/workspace_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/button_bar_height"
+            android:visibility="gone" />
+
+        <!-- (no) 小圆点 -->
+
+        <include
+            android:id="@+id/paged_view_indicator"
+            layout="@layout/scroll_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone" />
+        <!-- 下方应用键 -->
+        <include
+            android:id="@+id/hotseat"
+            layout="@layout/hotseat"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_bar_height_plus_padding_land"
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingBottom="10dp"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/qsb_bar"
+            layout="@layout/qsb_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:visibility="gone" />
+
+        <com.awell.launcher2.DrawableStateProxyView
+            android:id="@+id/voice_button_proxy"
+            android:layout_width="@dimen/qsb_bar_height"
+            android:layout_height="@dimen/app_icon_size"
+            android:layout_gravity="top|left"
+            android:layout_marginTop="64dp"
+            android:clickable="true"
+            android:importantForAccessibility="no"
+            android:onClick="onClickVoiceButton"
+            android:visibility="gone"
+            launcher:sourceViewId="@+id/voice_button" />
+
+        <include
+            android:id="@+id/apps_customize_pane"
+            layout="@layout/apps_customize_pane"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/workspace_cling"
+            layout="@layout/workspace_cling"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/folder_cling"
+            layout="@layout/folder_cling"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </com.awell.launcher2.DragLayer>
+
+</RelativeLayout>
