@@ -445,11 +445,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         LauncherApplication app = ((LauncherApplication) getApplication());
         mSharedPrefs = getSharedPreferences(LauncherApplication.getSharedPreferencesKey(), Context.MODE_PRIVATE);
         //huangxw
-//        mModel = app.setLauncher(this);
+        mModel = app.setLauncher(this);
 
-        mModel = app.mModel;
-        ModelImpl model = new ModelImpl();
-        mModel.initialize(model);
+//        mModel = app.mModel;
+//        ModelImpl model = new ModelImpl();
+//        mModel.initialize(model);
 
         mIconCache = app.getIconCache();
         mDragController = new DragController(this);
@@ -875,18 +875,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
          */
         updateGotoPageButtonStatus();
 
-        //huangxw
-        //startUIActivity();
-
-    }
-
-    /**
-     * start UI activity
-     */
-    private void startUIActivity() {
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName(this, UIActivity.class));
-        startActivity(intent);
     }
 
     @Override
@@ -2546,7 +2534,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     if (alreadyOnHome) {
                         showWorkspace(true);
                         //huangxw
-                        AppsCustomizeControl.INSTANCE.hideApps();
+//                        AppsCustomizeControl.INSTANCE.hideApps();
 
                     } else {
                         mOnResumeState = State.WORKSPACE;
@@ -2676,7 +2664,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        if (requestCode >= 0) mWaitingForResult = true;
+        if (requestCode >= 0)
+            mWaitingForResult = true;
         super.startActivityForResult(intent, requestCode);
     }
 
@@ -2787,7 +2776,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_WALLPAPER_SETTINGS:
-                startWallpaper();
+                Utils.startWallpaper();
                 return true;
         }
 
@@ -2957,36 +2946,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         sFolders.remove(folder.id);
     }
 
-    private void startWallpaper() {
-//        showWorkspace(true);
-        Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-        List<ResolveInfo> lists = getPackageManager().queryIntentActivities(pickWallpaper, 0);
-        List<Intent> listIntent = new ArrayList<>();
-        pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-        pickWallpaper.setPackage(getPackageName());
-        listIntent.add(pickWallpaper);
-        for (ResolveInfo info : lists) {
-            String pkgName = info.activityInfo.packageName;
-            Log.d(TAG, pkgName);
-            if (!pkgName.contains("launcher")) {
-                pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
-                pickWallpaper.setPackage(pkgName);
-                listIntent.add(pickWallpaper);
-            }
-        }
-        Intent chooser = Intent.createChooser(new Intent(), getText(R.string.chooser_wallpaper));
-        // NOTE: Adds a configure option to the chooser if the wallpaper supports Removed in Eclair MR1
-        // WallpaperManager wm = (WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);
-        // WallpaperInfo wi = wm.getWallpaperInfo();
-        // if (wi != null && wi.getSettingsActivity() != null) {
-        // LabeledIntent li = new LabeledIntent(getPackageName(),
-        // R.string.configure_wallpaper, 0);
-        // li.setClassName(wi.getPackageName(), wi.getSettingsActivity());
-        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, listIntent.toArray(new Parcelable[]{}));
-        // }
-        startActivityForResult(chooser, REQUEST_PICK_WALLPAPER);
-
-    }
 
     /**
      * Registers various content observers. The current implementation registers
@@ -3023,7 +2982,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     public void onBackPressed() {
         //huangxw
-        AppsCustomizeControl.INSTANCE.hideApps();
+//        AppsCustomizeControl.INSTANCE.hideApps();
 
         if (isAllAppsVisible()) {
             showWorkspace(true);
@@ -3104,9 +3063,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 canbus_set_dis = getCanBusState();
                 mModel.startLoader(true, -1);
 
-//                showAllApps(true);
+                showAllApps(true);
                 //huangxw
-                AppsCustomizeControl.INSTANCE.showApps(this);
+//                AppsCustomizeControl.INSTANCE.showApps(this);
 
                 break;
             case R.id.hotset_dianhua:
@@ -3551,7 +3510,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 if (itemUnderLongClick == null) {
                     // User long pressed on empty space
                     mWorkspace.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING);
-                    startWallpaper();
+                    Utils.startWallpaper();
                 } else {
 
                     if (!(itemUnderLongClick instanceof Folder)) {

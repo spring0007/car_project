@@ -6,6 +6,8 @@ import static com.awell.launcher2.LauncherApplication.getmAppContext;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.awell.addapp.AppInfo;
 import com.awell.launcher.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -376,6 +379,36 @@ public class Utils {
         return success;
     }
 
+    public static void startWallpaper() {
+//        showWorkspace(true);
+        Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
+        List<ResolveInfo> lists = getmAppContext().getPackageManager().queryIntentActivities(pickWallpaper, 0);
+        List<Intent> listIntent = new ArrayList<>();
+        pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
+        pickWallpaper.setPackage(getmAppContext().getPackageName());
+        listIntent.add(pickWallpaper);
+        for (ResolveInfo info : lists) {
+            String pkgName = info.activityInfo.packageName;
+            Log.d(TAG, pkgName);
+            if (!pkgName.contains("launcher")) {
+                pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
+                pickWallpaper.setPackage(pkgName);
+                listIntent.add(pickWallpaper);
+            }
+        }
+        Intent chooser = Intent.createChooser(new Intent(), getmAppContext().getText(R.string.chooser_wallpaper));
+        // NOTE: Adds a configure option to the chooser if the wallpaper supports Removed in Eclair MR1
+        // WallpaperManager wm = (WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);
+        // WallpaperInfo wi = wm.getWallpaperInfo();
+        // if (wi != null && wi.getSettingsActivity() != null) {
+        // LabeledIntent li = new LabeledIntent(getPackageName(),
+        // R.string.configure_wallpaper, 0);
+        // li.setClassName(wi.getPackageName(), wi.getSettingsActivity());
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, listIntent.toArray(new Parcelable[]{}));
+        // }
+        startActivity(null, chooser, "startWallpaper");
+        //startActivityForResult(chooser, REQUEST_PICK_WALLPAPER);
 
+    }
 }
 
