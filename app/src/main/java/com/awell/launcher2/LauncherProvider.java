@@ -128,6 +128,9 @@ public class LauncherProvider extends ContentProvider {
         if (!values.containsKey(LauncherSettings.Favorites._ID)) {
             throw new RuntimeException("Error: attempting to add item without specifying an id");
         }
+        Log.i(TAG, "dbInsertAndCheck: huang insert table=>" + table);
+        Log.i(TAG, "dbInsertAndCheck: huang insert values=>" + values);
+        Log.i(TAG, "dbInsertAndCheck: huang stacks =>" + Log.getStackTraceString(new Throwable("huang")));
         return db.insert(table, nullColumnHack, values);
     }
 
@@ -140,7 +143,7 @@ public class LauncherProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues initialValues) {
         SqlArguments args = new SqlArguments(uri);
-
+        Log.i(TAG, "insert: huang insert uri ==>" + uri);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final long rowId = dbInsertAndCheck(mOpenHelper, db, args.table, null, initialValues);
         if (rowId <= 0) return null;
@@ -226,7 +229,7 @@ public class LauncherProvider extends ContentProvider {
             if (origWorkspaceResId != 0) {
                 editor.putInt(DEFAULT_WORKSPACE_RESOURCE_ID, origWorkspaceResId);
             }
-            mOpenHelper.loadFavorites(mOpenHelper.getWritableDatabase(), workspaceResId);
+            //mOpenHelper.loadFavorites(mOpenHelper.getWritableDatabase(), workspaceResId);
             editor.commit();
         }
     }

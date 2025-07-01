@@ -16,14 +16,17 @@
 
 package com.awell.launcher2;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
 
 /**
  * We use a custom tab view to process our own focus traversals.
  */
-public class EarqueeTextView extends androidx.appcompat.widget.AppCompatTextView {
+@SuppressLint("AppCompatCustomView")
+public class EarqueeTextView extends TextView {
     public EarqueeTextView(Context context) {
         super(context);
     }

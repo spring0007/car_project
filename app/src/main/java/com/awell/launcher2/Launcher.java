@@ -148,10 +148,13 @@ import com.awell.ctrlview.MusicWidget;
 import com.awell.ctrlview.MyPageTransformer2;
 import com.awell.ctrlview.MyQAnalogClock;
 import com.awell.ctrlview.NewCalendar;
+import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
+import com.awell.ui.AppsCustomizeControl;
+import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.ui.UIActivity;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
@@ -211,7 +214,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     /**
      * hxw change 5 to 0
      */
-    static final int SCREEN_COUNT = 0;
+    public static final int SCREEN_COUNT = 0;
     static final int DEFAULT_SCREEN = 2;
 
     private final String PREFERENCES = "launcher.preferences";
@@ -381,11 +384,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private Bitmap bmp_dot;
     private Bitmap bmp_dot_sel;
     public static IndicatorPanel mIndicatorPanel;
-    public static AppsCustomizeIndicatorPanel mAppsCustomizeIndicatorPanel;
+    public AppsCustomizeIndicatorPanel mAppsCustomizeIndicatorPanel;
     private int mov_x = 0;
     Timer timer = new Timer();
 
-    public static Boolean isSettingOrAndroidPage = false;
 
     private Handler mHandlerSpeed = null;
     static int canbus_set_dis = 0;
@@ -393,14 +395,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private MediaBrowserCompat mMediaBrowser;
     private Context mContext;
     public static MediaNotificationListener mMediaListener;
-
-    public static void setSettingOrAndroidPage(Boolean boolean1) {
-        isSettingOrAndroidPage = boolean1;
-    }
-
-    public static Boolean getSettingOrAndroidPage() {
-        return isSettingOrAndroidPage;
-    }
 
     static int getCurrPage() {
         return mWorkspace.getCurrentPage();
@@ -466,7 +460,13 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		this.startService(service);*/
         LauncherApplication app = ((LauncherApplication) getApplication());
         mSharedPrefs = getSharedPreferences(LauncherApplication.getSharedPreferencesKey(), Context.MODE_PRIVATE);
-        mModel = app.setLauncher(this);
+        //huangxw
+//        mModel = app.setLauncher(this);
+
+        mModel = app.mModel;
+        ModelImpl model = new ModelImpl();
+        mModel.initialize(model);
+
         mIconCache = app.getIconCache();
         mDragController = new DragController(this);
         mInflater = getLayoutInflater();
@@ -508,6 +508,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
 
         if (!mRestoring) {
+            Log.i(TAG, "onCreate: huang start loader sPausedFromUserAction=>" + sPausedFromUserAction);
             if (sPausedFromUserAction) {
                 // If the user leaves launcher, then we should just load items
                 // asynchronously when
@@ -601,6 +602,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void checkForLocaleChange() {
         if (sLocaleConfiguration == null) {
             new AsyncTask<Void, Void, LocaleConfiguration>() {
@@ -658,31 +660,17 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private void readConfiguration(Context context, LocaleConfiguration configuration) {
-        DataInputStream in = null;
-        try {
-            in = new DataInputStream(context.openFileInput(PREFERENCES));
+        try (DataInputStream in = new DataInputStream(context.openFileInput(PREFERENCES))) {
             configuration.locale = in.readUTF();
             configuration.mcc = in.readInt();
             configuration.mnc = in.readInt();
-        } catch (FileNotFoundException e) {
-            // Ignore
         } catch (IOException e) {
             // Ignore
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
         }
     }
 
     private void writeConfiguration(Context context, LocaleConfiguration configuration) {
-        DataOutputStream out = null;
-        try {
-            out = new DataOutputStream(context.openFileOutput(PREFERENCES, MODE_PRIVATE));
+        try (DataOutputStream out = new DataOutputStream(context.openFileOutput(PREFERENCES, MODE_PRIVATE))) {
             out.writeUTF(configuration.locale);
             out.writeInt(configuration.mcc);
             out.writeInt(configuration.mnc);
@@ -692,14 +680,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         } catch (IOException e) {
             // noinspection ResultOfMethodCallIgnored
             context.getFileStreamPath(PREFERENCES).delete();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
         }
     }
 
@@ -871,6 +851,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mPaused = false;
         sPausedFromUserAction = false;
         if (mRestoring || mOnResumeNeedsLoad) {
+            Log.i(TAG, "onResume: huang start loader ==>");
             mWorkspaceLoading = true;
             mModel.startLoader(true, -1);
             mRestoring = false;
@@ -910,7 +891,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
          */
         updateGotoPageButtonStatus();
 
-        startUIActivity();
+        //huangxw
+        //startUIActivity();
 
     }
 
@@ -931,7 +913,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // it as necessary
         // when Launcher resumes and we are still in AllApps.
         updateWallpaperVisibility(true);
-
         super.onPause();
         mPaused = true;
         mDragController.cancelDrag();
@@ -1384,6 +1365,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mAppsCustomizeContent = (AppsCustomizePagedView) mAppsCustomizeTabHost.findViewById(R.id.apps_customize_pane_content);
         mAppsCustomizeContent.setup(this, dragController);
 
+
+        mAppsCustomizeIndicatorDots = (ViewGroup) mAppsCustomizeTabHost.findViewById(R.id.mIndicatorDots);
+        mAppsCustomizeIndicatorPanel = new AppsCustomizeIndicatorPanel(this);
+        mAppsCustomizeIndicatorDots.addView(mAppsCustomizeIndicatorPanel);
+        mAppsCustomizeContent.setPageIndication(mAppsCustomizeIndicatorPanel);
+
         dragController.setDragScoller(mWorkspace);
         dragController.setScrollView(mDragLayer);
         dragController.setMoveTarget(mWorkspace);
@@ -1403,10 +1390,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mIndicatorDots = (ViewGroup) findViewById(R.id.mIndicatorDots);
         mIndicatorPanel = new IndicatorPanel(this);
         mIndicatorDots.addView(mIndicatorPanel);
-
-        mAppsCustomizeIndicatorDots = (ViewGroup) mAppsCustomizeTabHost.findViewById(R.id.mIndicatorDots);
-        mAppsCustomizeIndicatorPanel = new AppsCustomizeIndicatorPanel(this);
-        mAppsCustomizeIndicatorDots.addView(mAppsCustomizeIndicatorPanel);
 
         initTimeReceiver();
 
@@ -1676,8 +1659,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         if (popupWindow3 != null) {
             popupWindow3.dismiss();
         }
-        SharedPreferences.Editor editor = mSharedPrefs
-                .edit();
+        SharedPreferences.Editor editor = mSharedPrefs.edit();
         editor.putInt("time_widget_index", index);
         editor.commit();
     }
@@ -2157,42 +2139,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             }
 
             canvas.drawBitmap(bmp_dot_sel, start_x + (bmp_dot_w + dot_gap) * mWorkspace.getNextPage() + mov_x, (mIndicatorDots.getHeight() - bmp_dot.getHeight()) / 2, mPaint);
-
-            canvas.restore();
-        }
-    }
-
-    // all app 页码图标
-    class AppsCustomizeIndicatorPanel extends View {
-        public AppsCustomizeIndicatorPanel(Context context) {
-            super(context);
-        }
-
-        public void onDraw(Canvas canvas) {
-
-            // canvas.drawColor(Color.BLACK);
-            mPaint.setAntiAlias(true);
-
-            canvas.clipRect(0, 0, mAppsCustomizeIndicatorDots.getWidth(), mAppsCustomizeIndicatorDots.getHeight());
-
-            canvas.save();
-
-            canvas.rotate(0.0f);
-
-            //mPaint.setColor(Color.RED);
-
-            int bmp_dot_w = bmp_dot.getWidth();
-            bmp_dot.getHeight();
-            int start_x = (mAppsCustomizeIndicatorDots.getWidth() - (bmp_dot_w + dot_gap) * mAppsCustomizeTabHost.mAppsCustomizePane.getPageCount() + dot_gap) / 2 + 20;
-            int start_x_tmp = start_x;
-
-
-            for (int i = 0; i < mAppsCustomizeTabHost.mAppsCustomizePane.getPageCount(); i++) {
-                canvas.drawBitmap(bmp_dot, start_x_tmp - 20, 0, mPaint);
-                start_x_tmp += bmp_dot_w + dot_gap;
-            }
-
-            canvas.drawBitmap(bmp_dot_sel, start_x + (bmp_dot_w + dot_gap) * mAppsCustomizeTabHost.mAppsCustomizePane.getNextPage() + mov_x - 20, 0, mPaint);
 
             canvas.restore();
         }
@@ -2775,7 +2721,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     public void startSearch(String initialQuery, boolean selectInitialQuery, Bundle appSearchData, boolean globalSearch) {
 
-        showWorkspace(true);
+        //showWorkspace(true);
 
         if (initialQuery == null) {
             // Use any text typed in the launcher as the initial query
@@ -3185,10 +3131,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 break;
             case R.id.hotset_allapp: // allapp
+
                 canbus_set_dis = getCanBusState();
-                showAllApps(true);
-                setSettingOrAndroidPage(true);
                 mModel.startLoader(true, -1);
+
+//                showAllApps(true);
+                //huangxw
+                AppsCustomizeControl.INSTANCE.showApps(this);
+
                 break;
             case R.id.hotset_dianhua:
                 startActivity("com.android.dialer", "com.android.dialer.app.DialtactsActivity");
@@ -3340,8 +3290,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // 娌℃湁杩欏彞璇濇樉绀轰笉鍑烘暟鎹�
         canbus_set_dis = getCanBusState();
         showAllApps(true);
-        // 璁剧疆涓簍rue,鏄剧ず搴旂敤鐣岄潰;璁剧疆涓篺alse鏃舵樉绀轰负璁剧疆鐣岄潰
-        setSettingOrAndroidPage(true);
         // 鏄剧ず涓嬫柟缈婚〉鐨勫皬鍦嗙偣?
         updateGotoPageButtonStatus();
         mModel.startLoader(true, -1);
@@ -3354,8 +3302,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // 娌℃湁杩欏彞璇濇樉绀轰笉鍑烘暟鎹�
         canbus_set_dis = getCanBusState();
         showAllApps(true);
-        // 璁剧疆涓簍rue,鏄剧ず搴旂敤鐣岄潰;璁剧疆涓篺alse鏃舵樉绀轰负璁剧疆鐣岄潰
-        setSettingOrAndroidPage(false);
         // 鏄剧ず涓嬫柟缈婚〉鐨勫皬鍦嗙偣?
         // updateGotoPageButtonStatus();
         mModel.startLoader(true, -1);
@@ -3717,10 +3663,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     // Now a part of LauncherModel.Callbacks. Used to reorder loading steps.
     public boolean isAllAppsVisible() {
+        Log.i(TAG, "isAllAppsVisible: huang ==>");
         return (mState == State.APPS_CUSTOMIZE) || (mOnResumeState == State.APPS_CUSTOMIZE);
     }
 
     public boolean isAllAppsButtonRank(int rank) {
+        Log.i(TAG, "isAllAppsButtonRank: huang =>");
         return mHotseat.isAllAppsButtonRank(rank);
     }
 
@@ -4105,7 +4053,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     void showWorkspace(boolean animated) {
-        mAppsCustomizeContent.setVisibility(View.GONE); // add by jxy
+        //mAppsCustomizeContent.setVisibility(View.GONE); // add by jxy
         showWorkspace(animated, null);
         updateGotoPageButtonStatus();
     }
@@ -4148,7 +4096,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     void showAllApps(boolean animated) {
         DragController.setUnInstallState(false); // by jxy
-        mAppsCustomizeContent.setVisibility(View.VISIBLE); // by jxy
+        //mAppsCustomizeContent.setVisibility(View.VISIBLE); // by jxy
         if (mState != State.WORKSPACE)
             return;
 
@@ -4585,8 +4533,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * some work in that case since we will come back again.
      */
     public boolean setLoadOnResume() {
+        Log.i(TAG, "setLoadOnResume: huang ==>");
         if (mPaused) {
-            Log.i(TAG, "setLoadOnResume");
+            Log.i(TAG, "setLoadOnResume: huang ==>");
             mOnResumeNeedsLoad = true;
             return true;
         } else {
@@ -4598,6 +4547,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public int getCurrentWorkspaceScreen() {
+        Log.i(TAG, "getCurrentWorkspaceScreen: huang ==>");
         if (mWorkspace != null) {
             return mWorkspace.getCurrentPage();
         } else {
@@ -4611,6 +4561,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void startBinding() {
+        Log.i(TAG, "startBinding: huang ==>");
         final Workspace workspace = mWorkspace;
 
         mNewShortcutAnimatePage = -1;
@@ -4635,7 +4586,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindItems(ArrayList<ItemInfo> shortcuts, int start, int end) {
-        setLoadOnResume();
+        Log.i(TAG, "bindItems: huang ==>");
+        //setLoadOnResume();
 
         // Get the list of added shortcuts and intersect them with the set of
         // shortcuts here
@@ -4692,7 +4644,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindFolders(HashMap<Long, FolderInfo> folders) {
-        setLoadOnResume();
+        Log.i(TAG, "bindFolders: huang ==>");
+        //setLoadOnResume();
         sFolders.clear();
         sFolders.putAll(folders);
     }
@@ -4703,7 +4656,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindAppWidget(LauncherAppWidgetInfo item) {
-        setLoadOnResume();
+        Log.i(TAG, "bindAppWidget: huang ==>");
+        //setLoadOnResume();
 
         final long start = DEBUG_WIDGETS ? SystemClock.uptimeMillis() : 0;
         if (DEBUG_WIDGETS) {
@@ -4733,6 +4687,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     public void onPageBoundSynchronously(int page) {
+        Log.i(TAG, "onPageBoundSynchronously: huang ==>");
         mSynchronouslyBoundPages.add(page);
     }
 
@@ -4742,7 +4697,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void finishBindingItems() {
-        setLoadOnResume();
+        Log.i(TAG, "finishBindingItems: huang ==>");
+        //setLoadOnResume();
 
         if (mSavedState != null) {
             if (!mWorkspace.hasFocus()) {
@@ -4865,6 +4821,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     @Override
     public void bindSearchablesChanged() {
+        Log.i(TAG, "bindSearchablesChanged: huang ==>");
         boolean searchVisible = updateGlobalSearchIcon();
         boolean voiceVisible = updateVoiceSearchIcon(searchVisible);
         if (mSearchDropTargetBar != null) {
@@ -4878,6 +4835,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindAllApplications(final ArrayList<ApplicationInfo> apps) {
+        Log.i(TAG, "bindAllApplications: huang ==>");
         Runnable setAllAppsRunnable = new Runnable() {
             public void run() {
                 if (mAppsCustomizeContent != null) {
@@ -4912,7 +4870,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindAppsAdded(ArrayList<ApplicationInfo> apps) {
-        setLoadOnResume();
+        Log.i(TAG, "bindAppsAdded: huang ==>");
+        //setLoadOnResume();
 
         if (mAppsCustomizeContent != null) {
             mAppsCustomizeContent.addApps(apps);
@@ -4925,8 +4884,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindAppsUpdated(ArrayList<ApplicationInfo> apps) {
+        Log.i(TAG, "bindAppsUpdated: huang ==>");
 
-        setLoadOnResume();
+        //setLoadOnResume();
         if (mWorkspace != null) {
             mWorkspace.updateShortcuts(apps);
         }
@@ -4942,6 +4902,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public void bindAppsRemoved(ArrayList<String> packageNames, boolean permanent) {
+        Log.i(TAG, "bindAppsRemoved: huang ==>");
         if (permanent) {
             mWorkspace.removeItems(packageNames);
         }
@@ -4958,6 +4919,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
      * A number of packages were updated.
      */
     public void bindPackagesUpdated() {
+        Log.i(TAG, "bindPackagesUpdated: huang ==>");
         if (mAppsCustomizeContent != null) {
             mAppsCustomizeContent.onPackagesUpdated();
         }
@@ -5268,9 +5230,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             } else if (action.equals("android.launcher.show.allApp")) {
                 Log.d(TAG, "mainReceiver:" + intent.getAction());
                 canbus_set_dis = getCanBusState();
-                showAllApps(true);
-                setSettingOrAndroidPage(true);
                 mModel.startLoader(true, -1);
+                showAllApps(true);
             } else if (action.equals("CANBUS_CHANGE_SPEED_Unit")) {
                 updateSpeedUnitText();
             } else if ("top_session_package_change".equals(action)) {
@@ -5352,14 +5313,3 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 }
 
-interface LauncherTransitionable {
-    View getContent();
-
-    void onLauncherTransitionPrepare(Launcher l, boolean animated, boolean toWorkspace);
-
-    void onLauncherTransitionStart(Launcher l, boolean animated, boolean toWorkspace);
-
-    void onLauncherTransitionStep(Launcher l, float t);
-
-    void onLauncherTransitionEnd(Launcher l, boolean animated, boolean toWorkspace);
-}

@@ -58,10 +58,10 @@
 
         <FrameLayout
             android:id="@android:id/tabcontent"
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
+            android:background="@android:color/holo_purple"
             android:layout_marginTop="0dp">
 
             <RelativeLayout

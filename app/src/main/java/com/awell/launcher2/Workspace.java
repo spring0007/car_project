@@ -671,6 +671,9 @@ public class Workspace extends SmoothPagedView
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        //直接返回false，禁止拦截触摸事件（无法滑动）
+        if (true)
+            return false;
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 mXDown = ev.getX();
@@ -1538,7 +1541,7 @@ public class Workspace extends SmoothPagedView
     /*
      * ZInterpolator compounded with an ease-out.
      */
-    static class ZoomOutInterpolator implements TimeInterpolator {
+    public static class ZoomOutInterpolator implements TimeInterpolator {
         private final DecelerateInterpolator decelerate = new DecelerateInterpolator(0.75f);
         private final ZInterpolator zInterpolator = new ZInterpolator(0.13f);
 
@@ -1610,7 +1613,7 @@ public class Workspace extends SmoothPagedView
         mNewRotationYs = new float[childCount];
     }
 
-    Animator getChangeStateAnimation(final State state, boolean animated) {
+    public Animator getChangeStateAnimation(final State state, boolean animated) {
         return getChangeStateAnimation(state, animated, 0);
     }
 

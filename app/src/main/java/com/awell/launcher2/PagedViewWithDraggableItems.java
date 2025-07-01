@@ -45,7 +45,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
     private boolean mIsDragging;
     private boolean mIsDragEnabled;
     private float mDragSlopeThreshold;
-    private Launcher mLauncher;
+    private final Context mContext;
 
     public PagedViewWithDraggableItems(Context context) {
         this(context, null);
@@ -57,7 +57,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
 
     public PagedViewWithDraggableItems(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mLauncher = (Launcher) context;
+        mContext = context;
     }
 
     protected boolean beginDragging(View v) {
@@ -131,9 +131,9 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         String packageName = appInfo.getPackageName();
         PackageInfo pInfo = null;
         try {
-            pInfo = mLauncher.getPackageManager().getPackageInfo(packageName, 0);
+            pInfo = mContext.getPackageManager().getPackageInfo(packageName, 0);
             if (!isUserApp(pInfo)) {//判断是否是系统应用，
-                Toast.makeText(mLauncher, getResources().getString(R.string.uninstall_system_app), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getResources().getString(R.string.uninstall_system_app), Toast.LENGTH_SHORT).show();
                 return true;
             }
         } catch (NameNotFoundException e) {
@@ -167,7 +167,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
     public void uninstallAPK(String packageName) {
         Uri uri = Uri.parse("package:" + packageName);
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
-        mLauncher.startActivity(intent);
+        mContext.startActivity(intent);
     }
 
 

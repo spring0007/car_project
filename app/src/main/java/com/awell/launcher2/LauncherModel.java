@@ -71,7 +71,7 @@ import java.util.Set;
  * for the Launcher.
  */
 public class LauncherModel extends BroadcastReceiver {
-    static final boolean DEBUG_LOADERS = false;
+    static final boolean DEBUG_LOADERS = true;
     static final String TAG = "Launcher.Model";
 
     private static final int ITEMS_CHUNK = 6; // batch size for the workspace icons
@@ -608,7 +608,7 @@ public class LauncherModel extends BroadcastReceiver {
                         + cellY + ")";
 
                 Log.d(TAG, transaction);
-
+                Log.i(TAG, "run: huang transaction=>" + transaction);
                 cr.insert(notify ? LauncherSettings.Favorites.CONTENT_URI :
                         LauncherSettings.Favorites.CONTENT_URI_NO_NOTIFICATION, values);
 
@@ -1213,6 +1213,8 @@ public class LauncherModel extends BroadcastReceiver {
             // Check if any workspace icons overlap with each other
             for (int x = item.cellX; x < (item.cellX + item.spanX); x++) {
                 for (int y = item.cellY; y < (item.cellY + item.spanY); y++) {
+                    Log.i(TAG, "checkItemPlacement: huang containerIndex=>" + containerIndex + " x=>" + x + " y=>" + y);
+                    Log.i(TAG, "checkItemPlacement: huang occupied=>" + Arrays.deepToString(occupied));
                     if (occupied[containerIndex][x][y] != null) {
                         Log.e(TAG, "Error loading shortcut " + item
                                 + " into cell (" + containerIndex + "-" + item.screen + ":"
@@ -1315,7 +1317,8 @@ public class LauncherModel extends BroadcastReceiver {
                                     } catch (URISyntaxException e) {
                                         continue;
                                     }
-
+                                    Log.i(TAG, "loadWorkspace: huang uri=>" + LauncherSettings.Favorites.CONTENT_URI);
+                                    Log.i(TAG, "loadWorkspace: huang itemType =>" + itemType);
                                     if (itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION) {
                                         info = getShortcutInfo(manager, intent, context, c, iconIndex,
                                                 titleIndex, mLabelCache);
@@ -1345,7 +1348,7 @@ public class LauncherModel extends BroadcastReceiver {
                                         info.screen = c.getInt(screenIndex);
                                         info.cellX = c.getInt(cellXIndex);
                                         info.cellY = c.getInt(cellYIndex);
-
+                                        Log.i(TAG, "loadWorkspace: huang info=>" + info);
                                         // check & update map of what's occupied
                                         if (!checkItemPlacement(occupied, info)) {
                                             break;
@@ -1931,6 +1934,7 @@ public class LauncherModel extends BroadcastReceiver {
 
                 mHandler.post(() -> {
                     final long t1 = SystemClock.uptimeMillis();
+                    Log.i(TAG, "loadAllAppsByBatch: huang call backs=>" + callbacks + " first=>" + first);
                     if (callbacks != null) {
                         if (first) {
                             callbacks.bindAllApplications(added);
@@ -2007,22 +2011,22 @@ public class LauncherModel extends BroadcastReceiver {
             final int N = packages.length;
             switch (mOp) {
                 case OP_ADD:
-                    for (int i = 0; i < N; i++) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.addPackage " + packages[i]);
-                        mBgAllAppsList.addPackage(context, packages[i]);
+                    for (String aPackage : packages) {
+                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.addPackage " + aPackage);
+                        mBgAllAppsList.addPackage(context, aPackage);
                     }
                     break;
                 case OP_UPDATE:
-                    for (int i = 0; i < N; i++) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.updatePackage " + packages[i]);
-                        mBgAllAppsList.updatePackage(context, packages[i]);
+                    for (String aPackage : packages) {
+                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.updatePackage " + aPackage);
+                        mBgAllAppsList.updatePackage(context, aPackage);
                     }
                     break;
                 case OP_REMOVE:
                 case OP_UNAVAILABLE:
-                    for (int i = 0; i < N; i++) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.removePackage " + packages[i]);
-                        mBgAllAppsList.removePackage(packages[i]);
+                    for (String aPackage : packages) {
+                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.removePackage " + aPackage);
+                        mBgAllAppsList.removePackage(aPackage);
                     }
                     break;
             }
@@ -2030,11 +2034,11 @@ public class LauncherModel extends BroadcastReceiver {
             ArrayList<ApplicationInfo> added = null;
             ArrayList<ApplicationInfo> modified = null;
 
-            if (mBgAllAppsList.added.size() > 0) {
+            if (!mBgAllAppsList.added.isEmpty()) {
                 added = new ArrayList<ApplicationInfo>(mBgAllAppsList.added);
                 mBgAllAppsList.added.clear();
             }
-            if (mBgAllAppsList.modified.size() > 0) {
+            if (!mBgAllAppsList.modified.isEmpty()) {
                 modified = new ArrayList<ApplicationInfo>(mBgAllAppsList.modified);
                 mBgAllAppsList.modified.clear();
             }
@@ -2042,12 +2046,10 @@ public class LauncherModel extends BroadcastReceiver {
             // pass through the removed package names directly.
             // NOTE: We flush the icon cache aggressively in removePackage() above.
             final ArrayList<String> removedPackageNames = new ArrayList<String>();
-            if (mBgAllAppsList.removed.size() > 0) {
+            if (!mBgAllAppsList.removed.isEmpty()) {
                 mBgAllAppsList.removed.clear();
 
-                for (int i = 0; i < N; ++i) {
-                    removedPackageNames.add(packages[i]);
-                }
+                removedPackageNames.addAll(Arrays.asList(packages).subList(0, N));
             }
 
             final Callbacks callbacks = mCallbacks != null ? mCallbacks.get() : null;
@@ -2061,7 +2063,8 @@ public class LauncherModel extends BroadcastReceiver {
                 mHandler.post(new Runnable() {
                     public void run() {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
-                        if (callbacks == cb && cb != null) {
+                        Log.i(TAG, "loadAllAppsByBatch: huang call backs=>" + callbacks + " addedFinal=>" + addedFinal);
+                        if (callbacks == cb) {
                             callbacks.bindAppsAdded(addedFinal);
                             Log.i("MMM", "packageName=bindAppsAdded=");
                         }
@@ -2073,7 +2076,7 @@ public class LauncherModel extends BroadcastReceiver {
                 mHandler.post(new Runnable() {
                     public void run() {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
-                        if (callbacks == cb && cb != null) {
+                        if (callbacks == cb) {
                             callbacks.bindAppsUpdated(modifiedFinal);
                             Log.i("MMM", "packageName=modified=");
                         }
@@ -2085,7 +2088,7 @@ public class LauncherModel extends BroadcastReceiver {
                 mHandler.post(new Runnable() {
                     public void run() {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
-                        if (callbacks == cb && cb != null) {
+                        if (callbacks == cb) {
                             callbacks.bindAppsRemoved(removedPackageNames, permanent);
                             Log.i("MMM", "packageName=removedPackageNames=");
                         }
@@ -2097,7 +2100,7 @@ public class LauncherModel extends BroadcastReceiver {
                 @Override
                 public void run() {
                     Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
-                    if (callbacks == cb && cb != null) {
+                    if (callbacks == cb) {
                         callbacks.bindPackagesUpdated();
                         Log.i("MMM", "packageName=bindPackagesUpdated=");
                     }

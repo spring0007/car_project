@@ -23,6 +23,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,7 +48,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
     private final LayoutInflater mLayoutInflater;
     private ViewGroup mTabs;
     private ViewGroup mTabsContainer;
-    AppsCustomizePagedView mAppsCustomizePane;
+    public AppsCustomizePagedView mAppsCustomizePane;
     private FrameLayout mAnimationBuffer;
     private LinearLayout mContent;
 
@@ -55,6 +56,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
     private boolean mTransitioningToWorkspace;
     private boolean mResetAfterTransition;
     private Runnable mRelayoutAndMakeVisible;
+    private static final String TAG = AppsCustomizeTabHost.LOG_TAG;
 
     public AppsCustomizeTabHost(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -380,6 +382,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
             mAppsCustomizePane.cancelScrollingIndicatorAnimations();
         } else {
             // Going from Workspace -> All Apps
+            Log.i(TAG, "onLauncherTransitionPrepare: huang view set visible =>");
             mContent.setVisibility(VISIBLE);
 
             // Make sure the current page is loaded (we start loading the side pages after the
@@ -458,6 +461,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
 
     public void onWindowVisible() {
         if (getVisibility() == VISIBLE) {
+            Log.i(TAG, "onWindowVisible: huang view set visible =>");
             mContent.setVisibility(VISIBLE);
             // We unload the widget previews when the UI is hidden, so need to reload pages
             // Load the current page synchronously, and the neighboring pages asynchronously
@@ -467,6 +471,7 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
     }
 
     public void onTrimMemory() {
+        Log.i(TAG, "onTrimMemory: huang view set visible =>");
         mContent.setVisibility(GONE);
         // Clear the widget pages of all their subviews - this will trigger the widget previews
         // to delete their bitmaps

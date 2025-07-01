@@ -28,12 +28,12 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:paddingLeft="@dimen/button_bar_width_left_padding"
-        android:paddingRight="@dimen/button_bar_width_right_padding"
         android:paddingTop="@dimen/button_bar_height_top_padding"
+        android:paddingRight="@dimen/button_bar_width_right_padding"
         android:paddingBottom="@dimen/button_bar_height_bottom_padding_land"
-        launcher:cellWidth="90dp"
         launcher:cellHeight="110dp"
-        launcher:widthGap="3dp"
+        launcher:cellWidth="90dp"
         launcher:heightGap="0dp"
-        launcher:maxGap="@dimen/workspace_max_gap" />
+        launcher:maxGap="@dimen/workspace_max_gap"
+        launcher:widthGap="3dp" />
 </com.awell.launcher2.Hotseat>

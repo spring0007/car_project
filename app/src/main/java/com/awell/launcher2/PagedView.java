@@ -43,6 +43,7 @@ import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
 import com.awell.launcher.R;
+import com.awell.ui.AppsCustomizeIndicatorPanel;
 
 import java.util.ArrayList;
 
@@ -89,6 +90,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     protected boolean mFirstLayout = true;
 
     protected int mCurrentPage;
+    protected AppsCustomizeIndicatorPanel pageIndication;
+
     protected int mNextPage = INVALID_PAGE;
     protected int mMaxScrollX;
     protected Scroller mScroller;
@@ -273,15 +276,15 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
      *
      * @return The index of the currently displayed page.
      */
-    int getCurrentPage() {
+    public int getCurrentPage() {
         return mCurrentPage;
     }
 
-    int getNextPage() {
+    public int getNextPage() {
         return (mNextPage != INVALID_PAGE) ? mNextPage : mCurrentPage;
     }
 
-    int getPageCount() {
+    public int getPageCount() {
         return getChildCount();
     }
 
@@ -302,7 +305,11 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         // If the current page is invalid, just reset the scroll position to zero
         int newX = 0;
         mCurrentPage = 0;// by jxy 每次进入allapp的时候都默认进入第一页
-        if (0 <= mCurrentPage && mCurrentPage < getPageCount()) {
+
+        if (getPageIndication() != null)
+            getPageIndication().setMCurrentPage(mCurrentPage);
+
+        if (mCurrentPage < getPageCount()) {
             int offset = getChildOffset(mCurrentPage);
             int relOffset = getRelativeChildOffset(mCurrentPage);
             newX = offset - relOffset;
@@ -358,7 +365,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         invalidate();
         //add by jxy 
         Launcher.mIndicatorPanel.invalidate();
-        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
     protected void notifyPageSwitchListener() {
@@ -458,7 +465,11 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             }
             invalidate();
             Launcher.mIndicatorPanel.invalidate();
-            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+            //Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+            if (getPageIndication() != null) {
+                getPageIndication().setMCurrentPage(mNextPage);
+                getPageIndication().invalidate();
+            }
             return true;
         } else if (mNextPage != INVALID_PAGE) {
             mCurrentPage = Math.max(0, Math.min(mNextPage, getPageCount() - 1));
@@ -702,7 +713,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             }
             invalidate();
             Launcher.mIndicatorPanel.invalidate();
-            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
         }
     }
 
@@ -714,7 +725,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         invalidate();
         invalidateCachedOffsets();
         Launcher.mIndicatorPanel.invalidate();
-        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+        if (getPageIndication() != null)
+            getPageIndication().setMTotalPages(getPageCount());
+//        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
     @Override
@@ -1005,8 +1018,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         acquireVelocityTrackerAndAddMovement(ev);
 
         // Skip touch handling if there are no pages to swipe
-        if (getChildCount() <= 0) return super.onInterceptTouchEvent(ev);
-
+        if (getChildCount() <= 0)
+            return super.onInterceptTouchEvent(ev);
         /*
          * Shortcut the most recurring case: the user is in the dragging
          * state and he is moving his finger.  We want to intercept this
@@ -1196,7 +1209,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         }
         invalidate();
         Launcher.mIndicatorPanel.invalidate();
-        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
     protected void dampedOverScroll(float amount) {
@@ -1222,7 +1235,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         }
         invalidate();
         Launcher.mIndicatorPanel.invalidate();
-        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
     protected void overScroll(float amount) {
@@ -1302,7 +1315,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                         } else {
                             invalidate();
                             Launcher.mIndicatorPanel.invalidate();
-                            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//                            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
                         }
                         mLastMotionX = x;
                         mLastMotionXRemainder = deltaX - (int) deltaX;
@@ -1671,7 +1684,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         notifyPageSwitchListener();
         invalidate();
         Launcher.mIndicatorPanel.invalidate();
-        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
+//        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
     public void scrollLeft() {
@@ -1945,7 +1958,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         }
     }
 
-    protected void hideScrollingIndicator(boolean immediately) {
+    public void hideScrollingIndicator(boolean immediately) {
         if (getChildCount() <= 1) return;
         if (!isScrollingIndicatorEnabled()) return;
 
@@ -2087,6 +2100,14 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             break;
         }
         return false;
+    }
+
+    public AppsCustomizeIndicatorPanel getPageIndication() {
+        return pageIndication;
+    }
+
+    public void setPageIndication(AppsCustomizeIndicatorPanel pageIndication) {
+        this.pageIndication = pageIndication;
     }
 
     protected String getCurrentPageDescription() {

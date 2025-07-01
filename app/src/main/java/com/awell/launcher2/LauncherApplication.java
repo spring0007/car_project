@@ -27,6 +27,7 @@ import android.database.ContentObserver;
 import android.os.Handler;
 
 import com.awell.launcher.R;
+import com.awell.ui.AppsCustomizeControl;
 
 import java.lang.ref.WeakReference;
 
@@ -54,6 +55,21 @@ public class LauncherApplication extends Application {
         mModel = new LauncherModel(this, mIconCache);
 
         // Register intent receivers
+        registerBroadcastLauncherModel();
+
+        // Register for changes to the favorites
+        ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true,
+                mFavoritesObserver);
+
+        //kwapi = KWAPI.createKWAPI(this, "auto");
+
+        AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
+
+
+    }
+
+    private void registerBroadcastLauncherModel() {
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -71,13 +87,6 @@ public class LauncherApplication extends Application {
         filter = new IntentFilter();
         filter.addAction(SearchManager.INTENT_ACTION_SEARCHABLES_CHANGED);
         registerReceiver(mModel, filter);
-
-        // Register for changes to the favorites
-        ContentResolver resolver = getContentResolver();
-        resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true,
-                mFavoritesObserver);
-
-        //kwapi = KWAPI.createKWAPI(this, "auto");
     }
 
     /**

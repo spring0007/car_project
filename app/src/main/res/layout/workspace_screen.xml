@@ -17,15 +17,13 @@
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-
-
-    android:paddingLeft="@dimen/cell_layout_left_padding_rtd"
-    android:paddingRight="@dimen/cell_layout_right_padding_rtd"
-    android:paddingTop="@dimen/cell_layout_top_padding_rtd"
-    android:paddingBottom="@dimen/cell_layout_bottom_padding_rtd"
     android:hapticFeedbackEnabled="false"
-    launcher:cellWidth="@dimen/workspace_cell_width"
+    android:paddingLeft="@dimen/cell_layout_left_padding_rtd"
+    android:paddingTop="@dimen/cell_layout_top_padding_rtd"
+    android:paddingRight="@dimen/cell_layout_right_padding_rtd"
+    android:paddingBottom="@dimen/cell_layout_bottom_padding_rtd"
     launcher:cellHeight="@dimen/workspace_cell_height"
-    launcher:widthGap="@dimen/workspace_width_gap_rtd"
+    launcher:cellWidth="@dimen/workspace_cell_width"
     launcher:heightGap="@dimen/workspace_height_gap"
-    launcher:maxGap="@dimen/workspace_max_gap" /><!--    android:paddingTop="@dimen/cell_layout_top_padding" -->
+    launcher:maxGap="@dimen/workspace_max_gap"
+    launcher:widthGap="@dimen/workspace_width_gap_rtd" /><!--    android:paddingTop="@dimen/cell_layout_top_padding" -->

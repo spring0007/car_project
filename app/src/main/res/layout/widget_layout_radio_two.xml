@@ -4,10 +4,10 @@
     android:id="@+id/ll_radio_two"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingStart="30dp"
     android:paddingEnd="30dp"
-    android:gravity="center"
     tools:ignore="MissingDefaultResource">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -48,8 +48,8 @@
             android:id="@+id/tv_radio_am_fm"
             android:layout_width="52dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
             android:fontFamily="@font/harmonyos_sans_sc_black"
             android:gravity="center"
             android:text="FM"

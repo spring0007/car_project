@@ -30,7 +30,7 @@ import java.util.HashMap;
 /**
  * Represents an app in AllAppsView.
  */
-class ApplicationInfo extends ItemInfo {
+public class ApplicationInfo extends ItemInfo {
     private static final String TAG = "Launcher2.ApplicationInfo";
 
     /**
@@ -102,7 +102,7 @@ class ApplicationInfo extends ItemInfo {
      * none exists.
      */
     String getPackageName() {
-        return super.getPackageName(intent);
+        return getPackageName(intent);
     }
 
     /**
