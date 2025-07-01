@@ -16,6 +16,8 @@
 
 package com.awell.launcher2;
 
+import static com.awell.utils.Utils.startActivitySafely;
+
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.appwidget.AppWidgetHostView;
@@ -450,14 +452,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             if (getPageIndication() != null) {
                 getPageIndication().setVisibility(View.GONE);
             }
-
-            Objects.requireNonNull(AppsCustomizeControl.INSTANCE.getMAppsCustomizeIndicatorPanel()).setVisibility(View.GONE);
         } else {
             if (getPageIndication() != null) {
                 getPageIndication().setVisibility(View.VISIBLE);
             }
-
-            Objects.requireNonNull(AppsCustomizeControl.INSTANCE.getMAppsCustomizeIndicatorPanel()).setVisibility(View.VISIBLE);
         }
     }
 
@@ -525,11 +523,13 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             // Calculate the position for the cling punch through
             int[] offset = new int[2];
             int[] pos = mWidgetSpacingLayout.estimateCellPosition(mClingFocusedX, mClingFocusedY);
-            mLauncher.getDragLayer().getLocationInDragLayer(this, offset);
+            if (mLauncher != null)
+                mLauncher.getDragLayer().getLocationInDragLayer(this, offset);
             // PagedViews are centered horizontally but top aligned
             pos[0] += (getMeasuredWidth() - mWidgetSpacingLayout.getMeasuredWidth()) / 2 + offset[0];
             pos[1] += offset[1];
-            mLauncher.showFirstRunAllAppsCling(pos);
+            if (mLauncher != null)
+                mLauncher.showFirstRunAllAppsCling(pos);
         }
     }
 
@@ -563,7 +563,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                 int minSpanX = Math.min(spanXY[0], minSpanXY[0]);
                 int minSpanY = Math.min(spanXY[1], minSpanXY[1]);
                 if (minSpanX <= LauncherModel.getCellCountX() && minSpanY <= LauncherModel.getCellCountY()) {
-                    Log.i(TAG, "onPackagesUpdated: huang add widgets =>" + Log.getStackTraceString(new Throwable("huang")));
                     mWidgets.add(widget);
                 } else {
                     Log.e(TAG, "Widget " + widget.provider + " can not fit on this device (" + widget.minWidth + ", " + widget.minHeight + ")");
@@ -581,7 +580,9 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     @Override
     public void onClick(View v) {
         // When we have exited all apps or are in transition, disregard clicks
-        if (!mLauncher.isAllAppsVisible() || mLauncher.getWorkspace().isSwitchingState()) return;
+        Log.i(TAG, "onClick: huang v=>" + v);
+
+        //if (!mLauncher.isAllAppsVisible() || mLauncher.getWorkspace().isSwitchingState()) return;
 
         if (v instanceof PagedViewIcon) {
             // Animate some feedback to the click
@@ -598,7 +599,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             // re-disable it as necessary
             // when Launcher resumes and we are still in AllApps.
             mLauncher.updateWallpaperVisibility(true);
-            mLauncher.startActivitySafely(v, appInfo.intent, appInfo);
+            startActivitySafely(v, appInfo.intent, appInfo);
             Log.i(TAG, "appinfo packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
         } else if (v instanceof PagedViewWidget) {
             // Let the user know that they have to long press to add a widget
@@ -1713,7 +1714,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
      * onMeasure() pass, which will trigger an invalidatePageData() itself.
      */
     private void invalidateOnDataChange() {
-        Log.i(TAG, "invalidateOnDataChange: huang isDataReady()=>" + isDataReady());
         if (!isDataReady()) {
             // The next layout pass will trigger data-ready if both widgets and
             // apps are set, so

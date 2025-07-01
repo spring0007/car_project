@@ -16,6 +16,8 @@
 
 package com.awell.launcher2;
 
+import static com.awell.utils.Utils.startActivitySafely;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -201,7 +203,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
             item.intent.setSourceBounds(new Rect(pos[0], pos[1],
                     pos[0] + v.getWidth(), pos[1] + v.getHeight()));
 
-            mLauncher.startActivitySafely(v, item.intent, item);
+            startActivitySafely(v, item.intent, item);
         }
     }
 

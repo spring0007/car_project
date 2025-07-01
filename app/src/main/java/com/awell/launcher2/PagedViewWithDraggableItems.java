@@ -167,6 +167,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
     public void uninstallAPK(String packageName) {
         Uri uri = Uri.parse("package:" + packageName);
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
     }
 

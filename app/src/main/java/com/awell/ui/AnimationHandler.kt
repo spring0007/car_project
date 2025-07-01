@@ -1,11 +1,10 @@
-
 import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 
 class AnimationHandler {
     companion object {
-        private const val ANIM_DURATION = 100L
+        private const val ANIM_DURATION = 0L
     }
 
     fun animateShow(view: View) {

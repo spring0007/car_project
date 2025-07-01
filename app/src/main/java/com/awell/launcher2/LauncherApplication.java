@@ -42,10 +42,13 @@ public class LauncherApplication extends Application {
     private static final String sSharedPreferencesKey = "com.awell.launcher2.prefs";
     WeakReference<LauncherProvider> mLauncherProvider;
 
+    public static Context mAppContext;
+
     //public  KWAPI kwapi;
     @Override
     public void onCreate() {
         super.onCreate();
+        mAppContext = this;
 
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
@@ -65,7 +68,6 @@ public class LauncherApplication extends Application {
         //kwapi = KWAPI.createKWAPI(this, "auto");
 
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
-
 
     }
 
@@ -89,6 +91,10 @@ public class LauncherApplication extends Application {
         registerReceiver(mModel, filter);
     }
 
+    public static Context getmAppContext() {
+        return mAppContext;
+    }
+
     /**
      * There's no guarantee that this function is ever called.
      */
@@ -100,6 +106,7 @@ public class LauncherApplication extends Application {
 
         ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mFavoritesObserver);
+        mAppContext = null;
     }
 
     /**

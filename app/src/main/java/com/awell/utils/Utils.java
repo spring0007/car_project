@@ -1,6 +1,14 @@
 package com.awell.utils;
 
+import static com.awell.launcher2.Launcher.INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION;
+import static com.awell.launcher2.LauncherApplication.getmAppContext;
+
+import android.app.ActivityOptions;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.awell.addapp.AppInfo;
 import com.awell.launcher.R;
@@ -10,6 +18,7 @@ import java.util.List;
 
 public class Utils {
 
+    private static final String TAG = Utils.class.getSimpleName();
     /**
      * 不需要显示的应用
      */
@@ -326,9 +335,47 @@ public class Utils {
             , R.drawable.sf_kugou
 
     };
+
     /**
      * icon背景图
      */
 //    public static int[] iconBg = {R.drawable.sf_a_bg,R.drawable.sf_b_bg,R.drawable.sf_c_bg,
 //            R.drawable.sf_d_bg,R.drawable.sf_e_bg};
+    public static boolean startActivity(View v, Intent intent, Object tag) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        try {
+            // Only launch using the new animation if the shortcut has not opted
+            // out (this is a
+            // private contract between launcher and may be ignored in the
+            // future).
+            boolean useLaunchAnimation = (v != null) && !intent.hasExtra(INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION);
+            if (useLaunchAnimation) {
+                ActivityOptions opts = ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+
+                getmAppContext().startActivity(intent, opts.toBundle());
+            } else {
+                getmAppContext().startActivity(intent);
+            }
+            return true;
+        } catch (SecurityException e) {
+            Toast.makeText(getmAppContext(), R.string.activity_not_found, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Launcher does not have the permission to launch " + intent + ". Make sure to create a MAIN intent-filter for the corresponding activity " + "or use the exported attribute for this activity. " + "tag=" + tag + " intent=" + intent, e);
+        }
+        return false;
+    }
+
+    public static boolean startActivitySafely(View v, Intent intent, Object tag) {
+        boolean success = false;
+        try {
+            success = startActivity(v, intent, tag);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getmAppContext(), R.string.activity_not_found, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Unable to launch. tag=" + tag + " intent=" + intent, e);
+        }
+        return success;
+    }
+
+
 }
+

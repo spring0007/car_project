@@ -16,6 +16,8 @@
 
 package com.awell.launcher2;
 
+import static com.awell.utils.Utils.startActivitySafely;
+
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -29,7 +31,6 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityOptions;
 import android.app.SearchManager;
 import android.app.WallpaperManager;
 import android.appwidget.AppWidgetHostView;
@@ -67,17 +68,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaMetadata;
-import android.media.MediaRecorder;
-import android.media.session.MediaController;
-import android.media.session.MediaSessionManager;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -86,16 +79,12 @@ import android.os.Parcelable;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.service.notification.NotificationListenerService;
 import android.speech.RecognizerIntent;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.method.TextKeyListener;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -158,11 +147,7 @@ import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.ui.UIActivity;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
-import com.awell.ctrlview.WaveformView;
 import com.awell.ctrlview.VisualizerView;
-import com.awell.ctrlview.SpetrumView;
-import com.awell.ctrlview.AudioRecorder;
-import com.awell.ctrlview.NewCalendar;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -173,7 +158,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -222,7 +206,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     final String DUMP_STATE_PROPERTY = "debug.dumpstate";
 
     // The Intent extra that defines whether to ignore the launch animation
-    static final String INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION = "com.awell.launcher.intent.extra.shortcut.INGORE_LAUNCH_ANIMATION";
+    public static final String INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION = "com.awell.launcher.intent.extra.shortcut.INGORE_LAUNCH_ANIMATION";
 
     // Type: int
     private final String RUNTIME_STATE_CURRENT_SCREEN = "launcher.current_screen";
@@ -1148,10 +1132,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         if (isValidPackage && mMediaListener != null) {
                             if (isLocalMusicPackage && isStartCommand) {
                                 mMediaListener.removeCallbacks();
-                            } else if (!isLocalMusicPackage
-                                    && value1.equals(mMediaListener.getCurrentPlayingPackage())
-                                    && isStopCommand
-                                    && llMusic != null) {
+                            } else if (!isLocalMusicPackage && value1.equals(mMediaListener.getCurrentPlayingPackage()) && isStopCommand && llMusic != null) {
                                 llMusic.setCurMusicState(false, MusicWidget.OTHER_MUSIC);
                             }
                         }
@@ -1188,9 +1169,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         if (llMusic != null) {
                             llMusic.setMusicNameTextView(value1, MusicWidget.MUSIC);
                             llMusic.setArtistNameTextView(value2, MusicWidget.MUSIC);
-                            if ("NO_MUSIC_LIST".equals(value1)
-                                    && "NO_MUSIC_LIST".equals(value2)
-                                    && "NO_MUSIC_LIST".equals(value3)) {
+                            if ("NO_MUSIC_LIST".equals(value1) && "NO_MUSIC_LIST".equals(value2) && "NO_MUSIC_LIST".equals(value3)) {
                                 llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                                 llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
                             }
@@ -1283,9 +1262,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                         if (llMusic != null) {
                             int currentMedia = MusicWidget.OTHER_MUSIC;
 
-                            if ("NO_MUSIC_LIST".equals(value1)
-                                    && "NO_MUSIC_LIST".equals(value2)
-                                    && "NO_MUSIC_LIST".equals(value3)) {
+                            if ("NO_MUSIC_LIST".equals(value1) && "NO_MUSIC_LIST".equals(value2) && "NO_MUSIC_LIST".equals(value3)) {
                                 llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), currentMedia);
                                 llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), currentMedia);
                             }
@@ -1365,7 +1342,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mAppsCustomizeContent = (AppsCustomizePagedView) mAppsCustomizeTabHost.findViewById(R.id.apps_customize_pane_content);
         mAppsCustomizeContent.setup(this, dragController);
 
-
         mAppsCustomizeIndicatorDots = (ViewGroup) mAppsCustomizeTabHost.findViewById(R.id.mIndicatorDots);
         mAppsCustomizeIndicatorPanel = new AppsCustomizeIndicatorPanel(this);
         mAppsCustomizeIndicatorDots.addView(mAppsCustomizeIndicatorPanel);
@@ -1391,7 +1367,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mIndicatorPanel = new IndicatorPanel(this);
         mIndicatorDots.addView(mIndicatorPanel);
 
-        initTimeReceiver();
+        initReceiver();
 
         mediaLibrary = new AwellLibrary(AwellTool.OPEN);
         mediaLibrary.init(this);
@@ -1597,12 +1573,10 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private MyQAnalogClock myQAnalogClock, myQAnalogClock1;
-    private int[] time_ll_id = new int[]{R.id.time_ll_one, R.id.time_ll_two,
-            R.id.time_ll_three, R.id.time_ll_four};
+    private int[] time_ll_id = new int[]{R.id.time_ll_one, R.id.time_ll_two, R.id.time_ll_three, R.id.time_ll_four};
     private LinearLayout[] time_ll;
 
-    private int[] time_img_id = new int[]{R.id.time_w_one_img, R.id.time_w_two_img,
-            R.id.time_w_three_img, R.id.time_w_four_img};
+    private int[] time_img_id = new int[]{R.id.time_w_one_img, R.id.time_w_two_img, R.id.time_w_three_img, R.id.time_w_four_img};
     private ImageView[] time_img;
     private View contentView, layoutView3;
     private NewCalendar calendar;
@@ -1685,8 +1659,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         Cursor cursor = sqLiteDatabase.query("showapp", null, null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                @SuppressLint("Range")
-                String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
+                @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
                 stroageAppList.add(packageName);
                 // 删除记录
                 sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
@@ -1701,13 +1674,12 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
         Log.i(TAG, "show_app cursor");
         // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoLis.size() == 0)
-            for (String packName : Utils.defaultShowApp) {
-                AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-                if (appInfo != null) {
-                    showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
-                }
+        if (showAppInfoLis.size() == 0) for (String packName : Utils.defaultShowApp) {
+            AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
+            if (appInfo != null) {
+                showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
             }
+        }
         // 添加到数据库
         for (AppInfo storagePac : showAppInfoLis) {
             if (storagePac != null) {
@@ -1733,8 +1705,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         @Override
         public void hidePopup() {
-            if (popupWindow != null)
-                popupWindow.dismiss();
+            if (popupWindow != null) popupWindow.dismiss();
         }
     };
 
@@ -1743,8 +1714,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         public void addAppInfo(AppInfo appInfo) {
             for (AppInfo pcka : showAppInfoLis)
                 if (pcka.package_name.equals(appInfo.package_name)) {
-                    if (popupWindow != null)
-                        popupWindow.dismiss();
+                    if (popupWindow != null) popupWindow.dismiss();
 
                     showPopupI.hidePopup();
                     return;
@@ -1832,14 +1802,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             bean.setPackage_name(pckaName);
             int flags = p.applicationInfo.flags;
             bean.setFlags(flags);
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 &&
-                    Utils.needToShowPackageName.contains(pckaName)) {
+            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(pckaName)) {
                 appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0
-                    && !Utils.filterAppPackageName.contains(pckaName)) {
+            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(pckaName)) {
                 appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0
-                    && Utils.otherNeedToShowPackageName.contains(pckaName)) {
+            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(pckaName)) {
                 appBeanList.add(bean);
             }
         }
@@ -1868,8 +1835,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
         if (Settings.System.getInt(getContentResolver(), "Headlamp", 0) == 1)
             ivLampSwitchBg.setImageResource(R.drawable.open);
-        else
-            ivLampSwitchBg.setImageResource(R.drawable.off);
+        else ivLampSwitchBg.setImageResource(R.drawable.off);
 
         //handler.removeMessages(ADDCARANIM);
         //handler.sendEmptyMessageDelayed(ADDCARANIM, 2000);
@@ -1994,10 +1960,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
     int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
     int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
-    int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night},
-            {R.drawable.time_w_two, R.drawable.time_w_two_night},
-            {R.drawable.time_w_three, R.drawable.time_w_three_night},
-            {R.drawable.time_w_four, R.drawable.time_w_four_night}};
+    int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
     int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
     int[] sf_add2_dID = {R.drawable.sf_add2_d, R.drawable.sf_add2_n};
 
@@ -2134,11 +2097,11 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             int start_x_tmp = start_x;
 
             for (int i = 0; i < mWorkspace.getPageCount(); i++) {
-                canvas.drawBitmap(bmp_dot, start_x_tmp, (mIndicatorDots.getHeight() - bmp_dot.getHeight()) / 2, mPaint);
+                canvas.drawBitmap(bmp_dot, start_x_tmp, (float) (mIndicatorDots.getHeight() - bmp_dot.getHeight()) / 2, mPaint);
                 start_x_tmp += bmp_dot_w + dot_gap;
             }
 
-            canvas.drawBitmap(bmp_dot_sel, start_x + (bmp_dot_w + dot_gap) * mWorkspace.getNextPage() + mov_x, (mIndicatorDots.getHeight() - bmp_dot.getHeight()) / 2, mPaint);
+            canvas.drawBitmap(bmp_dot_sel, start_x + (bmp_dot_w + dot_gap) * mWorkspace.getNextPage() + mov_x, (float) (mIndicatorDots.getHeight() - bmp_dot.getHeight()) / 2, mPaint);
 
             canvas.restore();
         }
@@ -2582,6 +2545,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     // to Workspace
                     if (alreadyOnHome) {
                         showWorkspace(true);
+                        //huangxw
+                        AppsCustomizeControl.INSTANCE.hideApps();
+
                     } else {
                         mOnResumeState = State.WORKSPACE;
                     }
@@ -3056,6 +3022,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     @Override
     public void onBackPressed() {
+        //huangxw
+        AppsCustomizeControl.INSTANCE.hideApps();
+
         if (isAllAppsVisible()) {
             showWorkspace(true);
         } else if (mWorkspace.getOpenFolder() != null) {
@@ -3269,7 +3238,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             if (activityName != null) {
                 intent.setPackage(activityName.getPackageName());
             }
-            startActivity(null, intent, "onClickVoiceButton");
+            Utils.startActivity(null, intent, "onClickVoiceButton");
         } catch (ActivityNotFoundException e) {
             Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -3348,40 +3317,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
-    boolean startActivity(View v, Intent intent, Object tag) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        try {
-            // Only launch using the new animation if the shortcut has not opted
-            // out (this is a
-            // private contract between launcher and may be ignored in the
-            // future).
-            boolean useLaunchAnimation = (v != null) && !intent.hasExtra(INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION);
-            if (useLaunchAnimation) {
-                ActivityOptions opts = ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-
-                startActivity(intent, opts.toBundle());
-            } else {
-                startActivity(intent);
-            }
-            return true;
-        } catch (SecurityException e) {
-            Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Launcher does not have the permission to launch " + intent + ". Make sure to create a MAIN intent-filter for the corresponding activity " + "or use the exported attribute for this activity. " + "tag=" + tag + " intent=" + intent, e);
-        }
-        return false;
-    }
-
-    boolean startActivitySafely(View v, Intent intent, Object tag) {
-        boolean success = false;
-        try {
-            success = startActivity(v, intent, tag);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Unable to launch. tag=" + tag + " intent=" + intent, e);
-        }
-        return success;
-    }
 
     void startActivityForResultSafely(Intent intent, int requestCode) {
         try {
@@ -3663,7 +3598,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
     // Now a part of LauncherModel.Callbacks. Used to reorder loading steps.
     public boolean isAllAppsVisible() {
-        Log.i(TAG, "isAllAppsVisible: huang ==>");
         return (mState == State.APPS_CUSTOMIZE) || (mOnResumeState == State.APPS_CUSTOMIZE);
     }
 
@@ -4097,8 +4031,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     void showAllApps(boolean animated) {
         DragController.setUnInstallState(false); // by jxy
         //mAppsCustomizeContent.setVisibility(View.VISIBLE); // by jxy
-        if (mState != State.WORKSPACE)
-            return;
+        if (mState != State.WORKSPACE) return;
 
         showAppsCustomizeHelper(animated, false);
         mAppsCustomizeTabHost.requestFocus();
@@ -4351,8 +4284,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     private boolean updateGlobalSearchIcon() {
-        if (true)
-            return false;
+        if (true) return false;
 
         final ImageView searchButton = (ImageView) findViewById(R.id.search_button);
         final View voiceButton = findViewById(R.id.voice_button);
@@ -5180,7 +5112,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         }
     }
 
-    private void initTimeReceiver() {
+    private void initReceiver() {
         IntentFilter filter = new IntentFilter();
 
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
@@ -5207,8 +5139,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
             if (action.equals(CommonData.BROADCAST_LAMP_SWITCH)) {
                 if (intent.getIntExtra("lamplet_state", 0) == 1)
                     ivLampSwitchBg.setImageResource(R.drawable.open);
-                else
-                    ivLampSwitchBg.setImageResource(R.drawable.off);
+                else ivLampSwitchBg.setImageResource(R.drawable.off);
             } else if (action.equals(CommonData.ACTION_ACC_ON)) {
                 if (ivLampSwitchBg != null)
                     ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
