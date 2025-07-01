@@ -48,7 +48,6 @@ object AppsCustomizeControl {
     var mAllIsShowing = false
 
 
-    @SuppressLint("InflateParams")
     fun initialize(context: Context, model: LauncherModel, iconCache: IconCache) {
         if (mIsInitialized)
             return

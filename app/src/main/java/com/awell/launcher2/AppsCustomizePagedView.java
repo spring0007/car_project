@@ -589,16 +589,17 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             final ApplicationInfo appInfo = (ApplicationInfo) v.getTag();
 
             // Lock the drawable state to pressed until we return to Launcher
-            if (mPressedIcon != null) {
-                mPressedIcon.lockDrawableState();
-            }
+            //huangxw 2025/7/1 not set the effect
+            //if (mPressedIcon != null) {
+            //    mPressedIcon.lockDrawableState();
+            //}
 
             // NOTE: We want all transitions from launcher to act as if the
             // wallpaper were enabled
             // to be consistent. So re-enable the flag here, and we will
             // re-disable it as necessary
             // when Launcher resumes and we are still in AllApps.
-            mLauncher.updateWallpaperVisibility(true);
+            //mLauncher.updateWallpaperVisibility(true);
             startActivitySafely(v, appInfo.intent, appInfo);
             Log.i(TAG, "appinfo packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
         } else if (v instanceof PagedViewWidget) {
