@@ -162,19 +162,18 @@ class UIActivity : Activity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "onResume: huang ==>")
-        AppsCustomizeControl.hideApps()
+        if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
+            AppsCustomizeControl.hideApps()
+        }
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        Log.i(TAG, "onBackPressed: huang ==>")
         AppsCustomizeControl.hideApps()
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.i(TAG, "onNewIntent: huang ==>")
         AppsCustomizeControl.hideApps()
     }
 }

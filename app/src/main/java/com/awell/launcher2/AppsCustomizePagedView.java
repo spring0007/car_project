@@ -537,7 +537,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
-        Log.i(TAG, "onMeasure: huang isDataReady=>" + isDataReady());
         if (!isDataReady()) {
             if (!mApps.isEmpty()/* && !mWidgets.isEmpty()*/) {
                 setDataIsReady();

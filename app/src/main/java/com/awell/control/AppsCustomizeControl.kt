@@ -23,11 +23,15 @@ object AppsCustomizeControl {
 
     private val TAG = AppsCustomizeControl::class.simpleName
 
+    private var DEBUG = true
+
     private var currentActivity: WeakReference<Activity>? = null
 
     private var originalViewsVisibility = mutableMapOf<Int, Int>()
 
     private val animationHandle = AnimationHandler()
+
+    var longClickUninstallAppToAppsView = false
 
     private var mIsInitialized = false
 
@@ -52,13 +56,8 @@ object AppsCustomizeControl {
         if (mIsInitialized)
             return
         mAppContext = context.applicationContext
-
         initView(context)
-
         mModel = model
-
-        mModel.startLoader(true, -1)
-
         mIsInitialized = true
 
     }
@@ -93,10 +92,12 @@ object AppsCustomizeControl {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
 
         if (mAllIsShowing) {
-            Log.i(TAG, "showApps: huang already show all apps=>")
+            if (DEBUG) {
+                Log.i(TAG, "showApps: huang already show all apps=>")
+            }
             return
         }
-
+        longClickUninstallAppToAppsView = false
         currentActivity = WeakReference(activity)
         saveActivityState(activity)
 
@@ -110,13 +111,7 @@ object AppsCustomizeControl {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        //showAppsCustomizeHelper(true, false)
-//        mAppsCustomizeContent?.setup(
-//            (activity as Launcher),
-//            (activity as Launcher).dragController
-//        )
 
-        Log.i(TAG, "showApps: huang visible=>${mAppsCustomizeTabHost?.visibility}")
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
 
@@ -182,7 +177,8 @@ object AppsCustomizeControl {
     fun hideApps() {
 
         if (!mAllIsShowing) {
-            Log.i(TAG, "hideApps: huang already hide=>")
+            if (DEBUG)
+                Log.i(TAG, "hideApps: huang already hide=>")
             return
         }
 
@@ -239,10 +235,5 @@ object AppsCustomizeControl {
             // to be hidden.
             setAllAppsRunnable.run()
         }
-    }
-
-
-    private fun refreshAppList() {
-        //todo show apps
     }
 }

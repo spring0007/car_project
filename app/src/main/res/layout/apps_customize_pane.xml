@@ -16,13 +16,13 @@
 <com.awell.launcher2.AppsCustomizeTabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="30dp">
 
     <LinearLayout
         android:id="@+id/apps_customize_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/holo_purple"
         android:layoutDirection="ltr"
         android:orientation="vertical"
         android:visibility="gone">

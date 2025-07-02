@@ -1852,7 +1852,6 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     }
 
     protected void invalidatePageData(int currentPage, boolean immediateAndOnly) {
-        Log.i(TAG, "invalidatePageData: huang mIsDataReady=>" + mIsDataReady);
         if (!mIsDataReady) {
             return;
         }

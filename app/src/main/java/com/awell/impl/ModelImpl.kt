@@ -92,6 +92,7 @@ class ModelImpl : LauncherModel.Callbacks {
 
     override fun bindSearchablesChanged() {
         Log.i(TAG, "bindSearchablesChanged: huang ==>")
+
     }
 
     override fun onPageBoundSynchronously(page: Int) {

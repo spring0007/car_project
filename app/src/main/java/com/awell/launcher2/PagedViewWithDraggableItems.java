@@ -16,6 +16,7 @@
 
 package com.awell.launcher2;
 
+import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.R;
 
 import android.content.Context;
@@ -169,6 +170,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
+        AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(true);
     }
 
 

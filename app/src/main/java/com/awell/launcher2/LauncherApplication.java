@@ -16,6 +16,7 @@
 
 package com.awell.launcher2;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -37,6 +38,7 @@ import java.lang.ref.WeakReference;
 public class LauncherApplication extends Application {
     public LauncherModel mModel;
     public IconCache mIconCache;
+    ModelImpl model = new ModelImpl();
     private static boolean sIsScreenLarge;
     private static float sScreenDensity;
     private static int sLongPressTimeout = 300;
@@ -58,7 +60,6 @@ public class LauncherApplication extends Application {
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
 
-        ModelImpl model = new ModelImpl();
         mModel.initialize(model);
 
         // Register intent receivers
@@ -71,10 +72,13 @@ public class LauncherApplication extends Application {
 
         //kwapi = KWAPI.createKWAPI(this, "auto");
 
+        mModel.startLoader(true, -1);
+
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
 
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerBroadcastLauncherModel() {
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -110,6 +114,7 @@ public class LauncherApplication extends Application {
 
         ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mFavoritesObserver);
+        mModel.stopLoader();
         mAppContext = null;
     }
 

@@ -814,7 +814,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     protected void onResume() {
         super.onResume();
-        AppsCustomizeControl.INSTANCE.hideApps();
+        if (!AppsCustomizeControl.INSTANCE.getLongClickUninstallAppToAppsView()) {
+            AppsCustomizeControl.INSTANCE.hideApps();
+        }
         // Restore the previous launcher state
         if (mOnResumeState == State.WORKSPACE) {
             showWorkspace(false);
@@ -5088,39 +5090,48 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.i(TAG, "mainReceiver:" + action);
-            if (action.equals(CommonData.BROADCAST_LAMP_SWITCH)) {
-                if (intent.getIntExtra("lamplet_state", 0) == 1)
-                    ivLampSwitchBg.setImageResource(R.drawable.open);
-                else ivLampSwitchBg.setImageResource(R.drawable.off);
-            } else if (action.equals(CommonData.ACTION_ACC_ON)) {
-                if (ivLampSwitchBg != null)
-                    ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
-            } else if (action.equals(CommonData.ACTION_ACC_OFF)) {
-                accRecor = true;
-            } else if (action.equals(CommonData.BROADCAST_MEDIA_EXIT)) {
-                String packge = intent.getStringExtra("package");
-                if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
+            switch (action) {
+                case CommonData.BROADCAST_LAMP_SWITCH:
+                    if (intent.getIntExtra("lamplet_state", 0) == 1)
+                        ivLampSwitchBg.setImageResource(R.drawable.open);
+                    else ivLampSwitchBg.setImageResource(R.drawable.off);
+                    break;
+                case CommonData.ACTION_ACC_ON:
+                    if (ivLampSwitchBg != null)
+                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    break;
+                case CommonData.ACTION_ACC_OFF:
+                    accRecor = true;
+                    break;
+                case CommonData.BROADCAST_MEDIA_EXIT:
+                    String packge = intent.getStringExtra("package");
+                    if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
 
-                }
-            } else if ("com.zjinnova.zlink".equals(action)) {
-                String zlinStatus = intent.getStringExtra("status");
-                String phoneMode = intent.getStringExtra("phoneMode");
-                Log.d(TAG, "zlinStatus:" + zlinStatus);
-                if (zlinStatus == null) {
-                    return;
-                }
-                llMusic.getCarPlayData(zlinStatus, phoneMode);
-            } else if (action.equals("android.launcher.show.allApp")) {
-                Log.d(TAG, "mainReceiver:" + intent.getAction());
-                canbus_set_dis = getCanBusState();
-                mModel.startLoader(true, -1);
-                showAllApps(true);
-            } else if (action.equals("CANBUS_CHANGE_SPEED_Unit")) {
-                updateSpeedUnitText();
-            } else if ("top_session_package_change".equals(action)) {
-                String sessionTopPkg = intent.getStringExtra("top_package");
-                handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
-                Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    }
+                    break;
+                case "com.zjinnova.zlink":
+                    String zlinStatus = intent.getStringExtra("status");
+                    String phoneMode = intent.getStringExtra("phoneMode");
+                    Log.d(TAG, "zlinStatus:" + zlinStatus);
+                    if (zlinStatus == null) {
+                        return;
+                    }
+                    llMusic.getCarPlayData(zlinStatus, phoneMode);
+                    break;
+                case "android.launcher.show.allApp":
+                    Log.d(TAG, "mainReceiver:" + intent.getAction());
+                    canbus_set_dis = getCanBusState();
+                    mModel.startLoader(true, -1);
+                    showAllApps(true);
+                    break;
+                case "CANBUS_CHANGE_SPEED_Unit":
+                    updateSpeedUnitText();
+                    break;
+                case "top_session_package_change":
+                    String sessionTopPkg = intent.getStringExtra("top_package");
+                    handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
+                    Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    break;
             }
 
         }

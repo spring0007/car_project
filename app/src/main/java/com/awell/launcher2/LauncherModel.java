@@ -765,7 +765,6 @@ public class LauncherModel extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (DEBUG_LOADERS) Log.d(TAG, "onReceive intent=" + intent);
-
         final String action = intent.getAction();
 
         if (Intent.ACTION_PACKAGE_CHANGED.equals(action)
@@ -781,22 +780,25 @@ public class LauncherModel extends BroadcastReceiver {
                 return;
             }
 
-            if (Intent.ACTION_PACKAGE_CHANGED.equals(action)) {
-                op = PackageUpdatedTask.OP_UPDATE;
-            } else if (Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
-                if (!replacing) {
-                    op = PackageUpdatedTask.OP_REMOVE;
-                }
-                // else, we are replacing the package, so a PACKAGE_ADDED will be sent
-                // later, we will update the package at this time
-            } else if (Intent.ACTION_PACKAGE_ADDED.equals(action)) {
-                if (!replacing) {
-                    op = PackageUpdatedTask.OP_ADD;
-                } else {
+            switch (action) {
+                case Intent.ACTION_PACKAGE_CHANGED:
                     op = PackageUpdatedTask.OP_UPDATE;
-                }
+                    break;
+                case Intent.ACTION_PACKAGE_REMOVED:
+                    if (!replacing) {
+                        op = PackageUpdatedTask.OP_REMOVE;
+                    }
+                    // else, we are replacing the package, so a PACKAGE_ADDED will be sent
+                    // later, we will update the package at this time
+                    break;
+                case Intent.ACTION_PACKAGE_ADDED:
+                    if (!replacing) {
+                        op = PackageUpdatedTask.OP_ADD;
+                    } else {
+                        op = PackageUpdatedTask.OP_UPDATE;
+                    }
+                    break;
             }
-
             if (op != PackageUpdatedTask.OP_NONE) {
                 enqueuePackageUpdated(new PackageUpdatedTask(op, new String[]{packageName}));
             }
@@ -838,7 +840,9 @@ public class LauncherModel extends BroadcastReceiver {
     }
 
     private void forceReload() {
-        resetLoadedState(true, true);
+        //resetLoadedState(true, true);
+        Log.i(TAG, "forceReload: huang force reload =>");
+        resetLoadedState(true, false);
 
         // Do this here because if the launcher activity is running it will be restarted.
         // If it's not running startLoaderFromBackground will merely tell it that it needs
