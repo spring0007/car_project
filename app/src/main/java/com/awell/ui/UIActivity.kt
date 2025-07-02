@@ -1,6 +1,5 @@
 package com.awell.ui
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.awell.control.AppsCustomizeControl
@@ -18,7 +18,7 @@ import com.awell.launcher.databinding.ActivityUiactivityBinding
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.utils.CommonData
 
-class UIActivity : Activity(), View.OnClickListener {
+class UIActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = UIActivity::class.simpleName.toString()
     private lateinit var binding: ActivityUiactivityBinding

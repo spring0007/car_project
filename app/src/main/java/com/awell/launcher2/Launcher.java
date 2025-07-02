@@ -29,7 +29,6 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.SearchManager;
 import android.app.WallpaperManager;
@@ -116,6 +115,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -168,7 +168,7 @@ import java.util.Timer;
 /**
  * Default launcher application.
  */
-public final class Launcher extends Activity implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {
+public final class Launcher extends AppCompatActivity implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks, View.OnTouchListener {
     public static final String TAG = "LauncherMainLog";
 
     private final boolean PROFILE_STARTUP = false;
@@ -774,6 +774,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         // Exit spring loaded mode if necessary after cancelling the
         // configuration of a widget
         exitSpringLoadedDragModeDelayed((resultCode != RESULT_CANCELED), delayExitSpringLoadedMode, null);
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void completeTwoStageWidgetDrop(final int resultCode, final int appWidgetId) {
@@ -887,7 +889,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
+    public Object onRetainCustomNonConfigurationInstance() {
         // Flag the loader to stop early before switching
         mModel.stopLoader();
         if (mAppsCustomizeContent != null) {

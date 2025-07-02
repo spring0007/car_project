@@ -89,7 +89,7 @@
             android:clearTaskOnLaunch="true"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme">
+            android:theme="@style/Theme_">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SHOW_WORK_APPS" />
@@ -108,7 +108,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="nosensor"
             android:stateNotNeeded="true"
-            android:theme="@style/Theme"
+            android:theme="@style/Theme_"
             android:windowSoftInputMode="adjustPan">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
