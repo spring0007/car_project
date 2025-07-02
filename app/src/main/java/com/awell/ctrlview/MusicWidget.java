@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.awell.launcher.R;
 import com.awell.launcher2.IconCache;
 import com.awell.launcher2.Launcher;
+import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
 import com.awell.utils.SocketThread;
 
@@ -85,6 +86,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     private LinearLayout ll_control_layout_music, ll_name_layout_music;
     private RelativeLayout ll_time_layout_music;
 
+    private AwellLibrary mediaLibrary;
+
     public MusicWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
@@ -95,6 +98,11 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
      */
     public void setActivity(Context context, View view) {
         findViews(context, view);
+    }
+
+    public void setMediaLibrary(AwellLibrary mediaLibrary) {
+        this.mediaLibrary = mediaLibrary;
+        Log.i(TAG, "setMediaLibrary: huang media library=>" + mediaLibrary);
     }
 
     private void findViews(Context context, View view) {
@@ -132,7 +140,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         //getKwMusicApi();
 
         setImageIcon(currentMedia);
-        setCurMusicState(Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
+        setCurMusicState(mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
     }
 
@@ -285,9 +293,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         switch (v.getId()) {
             case R.id.music_widget_next:
                 if (currentMedia == MUSIC) {
-                    Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
+                    mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
                 } else if (currentMedia == BT) {
-                    Launcher.mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
+                    mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
                 } else if (currentMedia == KUMUSIC) {
                     //kwapi.setPlayState(PlayState.STATE_NEXT);
                     Launcher.mMediaListener.skipToNext();
@@ -300,9 +308,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 break;
             case R.id.music_widget_pre:
                 if (currentMedia == MUSIC) {
-                    Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
+                    mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
                 } else if (currentMedia == BT) {
-                    Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
+                    mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
                 } else if (currentMedia == KUMUSIC) {
                     //kwapi.setPlayState(PlayState.STATE_PRE);
                     Launcher.mMediaListener.skipToPrevious();
@@ -317,15 +325,15 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 if (currentMedia == MUSIC) {
                     //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
                     if (musicState) {
-                        Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
+                        mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
                     } else {
-                        Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
+                        mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
                     }
                 } else if (currentMedia == BT) {
-                    if (Launcher.mediaLibrary.setDataEvent(AwellTool.BT.GET_STATE).equals("true"))
-                        Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
+                    if (mediaLibrary.setDataEvent(AwellTool.BT.GET_STATE).equals("true"))
+                        mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
                     else
-                        Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
+                        mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
                 } else if (currentMedia == KUMUSIC) {
                     /*if (kwapi.getPlayerStatus().equals(PlayerStatus.PAUSE))
                         kwapi.setPlayState(PlayState.STATE_PLAY);

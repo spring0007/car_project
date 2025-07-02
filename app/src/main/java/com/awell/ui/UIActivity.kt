@@ -10,14 +10,12 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.awell.control.AppsCustomizeControl
+import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher.R
 import com.awell.launcher.databinding.ActivityUiactivityBinding
-import com.awell.launcher2.Launcher
 import com.awell.launcher2.MediaNotificationListener
-import com.awell.library.AwellLibrary
-import com.awell.library.AwellLibrary.OnDataListener
-import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 
 class UIActivity : Activity(), View.OnClickListener {
@@ -28,8 +26,38 @@ class UIActivity : Activity(), View.OnClickListener {
     lateinit var llMusic: MusicWidget
 
 
-    lateinit var mediaLibrary: AwellLibrary
+    var thisActivity = this
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityUiactivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        mMediaListener.initDependencies(baseContext)
+
+
+        llMusic = findViewById(R.id.music_widget_layout)
+        Log.i(TAG, "onCreate: huang set media library =>${AwellMediaControl.mediaLibrary}")
+        llMusic.setMediaLibrary(AwellMediaControl.mediaLibrary)
+        llMusic.setActivity(this, llMusic)
+
+
+        binding.hotsetAllapp.setOnClickListener(this)
+
+
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mMediaListener.cleanup()
+    }
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
@@ -68,6 +96,8 @@ class UIActivity : Activity(), View.OnClickListener {
                 //showAllApps(true)
                 //setSettingOrAndroidPage(true)
                 //mModel.startLoader(true, -1)
+                AppsCustomizeControl.showApps(thisActivity)
+
             } else if (action == "CANBUS_CHANGE_SPEED_Unit") {
                 //updateSpeedUnitText()
             } else if ("top_session_package_change" == action) {
@@ -78,36 +108,6 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityUiactivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        mMediaListener.initDependencies(baseContext)
-
-
-        llMusic = findViewById(R.id.music_widget_layout)
-        llMusic.setActivity(this, llMusic)
-
-        mediaLibrary = AwellLibrary(AwellTool.OPEN)
-        mediaLibrary.init(this)
-        mediaLibrary.setOnDataListener(mAwellLibraryDataListener)
-
-        binding.hotsetAllapp.setOnClickListener(this)
-
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mMediaListener.cleanup()
-    }
 
     fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
 
@@ -124,10 +124,9 @@ class UIActivity : Activity(), View.OnClickListener {
             "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=$isValidPackage --isStartCommand=$isStartCommand-isStopCommand=$isStopCommand"
         )
         // 处理本地音乐的特殊情况
-        if (isValidPackage && (value1.contains("localmusic")
-                    || value1.contains("com.awell.bluetooth")
-                    || value1.contains("/system/bin/gocsdk"))
-            && isStartCommand
+        if (isValidPackage && (value1.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains(
+                "/system/bin/gocsdk"
+            )) && isStartCommand
         ) {
             mMediaListener.removeCallbacks()
             return
@@ -153,275 +152,29 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    private val mAwellLibraryDataListener =
-        OnDataListener { bundle ->
-            llMusic.post {
-                if (bundle == null)
-                    return@post
-                val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
-                Log.i(Launcher.TAG, "onResult---status = $status  $bundle")
-                when (status) {
-                    AwellTool.MEDIA_PLAY -> {
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        val value2 = bundle.getString(AwellTool.VALUE_M2)
-                        val value3 = bundle.getInt(AwellTool.VALUE_M3, 3)
-                        val value4 = bundle.getInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
-                        //if(value1!=null&&!value1.contains("localmusic")&&"start".equals(value2)){
-                        //    value4=MusicWidget.OTHER_MUSIC;
-                        //}
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---MUSIC_MEDIA_PLAY : $value1 $value2 $value3 $value4"
-                        )
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---MUSIC_MEDIA_PLAY : " + Launcher.mMediaListener.currentPlayingPackage
-                        )
-                        //handleMediaPlaybackResult(value1,value2,value3,value4);
-                        val isStartCommand = "start" == value2
-                        val isStopCommand = "stop" == value2
-                        val isValidPackage = !TextUtils.isEmpty(value1)
-                        val isLocalMusicPackage =
-                            (value1!!.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains(
-                                "/system/bin/gocsdk"
-                            ))
-                        if (isValidPackage && Launcher.mMediaListener != null) {
-                            if (isLocalMusicPackage && isStartCommand) {
-                                Launcher.mMediaListener.removeCallbacks()
-                            } else if (!isLocalMusicPackage
-                                && value1 == Launcher.mMediaListener.currentPlayingPackage
-                                && isStopCommand
-                                && llMusic != null
-                            ) {
-                                llMusic.setCurMusicState(false, MusicWidget.OTHER_MUSIC)
-                            }
-                        }
-                        llMusic.switchMediaController(value1, value2, value3, value4)
-                        if ("com.awell.radio" == value1) {
-                            if ("start" == value2) {
-                                //mWaveformView.startAnimation()
-                            } else {
-                                //mWaveformView.stopAnimation()
-                            }
-                        }
-                    }
-
-                    AwellTool.MUSIC.PLAY_STATUS -> {
-                        // 音乐监听 PLAY_STATUS 返回一个参数
-                        // VALUE_M1 = (boolean)音乐播放状态 true 播放 false 没播放
-                        val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
-                        Log.i(Launcher.TAG, "onResult---MUSIC_PLAY_STATUS : $musicStatus")
-                        if (llMusic != null) {
-                            llMusic.setCurMusicState(musicStatus, MusicWidget.MUSIC)
-                        }
-                    }
-
-                    AwellTool.MUSIC.PLAY_NAME -> {
-                        // 音乐监听 PLAY_NAME 返回三个参数
-                        // VALUE_M1 = (String)歌曲名称
-                        // VALUE_M2 = (String)歌手名称
-                        // VALUE_M3 = (String)专辑
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        val value2 = bundle.getString(AwellTool.VALUE_M2)
-                        val value3 = bundle.getString(AwellTool.VALUE_M3)
-                        val value4 = bundle.getInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---MUSIC_PLAY_NAME : $value1 $value2 $value3"
-                        )
-                        if (llMusic != null) {
-                            llMusic.setMusicNameTextView(value1, MusicWidget.MUSIC)
-                            llMusic.setArtistNameTextView(value2, MusicWidget.MUSIC)
-                            if ("NO_MUSIC_LIST" == value1
-                                && "NO_MUSIC_LIST" == value2
-                                && "NO_MUSIC_LIST" == value3
-                            ) {
-                                llMusic.setMusicNameTextView(
-                                    resources.getString(R.string.click_play_music),
-                                    MusicWidget.MUSIC
-                                )
-                                llMusic.setArtistNameTextView(
-                                    resources.getString(R.string.music_artist),
-                                    MusicWidget.MUSIC
-                                )
-                            }
-                        }
-                    }
-
-                    AwellTool.MUSIC.PLAY_IMAGE -> {
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        Log.i(Launcher.TAG, "onResult---MUSIC_PLAY_IMAGE $value1")
-                        val strs = value1!!.split(" , ".toRegex()).dropLastWhile { it.isEmpty() }
-                            .toTypedArray()
-                        val long1 = strs[0].toLong()
-                        val long2 = strs[1].toLong()
-                        llMusic.setPlayImage(long1, long2)
-                    }
-
-                    AwellTool.MUSIC.PLAY_TIME -> {
-                        // 音乐监听 PLAY_TIME 返回两个参数
-                        // VALUE_M1 = (long)当期时间 单位毫秒
-                        // VALUE_M2 = (long)总时间 单位毫秒
-                        val value1 = bundle.getLong(AwellTool.VALUE_M1)
-                        val value2 = bundle.getLong(AwellTool.VALUE_M2)
-                        Log.i(Launcher.TAG, "onResult---MUSIC_PLAY_TIME : $value1-$value2")
-                        if (llMusic != null) {
-                            llMusic.setMusicSeekBar(
-                                value1.toInt(),
-                                value2.toInt(),
-                                MusicWidget.MUSIC
-                            )
-                        }
-                    }
-
-                    AwellTool.BT.PLAY_STATUS -> {
-                        // 蓝牙监听 PLAY_STATUS 返回一个参数
-                        val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
-                        Log.i(Launcher.TAG, "onResult---BT_PLAY_STATUS : $musicStatus")
-                        if (llMusic != null) {
-                            llMusic.setCurMusicState(musicStatus, MusicWidget.BT)
-                        }
-                    }
-
-                    AwellTool.BT.PLAY_NAME -> {
-                        // 音乐监听 PLAY_NAME 返回三个参数
-                        // VALUE_M1 = (String)歌曲名称
-                        // VALUE_M2 = (String)歌手名称
-                        // VALUE_M3 = (String)专辑
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        val value2 = bundle.getString(AwellTool.VALUE_M2)
-                        val value3 = bundle.getString(AwellTool.VALUE_M3)
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---BT_PLAY_NAME : $value1 $value2 $value3"
-                        )
-                        if (llMusic != null) {
-                            llMusic.setMusicNameTextView(value1, MusicWidget.BT)
-                            llMusic.setArtistNameTextView(value2, MusicWidget.BT)
-                        }
-                    }
-
-                    AwellTool.BT.PLAY_TIME -> {
-                        // 音乐监听 PLAY_TIME 返回两个参数
-                        // VALUE_M1 = (long)当期时间 单位秒
-                        // VALUE_M2 = (long)总时间 单位秒
-                        val value1 = (bundle.getInt(AwellTool.VALUE_M1) * 1000).toLong()
-                        val value2 = (bundle.getInt(AwellTool.VALUE_M2) * 1000).toLong()
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---BT_MUSIC_PLAY_TIME : $value1-$value2"
-                        )
-                        if (llMusic != null) {
-                            llMusic.setMusicSeekBar(value1.toInt(), value2.toInt(), MusicWidget.BT)
-                        }
-                    }
-
-                    AwellTool.RADIO.FREQUENCY -> {
-                        // 收音机监听 FREQUENCY 返回三个参数
-                        // VALUE_M1 = (String)FM or AM
-                        // VALUE_M2 = (String)具体频率 87.5 or 531
-                        // VALUE_M3 = (String)单位 MHz or KHz
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        val value2 = bundle.getString(AwellTool.VALUE_M2)
-                        val value3 = bundle.getString(AwellTool.VALUE_M3)
-                        Log.i(Launcher.TAG, "$value1 $value2 $value3")
-                        //tv_radio_am_fm.setText(value1)
-                        //tvRadioButAFM.setText(value1)
-                        //tv_radio_freq.setText(value2)
-                        //tv_radio_freq_unit.setText(value3)
-                    }
-
-                    MusicWidget.OTHER_MUSIC_PLAYNAME -> {
-                        // 音乐监听 PLAY_NAME 返回三个参数
-                        // VALUE_M1 = (String)歌曲名称
-                        // VALUE_M2 = (String)歌手名称
-                        // VALUE_M3 = (String)专辑
-                        val value1 = bundle.getString(AwellTool.VALUE_M1)
-                        val value2 = bundle.getString(AwellTool.VALUE_M2)
-                        val value3 = bundle.getString(AwellTool.VALUE_M3)
-                        val value4 = bundle.getInt(AwellTool.VALUE_M4, MusicWidget.OTHER_MUSIC)
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---OTHER_MUSIC_PLAYNAME : $value1 $value2 $value3"
-                        )
-                        if (llMusic != null) {
-                            val currentMedia = MusicWidget.OTHER_MUSIC
-
-                            if ("NO_MUSIC_LIST" == value1
-                                && "NO_MUSIC_LIST" == value2
-                                && "NO_MUSIC_LIST" == value3
-                            ) {
-                                llMusic.setMusicNameTextView(
-                                    resources.getString(R.string.click_play_music),
-                                    currentMedia
-                                )
-                                llMusic.setArtistNameTextView(
-                                    resources.getString(R.string.music_artist),
-                                    currentMedia
-                                )
-                            }
-
-                            if (value1 != null && !TextUtils.isEmpty(value1)) {
-                                llMusic.setMusicNameTextView(value1, currentMedia)
-                            } else {
-                                llMusic.setMusicNameTextView(
-                                    resources.getString(R.string.click_play_music),
-                                    currentMedia
-                                )
-                            }
-                            if (value2 != null && !TextUtils.isEmpty(value2)) {
-                                llMusic.setArtistNameTextView(value2, currentMedia)
-                            } else {
-                                llMusic.setArtistNameTextView(
-                                    resources.getString(R.string.music_artist),
-                                    currentMedia
-                                )
-                            }
-                        }
-                    }
-
-                    MusicWidget.OTHER_MUSIC_PLAYSTATUS -> {
-                        // 音乐监听 PLAY_STATUS 返回一个参数
-                        // VALUE_M1 = (boolean)音乐播放状态 true 播放 false 没播放
-                        val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---OTHER_MUSIC_PLAYSTATUS : $musicStatus"
-                        )
-                        if (llMusic != null) {
-                            llMusic.setCurMusicState(musicStatus, MusicWidget.OTHER_MUSIC)
-                        }
-                    }
-
-                    MusicWidget.OTHER_MUSIC_TIME -> {
-                        // 音乐监听 PLAY_TIME 返回两个参数
-                        // VALUE_M1 = (long)当期时间 单位毫秒
-                        // VALUE_M2 = (long)总时间 单位毫秒
-                        val value1 = bundle.getLong(AwellTool.VALUE_M1)
-                        val value2 = bundle.getLong(AwellTool.VALUE_M2)
-                        Log.i(
-                            Launcher.TAG,
-                            "onResult---OTHER_MUSIC_TIME : $value1-$value2"
-                        )
-                        if (llMusic != null) {
-                            llMusic.setMusicSeekBar(
-                                value1.toInt(),
-                                value2.toInt(),
-                                MusicWidget.OTHER_MUSIC
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
     override fun onClick(view: View) {
         when (view.id) {
             R.id.hotset_allapp -> {
-                Log.i(TAG, "onClick: huang click all apps =>")
                 AppsCustomizeControl.showApps(this)
             }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "onResume: huang ==>")
+        AppsCustomizeControl.hideApps()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        Log.i(TAG, "onBackPressed: huang ==>")
+        AppsCustomizeControl.hideApps()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.i(TAG, "onNewIntent: huang ==>")
+        AppsCustomizeControl.hideApps()
+    }
 }

@@ -26,8 +26,9 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.Handler;
 
+import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
-import com.awell.ui.AppsCustomizeControl;
+import com.awell.control.AppsCustomizeControl;
 
 import java.lang.ref.WeakReference;
 
@@ -56,6 +57,9 @@ public class LauncherApplication extends Application {
 
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
+
+        ModelImpl model = new ModelImpl();
+        mModel.initialize(model);
 
         // Register intent receivers
         registerBroadcastLauncherModel();

@@ -50,7 +50,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.ContentObserver;
@@ -75,7 +74,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Parcelable;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -132,19 +130,18 @@ import com.awell.addapp.AppInofAdapter;
 import com.awell.addapp.AppPopAdapter;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
+import com.awell.control.AwellMediaControl;
 import com.awell.ctrlview.FrequencyTextView;
 import com.awell.ctrlview.MusicWidget;
 import com.awell.ctrlview.MyPageTransformer2;
 import com.awell.ctrlview.MyQAnalogClock;
 import com.awell.ctrlview.NewCalendar;
-import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
-import com.awell.ui.AppsCustomizeControl;
+import com.awell.control.AppsCustomizeControl;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
-import com.awell.ui.UIActivity;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
 import com.awell.ctrlview.VisualizerView;
@@ -445,11 +442,8 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         LauncherApplication app = ((LauncherApplication) getApplication());
         mSharedPrefs = getSharedPreferences(LauncherApplication.getSharedPreferencesKey(), Context.MODE_PRIVATE);
         //huangxw
-        mModel = app.setLauncher(this);
-
-//        mModel = app.mModel;
-//        ModelImpl model = new ModelImpl();
-//        mModel.initialize(model);
+//        mModel = app.setLauncher(this);
+        mModel = app.mModel;
 
         mIconCache = app.getIconCache();
         mDragController = new DragController(this);
@@ -820,7 +814,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     protected void onResume() {
         super.onResume();
-
+        AppsCustomizeControl.INSTANCE.hideApps();
         // Restore the previous launcher state
         if (mOnResumeState == State.WORKSPACE) {
             showWorkspace(false);
@@ -835,7 +829,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         mPaused = false;
         sPausedFromUserAction = false;
         if (mRestoring || mOnResumeNeedsLoad) {
-            Log.i(TAG, "onResume: huang start loader ==>");
             mWorkspaceLoading = true;
             mModel.startLoader(true, -1);
             mRestoring = false;
@@ -1358,8 +1351,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
         initReceiver();
 
         mediaLibrary = new AwellLibrary(AwellTool.OPEN);
-        mediaLibrary.init(this);
+        mediaLibrary.init(getApplication());
         mediaLibrary.setOnDataListener(awellLibraryDataListener);
+
         wallpaperManager = (WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);
 
         findView();
@@ -1524,6 +1518,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     private EarqueeTextView musicName;
 
     private void initMusicWidget() {
+        llMusic.setMediaLibrary(AwellMediaControl.INSTANCE.getMediaLibrary());
         llMusic.setActivity(this, llMusic);
     }
 
@@ -2532,10 +2527,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                     // otherwise, just wait until onResume to set the state back
                     // to Workspace
                     if (alreadyOnHome) {
-                        showWorkspace(true);
+//                        showWorkspace(true);
                         //huangxw
-//                        AppsCustomizeControl.INSTANCE.hideApps();
-
+                        AppsCustomizeControl.INSTANCE.hideApps();
                     } else {
                         mOnResumeState = State.WORKSPACE;
                     }
@@ -2982,7 +2976,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     @Override
     public void onBackPressed() {
         //huangxw
-//        AppsCustomizeControl.INSTANCE.hideApps();
+        AppsCustomizeControl.INSTANCE.hideApps();
 
         if (isAllAppsVisible()) {
             showWorkspace(true);
@@ -3063,9 +3057,9 @@ public final class Launcher extends Activity implements View.OnClickListener, On
                 canbus_set_dis = getCanBusState();
                 mModel.startLoader(true, -1);
 
-                showAllApps(true);
+//                showAllApps(true);
                 //huangxw
-//                AppsCustomizeControl.INSTANCE.showApps(this);
+                AppsCustomizeControl.INSTANCE.showApps(this);
 
                 break;
             case R.id.hotset_dianhua:
@@ -4426,7 +4420,6 @@ public final class Launcher extends Activity implements View.OnClickListener, On
     public boolean setLoadOnResume() {
         Log.i(TAG, "setLoadOnResume: huang ==>");
         if (mPaused) {
-            Log.i(TAG, "setLoadOnResume: huang ==>");
             mOnResumeNeedsLoad = true;
             return true;
         } else {

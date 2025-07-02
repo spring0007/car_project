@@ -1,4 +1,4 @@
-package com.awell.ui
+package com.awell.control
 
 import AnimationHandler
 import android.annotation.SuppressLint
@@ -14,8 +14,8 @@ import com.awell.launcher2.ApplicationInfo
 import com.awell.launcher2.AppsCustomizePagedView
 import com.awell.launcher2.AppsCustomizeTabHost
 import com.awell.launcher2.IconCache
-import com.awell.launcher2.Launcher
 import com.awell.launcher2.LauncherModel
+import com.awell.ui.AppsCustomizeIndicatorPanel
 import java.lang.ref.WeakReference
 
 @SuppressLint("StaticFieldLeak")
@@ -57,6 +57,8 @@ object AppsCustomizeControl {
 
         mModel = model
 
+        mModel.startLoader(true, -1)
+
         mIsInitialized = true
 
     }
@@ -87,9 +89,13 @@ object AppsCustomizeControl {
     }
 
 
-
     fun showApps(activity: Activity) {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
+
+        if (mAllIsShowing) {
+            Log.i(TAG, "showApps: huang already show all apps=>")
+            return
+        }
 
         currentActivity = WeakReference(activity)
         saveActivityState(activity)
@@ -105,14 +111,12 @@ object AppsCustomizeControl {
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         //showAppsCustomizeHelper(true, false)
-        mModel.startLoader(true, -1)
+//        mAppsCustomizeContent?.setup(
+//            (activity as Launcher),
+//            (activity as Launcher).dragController
+//        )
 
-        mAppsCustomizeContent?.setup(
-            (activity as Launcher),
-            (activity as Launcher).dragController
-        )
-
-
+        Log.i(TAG, "showApps: huang visible=>${mAppsCustomizeTabHost?.visibility}")
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
 
@@ -176,6 +180,11 @@ object AppsCustomizeControl {
     }
 
     fun hideApps() {
+
+        if (!mAllIsShowing) {
+            Log.i(TAG, "hideApps: huang already hide=>")
+            return
+        }
 
         removeFromParent()
         restoreActivityState()

@@ -7,7 +7,7 @@ import com.awell.launcher2.ItemInfo
 import com.awell.launcher2.Launcher
 import com.awell.launcher2.LauncherAppWidgetInfo
 import com.awell.launcher2.LauncherModel
-import com.awell.ui.AppsCustomizeControl
+import com.awell.control.AppsCustomizeControl
 
 class ModelImpl : LauncherModel.Callbacks {
 

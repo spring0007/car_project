@@ -16,6 +16,8 @@
 
 package com.awell.launcher2;
 
+import static com.awell.launcher2.LauncherApplication.getmAppContext;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -243,7 +245,7 @@ public class DragController {
         // Hide soft keyboard, if visible
         if (mInputMethodManager == null) {
             mInputMethodManager = (InputMethodManager)
-                    mLauncher.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    getmAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         }
         mInputMethodManager.hideSoftInputFromWindow(mWindowToken, 0);
 

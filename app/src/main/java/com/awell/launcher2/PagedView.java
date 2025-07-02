@@ -364,7 +364,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         notifyPageSwitchListener();
         invalidate();
         //add by jxy 
-        Launcher.mIndicatorPanel.invalidate();
+//        Launcher.mIndicatorPanel.invalidate();
 //        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
@@ -464,7 +464,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                 scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             }
             invalidate();
-            Launcher.mIndicatorPanel.invalidate();
+//            Launcher.mIndicatorPanel.invalidate();
             //Launcher.mAppsCustomizeIndicatorPanel.invalidate();
             if (getPageIndication() != null) {
                 getPageIndication().setMCurrentPage(mNextPage);
@@ -712,7 +712,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                 }
             }
             invalidate();
-            Launcher.mIndicatorPanel.invalidate();
+//            Launcher.mIndicatorPanel.invalidate();
 //            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
         }
     }
@@ -724,7 +724,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         mForceScreenScrolled = true;
         invalidate();
         invalidateCachedOffsets();
-        Launcher.mIndicatorPanel.invalidate();
+//        Launcher.mIndicatorPanel.invalidate();
         if (getPageIndication() != null)
             getPageIndication().setMTotalPages(getPageCount());
 //        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
@@ -1208,7 +1208,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             super.scrollTo(mMaxScrollX, getScrollY());
         }
         invalidate();
-        Launcher.mIndicatorPanel.invalidate();
+//        Launcher.mIndicatorPanel.invalidate();
 //        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
@@ -1234,7 +1234,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             super.scrollTo(mMaxScrollX, getScrollY());
         }
         invalidate();
-        Launcher.mIndicatorPanel.invalidate();
+//        Launcher.mIndicatorPanel.invalidate();
 //        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
@@ -1314,7 +1314,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
                             if (DEBUG) Log.d(TAG, "onTouchEvent().Scrolling: " + deltaX);
                         } else {
                             invalidate();
-                            Launcher.mIndicatorPanel.invalidate();
+//                            Launcher.mIndicatorPanel.invalidate();
 //                            Launcher.mAppsCustomizeIndicatorPanel.invalidate();
                         }
                         mLastMotionX = x;
@@ -1683,7 +1683,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         }
         notifyPageSwitchListener();
         invalidate();
-        Launcher.mIndicatorPanel.invalidate();
+//        Launcher.mIndicatorPanel.invalidate();
 //        Launcher.mAppsCustomizeIndicatorPanel.invalidate();
     }
 
@@ -1852,6 +1852,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     }
 
     protected void invalidatePageData(int currentPage, boolean immediateAndOnly) {
+        Log.i(TAG, "invalidatePageData: huang mIsDataReady=>" + mIsDataReady);
         if (!mIsDataReady) {
             return;
         }

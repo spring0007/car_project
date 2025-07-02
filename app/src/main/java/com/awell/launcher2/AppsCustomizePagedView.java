@@ -53,7 +53,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -64,7 +63,7 @@ import android.widget.Toast;
 
 import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
-import com.awell.ui.AppsCustomizeControl;
+import com.awell.control.AppsCustomizeControl;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -74,7 +73,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 /**
  * A simple callback interface which also provides the results of the task.
@@ -284,7 +282,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private int mWidgetWidthGap, mWidgetHeightGap;
     private final float sWidgetPreviewIconPaddingPercentage = 0.25f;
     private PagedViewCellLayout mWidgetSpacingLayout;
-    private int mNumAppsPages;
+    private int mNumAppsPages = 0;
     private int mNumWidgetPages;
 
     // Relating to the scroll and overscroll effects
@@ -446,7 +444,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private void updatePageCounts() {
 
 //		mNumWidgetPages = (int) Math.ceil(mWidgets.size() / (mWidgetCountX * mWidgetCountY)); // by jxy (float)
-
+        Log.i(TAG, "updatePageCounts: huang mNumAppsPages=>" + mNumAppsPages + " mApps.size()=>" + mApps.size() + " count=>" + (mCellCountX * mCellCountY));
         mNumAppsPages = (int) Math.ceil((float) mApps.size() / (mCellCountX * mCellCountY));
         if (mNumAppsPages == 1) {
             if (getPageIndication() != null) {
@@ -472,6 +470,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         if (mMaxAppCellCountX > -1) {
             maxCellCountX = Math.min(maxCellCountX, mMaxAppCellCountX);
         }
+        maxCellCountX = 7;
+        maxCellCountY = 2;
         // Temp hack for now: only use the max cell count Y for widget layout
         int maxWidgetCellCountY = maxCellCountY;
         if (mMaxAppCellCountY > -1) {
@@ -537,6 +537,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
         int height = MeasureSpec.getSize(heightMeasureSpec);
+        Log.i(TAG, "onMeasure: huang isDataReady=>" + isDataReady());
         if (!isDataReady()) {
             if (!mApps.isEmpty()/* && !mWidgets.isEmpty()*/) {
                 setDataIsReady();
@@ -727,7 +728,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             cleanupWidgetPreloading(false);
         }
         mCreateWidgetInfo = new PendingAddWidgetInfo((PendingAddWidgetInfo) v.getTag());
-        preloadWidget(mCreateWidgetInfo);
+
+        //preloadWidget(mCreateWidgetInfo);
     }
 
     private void cleanupWidgetPreloading(boolean widgetWasAdded) {
@@ -843,7 +845,9 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         // Start the drag
         mLauncher.lockScreenOrientation();
         mLauncher.getWorkspace().onDragStartedWithItem(createItemInfo, outline, clipAlpha);
-        mDragController.startDrag(image, preview, this, createItemInfo, DragController.DRAG_ACTION_COPY, null, scale);
+        if (mDragController != null) {
+            mDragController.startDrag(image, preview, this, createItemInfo, DragController.DRAG_ACTION_COPY, null, scale);
+        }
         outline.recycle();
         preview.recycle();
         return true;
@@ -1564,6 +1568,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
     @Override
     public void syncPages() {
+        Log.i(TAG, "syncPages: huang pages mNumWidgetPages=>" + mNumWidgetPages + " mNumAppsPages=>" + mNumAppsPages);
         removeAllViews();
         cancelAllTasks();
 
