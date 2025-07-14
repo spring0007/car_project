@@ -530,7 +530,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         //if (/*index == BT || */index == KUMUSIC) {
         //    ll_time_layout_music.setVisibility(INVISIBLE);
         //} else {
-        ll_time_layout_music.setVisibility(VISIBLE);
+        if (ll_time_layout_music != null)
+            ll_time_layout_music.setVisibility(VISIBLE);
         //}
 
         //if (index == CARPLAY) {

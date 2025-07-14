@@ -10,20 +10,24 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher.R
 import com.awell.launcher.databinding.ActivityUiactivityBinding
 import com.awell.launcher2.MediaNotificationListener
+import com.awell.model.MediaViewModel
 import com.awell.utils.CommonData
 
-class UIActivity : AppCompatActivity(), View.OnClickListener {
+class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
 
     private val TAG = UIActivity::class.simpleName.toString()
     private lateinit var binding: ActivityUiactivityBinding
     private var mMediaListener = MediaNotificationListener()
     lateinit var llMusic: MusicWidget
+    lateinit var mediaControl: AwellMediaControl
+    lateinit var mediaViewModel: MediaViewModel
 
 
     var thisActivity = this
@@ -41,10 +45,14 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
 
         mMediaListener.initDependencies(baseContext)
 
-
+        mediaViewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
+        mediaViewModel.mediaState.observe(this) {
+            Log.i(TAG, "onCreate: huang update ui =${it}")
+        }
+        mediaControl = AwellMediaControl()
         llMusic = findViewById(R.id.music_widget_layout)
-        Log.i(TAG, "onCreate: huang set media library =>${AwellMediaControl.mediaLibrary}")
-        llMusic.setMediaLibrary(AwellMediaControl.mediaLibrary)
+        Log.i(TAG, "onCreate: huang set media library =>${mediaControl.mediaLibrary}")
+        llMusic.setMediaLibrary(mediaControl.mediaLibrary)
         llMusic.setActivity(this, llMusic)
 
 
@@ -56,6 +64,7 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        mediaControl.mediaLibrary.release()
         mMediaListener.cleanup()
     }
 
@@ -161,10 +170,10 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onResume() {
-        super.onResume()
         if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
             AppsCustomizeControl.hideApps()
         }
+        super.onResume()
     }
 
     @Deprecated("Deprecated in Java")
@@ -173,7 +182,12 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
         AppsCustomizeControl.hideApps()
+        super.onNewIntent(intent)
+    }
+
+    override fun onLongClick(v: View?): Boolean {
+        Log.i(TAG, "onLongClick: huang v=>${v}")
+        return false;
     }
 }

@@ -27,6 +27,10 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
@@ -35,7 +39,7 @@ import java.lang.ref.WeakReference;
 
 //import cn.kuwo.autosdk.api.KWAPI;
 
-public class LauncherApplication extends Application {
+public class LauncherApplication extends Application implements ViewModelStoreOwner {
     public LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
@@ -44,6 +48,8 @@ public class LauncherApplication extends Application {
     private static int sLongPressTimeout = 300;
     private static final String sSharedPreferencesKey = "com.awell.launcher2.prefs";
     WeakReference<LauncherProvider> mLauncherProvider;
+
+    private final ViewModelStore store = new ViewModelStore();
 
     public static Context mAppContext;
 
@@ -109,9 +115,8 @@ public class LauncherApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-
+        store.clear();
         unregisterReceiver(mModel);
-
         ContentResolver resolver = getContentResolver();
         resolver.unregisterContentObserver(mFavoritesObserver);
         mModel.stopLoader();
@@ -171,5 +176,11 @@ public class LauncherApplication extends Application {
 
     public static int getLongPressTimeout() {
         return sLongPressTimeout;
+    }
+
+    @NonNull
+    @Override
+    public ViewModelStore getViewModelStore() {
+        return store;
     }
 }

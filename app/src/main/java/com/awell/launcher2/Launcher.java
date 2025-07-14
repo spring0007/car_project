@@ -16,6 +16,7 @@
 
 package com.awell.launcher2;
 
+import static com.awell.launcher2.LauncherApplication.getmAppContext;
 import static com.awell.utils.Utils.startActivitySafely;
 
 import android.Manifest;
@@ -118,6 +119,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -141,6 +144,10 @@ import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
 import com.awell.control.AppsCustomizeControl;
+import com.awell.model.MediaViewModel;
+import com.awell.model.PlayImage;
+import com.awell.model.PlayTime;
+import com.awell.model.RadioInfo;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
@@ -1354,9 +1361,10 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         initReceiver();
 
-        mediaLibrary = new AwellLibrary(AwellTool.OPEN);
-        mediaLibrary.init(getApplication());
-        mediaLibrary.setOnDataListener(awellLibraryDataListener);
+        //huangxw delete
+//        mediaLibrary = new AwellLibrary(AwellTool.OPEN);
+//        mediaLibrary.init(getApplication());
+//        mediaLibrary.setOnDataListener(awellLibraryDataListener);
 
         wallpaperManager = (WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);
 
@@ -1365,6 +1373,82 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 //        handler.obtainMessage(INITVIEW).sendToTarget();
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
     }
+
+    private void initMediaObserverView() {
+        mediaViewModel = new ViewModelProvider((LauncherApplication) getmAppContext()).get(MediaViewModel.class);
+        mediaViewModel.getMediaState().observe(this, mediaDataSelect -> {
+            llMusic.switchMediaController(mediaDataSelect.getPackName(),
+                    mediaDataSelect.getStatus(),
+                    mediaDataSelect.getMediaType(),
+                    mediaDataSelect.getCurMedia());
+            if ("com.awell.radio".equals(mediaDataSelect.getPackName())) {
+                if ("start".equals(mediaDataSelect.getStatus())) {
+                    mWaveformView.startAnimation();
+                } else if ("stop".equals(mediaDataSelect.getStatus())) {
+                    mWaveformView.stopAnimation();
+                }
+            }
+        });
+
+        mediaViewModel.getPlayStatus().observe(this, playStatus -> {
+            if (llMusic != null) {
+                llMusic.setCurMusicState(playStatus.getStatus(), playStatus.getPlayAppType());
+            }
+        });
+
+        mediaViewModel.getPlayInfo().observe(this, playInfo -> {
+            if (llMusic != null) {
+                llMusic.setMusicNameTextView(playInfo.getSongName(), playInfo.getAppType());
+                llMusic.setArtistNameTextView(playInfo.getSingerName(), playInfo.getAppType());
+                if ("NO_MUSIC_LIST".equals(playInfo.getSongName())
+                        && "NO_MUSIC_LIST".equals(playInfo.getSingerName())
+                        && "NO_MUSIC_LIST".equals(playInfo.getAlbum())) {
+                    llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
+                    llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
+                }
+
+                if (MusicWidget.OTHER_MUSIC == playInfo.getAppType()) {
+                    if (!TextUtils.isEmpty(playInfo.getSongName())) {
+                        llMusic.setMusicNameTextView(playInfo.getSongName(), MusicWidget.OTHER_MUSIC);
+                    } else {
+                        llMusic.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
+                    }
+                    if (!TextUtils.isEmpty(playInfo.getSingerName())) {
+                        llMusic.setArtistNameTextView(playInfo.getSingerName(), MusicWidget.OTHER_MUSIC);
+                    } else {
+                        llMusic.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
+                    }
+                }
+            }
+        });
+
+        mediaViewModel.getPlayTime().observe(this, new Observer<PlayTime>() {
+            @Override
+            public void onChanged(PlayTime playTime) {
+                if (llMusic != null)
+                    llMusic.setMusicSeekBar((int) playTime.getCurrentTime(), (int) playTime.getTotalTime(), playTime.getPlayType());
+            }
+        });
+
+        mediaViewModel.getPlayImage().observe(this, new Observer<PlayImage>() {
+            @Override
+            public void onChanged(PlayImage playImage) {
+                if (llMusic != null)
+                    llMusic.setPlayImage(playImage.getSongId(), playImage.getAlbumId());
+            }
+        });
+
+        mediaViewModel.getRadioInfo().observe(this, new Observer<RadioInfo>() {
+            @Override
+            public void onChanged(RadioInfo radioInfo) {
+                tv_radio_am_fm.setText(radioInfo.getRadioType());
+                tvRadioButAFM.setText(radioInfo.getRadioType());
+                tv_radio_freq.setText(radioInfo.getFreq());
+                tv_radio_freq_unit.setText(radioInfo.getUnit());
+            }
+        });
+    }
+
 
     private void findView() {
         /*viewPager = findViewById(R.id.viewpager);
@@ -1520,10 +1604,16 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     private TextView date_bg_tv_h, date_bg_tv_m;
     //private TextView musicName;
     private EarqueeTextView musicName;
+    //huangxw add
+    private MediaViewModel mediaViewModel;
+    private AwellMediaControl mediaControl;
 
     private void initMusicWidget() {
-        llMusic.setMediaLibrary(AwellMediaControl.INSTANCE.getMediaLibrary());
+        mediaControl = new AwellMediaControl();
+        llMusic.setMediaLibrary(mediaControl.getMediaLibrary());
         llMusic.setActivity(this, llMusic);
+
+        initMediaObserverView();
     }
 
     private LinearLayout radio_rl, radio_control_ll;
@@ -2612,6 +2702,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mediaControl.getMediaLibrary().release();
+
         unRegisterBroadcastReceiver();
         // Remove all pending runnables
         mHandler.removeMessages(ADVANCE_MSG);
@@ -2662,8 +2754,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        if (requestCode >= 0)
-            mWaitingForResult = true;
+        if (requestCode >= 0) mWaitingForResult = true;
         super.startActivityForResult(intent, requestCode);
     }
 
@@ -3086,20 +3177,29 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.iv_radio_pre:
                 //String[] exampleData = generateRandomSpectrumData(16, 0.0, 1.0, 0.95); // 95%概率非零
-                mediaLibrary.setDataEvent(AwellTool.RADIO.PREVIOUS);
+//                mediaLibrary.setDataEvent(AwellTool.RADIO.PREVIOUS);
+                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.PREVIOUS);
                 break;
             case R.id.iv_radio_next:
-                mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
+//                mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
+                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.NEXT);
+
                 break;
             case R.id.tv_radio_am_fm:
             case R.id.iv_radio_setFM:
-                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
+//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
+                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_FMAM);
+
                 break;
             case R.id.iv_radio_setSearch:
-                mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+//                mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+
                 break;
             case R.id.iv_radio_setYC:
-                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
+//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
+                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_LocDX);
+
                 break;
         }
 
@@ -3483,6 +3583,10 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         } else {
 
+            if (true) {
+                Utils.startWallpaper();
+                return true;
+            }
 
             if (!isDraggingEnabled()) return false;
             if (isWorkspaceLocked()) return false;

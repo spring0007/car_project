@@ -40,7 +40,7 @@ public class AwellLibrary {
     }
 
     public AwellLibrary(Looper looper) {
-        Log.i(TAG,"looper = " + looper);
+        Log.i(TAG, "looper = " + looper);
         if (null == looper) {
             looper = Looper.myLooper();
             if (null == looper) {
@@ -52,12 +52,13 @@ public class AwellLibrary {
 
     /**
      * 初始化 AwellLibrary
+     *
      * @param context
      */
     public void init(Context context) {
         mContext = context;
         mCallerName = getAppName(Process.myPid());
-        Log.i(TAG,"init mCallerName = " + mCallerName + " Pid = " + Process.myPid());
+        Log.i(TAG, "init mCallerName = " + mCallerName + " Pid = " + Process.myPid());
         iAwellInterface = new IAwellInterface.Stub() {
 
             @Override
@@ -82,7 +83,7 @@ public class AwellLibrary {
         try {
             mAwellApiService = IAwellApi.Stub.asInterface(ServiceManager.getService("AwellAutoApi"));
         } catch (Exception e) {
-            Log.e(TAG,"init Exception = " + e.toString());
+            Log.e(TAG, "init Exception = " + e.toString());
         }
     }
 
@@ -95,36 +96,38 @@ public class AwellLibrary {
             if (mAwellApiService != null && iAwellInterface != null)
                 mAwellApiService.unRegisterIAwellInterfaceListener(iAwellInterface);
         } catch (Exception e) {
-            Log.e(TAG,"release Exception = " + e.toString());
+            Log.e(TAG, "release Exception = " + e.toString());
         }
     }
 
     /**
      * 发送数据
+     *
      * @param bundle 类型
      * @return
      */
     public String setDataEvent(Bundle bundle) {
 
         if (bundle == null || mContext == null) return null;
-        Log.i(TAG,"setDataEvent Package = " + mContext.getPackageName() + "  " + getBundle(bundle));
+        Log.i(TAG, "setDataEvent Package = " + mContext.getPackageName() + "  " + getBundle(bundle));
         String string = getReturnSplit(bundle.getString(AwellTool.STATUS_SEND, null));
         try {
             if (mAwellApiService != null) {
                 String str = mAwellApiService.setDataEvent(bundle, openFlag);
-                Log.i(TAG,"str = " + str);
+                Log.i(TAG, "str = " + str);
                 if (str == null || str.equals(""))
                     str = string;
                 return str;
             }
         } catch (Exception e) {
-            Log.e(TAG,"setDataEvent Exception = " + e.toString());
+            Log.e(TAG, "setDataEvent Exception = " + e.toString());
         }
         return string;
     }
 
     /**
      * 发送不带参数据类型
+     *
      * @param status 只传一个状态
      * @return
      */
@@ -136,6 +139,7 @@ public class AwellLibrary {
 
     /**
      * 发送带一个int参数据类型
+     *
      * @param status 状态
      * @param value1 参数1
      * @return
@@ -149,6 +153,7 @@ public class AwellLibrary {
 
     /**
      * 发送带一个boolean参数据类型
+     *
      * @param status 状态
      * @param value1 参数1
      * @return
@@ -162,6 +167,7 @@ public class AwellLibrary {
 
     /**
      * 发送带一个String参数据类型
+     *
      * @param status 状态
      * @param value1 参数1
      * @return
@@ -175,6 +181,7 @@ public class AwellLibrary {
 
     /**
      * 发送带两个String参数据类型
+     *
      * @param status 状态
      * @param value1 参数1
      * @param value2 参数2
@@ -190,18 +197,19 @@ public class AwellLibrary {
 
     /**
      * 注册回调监听
+     *
      * @param listener
      */
     public void setOnDataListener(OnDataListener listener) {
-        Log.i(TAG,"listener = " + listener);
+        Log.i(TAG, "listener = " + listener);
         if (listener != null) {
             try {
-                if (mAwellApiService != null && iAwellInterface != null){
+                if (mAwellApiService != null && iAwellInterface != null) {
                     mAwellApiService.registerIAwellInterfaceListener(iAwellInterface);
                     mDataListener = listener;
                 }
             } catch (Exception e) {
-                Log.e(TAG,"setOnDataListener Exception = " + e.toString());
+                Log.e(TAG, "setOnDataListener Exception = " + e.toString());
             }
         }
     }
@@ -215,6 +223,7 @@ public class AwellLibrary {
 
     /**
      * 根据pid获取包名
+     *
      * @param pid
      * @return
      */
@@ -228,7 +237,7 @@ public class AwellLibrary {
                 String line;
                 if ((line = br.readLine()) != null) {
                     processName = line.trim();
-                    Log.i(TAG,"getAppName() = " + processName);
+                    Log.i(TAG, "getAppName() = " + processName);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -247,29 +256,30 @@ public class AwellLibrary {
 
     /**
      * 显示bundle全部内容
+     *
      * @param bundle
      * @return
      */
-    private String getBundle(Bundle bundle){
+    private String getBundle(Bundle bundle) {
 //        Bundle[{value_m1=0, awellStatusSend=radio_setFmAm1}]
 
         StringBuffer sb = new StringBuffer();
         sb.append("Bundle[{");
-        for (String key : bundle.keySet()){
+        for (String key : bundle.keySet()) {
             sb.append(key + "=" + bundle.get(key) + ", ");
         }
         sb.append("}]");
         return sb.toString();
     }
 
-    private String getReturnSplit(String name){
+    private String getReturnSplit(String name) {
         if (TextUtils.isEmpty(name)) return null;
-        int i,j,number;
+        int i, j, number;
         String str = "";
-        for (i = 0; i < AwellTool.ReturnSplit.length; i++){
-            if (AwellTool.ReturnSplit[i][1].equals(name)){
+        for (i = 0; i < AwellTool.ReturnSplit.length; i++) {
+            if (AwellTool.ReturnSplit[i][1].equals(name)) {
                 number = Integer.parseInt(AwellTool.ReturnSplit[i][0]);
-                for (j = 0; j < number; j++){
+                for (j = 0; j < number; j++) {
                     str = (j == 0 ? "" : str + AwellTool.SPLIT + "");
                 }
             }
@@ -288,14 +298,14 @@ public class AwellLibrary {
 
         public void handleMessage(Message msg) {
             //Log.i(TAG,"handleMessage() start what = " + msg.what);
-            if (msg.what == 0x100){
+            if (msg.what == 0x100) {
                 if (mDataListener == null) {
                     return;
                 }
                 Bundle bundle = msg.getData();
                 if (bundle != null)
                     mDataListener.onResult(bundle);
-                Log.i(TAG,"handleMessage() over " + mCallerName + "  " + getBundle(bundle));
+//                Log.i(TAG,"handleMessage() over " + mCallerName + "  " + getBundle(bundle));
             }
         }
     }
