@@ -5,12 +5,21 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+def mavenRepoUrl = providers.gradleProperty('MAVEN_REPO_URL').orElse('./libs/maven').get()
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven {
+            url = uri(mavenRepoUrl)
+        }
+        mavenLocal()
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "Launcher2_awell"
 include ':app', ':AwellLibrary'
+include ':plugin:plugins:plugin_1'

@@ -1,0 +1,80 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.tencent.shadow",
+    "module": "aar-to-jar-plugin",
+    "version": "1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "files": [
+        {
+          "name": "aar-to-jar-plugin-1.0.jar",
+          "url": "aar-to-jar-plugin-1.0.jar",
+          "size": 5222,
+          "sha512": "9b88e37b15aed703755f6ac82c5ed80facdd01a04947f12de5c4ffca1f2575a111447e0a1b30a241eabbb5de0ed9617657631ca488d83fb729a6e029e7e7d175",
+          "sha256": "350041f6c8e92f65478ce00cbb3d02cb0ad3e00f3c0704c4355b9533e692b716",
+          "sha1": "630935d30d6beb3912073d7b6f3edb226998dd48",
+          "md5": "f61df393eaef79a98a6b27e26658f4fe"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.localToProject": "public",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk7",
+          "version": {
+            "requires": "1.5.31"
+          }
+        },
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "7.4.2"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "aar-to-jar-plugin-1.0.jar",
+          "url": "aar-to-jar-plugin-1.0.jar",
+          "size": 5222,
+          "sha512": "9b88e37b15aed703755f6ac82c5ed80facdd01a04947f12de5c4ffca1f2575a111447e0a1b30a241eabbb5de0ed9617657631ca488d83fb729a6e029e7e7d175",
+          "sha256": "350041f6c8e92f65478ce00cbb3d02cb0ad3e00f3c0704c4355b9533e692b716",
+          "sha1": "630935d30d6beb3912073d7b6f3edb226998dd48",
+          "md5": "f61df393eaef79a98a6b27e26658f4fe"
+        }
+      ]
+    }
+  ]
+}

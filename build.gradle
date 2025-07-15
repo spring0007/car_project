@@ -1,4 +1,37 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+
+buildscript {
+    loadVersions:
+    {// 读取versions.properties到ext中，供项目中直接用变量引用版本号
+        def versions_properties_path = 'buildScripts/gradle/versions.properties'
+        def versions = new Properties()
+        versions.load(file(versions_properties_path).newReader())
+        versions.forEach { key, stringValue ->
+            def value = stringValue?.isInteger() ? stringValue as Integer : stringValue
+            ext.set(key, value)
+        }
+    }
+    ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.tencent.shadow.sample.host'
+    ext.mavenRepoUrl = providers.gradleProperty('MAVEN_REPO_URL').orElse('./libs/maven').get()
+
+    repositories {
+        maven {
+            url = uri(mavenRepoUrl)
+        }
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+    ext.kotlin_version = '1.9.24' // 统一使用这个版本
+    dependencies {
+        // 其他依赖...
+        classpath "com.tencent.shadow:aar-to-jar-plugin:1.0" // 替换成你发布的版本
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.4.0' apply false
     id 'com.android.library' version '7.4.0' apply false
