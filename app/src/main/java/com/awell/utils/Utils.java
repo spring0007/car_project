@@ -17,7 +17,9 @@ import com.awell.launcher.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class Utils {
 
@@ -338,6 +340,33 @@ public class Utils {
             , R.drawable.sf_kugou
 
     };
+
+    public static final Set<String> mAppLevel_1 = Set.of(
+            "com.awell.localmusic",
+            "com.awell.bluetooth",
+            "com.awell.radio",
+            "com.awell.localvideo"
+    );
+    public static final Set<String> mAppLevel_2 = Set.of(
+            ""
+    );
+
+    public static final Set<String> mAppLevel_3 = Set.of(
+            ""
+    );
+
+    public static final Set<String> mAppLevel_4 = Set.of(
+            ""
+    );
+
+    public static final Set<String> mAppLevel_5 = Set.of(
+            ""
+    );
+
+    public static final Set<String> mAppLevel_6 = Set.of(
+            ""
+    );
+
 
     /**
      * icon背景图

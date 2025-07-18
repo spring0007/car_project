@@ -2488,13 +2488,26 @@ public class LauncherModel extends BroadcastReceiver {
         return folderInfo;
     }
 
-    public static final Comparator<ApplicationInfo> getAppNameComparator() {
+    public static Comparator<ApplicationInfo> getAppNameComparator() {
         final Collator collator = Collator.getInstance();
         return new Comparator<ApplicationInfo>() {
             public final int compare(ApplicationInfo a, ApplicationInfo b) {
                 int result = collator.compare(a.title.toString(), b.title.toString());
                 if (result == 0) {
                     result = a.componentName.compareTo(b.componentName);
+                }
+                return result;
+            }
+        };
+    }
+
+    public static Comparator<ApplicationInfo> getAppLevelComparator() {
+        final Collator collator = Collator.getInstance();
+        return new Comparator<ApplicationInfo>() {
+            public final int compare(ApplicationInfo a, ApplicationInfo b) {
+                int result = Integer.compare(a.getLevel(), b.getLevel());
+                if (result == 0) {
+                    result = collator.compare(a.title.toString(), b.title.toString());
                 }
                 return result;
             }

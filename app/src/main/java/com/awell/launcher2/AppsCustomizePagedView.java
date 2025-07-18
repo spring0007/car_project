@@ -64,6 +64,7 @@ import android.widget.Toast;
 import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.control.AppsCustomizeControl;
+import com.awell.utils.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -1735,7 +1736,20 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (ApplicationInfo a : list) {
             try {
                 String str = a.componentName.getPackageName();
-                if (str.equals("com.android.xysysteminfo") || str.equals("com.pve.xysecurity") || str.equals("com.pve.steering") || str.equals("com.xy.brightsetting") || str.equals("com.android.xy.volumesetting") || str.equals("com.acloud.stub.onekeyclean") || str.equals("com.pve.aps") || str.equals("com.pve.gpsinfo") || str.equals("com.pve.wifi") || str.equals("com.pve.logoselector") || str.equals("com.pve.wallpaper") || str.equals("com.pve.sysrestore") || str.equals("com.pve.time") || str.equals("com.pve.language")
+                if (str.equals("com.android.xysysteminfo")
+                        || str.equals("com.pve.xysecurity")
+                        || str.equals("com.pve.steering")
+                        || str.equals("com.xy.brightsetting")
+                        || str.equals("com.android.xy.volumesetting")
+                        || str.equals("com.acloud.stub.onekeyclean")
+                        || str.equals("com.pve.aps")
+                        || str.equals("com.pve.gpsinfo")
+                        || str.equals("com.pve.wifi")
+                        || str.equals("com.pve.logoselector")
+                        || str.equals("com.pve.wallpaper")
+                        || str.equals("com.pve.sysrestore")
+                        || str.equals("com.pve.time")
+                        || str.equals("com.pve.language")
 //						|| str.equals("com.autonavi.xmgd.navigator")
 //						|| str.equals("cld.navi.c2739.mainframe")
 //						|| str.equals("com.acloud.stub.news")
@@ -1751,13 +1765,43 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 //						|| str.equals("com.android.browser")
 //						|| str.equals("com.autochips.bluetooth")
 //						|| str.equals("com.pve.onekeysos")
-                        || str.equals("com.android.xy.floatbar") || str.equals("com.iflytek.speechcloud") || str.equals("com.iflytek.inputmethod") || str.equals("com.android.settings") || str.equals("com.example.logosetter") || str.equals("com.android.speechrecorder") || str.equals("com.awell.pvcanset") || str.equals("com.android.gallery3d") || str.equals("com.android.deskclock") || str.equals("com.wifi.pnp.player") || str.equals("com.awell.canbus")
+                        || str.equals("com.android.xy.floatbar")
+                        || str.equals("com.iflytek.speechcloud")
+                        || str.equals("com.iflytek.inputmethod")
+                        || str.equals("com.android.settings")
+                        || str.equals("com.example.logosetter")
+                        || str.equals("com.android.speechrecorder")
+                        || str.equals("com.awell.pvcanset")
+                        || str.equals("com.android.gallery3d")
+                        || str.equals("com.android.deskclock")
+                        || str.equals("com.wifi.pnp.player")
+                        || str.equals("com.awell.canbus")
 //						||str.equals("com.pve.naviguide")
-                        || str.equals("com.xy.usbsettings") || str.equals("com.xy.screensettings") || str.equals("com.xy.avoutsettings") || str.equals("com.bizhi.mogudongtai") || str.equals("com.pve.pveparkingbrake") || str.equals("com.gpspve.pvefloatbar") || str.equals("com.pve.navisetting") || str.equals("com.fourtech.logosettings") || str.equals("com.aispeech.aios")
+                        || str.equals("com.xy.usbsettings")
+                        || str.equals("com.xy.screensettings")
+                        || str.equals("com.xy.avoutsettings")
+                        || str.equals("com.bizhi.mogudongtai")
+                        || str.equals("com.pve.pveparkingbrake")
+                        || str.equals("com.gpspve.pvefloatbar")
+                        || str.equals("com.pve.navisetting")
+                        || str.equals("com.fourtech.logosettings")
+                        || str.equals("com.aispeech.aios")
                     /*		|| str.equals("com.acloud.stub.manual")*/) {
 
                 } else {
-                    if (str.equals("com.acloud.stub.news") || str.equals("com.acloud.stub.cdplay") || str.equals("com.acloud.stub.newonlineradio") || str.equals("com.acloud.stub.newonlinemusic") || str.equals("com.acloud.stub.video") || str.equals("com.acloud.stub.localmusic") || str.equals("com.autochips.avin") || str.equals("com.acloud.stub.localradio") || str.equals("com.android.browser") || str.equals("com.autochips.bluetooth") || str.equals("com.pve.onekeysos") || str.equals("com.pve.naviguide") || str.equals("com.autochips.HDMI")) {
+                    if (str.equals("com.acloud.stub.news")
+                            || str.equals("com.acloud.stub.cdplay")
+                            || str.equals("com.acloud.stub.newonlineradio")
+                            || str.equals("com.acloud.stub.newonlinemusic")
+                            || str.equals("com.acloud.stub.video")
+                            || str.equals("com.acloud.stub.localmusic")
+                            || str.equals("com.autochips.avin")
+                            || str.equals("com.acloud.stub.localradio")
+                            || str.equals("com.android.browser")
+                            || str.equals("com.autochips.bluetooth")
+                            || str.equals("com.pve.onekeysos")
+                            || str.equals("com.pve.naviguide")
+                            || str.equals("com.autochips.HDMI")) {
                         a.setLevel(2);
                         mApps.add(a);
                     } else if (str.equals("com.xyauto.xysettings")) {
@@ -1773,7 +1817,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             }
         }
         list = mApps;
-        Collections.sort(mApps, new Comparator<ApplicationInfo>() {
+        mApps.sort(new Comparator<ApplicationInfo>() {
             @Override
             public int compare(ApplicationInfo lhs, ApplicationInfo rhs) {
                 return lhs.getLevel().compareTo(rhs.getLevel());
@@ -1795,7 +1839,35 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (ApplicationInfo a : list) {
             try {
                 String str = a.componentName.getPackageName();
-                if (str.equals("com.android.xysysteminfo") || str.equals("com.pve.xysecurity") || str.equals("com.pve.steering") || str.equals("com.acloud.stub.onekeyclean") || str.equals("com.pve.aps") || str.equals("com.pve.gpsinfo") || str.equals("com.pve.wifi") || str.equals("com.pve.logoselector") || str.equals("com.pve.wallpaper") || str.equals("com.pve.sysrestore") || str.equals("com.pve.time") || str.equals("com.pve.language") || str.equals("com.pve.onekeynavi") || str.equals("com.android.xy.floatbar") || str.equals("com.iflytek.speechcloud") || str.equals("com.iflytek.inputmethod") || str.equals("com.android.settings") || str.equals("com.example.logosetter") || str.equals("com.android.speechrecorder") || str.equals("com.awell.pvcanset") || str.equals("com.android.gallery3d") || str.equals("com.android.deskclock") || str.equals("com.wifi.pnp.player") || str.equals("com.bizhi.mogudongtai") || str.equals("com.pve.pveparkingbrake") || str.equals("com.gpspve.pvefloatbar") || str.equals("com.pve.navisetting") || str.equals("com.fourtech.logosettings") || str.equals("com.aispeech.aios")) {
+                if (str.equals("com.android.xysysteminfo")
+                        || str.equals("com.pve.xysecurity")
+                        || str.equals("com.pve.steering")
+                        || str.equals("com.acloud.stub.onekeyclean")
+                        || str.equals("com.pve.aps")
+                        || str.equals("com.pve.gpsinfo")
+                        || str.equals("com.pve.wifi")
+                        || str.equals("com.pve.logoselector")
+                        || str.equals("com.pve.wallpaper")
+                        || str.equals("com.pve.sysrestore")
+                        || str.equals("com.pve.time")
+                        || str.equals("com.pve.language")
+                        || str.equals("com.pve.onekeynavi")
+                        || str.equals("com.android.xy.floatbar")
+                        || str.equals("com.iflytek.speechcloud")
+                        || str.equals("com.iflytek.inputmethod")
+                        || str.equals("com.android.settings")
+                        || str.equals("com.example.logosetter")
+                        || str.equals("com.android.speechrecorder")
+                        || str.equals("com.awell.pvcanset")
+                        || str.equals("com.android.gallery3d")
+                        || str.equals("com.android.deskclock")
+                        || str.equals("com.wifi.pnp.player")
+                        || str.equals("com.bizhi.mogudongtai")
+                        || str.equals("com.pve.pveparkingbrake")
+                        || str.equals("com.gpspve.pvefloatbar")
+                        || str.equals("com.pve.navisetting")
+                        || str.equals("com.fourtech.logosettings")
+                        || str.equals("com.aispeech.aios")) {
 
                 } else if (str.contains("com.awell.launcher")) {
 
@@ -1818,13 +1890,35 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                     } else if (str.equals("cn.kuwo.kwmusiccar")) {
                         a.setLevel(6);
                         mApps.add(a);
-                    } else if (str.equals("com.autochips.bluetooth") || str.equals("com.pve.onekeysos") || str.equals("com.pve.naviguide") || str.equals("com.autochips.HDMI") || str.equals("com.awell.soundeffect") || str.equals("com.awell.eqselect") || str.equals("com.android.chrome") || str.equals("com.android.browser") || str.equals("com.mediatek.filemanager") || str.equals("com.awell.navigation") || str.equals("com.autonavi.amapauto") || str.equals("com.autonavi.minimap") || str.equals("com.google.android.apps.maps")) {
+                    } else if (str.equals("com.autochips.bluetooth")
+                            || str.equals("com.pve.onekeysos")
+                            || str.equals("com.pve.naviguide")
+                            || str.equals("com.autochips.HDMI")
+                            || str.equals("com.awell.soundeffect")
+                            || str.equals("com.awell.eqselect")
+                            || str.equals("com.android.chrome")
+                            || str.equals("com.android.browser")
+                            || str.equals("com.mediatek.filemanager")
+                            || str.equals("com.awell.navigation")
+                            || str.equals("com.autonavi.amapauto")
+                            || str.equals("com.autonavi.minimap")
+                            || str.equals("com.google.android.apps.maps")) {
                         a.setLevel(7);
                         mApps.add(a);
-                    } else if (str.equals("com.tima.carnet.vt") || str.equals("net.easyconn") || str.equals("com.zjinnova.zlink") || str.equals("com.awell.backcar") || str.equals("com.android.vending") || str.equals("com.google.android.youtube")) {
+                    } else if (str.equals("com.tima.carnet.vt")
+                            || str.equals("net.easyconn")
+                            || str.equals("com.zjinnova.zlink")
+                            || str.equals("com.awell.backcar")
+                            || str.equals("com.android.vending")
+                            || str.equals("com.google.android.youtube")) {
                         a.setLevel(8);
                         mApps.add(a);
-                    } else if (str.equals("com.android.documentsui") || str.equals("com.android.dialer") || str.equals("com.android.mms") || str.equals("com.awell.canbus") || str.equals("com.android.calculator2") || str.equals("com.android.soundrecorder")) {
+                    } else if (str.equals("com.android.documentsui")
+                            || str.equals("com.android.dialer")
+                            || str.equals("com.android.mms")
+                            || str.equals("com.awell.canbus")
+                            || str.equals("com.android.calculator2")
+                            || str.equals("com.android.soundrecorder")) {
                         a.setLevel(9);
                         mApps.add(a);
                     } else {
@@ -1842,7 +1936,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             public int compare(ApplicationInfo lhs, ApplicationInfo rhs) {
                 return lhs.getLevel().compareTo(rhs.getLevel());
             }
-
         });
         updatePageCounts();
         invalidateOnDataChange();
@@ -1896,16 +1989,37 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (ApplicationInfo a : list) {
             //Log.d(TAG, "setApps--getPackageName=" + a.componentName.getPackageName());
             //Log.d(TAG, "setApps--getClassName=" + a.componentName.getClassName());
-            if (excludePackageList != null && (excludePackageList.contains(a.componentName.getPackageName()) || excludePackageList.contains(a.componentName.getClassName()))) {
+            if (excludePackageList != null && (excludePackageList.contains(a.componentName.getPackageName())
+                    || excludePackageList.contains(a.componentName.getClassName()))) {
                 continue;
             }
+            setAppShowLevel(a);
             mApps.add(a);
         }
         Log.i(TAG, "setApps: huang mApps=>" + mApps);
 
-        Collections.sort(mApps, LauncherModel.getAppNameComparator());
+        //mApps.sort(LauncherModel.getAppNameComparator());
+        mApps.sort(LauncherModel.getAppLevelComparator());
         updatePageCounts();
         invalidateOnDataChange();
+    }
+
+    private void setAppShowLevel(ApplicationInfo app) {
+        if (Utils.mAppLevel_1.contains(app.componentName.getPackageName())) {
+            app.setLevel(1);
+        } else if (Utils.mAppLevel_2.contains(app.componentName.getPackageName())) {
+            app.setLevel(2);
+        } else if (Utils.mAppLevel_3.contains(app.componentName.getPackageName())) {
+            app.setLevel(3);
+        } else if (Utils.mAppLevel_4.contains(app.componentName.getPackageName())) {
+            app.setLevel(4);
+        } else if (Utils.mAppLevel_5.contains(app.componentName.getPackageName())) {
+            app.setLevel(5);
+        } else if (Utils.mAppLevel_6.contains(app.componentName.getPackageName())) {
+            app.setLevel(6);
+        } else {
+            app.setLevel(7);
+        }
     }
 
     private void addAppsWithoutInvalidate(ArrayList<ApplicationInfo> list) {
