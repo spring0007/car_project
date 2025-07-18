@@ -14,7 +14,7 @@
  * limitations under the License.
   -->
 <resources>
-    <string-array translatable="false" name="excludePackageList">
+    <string-array name="excludePackageList" translatable="false">
         <item>com.android.inputmethod.latin</item>
         <item>com.google.android.inputmethod.latin</item>
         <item>com.google.android.inputmethod.pinyin</item>
@@ -24,5 +24,8 @@
         <item>com.awell.service</item>
         <item>com.awell.navigation</item>
         <item>com.android.settings</item>
+        <item>com.android.dialer</item><!--Telephone-->
+        <item>com.android.mms</item><!--Messaging-->
+        <item>com.android.contacts</item><!--Contacts-->
     </string-array>
 </resources>

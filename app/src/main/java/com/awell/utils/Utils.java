@@ -343,28 +343,28 @@ public class Utils {
 
     public static final Set<String> mAppLevel_1 = Set.of(
             "com.awell.localmusic",
-            "com.awell.bluetooth",
+            "com.awell.bluetooth"
+    );
+    public static final Set<String> mAppLevel_2 = Set.of(
             "com.awell.radio",
             "com.awell.localvideo"
     );
-    public static final Set<String> mAppLevel_2 = Set.of(
-            ""
-    );
 
     public static final Set<String> mAppLevel_3 = Set.of(
-            ""
+            "com.zjinnova.zlink"
     );
 
     public static final Set<String> mAppLevel_4 = Set.of(
-            ""
+            "com.awell.eqselect"
     );
 
     public static final Set<String> mAppLevel_5 = Set.of(
-            ""
+            "com.mediatek.filemanager"
     );
 
     public static final Set<String> mAppLevel_6 = Set.of(
-            ""
+            "com.awell.canbus",
+            "com.awell.carsetting"
     );
 
 
