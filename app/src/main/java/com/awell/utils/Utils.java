@@ -351,6 +351,8 @@ public class Utils {
     );
 
     public static final Set<String> mAppLevel_3 = Set.of(
+            "com.mediatek.filemanager",
+            "com.awell.canbus",
             "com.zjinnova.zlink"
     );
 
@@ -359,12 +361,13 @@ public class Utils {
     );
 
     public static final Set<String> mAppLevel_5 = Set.of(
-            "com.mediatek.filemanager"
+            "com.awell.carsetting"
     );
 
     public static final Set<String> mAppLevel_6 = Set.of(
-            "com.awell.canbus",
-            "com.awell.carsetting"
+            "com.google.android.youtube",
+            "com.google.android.apps.maps",
+            "com.android.vending"
     );
 
 
