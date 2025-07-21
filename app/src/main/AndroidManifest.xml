@@ -84,23 +84,6 @@
         android:supportsRtl="true">
 
         <activity
-            android:name="com.awell.ui.UIActivity"
-            android:clearTaskOnLaunch="true"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme_">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <action android:name="android.intent.action.SHOW_WORK_APPS" />-->
-
-<!--                <category android:name="android.intent.category.HOME" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.MONKEY" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
-<!--            </intent-filter>-->
-        </activity>
-
-        <activity
             android:name="com.awell.launcher2.Launcher"
             android:clearTaskOnLaunch="true"
             android:exported="true"
