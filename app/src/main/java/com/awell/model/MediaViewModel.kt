@@ -1,12 +1,17 @@
 package com.awell.model
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
+/**
+ * 负责数据更新
+ */
 class MediaViewModel : ViewModel() {
 
+    private val TAG: String = MediaViewModel::class.java.simpleName
     private val _mediaState = MutableLiveData<MediaDataSelect>()
     val mediaState: LiveData<MediaDataSelect> get() = _mediaState
 

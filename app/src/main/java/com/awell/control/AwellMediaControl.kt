@@ -23,7 +23,6 @@ class AwellMediaControl() {
     val mDataListener = AwellLibrary.OnDataListener { bundle: Bundle? ->
         bundle?.let {
             val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
-
             when (status) {
                 AwellTool.MEDIA_PLAY -> {
                     handleMediaPlay(bundle)
@@ -83,6 +82,7 @@ class AwellMediaControl() {
 
         mediaLibrary.init(mAppContext)
         mediaLibrary.setOnDataListener(mDataListener)
+        Log.i(TAG, "huang init awell media control=>: ")
         mediaViewModel =
             ViewModelProvider(mAppContext as LauncherApplication).get(MediaViewModel::class.java)
     }

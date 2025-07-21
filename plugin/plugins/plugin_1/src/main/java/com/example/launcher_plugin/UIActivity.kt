@@ -7,17 +7,30 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
+import com.awell.ctrlview.FrequencyTextView
 import com.awell.ctrlview.MusicWidget
+import com.awell.ctrlview.VisualizerView
 import com.awell.launcher.R
 import com.awell.launcher.databinding.ActivityUiactivityBinding
+import com.awell.launcher2.LauncherApplication
+import com.awell.launcher2.LauncherApplication.getmAppContext
 import com.awell.launcher2.MediaNotificationListener
+import com.awell.model.MediaDataSelect
 import com.awell.model.MediaViewModel
+import com.awell.model.PlayImage
+import com.awell.model.PlayInfo
+import com.awell.model.PlayStatus
+import com.awell.model.PlayTime
+import com.awell.model.RadioInfo
 import com.awell.utils.CommonData
 
 class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
@@ -28,7 +41,11 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
     lateinit var llMusic: MusicWidget
     lateinit var mediaControl: AwellMediaControl
     lateinit var mediaViewModel: MediaViewModel
-
+    lateinit var mWaveformView: VisualizerView
+    lateinit var tvRadioButAFM: Button
+    lateinit var tv_radio_freq: FrequencyTextView
+    lateinit var tv_radio_am_fm: TextView
+    lateinit var tv_radio_freq_unit: TextView
 
     var thisActivity = this
 
@@ -43,22 +60,43 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
             insets
         }
 
-        mMediaListener.initDependencies(baseContext)
-
-        mediaViewModel = ViewModelProvider(this).get(MediaViewModel::class.java)
-        mediaViewModel.mediaState.observe(this) {
-            Log.i(TAG, "onCreate: huang update ui =${it}")
-        }
-        mediaControl = AwellMediaControl()
-        llMusic = findViewById(R.id.music_widget_layout)
-        Log.i(TAG, "onCreate: huang set media library =>${mediaControl.mediaLibrary}")
-        llMusic.setMediaLibrary(mediaControl.mediaLibrary)
-        llMusic.setActivity(this, llMusic)
-
+        initMediaMusic()
 
         binding.hotsetAllapp.setOnClickListener(this)
 
+        findViewId()
 
+        initMediaObserverView()
+    }
+
+    private fun initMediaMusic() {
+
+        mMediaListener.initDependencies(baseContext)
+        mediaControl = AwellMediaControl()
+        mediaViewModel =
+            ViewModelProvider((getmAppContext() as? LauncherApplication?)!!).get<MediaViewModel>(
+                MediaViewModel::class.java
+            )
+
+        llMusic = findViewById(R.id.music_widget_layout)
+        llMusic.setMediaLibrary(mediaControl.mediaLibrary)
+        llMusic.setActivity(this, llMusic)
+    }
+
+    private fun findViewId() {
+        mWaveformView = findViewById<VisualizerView>(R.id.waveformView)
+        mWaveformView.setOnClickListener(this)
+
+        tv_radio_am_fm = findViewById<TextView>(R.id.tv_radio_am_fm)
+        tv_radio_am_fm.setOnClickListener(this)
+
+        tvRadioButAFM = findViewById<Button>(R.id.iv_radio_setFM)
+        tvRadioButAFM.setOnClickListener(this)
+
+        tv_radio_freq = findViewById<FrequencyTextView>(R.id.tv_radio_freq)
+        tv_radio_freq.setOnClickListener(this)
+
+        tv_radio_freq_unit = findViewById<TextView>(R.id.tv_radio_freq_unit)
     }
 
 
@@ -66,6 +104,88 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
         super.onDestroy()
         mediaControl.mediaLibrary.release()
         mMediaListener.cleanup()
+    }
+
+    private fun initMediaObserverView() {
+
+        mediaViewModel.mediaState.observe(this, Observer { mediaDataSelect: MediaDataSelect ->
+            llMusic.switchMediaController(
+                mediaDataSelect.packName,
+                mediaDataSelect.status,
+                mediaDataSelect.mediaType,
+                mediaDataSelect.curMedia
+            )
+            if ("com.awell.radio" == mediaDataSelect.packName) {
+                if ("start" == mediaDataSelect.status) {
+                    mWaveformView.startAnimation()
+                } else if ("stop" == mediaDataSelect.status) {
+                    mWaveformView.stopAnimation()
+                }
+            }
+        })
+
+        mediaViewModel.playStatus.observe(this, Observer { playStatus: PlayStatus ->
+            llMusic.setCurMusicState(playStatus.status, playStatus.playAppType)
+        })
+
+        mediaViewModel.playInfo.observe(this, Observer { playInfo: PlayInfo ->
+            llMusic.setMusicNameTextView(playInfo.songName, playInfo.appType)
+            llMusic.setArtistNameTextView(playInfo.singerName, playInfo.appType)
+            if ("NO_MUSIC_LIST" == playInfo.songName
+                && "NO_MUSIC_LIST" == playInfo.singerName
+                && "NO_MUSIC_LIST" == playInfo.album
+            ) {
+                llMusic.setMusicNameTextView(
+                    getResources().getString(R.string.click_play_music),
+                    MusicWidget.MUSIC
+                )
+                llMusic.setArtistNameTextView(
+                    getResources().getString(R.string.music_artist),
+                    MusicWidget.MUSIC
+                )
+            }
+
+            if (MusicWidget.OTHER_MUSIC == playInfo.appType) {
+                if (!TextUtils.isEmpty(playInfo.songName)) {
+                    llMusic.setMusicNameTextView(playInfo.songName, MusicWidget.OTHER_MUSIC)
+                } else {
+                    llMusic.setMusicNameTextView(
+                        getResources().getString(R.string.click_play_music),
+                        MusicWidget.OTHER_MUSIC
+                    )
+                }
+                if (!TextUtils.isEmpty(playInfo.singerName)) {
+                    llMusic.setArtistNameTextView(
+                        playInfo.singerName,
+                        MusicWidget.OTHER_MUSIC
+                    )
+                } else {
+                    llMusic.setArtistNameTextView(
+                        getResources().getString(R.string.music_artist),
+                        MusicWidget.OTHER_MUSIC
+                    )
+                }
+            }
+        })
+
+        mediaViewModel.playTime.observe(this, Observer<PlayTime> { playTime ->
+            llMusic.setMusicSeekBar(
+                playTime.currentTime.toInt(),
+                playTime.totalTime.toInt(),
+                playTime.playType
+            )
+        })
+
+        mediaViewModel.playImage.observe(this, Observer<PlayImage> { playImage ->
+            llMusic.setPlayImage(playImage.songId, playImage.albumId)
+        })
+
+        mediaViewModel.radioInfo.observe(this, Observer<RadioInfo> { radioInfo ->
+            tv_radio_am_fm.text = radioInfo.radioType
+            tvRadioButAFM.text = radioInfo.radioType
+            tv_radio_freq.text = radioInfo.freq
+            tv_radio_freq_unit.text = radioInfo.unit
+        })
     }
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {

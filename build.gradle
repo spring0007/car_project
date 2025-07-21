@@ -12,7 +12,7 @@ buildscript {
             ext.set(key, value)
         }
     }
-    ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.tencent.shadow.sample.host'
+    ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.awell.launcher'
     ext.mavenRepoUrl = providers.gradleProperty('MAVEN_REPO_URL').orElse('./libs/maven').get()
 
     repositories {
@@ -29,6 +29,7 @@ buildscript {
         // 其他依赖...
         classpath "com.tencent.shadow:aar-to-jar-plugin:1.0" // 替换成你发布的版本
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.tencent.shadow.core:gradle-plugin:1.0'
     }
 }
 

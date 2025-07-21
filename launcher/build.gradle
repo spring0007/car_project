@@ -1,6 +1,9 @@
-plugins {
-    id 'com.android.application'
-}
+
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.tencent.shadow.plugin'
+apply plugin: 'org.jetbrains.kotlin.android'
+
 
 android {
     namespace 'com.awell.launcher'

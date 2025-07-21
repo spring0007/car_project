@@ -24,8 +24,7 @@ allprojects {
     }
     //ext.ARTIFACT_VERSION = versionName + versionSuffix
     ext.ARTIFACT_VERSION = versionName
-    ext.TEST_HOST_APP_APPLICATION_ID = 'com.tencent.shadow.test.hostapp'
-    ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.tencent.shadow.sample.host'
+    ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.awell.launcher'
     repositories {
         if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
             maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
