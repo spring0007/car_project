@@ -16,7 +16,10 @@
 
 package com.awell.launcher2;
 
+import static android.os.Process.myPid;
+
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
 import android.app.SearchManager;
 import android.content.ContentResolver;
@@ -25,7 +28,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Handler;
+import android.os.StrictMode;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
@@ -34,7 +40,15 @@ import androidx.lifecycle.ViewModelStoreOwner;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
+import com.awell.plugin_shadow.AndroidLogLoggerFactory;
+import com.awell.plugin_shadow.PluginHelper;
+import com.awell.plugin_shadow.manager.Shadow;
+import com.tencent.shadow.core.common.LoggerFactory;
+import com.tencent.shadow.dynamic.host.DynamicRuntime;
+import com.tencent.shadow.dynamic.host.PluginManager;
+import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 //import cn.kuwo.autosdk.api.KWAPI;
@@ -50,6 +64,8 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     WeakReference<LauncherProvider> mLauncherProvider;
 
     private final ViewModelStore store = new ViewModelStore();
+    private PluginManager mPluginManager;
+
 
     public static Context mAppContext;
 
@@ -82,6 +98,67 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
 
+
+        initPluginModel();
+
+
+    }
+
+    private void initPluginModel() {
+        detectNonSdkApiUsageOnAndroidP();
+        setWebViewDataDirectorySuffix();
+        LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());
+
+        if (isProcess(this, ":plugin")) {
+            //在全动态架构中，Activity组件没有打包在宿主而是位于被动态加载的runtime，
+            //为了防止插件crash后，系统自动恢复crash前的Activity组件，此时由于没有加载runtime而发生classNotFound异常，导致二次crash
+            //因此这里恢复加载上一次的runtime
+            DynamicRuntime.recoveryRuntime(this);
+        }
+
+        if (isProcess(this, getPackageName())) {
+            PluginHelper.getInstance().init(this);
+        }
+
+        HostUiLayerProvider.init(this);
+    }
+
+    private static void detectNonSdkApiUsageOnAndroidP() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            return;
+        }
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        builder.detectNonSdkApiUsage();
+        StrictMode.setVmPolicy(builder.build());
+    }
+    private static void setWebViewDataDirectorySuffix() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            return;
+        }
+        WebView.setDataDirectorySuffix(Application.getProcessName());
+    }
+
+    public void loadPluginManager(File apk) {
+        if (mPluginManager == null) {
+            mPluginManager = Shadow.getPluginManager(apk);
+        }
+    }
+    public PluginManager getPluginManager() {
+        return mPluginManager;
+    }
+
+    private static boolean isProcess(Context context, String processName) {
+        String currentProcName = "";
+        ActivityManager manager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
+            if (processInfo.pid == myPid()) {
+                currentProcName = processInfo.processName;
+                break;
+            }
+        }
+
+        return currentProcName.endsWith(processName);
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
