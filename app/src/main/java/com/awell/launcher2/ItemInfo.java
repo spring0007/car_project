@@ -102,7 +102,7 @@ public class ItemInfo {
      */
     int[] dropPos = null;
 
-    ItemInfo() {
+    public ItemInfo() {
     }
 
     ItemInfo(ItemInfo info) {

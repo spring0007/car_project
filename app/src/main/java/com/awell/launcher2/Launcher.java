@@ -133,17 +133,18 @@ import com.awell.addapp.AppInofAdapter;
 import com.awell.addapp.AppPopAdapter;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
+import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.ctrlview.FrequencyTextView;
 import com.awell.ctrlview.MusicWidget;
 import com.awell.ctrlview.MyPageTransformer2;
 import com.awell.ctrlview.MyQAnalogClock;
 import com.awell.ctrlview.NewCalendar;
+import com.awell.ctrlview.VisualizerView;
 import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
-import com.awell.control.AppsCustomizeControl;
 import com.awell.model.MediaViewModel;
 import com.awell.model.PlayImage;
 import com.awell.model.PlayTime;
@@ -151,7 +152,6 @@ import com.awell.model.RadioInfo;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
-import com.awell.ctrlview.VisualizerView;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -413,9 +413,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             fis = openFileInput(filename);
             fis.close();
             return true;
-        } catch (java.io.FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             return false;
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             return true;
         }
     }
@@ -440,8 +440,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         mMediaListener = new MediaNotificationListener();
         mMediaListener.initDependencies(mContext);
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0x10);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 0x10);
         }
 
 		/*Intent service = new Intent("xy.android.intent.action_GLA_DATA");
@@ -517,7 +517,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         Selection.setSelection(mDefaultKeySsb, 0);
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        registerReceiver(mCloseSystemDialogsReceiver, filter);
+        registerReceiver(mCloseSystemDialogsReceiver, filter, RECEIVER_EXPORTED);
 
         updateGlobalIcons();
 
@@ -527,7 +527,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         startBinding();
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             handler.removeMessages(SPEEDHOME);
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
@@ -1049,7 +1049,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 //                handler.removeMessages(SWTWALLPAPER);
 //                handler.obtainMessage(SWTWALLPAPER, value, 0).sendToTarget();
             } else if (uri.equals(radioUri)) {
-                int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 0);
+                int mIsLocOrDX = Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 0);
                 Log.i(TAG, "mIsLocOrDX = " + mIsLocOrDX);
                 if (mIsLocOrDX == 0) {
                     tvRadioDxLoc.setText(R.string.radio_loc);
@@ -1627,8 +1627,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     private LinearLayout mMusicEntry;
 
     private void initRadioWidget() {
-        int mIsLocOrDX = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 1);
-        int mIsFMOrAM = android.provider.Settings.System.getInt(getContentResolver(), "RadioIsFMOrAM", 0);
+        int mIsLocOrDX = Settings.System.getInt(getContentResolver(), "RadioIsLocOrDX", 1);
+        int mIsFMOrAM = Settings.System.getInt(getContentResolver(), "RadioIsFMOrAM", 0);
         Log.d(TAG, "mIsFMOrAM:" + mIsFMOrAM + " mIsLocOrDX:" + mIsLocOrDX);
         if (mIsLocOrDX == 0) {
             tvRadioDxLoc.setText(R.string.radio_loc);
@@ -2833,7 +2833,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         Intent manageApps = new Intent(Settings.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS);
         manageApps.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        Intent settings = new Intent(android.provider.Settings.ACTION_SETTINGS);
+        Intent settings = new Intent(Settings.ACTION_SETTINGS);
         settings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         String helpUrl = getString(R.string.help_url);
         Intent help = new Intent(Intent.ACTION_VIEW, Uri.parse(helpUrl));
@@ -3135,72 +3135,44 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
      */
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.hotset_setting:
-                startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
-                break;
-            case R.id.hotset_bluetooth:
-                startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-                break;
-            case R.id.hotset_navi:
-            case R.id.rl_car:
-            case R.id.iv_main_xiaodeng:
-                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-                break;
-            case R.id.hotset_allapp: // allapp
+        if (id == R.id.hotset_setting) {
+            startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
+        } else if (id == R.id.hotset_bluetooth) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        } else if (id == R.id.hotset_navi || id == R.id.rl_car || id == R.id.iv_main_xiaodeng) {
+            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+        } else if (id == R.id.hotset_allapp) { // allapp
 
-                canbus_set_dis = getCanBusState();
-                mModel.startLoader(true, -1);
+            canbus_set_dis = getCanBusState();
+            mModel.startLoader(true, -1);
 
 //                showAllApps(true);
-                //huangxw
-                AppsCustomizeControl.INSTANCE.showApps(this);
-
-                break;
-            case R.id.hotset_dianhua:
-                startActivity("com.android.dialer", "com.android.dialer.app.DialtactsActivity");
-                break;
-            case R.id.hotset_video:
-                startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-                break;
-            case R.id.hotset_moshi:
-                int value = Settings.System.getInt(getContentResolver(), "launcherTypeDN", 0);
-                value = value == 1 ? 0 : 1;
-                Settings.System.putInt(getContentResolver(), "launcherTypeDN", value);
-                dayNightImages(value);
-                handler.removeMessages(SWTWALLPAPER);
-                handler.obtainMessage(SWTWALLPAPER, value, 0).sendToTarget();
-                break;
-            case R.id.tv_radio_freq:
-            case R.id.waveformView:
-                startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-                break;
-            case R.id.iv_radio_pre:
-                //String[] exampleData = generateRandomSpectrumData(16, 0.0, 1.0, 0.95); // 95%概率非零
+            //huangxw
+            AppsCustomizeControl.INSTANCE.showApps(this);
+        } else if (id == R.id.hotset_dianhua) {
+            startActivity("com.android.dialer", "com.android.dialer.app.DialtactsActivity");
+        } else if (id == R.id.hotset_video) {
+            startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
+        } else if (id == R.id.hotset_moshi) {
+            int value = Settings.System.getInt(getContentResolver(), "launcherTypeDN", 0);
+            value = value == 1 ? 0 : 1;
+            Settings.System.putInt(getContentResolver(), "launcherTypeDN", value);
+            dayNightImages(value);
+            handler.removeMessages(SWTWALLPAPER);
+            handler.obtainMessage(SWTWALLPAPER, value, 0).sendToTarget();
+        } else if (id == R.id.tv_radio_freq || id == R.id.waveformView) {
+            startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
+        } else if (id == R.id.iv_radio_pre) {//String[] exampleData = generateRandomSpectrumData(16, 0.0, 1.0, 0.95); // 95%概率非零
 //                mediaLibrary.setDataEvent(AwellTool.RADIO.PREVIOUS);
-                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.PREVIOUS);
-                break;
-            case R.id.iv_radio_next:
-//                mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
-                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.NEXT);
-
-                break;
-            case R.id.tv_radio_am_fm:
-            case R.id.iv_radio_setFM:
-//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
-                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_FMAM);
-
-                break;
-            case R.id.iv_radio_setSearch:
-//                mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
-                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.AUTO_SCAN);
-
-                break;
-            case R.id.iv_radio_setYC:
-//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
-                mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_LocDX);
-
-                break;
+            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.PREVIOUS);
+        } else if (id == R.id.iv_radio_next) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
+            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.NEXT);
+        } else if (id == R.id.tv_radio_am_fm || id == R.id.iv_radio_setFM) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
+            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_FMAM);
+        } else if (id == R.id.iv_radio_setSearch) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+        } else if (id == R.id.iv_radio_setYC) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
+            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_LocDX);
         }
 
         for (int i = 0; i < time_img_id.length; i++) {
@@ -5183,7 +5155,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
         filter.addAction("CANBUS_CHANGE_SPEED_Unit");
         filter.addAction("top_session_package_change");
-        registerReceiver(mainReceiver, filter, null, null);
+        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
     }
 
@@ -5262,10 +5234,10 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             }
             if (packName.contains("com.autonavi")) {
                 if (isboot)
-                    android.provider.Settings.System.putString(getContentResolver(), "boot_apk1", packName);
+                    Settings.System.putString(getContentResolver(), "boot_apk1", packName);
             } else {
                 if (isboot)
-                    android.provider.Settings.System.putString(getContentResolver(), "boot_apk2", packName);
+                    Settings.System.putString(getContentResolver(), "boot_apk2", packName);
             }
             startActivity(intent);
         }
@@ -5309,7 +5281,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     }
 
     public int getCanBusState() {
-        return android.provider.Settings.System.getInt(this.getContentResolver(), "canbus_set_dis", 1);
+        return Settings.System.getInt(this.getContentResolver(), "canbus_set_dis", 1);
     }
 }
 

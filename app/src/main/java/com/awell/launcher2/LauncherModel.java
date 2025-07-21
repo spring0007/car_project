@@ -186,7 +186,7 @@ public class LauncherModel extends BroadcastReceiver {
         public void onPageBoundSynchronously(int page);
     }
 
-    LauncherModel(LauncherApplication app, IconCache iconCache) {
+    public LauncherModel(LauncherApplication app, IconCache iconCache) {
         mAppsCanBeOnExternalStorage = !Environment.isExternalStorageEmulated();
         mApp = app;
         mBgAllAppsList = new AllAppsList(iconCache);

@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
 
@@ -8,7 +8,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.awell.launcher"
+//        applicationId "com.awell.launcher"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -21,25 +21,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-
-    android.applicationVariants.all {
-        variant ->
-            variant.outputs.all {
-                outputFileName = "Launcher.apk"
-            }
+    buildFeatures {
+        viewBinding true
     }
-    android {
 
-        buildFeatures {
-            viewBinding true
-        }
-
-        defaultConfig {
-            applicationId "com.awell.launcher"
-            manifestPlaceholders = [sharedUserId: "android.uid.system"]
-        }
-    }
+//    android.applicationVariants.all {
+//        variant ->
+//            variant.outputs.all {
+//                outputFileName = "Launcher.apk"
+//            }
+//    }
+//    android {
+//
+//
+//        defaultConfig {
+//            applicationId "com.awell.launcher"
+//            manifestPlaceholders = [sharedUserId: "android.uid.system"]
+//        }
+//    }
     signingConfigs {
         debug {
             storeFile file('../keystore/platform.jks')

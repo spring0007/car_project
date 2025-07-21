@@ -4,10 +4,10 @@ import android.util.Log
 import com.awell.launcher2.ApplicationInfo
 import com.awell.launcher2.FolderInfo
 import com.awell.launcher2.ItemInfo
-import com.awell.launcher2.Launcher
 import com.awell.launcher2.LauncherAppWidgetInfo
 import com.awell.launcher2.LauncherModel
 import com.awell.control.AppsCustomizeControl
+import com.awell.launcher2.Launcher
 
 class ModelImpl : LauncherModel.Callbacks {
 

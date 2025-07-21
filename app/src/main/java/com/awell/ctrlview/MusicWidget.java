@@ -25,10 +25,8 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -290,88 +288,81 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick v.getId() " + v.getId());
-        switch (v.getId()) {
-            case R.id.music_widget_next:
-                if (currentMedia == MUSIC) {
-                    mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
-                } else if (currentMedia == BT) {
-                    mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
-                } else if (currentMedia == KUMUSIC) {
-                    //kwapi.setPlayState(PlayState.STATE_NEXT);
-                    Launcher.mMediaListener.skipToNext();
-                } else if (currentMedia == CARPLAY) {
-                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
-                    Launcher.mMediaListener.skipToNext();
-                } else if (currentMedia == OTHER_MUSIC) {
-                    Launcher.mMediaListener.skipToNext();
+        int id = v.getId();
+        if (id == R.id.music_widget_next) {
+            if (currentMedia == MUSIC) {
+                mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
+            } else if (currentMedia == BT) {
+                mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
+            } else if (currentMedia == KUMUSIC) {
+                //kwapi.setPlayState(PlayState.STATE_NEXT);
+                Launcher.mMediaListener.skipToNext();
+            } else if (currentMedia == CARPLAY) {
+                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
+                Launcher.mMediaListener.skipToNext();
+            } else if (currentMedia == OTHER_MUSIC) {
+                Launcher.mMediaListener.skipToNext();
+            }
+        } else if (id == R.id.music_widget_pre) {
+            if (currentMedia == MUSIC) {
+                mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
+            } else if (currentMedia == BT) {
+                mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
+            } else if (currentMedia == KUMUSIC) {
+                //kwapi.setPlayState(PlayState.STATE_PRE);
+                Launcher.mMediaListener.skipToPrevious();
+            } else if (currentMedia == CARPLAY) {
+                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                Launcher.mMediaListener.skipToPrevious();
+            } else if (currentMedia == OTHER_MUSIC) {
+                Launcher.mMediaListener.skipToPrevious();
+            }
+        } else if (id == R.id.music_widget_play) {
+            if (currentMedia == MUSIC) {
+                //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
+                if (musicState) {
+                    mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
+                } else {
+                    mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
                 }
-                break;
-            case R.id.music_widget_pre:
-                if (currentMedia == MUSIC) {
-                    mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
-                } else if (currentMedia == BT) {
-                    mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
-                } else if (currentMedia == KUMUSIC) {
-                    //kwapi.setPlayState(PlayState.STATE_PRE);
-                    Launcher.mMediaListener.skipToPrevious();
-                } else if (currentMedia == CARPLAY) {
-                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-                    Launcher.mMediaListener.skipToPrevious();
-                } else if (currentMedia == OTHER_MUSIC) {
-                    Launcher.mMediaListener.skipToPrevious();
-                }
-                break;
-            case R.id.music_widget_play:
-                if (currentMedia == MUSIC) {
-                    //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
-                    if (musicState) {
-                        mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
-                    } else {
-                        mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
-                    }
-                } else if (currentMedia == BT) {
-                    if (mediaLibrary.setDataEvent(AwellTool.BT.GET_STATE).equals("true"))
-                        mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
-                    else
-                        mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
-                } else if (currentMedia == KUMUSIC) {
+            } else if (currentMedia == BT) {
+                if (mediaLibrary.setDataEvent(AwellTool.BT.GET_STATE).equals("true"))
+                    mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
+                else
+                    mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
+            } else if (currentMedia == KUMUSIC) {
                     /*if (kwapi.getPlayerStatus().equals(PlayerStatus.PAUSE))
                         kwapi.setPlayState(PlayState.STATE_PLAY);
                     else if (kwapi.getPlayerStatus().equals(PlayerStatus.PLAYING))
                         kwapi.setPlayState(PlayState.STATE_PAUSE);*/
-                    Launcher.mMediaListener.togglePlayPause();
-                } else if (currentMedia == CARPLAY) {
-                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-                    Launcher.mMediaListener.togglePlayPause();
-                } else if (currentMedia == OTHER_MUSIC) {
-                    Launcher.mMediaListener.togglePlayPause();
+                Launcher.mMediaListener.togglePlayPause();
+            } else if (currentMedia == CARPLAY) {
+                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+                Launcher.mMediaListener.togglePlayPause();
+            } else if (currentMedia == OTHER_MUSIC) {
+                Launcher.mMediaListener.togglePlayPause();
+            }
+        } else if (id == R.id.ll_name_layout_music || id == R.id.music_widget_rl) {
+            Log.i(TAG, "onClick MUSIC_MEDIA_PLAY -currentMedia=" + currentMedia);
+            if (currentMedia == MUSIC) {
+                startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
+            } else if (currentMedia == BT) {
+                try {
+                    Intent btIntent = new Intent("com.awell.bluetooth");
+                    btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+                    btIntent.putExtra("bt_preference_key", 3);
+                    mContext.startActivity(btIntent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e("TAG", "Activity not found: " + e.getMessage());
+                    // 可以提示用户安装目标应用
                 }
-                break;
-            case R.id.ll_name_layout_music:
-            case R.id.music_widget_rl:
-                Log.i(TAG, "onClick MUSIC_MEDIA_PLAY -currentMedia=" + currentMedia);
-                if (currentMedia == MUSIC) {
-                    startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-                } else if (currentMedia == BT) {
-                    try {
-                        Intent btIntent = new Intent("com.awell.bluetooth");
-                        btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-                        btIntent.putExtra("bt_preference_key", 3);
-                        mContext.startActivity(btIntent);
-                    } catch (ActivityNotFoundException e) {
-                        Log.e("TAG", "Activity not found: " + e.getMessage());
-                        // 可以提示用户安装目标应用
-                    }
                 /*} else if (currentMedia == KUMUSIC) {
                     startActivity("cn.kuwo.kwmusiccar", "cn.kuwo.kwmusiccar.MainActivity");
                 } else if (currentMedia == CARPLAY) {
                     startActivity("com.zjinnova.zlink", "com.zjinnova.android.zlink.features.main.MainActivity");*/
-                } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
-                    launchAppByPackageName(mContext, currentPlayingPackage);
-                }
-                break;
-            default:
-                break;
+            } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
+                launchAppByPackageName(mContext, currentPlayingPackage);
+            }
         }
     }
 

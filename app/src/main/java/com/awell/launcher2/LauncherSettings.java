@@ -22,7 +22,7 @@ import android.provider.BaseColumns;
 /**
  * Settings related utilities.
  */
-class LauncherSettings {
+public class LauncherSettings {
     static interface BaseLauncherColumns extends BaseColumns {
         /**
          * Descriptive name of the gesture that can be displayed to the user.
@@ -93,11 +93,11 @@ class LauncherSettings {
     /**
      * Favorites.
      */
-    static final class Favorites implements BaseLauncherColumns {
+    public static final class Favorites implements BaseLauncherColumns {
         /**
          * The content:// style URL for this table
          */
-        static final Uri CONTENT_URI = Uri.parse("content://" +
+        public static final Uri CONTENT_URI = Uri.parse("content://" +
                 LauncherProvider.AUTHORITY + "/" + LauncherProvider.TABLE_FAVORITES +
                 "?" + LauncherProvider.PARAMETER_NOTIFY + "=true");
 

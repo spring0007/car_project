@@ -77,11 +77,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.BIND_MEDIA_BROWSER_SERVICE" />
 
+
+    <!--android:name="com.awell.launcher2.LauncherApplication"-->
     <application
-        android:name="com.awell.launcher2.LauncherApplication"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher_home"
-        android:label="@string/application_name"
         android:supportsRtl="true">
 
         <activity
@@ -90,15 +89,15 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme_">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.SHOW_WORK_APPS" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <action android:name="android.intent.action.SHOW_WORK_APPS" />-->
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY" />
-                <category android:name="android.intent.category.LAUNCHER_APP" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.HOME" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.MONKEY" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <activity

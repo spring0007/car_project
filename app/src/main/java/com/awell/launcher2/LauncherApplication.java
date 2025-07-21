@@ -99,7 +99,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         registerReceiver(mModel, filter);
         filter = new IntentFilter();
         filter.addAction(SearchManager.INTENT_GLOBAL_SEARCH_ACTIVITY_CHANGED);
-        registerReceiver(mModel, filter);
+        registerReceiver(mModel, filter, RECEIVER_EXPORTED);
         filter = new IntentFilter();
         filter.addAction(SearchManager.INTENT_ACTION_SEARCHABLES_CHANGED);
         registerReceiver(mModel, filter);
@@ -141,7 +141,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         return mModel;
     }
 
-    IconCache getIconCache() {
+    public IconCache getIconCache() {
         return mIconCache;
     }
 
