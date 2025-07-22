@@ -31,6 +31,7 @@ import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,7 @@ import java.lang.ref.WeakReference;
 //import cn.kuwo.autosdk.api.KWAPI;
 
 public class LauncherApplication extends Application implements ViewModelStoreOwner {
+    private static final String TAG = LauncherApplication.class.getSimpleName();
     public LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
@@ -73,6 +75,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "onCreate: huang application create this==>" + this);
         mAppContext = this;
 
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache

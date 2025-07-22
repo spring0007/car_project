@@ -86,58 +86,25 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
             });
             futures.add(odexLoader);
         }
-        File fileDir = new File(pluginDir);
-        if (fileDir.exists()) {
-            for (File file : Objects.requireNonNull(fileDir.listFiles())) {
-                if (file.isFile() && file.getName().toLowerCase().endsWith(".apk")) {
-                    Log.i(TAG, "installPlugin: huang file=>" + file);
-                    Future<Pair<String, String>> extractSo = mFixedPool.submit(() -> extractSo(uuid, file.getPath(), file));
-                    futures.add(extractSo);
-                    extractSoFutures.add(extractSo);
-                    if (odex) {
-                        Future odexPlugin = mFixedPool.submit(new Callable() {
-                            @Override
-                            public Object call() throws Exception {
-                                oDexPlugin(uuid, file.getPath(), file);
-                                return null;
-                            }
-                        });
-                        futures.add(odexPlugin);
+
+        for (Map.Entry<String, PluginConfig.PluginFileInfo> plugin : pluginConfig.plugins.entrySet()) {
+            final String partKey = plugin.getKey();
+            final File apkFile = plugin.getValue().file;
+            Log.i(TAG, "installPlugin: huang apkFile=>" + apkFile);
+            Future<Pair<String, String>> extractSo = mFixedPool.submit(() -> extractSo(uuid, partKey, apkFile));
+            futures.add(extractSo);
+            extractSoFutures.add(extractSo);
+            if (odex) {
+                Future odexPlugin = mFixedPool.submit(new Callable() {
+                    @Override
+                    public Object call() throws Exception {
+                        oDexPlugin(uuid, partKey, apkFile);
+                        return null;
                     }
-                }
+                });
+                futures.add(odexPlugin);
             }
         }
-
-
-//        for (Map.Entry<String, PluginConfig.PluginFileInfo> plugin : pluginConfig.plugins.entrySet()) {
-//            final String partKey = plugin.getKey();
-//            File apkFile_temp = plugin.getValue().file;
-//            Log.i(TAG, "installPlugin: huang apkFile=>" + apkFile_temp);
-//            Log.i(TAG, "installPlugin: huang partKey=>" + partKey);
-//            if (apkFile_temp.getName().equals("sample-app-plugin-debug.apk")) {
-//                apkFile_temp = new File("/sdcard/sample-app-plugin-debug.apk");
-//                Log.i(TAG, "installPlugin: huang replace apk debug =>" + apkFile_temp);
-//            }
-//            if (apkFile_temp.getName().equals("sample-app-plugin-debug2.apk")) {
-//                apkFile_temp = new File("/sdcard/sample-app-plugin-debug2.apk");
-//                Log.i(TAG, "installPlugin: huang replace apk 2 debug =>" + apkFile_temp);
-//            }
-//            final File apkFile = apkFile_temp;
-//
-//            Future<Pair<String, String>> extractSo = mFixedPool.submit(() -> extractSo(uuid, partKey, apkFile));
-//            futures.add(extractSo);
-//            extractSoFutures.add(extractSo);
-//            if (odex) {
-//                Future odexPlugin = mFixedPool.submit(new Callable() {
-//                    @Override
-//                    public Object call() throws Exception {
-//                        oDexPlugin(uuid, partKey, apkFile);
-//                        return null;
-//                    }
-//                });
-//                futures.add(odexPlugin);
-//            }
-//        }
 
         for (Future future : futures) {
             future.get();

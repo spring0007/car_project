@@ -65,19 +65,19 @@ public class SamplePluginManager extends FastPluginManager {
     @Override
     protected String getPluginProcessServiceName(String partKey) {
         if ("plugin_1".equals(partKey)) {
-            return "com.example.temp1.plugin_shadow.PluginProcessPPS";
+            return "com.awell.plugin_shadow.PluginProcessPPS";
         } else if (PART_KEY_PLUGIN_MAIN_APP.equals(partKey)) {
-            return "com.example.temp1.plugin_shadow.PluginProcessPPS";
+            return "com.awell.plugin_shadow.PluginProcessPPS";
 //            return "com.tencent.shadow.sample.host.PluginProcessPPS";
         } else if (PART_KEY_PLUGIN_BASE.equals(partKey)) {
-            return "com.example.temp1.plugin_shadow.PluginProcessPPS";
+            return "com.awell.plugin_shadow.PluginProcessPPS";
 //            return "com.tencent.shadow.sample.host.PluginProcessPPS";
         } else if (PART_KEY_PLUGIN_ANOTHER_APP.equals(partKey)) {
-            return "com.example.temp1.plugin_shadow.Plugin2ProcessPPS";//在这里支持多个插件
+            return "com.awell.plugin_shadow.Plugin2ProcessPPS";//在这里支持多个插件
 //            return "com.tencent.shadow.sample.host.Plugin2ProcessPPS";//在这里支持多个插件
         } else {
             //如果有默认PPS，可用return代替throw
-            return "com.example.temp1.plugin_shadow.PluginProcessPPS";
+            return "com.awell.plugin_shadow.PluginProcessPPS";
             //throw new IllegalArgumentException("unexpected plugin load request: " + partKey);
         }
     }

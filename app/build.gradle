@@ -1,14 +1,19 @@
-plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-}
+//plugins {
+////    id 'com.android.library'
+//    id 'com.android.application'
+//    id 'org.jetbrains.kotlin.android'
+//}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.tencent.shadow.plugin'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
 
     compileSdk 33
 
     defaultConfig {
-//        applicationId "com.awell.launcher"
+        applicationId "com.awell.launcher"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -25,20 +30,20 @@ android {
         viewBinding true
     }
 
-//    android.applicationVariants.all {
-//        variant ->
-//            variant.outputs.all {
-//                outputFileName = "Launcher.apk"
-//            }
-//    }
-//    android {
-//
-//
-//        defaultConfig {
-//            applicationId "com.awell.launcher"
-//            manifestPlaceholders = [sharedUserId: "android.uid.system"]
-//        }
-//    }
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "Launcher.apk"
+            }
+    }
+    android {
+
+
+        defaultConfig {
+            applicationId "com.awell.launcher"
+            manifestPlaceholders = [sharedUserId: "android.uid.system"]
+        }
+    }
     signingConfigs {
         debug {
             storeFile file('../keystore/platform.jks')
@@ -53,6 +58,18 @@ android {
             storePassword 'android'
         }
     }
+
+    sourceSets {
+        debug {
+            assets.srcDir('build/generated/assets/manager/debug/')
+            assets.srcDir('build/generated/assets/plugin-zip/debug/')
+        }
+        release {
+            assets.srcDir('build/generated/assets/manager/release/')
+            assets.srcDir('build/generated/assets/plugin-zip/release/')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -80,6 +97,18 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'  // �����ҪKotlin��չ
 
 
+    constraints {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android") {
+            version { strictly("1.7.3") } // Kotlin 1.9.x官方推荐协程版本
+        }
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
+            version { strictly("1.7.3") }
+        }
+    }
+    implementation("androidx.lifecycle:lifecycle-common:2.6.1") // 保持原版本
+    implementation 'androidx.activity:activity:1.7.1'
+
+
     implementation 'com.tencent.shadow.core:loader:1.0'
     implementation 'com.tencent.shadow.core:common:1.0'
     implementation 'com.tencent.shadow.dynamic:host:1.0'
@@ -93,6 +122,136 @@ dependencies {
 }
 
 
+def createCopyTask(projectName, buildType, name, apkName, inputFile, taskName) {
+    def outputFile = file("${getBuildDir()}/generated/assets/${name}/${buildType}/${apkName}")
+    outputFile.getParentFile().mkdirs()
+    log(" createCopyTask ")
+    return tasks.create("copyAssets${buildType.capitalize()}${name.capitalize()}Task", Copy) {
+        group = 'build'
+        description = "复制${name}到assets中."
+
+        log(" Copy copy${buildType.capitalize()}${name.capitalize()}Task file =>${inputFile.name} file exits=${inputFile.exists()}")
+
+        from(inputFile.getParent()) {
+            include(inputFile.name)
+            rename { outputFile.name }
+        }
+        into(outputFile.getParent())
+
+    }.dependsOn("${projectName}:${taskName}")
+}
+
+def generateAssets(generateAssetsTask, buildType) {
+
+    def moduleName = 'manager'
+    def pluginManagerApkFile = file(
+            "${project(":plugin:plugins:manager").getBuildDir()}" +
+                    "/outputs/apk/${buildType}/" +
+                    "${moduleName}-${buildType}.apk"
+    )
+
+    def sourceApkFile = file(
+            "${project(":plugin:plugins:manager").getBuildDir()}" +
+                    "/intermediates/apk/${buildType}/" +
+                    "${moduleName}-${buildType}.apk"
+    )
+
+    def validApkFile = file(
+            "${project(":plugin:plugins:manager").getBuildDir()}" +
+                    "/intermediates/apk/${buildType}/" +
+                    "${moduleName}-${buildType}.apk")
+
+    if (pluginManagerApkFile.exists()) {
+        validApkFile = pluginManagerApkFile
+    } else if (sourceApkFile.exists()) {
+        validApkFile = sourceApkFile
+    }
+    log("manager apk file exist?=${validApkFile.exists()} path=${validApkFile.path}")
+    generateAssetsTask.dependsOn createCopyTask(
+            ':plugin:plugins:manager',
+            buildType,
+            moduleName,
+            'pluginmanager.apk',
+            validApkFile,
+            "assemble${buildType.capitalize()}"
+    )
+
+    def pluginZip = file("${getRootProject().getBuildDir()}/plugin-${buildType}.zip")
+    log("plugin zip file exist?=${pluginZip.exists()} path=${pluginZip.path}")
+    generateAssetsTask.dependsOn createCopyTask(
+            ':app',
+            buildType,
+            'plugin-zip',
+            "plugin-${buildType}.zip",
+            pluginZip,
+            "package${buildType.capitalize()}Plugin"
+    )
+}
+
+
+tasks.whenTaskAdded { task ->
+    if (task.name == "generateDebugAssets") {
+        generateAssets(task, 'debug')
+    }
+    if (task.name == "generateReleaseAssets") {
+        generateAssets(task, 'release')
+    }
+    if (task.name == "generateNormalDebugAssets") {
+        generateAssets(task, 'debug')
+    }
+    if (task.name == "generateNormalReleaseAssets") {
+        generateAssets(task, 'release')
+    }
+}
+
+shadow {
+    transform {
+//        useHostContext = ['abc']
+    }
+
+    packagePlugin {
+        pluginTypes {
+            debug {
+                loaderApkConfig = new Tuple2('loader-debug.apk', ':plugin:plugins:loader:assembleDebug')
+                runtimeApkConfig = new Tuple2('runtime-debug.apk', ':plugin:plugins:runtime:assembleDebug')
+                pluginApks {
+                    pluginApk1 {
+                        businessName = 'plugin-app'
+                        partKey = 'plugin-app'
+                        buildTask = ':plugin:plugins:plugin_1:assemblePluginDebug'
+                        apkPath = 'plugin/plugins/plugin_1/build/intermediates/apk/plugin/debug/plugin_1-plugin-debug.apk'
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                    }
+                }
+            }
+
+            release {
+                loaderApkConfig = new Tuple2('loader-release.apk', ':plugin:plugins:loader:assembleRelease')
+                runtimeApkConfig = new Tuple2('runtime-release.apk', ':plugin:plugins:runtime:assembleRelease')
+                pluginApks {
+                    pluginApk1 {
+                        businessName = 'plugin-app'
+                        partKey = 'plugin-app'
+                        buildTask = ':plugin:plugins:plugin_1:assemblePluginRelease'
+                        apkPath = 'plugin/plugins/plugin_1/build/intermediates/apk/plugin/release/plugin_1-plugin-release.apk'
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                    }
+                }
+            }
+        }
+
+        loaderApkProjectPath = 'plugin/plugins/loader'
+        runtimeApkProjectPath = 'plugin/plugins/runtime'
+
+        archiveSuffix = System.getenv("PluginSuffix") ?: ""
+        archivePrefix = 'plugin'
+        destinationDir = "${getRootProject().getBuildDir()}"
+
+        version = 4
+        compactVersion = [1, 2, 3]
+        uuidNickName = "1.1.5"
+    }
+}
 
 
 

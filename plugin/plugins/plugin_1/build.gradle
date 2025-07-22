@@ -93,20 +93,16 @@ dependencies {
 //    implementation 'com.google.android.material:material:1.12.0'
 //    implementation 'com.google.android.material:material:1.12.0'
 
-//    constraints {
-//        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android") {
-//            version { strictly("1.7.3") } // Kotlin 1.9.x官方推荐协程版本
-//        }
-//        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
-//            version { strictly("1.7.3") }
-//        }
-//    }
-//    implementation("androidx.lifecycle:lifecycle-common:2.6.1") // 保持原版本
-//    implementation 'androidx.activity:activity:1.7.1'
-
-
-    pluginCompileOnly project(":app")
-    normalImplementation project(":app")
+    constraints {
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android") {
+            version { strictly("1.7.3") } // Kotlin 1.9.x官方推荐协程版本
+        }
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core") {
+            version { strictly("1.7.3") }
+        }
+    }
+    implementation("androidx.lifecycle:lifecycle-common:2.6.1") // 保持原版本
+    implementation 'androidx.activity:activity:1.7.1'
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
 

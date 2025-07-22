@@ -208,7 +208,6 @@ object AppsCustomizeControl {
     }
 
     fun bindApps(apps: ArrayList<ApplicationInfo>?) {
-        Log.i(TAG, "bindApps: huang apps=>${apps}")
         val setAllAppsRunnable = Runnable {
             mAppsCustomizeContent?.setApps(apps)
         }

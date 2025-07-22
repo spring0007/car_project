@@ -1,5 +1,6 @@
-package com.example.launcher_plugin
+package com.awell.ui
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -9,9 +10,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.annotation.CallSuper
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.awell.control.AppsCustomizeControl
@@ -33,7 +35,7 @@ import com.awell.model.PlayTime
 import com.awell.model.RadioInfo
 import com.awell.utils.CommonData
 
-class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickListener {
+class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, LifecycleOwner {
 
     private val TAG = UIActivity::class.simpleName.toString()
     private lateinit var binding: ActivityUiactivityBinding
@@ -46,7 +48,7 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
     lateinit var tv_radio_freq: FrequencyTextView
     lateinit var tv_radio_am_fm: TextView
     lateinit var tv_radio_freq_unit: TextView
-
+    private lateinit var lifecycleRegistry: LifecycleRegistry
     var thisActivity = this
 
 
@@ -54,20 +56,55 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
         super.onCreate(savedInstanceState)
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        lifecycleRegistry = LifecycleRegistry(this)
+        lifecycleRegistry.currentState = Lifecycle.State.CREATED
 
         initMediaMusic()
-
         binding.hotsetAllapp.setOnClickListener(this)
 
         findViewId()
 
         initMediaObserverView()
     }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
+    }
+
+
+    @CallSuper
+    override fun onPause() {
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        super.onPause()
+    }
+
+    override fun onResume() {
+        if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
+            AppsCustomizeControl.hideApps()
+        }
+        super.onResume()
+        lifecycleRegistry.currentState = Lifecycle.State.RESUMED
+
+    }
+
+    @CallSuper
+    override fun onStop() {
+        lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
+        mediaControl.mediaLibrary.release()
+        mMediaListener.cleanup()
+    }
+
+
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 
     private fun initMediaMusic() {
 
@@ -99,12 +136,6 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
         tv_radio_freq_unit = findViewById<TextView>(R.id.tv_radio_freq_unit)
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaControl.mediaLibrary.release()
-        mMediaListener.cleanup()
-    }
 
     private fun initMediaObserverView() {
 
@@ -289,12 +320,6 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
         }
     }
 
-    override fun onResume() {
-        if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
-            AppsCustomizeControl.hideApps()
-        }
-        super.onResume()
-    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -310,4 +335,5 @@ class UIActivity : AppCompatActivity(), View.OnClickListener, View.OnLongClickLi
         Log.i(TAG, "onLongClick: huang v=>${v}")
         return false;
     }
+
 }

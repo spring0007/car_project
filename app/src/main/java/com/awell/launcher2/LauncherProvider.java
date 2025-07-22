@@ -94,6 +94,7 @@ public class LauncherProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new DatabaseHelper(getContext());
+        Log.i(TAG, "onCreate: huang provide create this==>" + this);
         ((LauncherApplication) getContext()).setLauncherProvider(this);
         return true;
     }

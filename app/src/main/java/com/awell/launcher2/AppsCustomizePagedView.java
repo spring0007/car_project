@@ -1996,7 +1996,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             setAppShowLevel(a);
             mApps.add(a);
         }
-        Log.i(TAG, "setApps: huang mApps=>" + mApps);
 
         //mApps.sort(LauncherModel.getAppNameComparator());
         mApps.sort(LauncherModel.getAppLevelComparator());

@@ -55,7 +55,6 @@ class ModelImpl : LauncherModel.Callbacks {
     }
 
     override fun bindAllApplications(apps: ArrayList<ApplicationInfo>?) {
-        Log.i(TAG, "bindAllApplications: huang bind all applications =>${apps}")
         AppsCustomizeControl.bindApps(apps)
     }
 
