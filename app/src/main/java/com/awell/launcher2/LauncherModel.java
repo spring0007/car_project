@@ -1097,7 +1097,8 @@ public class LauncherModel extends BroadcastReceiver {
                 }
                 if (loadWorkspaceFirst) {
                     if (DEBUG_LOADERS) Log.d(TAG, "step 1: loading workspace");
-                    loadAndBindWorkspace();
+                    //huangxw
+                    //loadAndBindWorkspace();
                 } else {
                     if (DEBUG_LOADERS) Log.d(TAG, "step 1: special: loading all apps");
                     loadAndBindAllApps();
@@ -1123,7 +1124,8 @@ public class LauncherModel extends BroadcastReceiver {
                     loadAndBindAllApps();
                 } else {
                     if (DEBUG_LOADERS) Log.d(TAG, "step 2: special: loading workspace");
-                    loadAndBindWorkspace();
+                    //huangxw
+                    //loadAndBindWorkspace();
                 }
 
                 // Restore the default thread priority after we are done loading items

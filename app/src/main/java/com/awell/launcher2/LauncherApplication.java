@@ -58,7 +58,7 @@ import java.lang.ref.WeakReference;
 
 public class LauncherApplication extends Application implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
-    public LauncherModel mModel;
+    private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
     private static boolean sIsScreenLarge;
@@ -84,29 +84,31 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
 
-        mIconCache = new IconCache(this);
-        mModel = new LauncherModel(this, mIconCache);
+        initLauncherModel();
 
-        mModel.initialize(model);
-
-        // Register intent receivers
-        registerBroadcastLauncherModel();
-
-        // Register for changes to the favorites
-        ContentResolver resolver = getContentResolver();
-        resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true,
-                mFavoritesObserver);
-
-        //kwapi = KWAPI.createKWAPI(this, "auto");
-
-//        mModel.startLoader(true, -1);
-
-        AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
-
+        if (isProcess(this, ":plugin")) {
+            Log.i(TAG, "onCreate: huang plugin ==>");
+        }
 
         initPluginModel();
 
 
+    }
+
+    private void initLauncherModel() {
+        Log.i(TAG, "initLauncherModel: huang init model only one ==>");
+        mIconCache = new IconCache(this);
+        mModel = new LauncherModel(this, mIconCache);
+        mModel.initialize(model);
+        // Register intent receivers
+        registerBroadcastLauncherModel();
+        // Register for changes to the favorites
+        ContentResolver resolver = getContentResolver();
+        resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true,
+                mFavoritesObserver);
+        //kwapi = KWAPI.createKWAPI(this, "auto");
+//        mModel.startLoader(true, -1);
+        AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
     }
 
     private void initPluginModel() {
@@ -232,7 +234,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         return mIconCache;
     }
 
-    LauncherModel getModel() {
+    public LauncherModel getModel() {
         return mModel;
     }
 

@@ -63,7 +63,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (getmAppContext() as LauncherApplication).mModel.startLoader(true, -1)
+        (getmAppContext() as LauncherApplication).getModel().startLoader(true, -1)
 
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)

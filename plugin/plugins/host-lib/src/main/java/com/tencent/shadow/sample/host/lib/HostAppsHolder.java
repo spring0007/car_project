@@ -11,4 +11,7 @@ public class HostAppsHolder {
         Log.i(TAG, "init: huang apps=>" + apps);
         HostAppsHolder.apps = apps;
     }
+
+
+
 }

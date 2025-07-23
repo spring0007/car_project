@@ -11,4 +11,6 @@ public interface HostApps {
 
     void hideAllApps();
 
+    void loadApps();
+
 }

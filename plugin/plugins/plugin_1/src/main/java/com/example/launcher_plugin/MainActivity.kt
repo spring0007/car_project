@@ -20,6 +20,12 @@ class MainActivity : Activity() {
             HostAppsHolder.apps?.showAllApps(findViewById<ViewGroup>(android.R.id.content))
             HostAppsHolder.apps?.printStr("message from plugin")
         }
+        val load_btn = findViewById<Button>(R.id.LOAD_ALL_APPS)
+        load_btn.setOnClickListener {
+            Log.i(TAG, "onCreate: huang click load all apps==>")
+            HostAppsHolder.apps?.loadApps()
+
+        }
 
     }
 

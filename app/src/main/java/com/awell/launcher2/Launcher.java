@@ -450,7 +450,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         mSharedPrefs = getSharedPreferences(LauncherApplication.getSharedPreferencesKey(), Context.MODE_PRIVATE);
         //huangxw
 //        mModel = app.setLauncher(this);
-        mModel = app.mModel;
+        mModel = app.getModel();
 
         mIconCache = app.getIconCache();
         mDragController = new DragController(this);

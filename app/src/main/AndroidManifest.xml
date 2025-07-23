@@ -82,6 +82,12 @@
         android:name="com.awell.launcher2.LauncherApplication"
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
+
+
+
+
+
+
         <activity
             android:name="com.awell.ui.UIActivity"
             android:clearTaskOnLaunch="true"

@@ -54,7 +54,7 @@ object AppsCustomizeControl {
     fun initialize(context: Context, model: LauncherModel, iconCache: IconCache) {
         if (mIsInitialized)
             return
-        Log.i(TAG, "initialize: huang initialize==>")
+        Log.i(TAG, "initialize: huang initialize==>${this}")
         mAppContext = context.applicationContext
         initView(context)
         mModel = model
