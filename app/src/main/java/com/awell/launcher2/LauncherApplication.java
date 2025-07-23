@@ -107,7 +107,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         resolver.registerContentObserver(LauncherSettings.Favorites.CONTENT_URI, true,
                 mFavoritesObserver);
         //kwapi = KWAPI.createKWAPI(this, "auto");
-//        mModel.startLoader(true, -1);
+        mModel.startLoader(true, -1);
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
     }
 
