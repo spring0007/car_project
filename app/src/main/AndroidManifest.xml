@@ -88,15 +88,15 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme_">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <action android:name="android.intent.action.SHOW_WORK_APPS" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SHOW_WORK_APPS" />
 
-            <!--                <category android:name="android.intent.category.HOME" />-->
-            <!--                <category android:name="android.intent.category.DEFAULT" />-->
-            <!--                <category android:name="android.intent.category.MONKEY" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
-            <!--            </intent-filter>-->
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
+                <category android:name="android.intent.category.LAUNCHER_APP" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.awell.launcher2.Launcher"
@@ -107,15 +107,15 @@
             android:stateNotNeeded="true"
             android:theme="@style/Theme_"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.SHOW_WORK_APPS" />
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!--                <action android:name="android.intent.action.SHOW_WORK_APPS" />-->
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY" />
-                <category android:name="android.intent.category.LAUNCHER_APP" />
-            </intent-filter>
+            <!--                <category android:name="android.intent.category.HOME" />-->
+            <!--                <category android:name="android.intent.category.DEFAULT" />-->
+            <!--                <category android:name="android.intent.category.MONKEY" />-->
+            <!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+            <!--            </intent-filter>-->
         </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
         <activity
             android:name="com.awell.launcher2.WallpaperChooser"
@@ -135,6 +135,27 @@
                 android:name="android.wallpaper.preview"
                 android:resource="@xml/wallpaper_picker_preview" />
         </activity> <!-- Intent received used to prepopulate the default workspace. -->
+
+
+        <activity
+            android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:launchMode="standard"
+            android:multiprocess="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+
+        <activity
+            android:name="com.awell.plugin_shadow.PluginLoadActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Transparent" />
+
+        <service
+            android:name="com.awell.plugin_shadow.PluginProcessPPS"
+            android:process=":plugin" />
+
         <receiver
             android:name="com.awell.launcher2.PreloadReceiver"
             android:exported="true"

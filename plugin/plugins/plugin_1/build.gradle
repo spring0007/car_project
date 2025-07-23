@@ -113,6 +113,10 @@ dependencies {
 
     pluginCompileOnly 'com.tencent.shadow.core:runtime:1.0'
 
+    //注意host-lib要用compileOnly编译而不打包在插件中。在packagePlugin任务中配置hostWhiteList允许插件访问宿主的类。
+    pluginCompileOnly project(":plugin:plugins:host-lib")
+    normalImplementation project(":plugin:plugins:host-lib")
+
 }
 
 

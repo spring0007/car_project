@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.CallSuper
@@ -33,7 +34,9 @@ import com.awell.model.PlayInfo
 import com.awell.model.PlayStatus
 import com.awell.model.PlayTime
 import com.awell.model.RadioInfo
+import com.awell.plugin_shadow.PluginLoadActivity
 import com.awell.utils.CommonData
+import com.tencent.shadow.sample.constant.Constant
 
 class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, LifecycleOwner {
 
@@ -49,11 +52,19 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     lateinit var tv_radio_am_fm: TextView
     lateinit var tv_radio_freq_unit: TextView
     private lateinit var lifecycleRegistry: LifecycleRegistry
+    private val CLAZZ_NAME = "com.example.plugin_1.MainActivity" // plugin_1 apk
+    private val CLAZZ_NAME_LAUNCHER =
+        "com.example.launcher_plugin.MainActivity" // plugin_1 apk
+
+
     var thisActivity = this
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (getmAppContext() as LauncherApplication).mModel.startLoader(true, -1)
+
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -62,6 +73,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
 
         initMediaMusic()
         binding.hotsetAllapp.setOnClickListener(this)
+        binding.startPlugin.setOnClickListener(this)
 
         findViewId()
 
@@ -256,7 +268,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
                 //showAllApps(true)
                 //setSettingOrAndroidPage(true)
                 //mModel.startLoader(true, -1)
-                AppsCustomizeControl.showApps(thisActivity)
+                AppsCustomizeControl.showApps(thisActivity.findViewById<ViewGroup>(android.R.id.content))
 
             } else if (action == "CANBUS_CHANGE_SPEED_Unit") {
                 //updateSpeedUnitText()
@@ -315,8 +327,32 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onClick(view: View) {
         when (view.id) {
             R.id.hotset_allapp -> {
-                AppsCustomizeControl.showApps(this)
+                AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
             }
+
+            R.id.start_plugin -> {
+                Log.i(TAG, "onClick: huang click start plugin 1 =>")
+                val intent: Intent = Intent(this, PluginLoadActivity::class.java)
+
+                intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, "plugin-app")
+//                intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, "plugin_1-release")
+
+                intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER)
+//                intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME)
+
+                Log.i(TAG, "onClick: huang intent=>$intent")
+                Log.i(
+                    TAG,
+                    "onClick: huang KEY_PLUGIN_PART_KEY=>" + intent.getStringExtra(Constant.KEY_PLUGIN_PART_KEY)
+                )
+                Log.i(
+                    TAG,
+                    "onClick: huang KEY_ACTIVITY_CLASSNAME=>" + intent.getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME)
+                )
+
+                startActivity(intent)
+            }
+
         }
     }
 

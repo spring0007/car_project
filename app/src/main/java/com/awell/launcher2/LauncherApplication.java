@@ -38,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.awell.impl.HostApps;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
@@ -47,6 +48,7 @@ import com.awell.plugin_shadow.manager.Shadow;
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
 import com.tencent.shadow.dynamic.host.PluginManager;
+import com.tencent.shadow.sample.host.lib.HostAppsHolder;
 import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
 
 import java.io.File;
@@ -97,7 +99,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
         //kwapi = KWAPI.createKWAPI(this, "auto");
 
-        mModel.startLoader(true, -1);
+//        mModel.startLoader(true, -1);
 
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
 
@@ -124,6 +126,9 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         }
 
         HostUiLayerProvider.init(this);
+
+        HostAppsHolder.init(new HostApps());
+
     }
 
     private static void detectNonSdkApiUsageOnAndroidP() {
@@ -134,6 +139,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         builder.detectNonSdkApiUsage();
         StrictMode.setVmPolicy(builder.build());
     }
+
     private static void setWebViewDataDirectorySuffix() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             return;
@@ -146,6 +152,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
             mPluginManager = Shadow.getPluginManager(apk);
         }
     }
+
     public PluginManager getPluginManager() {
         return mPluginManager;
     }

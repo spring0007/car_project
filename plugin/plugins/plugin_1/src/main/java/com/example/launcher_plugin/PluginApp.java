@@ -10,6 +10,6 @@ public class PluginApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate: huang create application==>");
+        Log.i(TAG, "onCreate: huang create application this==>" + this);
     }
 }

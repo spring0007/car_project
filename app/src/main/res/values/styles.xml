@@ -241,4 +241,13 @@
     <style name="CustomClingTitleText"></style>
 
     <style name="CustomClingText"></style>
+
+    <!-- 使用Theme.AppCompat.Light.NoActionBar作为基础，并设置为透明背景 -->
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 如果希望状态栏透明，可以添加以下属性（需要API 21以上） -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
 </resources>

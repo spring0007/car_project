@@ -3148,7 +3148,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
 //                showAllApps(true);
             //huangxw
-            AppsCustomizeControl.INSTANCE.showApps(this);
+            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (id == R.id.hotset_dianhua) {
             startActivity("com.android.dialer", "com.android.dialer.app.DialtactsActivity");
         } else if (id == R.id.hotset_video) {

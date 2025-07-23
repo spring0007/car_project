@@ -2,7 +2,6 @@ package com.awell.control
 
 import AnimationHandler
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +24,7 @@ object AppsCustomizeControl {
 
     private var DEBUG = true
 
-    private var currentActivity: WeakReference<Activity>? = null
+    private var currentViewGroup: WeakReference<ViewGroup>? = null
 
     private var originalViewsVisibility = mutableMapOf<Int, Int>()
 
@@ -55,6 +54,7 @@ object AppsCustomizeControl {
     fun initialize(context: Context, model: LauncherModel, iconCache: IconCache) {
         if (mIsInitialized)
             return
+        Log.i(TAG, "initialize: huang initialize==>")
         mAppContext = context.applicationContext
         initView(context)
         mModel = model
@@ -87,8 +87,7 @@ object AppsCustomizeControl {
         mAppsCustomizeContent?.onPackagesUpdated()
     }
 
-
-    fun showApps(activity: Activity) {
+    fun showApps(viewGroup: ViewGroup) {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
 
         if (mAllIsShowing) {
@@ -98,28 +97,31 @@ object AppsCustomizeControl {
             return
         }
         longClickUninstallAppToAppsView = false
-        currentActivity = WeakReference(activity)
-        saveActivityState(activity)
+        currentViewGroup = WeakReference(viewGroup)
+        saveActivityState(viewGroup)
 
         // 隐藏所有内容视图
-        hideAllContentViews(activity)
+        hideAllContentViews(viewGroup)
 
         removeFromParent()
 
-        activity.findViewById<ViewGroup>(android.R.id.content).addView(
+        viewGroup.addView(
             mAppsCustomizeTabHost,
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-
+        Log.i(
+            TAG,
+            "showApps: huang show all apps viewGroup=>${viewGroup} mAppsCustomizeTabHost=${mAppsCustomizeTabHost}"
+        )
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
 
         mAllIsShowing = true
     }
 
-    private fun hideAllContentViews(activity: Activity) {
-        val contentView = activity.findViewById<ViewGroup>(android.R.id.content)
+    private fun hideAllContentViews(viewGroup: ViewGroup) {
+        val contentView = viewGroup
         for (i in 0 until contentView.childCount) {
             val child = contentView.getChildAt(i)
             if (child != mAppsCustomizeTabHost) {
@@ -143,9 +145,9 @@ object AppsCustomizeControl {
      * 在显示全部app列表时需要隐藏当前Activity的全部子view，否则会显示在全部app列表后面
      *
      */
-    private fun saveActivityState(activity: Activity) {
+    private fun saveActivityState(viewGroup: ViewGroup) {
         // 保存视图可见性状态
-        val contentView = activity.findViewById<ViewGroup>(android.R.id.content)
+        val contentView = viewGroup
         for (i in 0 until contentView.childCount) {
             val child = contentView.getChildAt(i)
             if (child != mAppsCustomizeTabHost) {
@@ -158,10 +160,10 @@ object AppsCustomizeControl {
      * 隐藏全部app时显示当前Activity的子view
      */
     private fun restoreActivityState() {
-        currentActivity?.get()?.let { activity ->
+        currentViewGroup?.get()?.let { viewGroup ->
 
             // 恢复视图可见性
-            val contentView = activity.findViewById<ViewGroup>(android.R.id.content)
+            val contentView = viewGroup
             for (i in 0 until contentView.childCount) {
                 val child = contentView.getChildAt(i)
                 if (child != mAppsCustomizeTabHost) {
@@ -177,6 +179,7 @@ object AppsCustomizeControl {
     fun hideApps() {
 
         if (!mAllIsShowing) {
+            Log.i(TAG, "hideApps: huang already hide all apps==>")
             return
         }
 
@@ -209,6 +212,7 @@ object AppsCustomizeControl {
 
     fun bindApps(apps: ArrayList<ApplicationInfo>?) {
         val setAllAppsRunnable = Runnable {
+            Log.i(TAG, "bindApps: huang bind apps=>")
             mAppsCustomizeContent?.setApps(apps)
         }
 

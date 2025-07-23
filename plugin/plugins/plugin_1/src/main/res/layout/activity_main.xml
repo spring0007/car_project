@@ -5,16 +5,25 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_purple"
+    android:background="@android:color/holo_blue_bright"
     tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/plugin_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="plugin_1"
+        android:text="launcher plugin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/SHOW_ALL_APPS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="show apps"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
