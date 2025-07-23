@@ -109,6 +109,9 @@ dependencies {
     pluginCompileOnly project(path: ':AwellLibrary')
     normalImplementation project(path: ':AwellLibrary')
 
+    pluginCompileOnly project(path: ':app')
+    normalImplementation project(path: ':app')
+
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
     pluginCompileOnly 'com.tencent.shadow.core:runtime:1.0'
