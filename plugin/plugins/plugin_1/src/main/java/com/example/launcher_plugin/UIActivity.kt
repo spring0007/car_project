@@ -1,4 +1,4 @@
-package com.awell.ui
+package com.example.launcher_plugin
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -23,7 +23,6 @@ import com.awell.ctrlview.FrequencyTextView
 import com.awell.ctrlview.MusicWidget
 import com.awell.ctrlview.VisualizerView
 import com.awell.launcher.R
-import com.awell.launcher.databinding.ActivityUiactivityBinding
 import com.awell.launcher2.LauncherApplication
 import com.awell.launcher2.LauncherApplication.getmAppContext
 import com.awell.launcher2.MediaNotificationListener
@@ -36,6 +35,7 @@ import com.awell.model.PlayTime
 import com.awell.model.RadioInfo
 import com.awell.plugin_shadow.PluginLoadActivity
 import com.awell.utils.CommonData
+import com.example.launcher_plugin.databinding.ActivityUiactivityBinding
 import com.tencent.shadow.sample.constant.Constant
 
 class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, LifecycleOwner {
@@ -66,6 +66,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         (getmAppContext() as LauncherApplication).getModel().startLoader(true, -1)
 
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
+        Log.i(TAG, "onCreate: huang ==${BuildConfig.FLAVOR}")
         setContentView(binding.root)
 
         lifecycleRegistry = LifecycleRegistry(this)
@@ -330,9 +331,9 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
                 AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
             }
 
-            R.id.start_plugin -> {
+            com.example.launcher_plugin.R.id.start_plugin -> {
                 Log.i(TAG, "onClick: huang click start plugin 1 =>")
-                val intent: Intent = Intent(this, PluginLoadActivity::class.java)
+                val intent = Intent(this, PluginLoadActivity::class.java)
 
                 intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, "plugin-app")
 //                intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, "plugin_1-release")

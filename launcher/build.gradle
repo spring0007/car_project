@@ -19,11 +19,39 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildFeatures {
+        viewBinding true
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        release {
+            storeFile file('../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        debug {
+            assets.srcDir('build/generated/assets/manager/debug/')
+            assets.srcDir('build/generated/assets/plugin-zip/debug/')
+        }
+        release {
+            assets.srcDir('build/generated/assets/manager/release/')
+            assets.srcDir('build/generated/assets/plugin-zip/release/')
         }
     }
     compileOptions {
@@ -51,6 +79,7 @@ dependencies {
 
 
     implementation project(path: ':app')
+    implementation project(':plugin:plugins:constant')
 
 
 }
@@ -155,7 +184,8 @@ shadow {
                         partKey = 'plugin-app'
                         buildTask = ':plugin:plugins:plugin_1:assemblePluginDebug'
                         apkPath = 'plugin/plugins/plugin_1/build/intermediates/apk/plugin/debug/plugin_1-plugin-debug.apk'
-                        hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib", "com.awell.launcher.databinding",
+                                         "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]
                     }
                 }
             }
@@ -169,7 +199,8 @@ shadow {
                         partKey = 'plugin-app'
                         buildTask = ':plugin:plugins:plugin_1:assemblePluginRelease'
                         apkPath = 'plugin/plugins/plugin_1/build/intermediates/apk/plugin/release/plugin_1-plugin-release.apk'
-                        hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib", "com.awell.launcher.databinding",
+                                         "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]
                     }
                 }
             }

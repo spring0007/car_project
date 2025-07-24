@@ -87,15 +87,6 @@
 
 
 
-
-        <activity
-            android:name="com.awell.ui.UIActivity"
-            android:clearTaskOnLaunch="true"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme_">
-
-        </activity>
         <activity
             android:name="com.awell.launcher2.Launcher"
             android:clearTaskOnLaunch="true"

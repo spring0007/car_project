@@ -16,4 +16,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/start_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/start_ui_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start UI activity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_launcher" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -96,7 +96,6 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     }
 
     private void initLauncherModel() {
-        Log.i(TAG, "initLauncherModel: huang init model only one ==>");
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
         mModel.initialize(model);
