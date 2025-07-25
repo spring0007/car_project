@@ -182,10 +182,10 @@ object AppsCustomizeControl {
             Log.i(TAG, "hideApps: huang already hide all apps==>")
             return
         }
-
         removeFromParent()
         restoreActivityState()
 
+        Log.i(TAG, "hideApps: huang hide all apps==>")
         mAllIsShowing = false
     }
 

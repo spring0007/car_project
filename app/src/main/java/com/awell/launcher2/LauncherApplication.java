@@ -84,10 +84,11 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
 
-        initLauncherModel();
 
         if (isProcess(this, ":plugin")) {
             Log.i(TAG, "onCreate: huang plugin ==>");
+            HostAppsHolder.init(new HostApps());
+            initLauncherModel();
         }
 
         initPluginModel();
@@ -95,7 +96,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
     }
 
-    private void initLauncherModel() {
+    public void initLauncherModel() {
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
         mModel.initialize(model);
@@ -128,7 +129,6 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
         HostUiLayerProvider.init(this);
 
-        HostAppsHolder.init(new HostApps());
 
     }
 

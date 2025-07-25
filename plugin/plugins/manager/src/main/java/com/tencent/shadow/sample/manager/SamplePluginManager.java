@@ -33,6 +33,7 @@ import android.view.View;
 import com.plugins.manager.R;
 import com.tencent.shadow.core.manager.installplugin.InstalledPlugin;
 import com.tencent.shadow.dynamic.host.EnterCallback;
+import com.tencent.shadow.dynamic.loader.PluginLoader;
 import com.tencent.shadow.sample.constant.Constant;
 
 import java.util.concurrent.ExecutorService;
@@ -51,6 +52,9 @@ public class SamplePluginManager extends FastPluginManager {
         mCurrentContext = context;
     }
 
+    public PluginLoader getmPluginLoader() {
+        return mPluginLoader;
+    }
     /**
      * @return PluginManager实现的别名，用于区分不同PluginManager实现的数据存储路径
      */

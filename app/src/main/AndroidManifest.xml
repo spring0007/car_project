@@ -84,7 +84,9 @@
         android:supportsRtl="true">
 
 
-
+        <activity
+            android:name="com.awell.ui.UIActivity"
+            android:exported="true" />
 
 
         <activity
@@ -129,11 +131,21 @@
         <activity
             android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="standard"
             android:multiprocess="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
+            android:theme="@style/Theme.Transparent">
+            <intent-filter>
+                <action android:name="android.intent.action.SHOW_WORK_APPS" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="com.awell.plugin_shadow.PluginLoadActivity"

@@ -47,6 +47,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
     private boolean mIsDragEnabled;
     private float mDragSlopeThreshold;
     private final Context mContext;
+    private final String TAG = PagedViewWithDraggableItems.class.getSimpleName();
 
     public PagedViewWithDraggableItems(Context context) {
         this(context, null);
@@ -109,6 +110,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
 
     @Override
     public boolean onLongClick(View v) {
+        Log.i(TAG, "onLongClick: huang v=>" + v);
 //    	return true;
     	/*ApplicationInfo appInfo = (ApplicationInfo) v.getTag();
 		String packageName=appInfo.getPackageName(); 
@@ -170,6 +172,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         Intent intent = new Intent(Intent.ACTION_DELETE, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
+        Log.i(TAG, "uninstallAPK: huang mContext==>" + mContext + " uninstall intent==>" + intent);
         AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(true);
     }
 

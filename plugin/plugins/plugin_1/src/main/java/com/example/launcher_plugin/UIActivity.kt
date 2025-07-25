@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -22,9 +23,8 @@ import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.FrequencyTextView
 import com.awell.ctrlview.MusicWidget
 import com.awell.ctrlview.VisualizerView
-import com.awell.launcher.R
+import com.awell.launcher.BuildConfig
 import com.awell.launcher2.LauncherApplication
-import com.awell.launcher2.LauncherApplication.getmAppContext
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.model.MediaDataSelect
 import com.awell.model.MediaViewModel
@@ -45,7 +45,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     private var mMediaListener = MediaNotificationListener()
     lateinit var llMusic: MusicWidget
     lateinit var mediaControl: AwellMediaControl
-    lateinit var mediaViewModel: MediaViewModel
+    var mediaViewModel: MediaViewModel? = null
     lateinit var mWaveformView: VisualizerView
     lateinit var tvRadioButAFM: Button
     lateinit var tv_radio_freq: FrequencyTextView
@@ -63,16 +63,16 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (getmAppContext() as LauncherApplication).getModel().startLoader(true, -1)
+        (LauncherApplication.getmAppContext() as LauncherApplication).getModel()
+            .startLoader(true, -1)
 
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
-        Log.i(TAG, "onCreate: huang ==${BuildConfig.FLAVOR}")
         setContentView(binding.root)
 
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
 
-        initMediaMusic()
+//        initMediaMusic()
         binding.hotsetAllapp.setOnClickListener(this)
         binding.startPlugin.setOnClickListener(this)
 
@@ -124,7 +124,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
         mediaViewModel =
-            ViewModelProvider((getmAppContext() as? LauncherApplication?)!!).get<MediaViewModel>(
+            ViewModelProvider((LauncherApplication.getmAppContext() as? LauncherApplication?)!!).get<MediaViewModel>(
                 MediaViewModel::class.java
             )
 
@@ -152,7 +152,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
 
     private fun initMediaObserverView() {
 
-        mediaViewModel.mediaState.observe(this, Observer { mediaDataSelect: MediaDataSelect ->
+        mediaViewModel?.mediaState?.observe(this, Observer { mediaDataSelect: MediaDataSelect ->
             llMusic.switchMediaController(
                 mediaDataSelect.packName,
                 mediaDataSelect.status,
@@ -168,11 +168,11 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
             }
         })
 
-        mediaViewModel.playStatus.observe(this, Observer { playStatus: PlayStatus ->
+        mediaViewModel?.playStatus?.observe(this, Observer { playStatus: PlayStatus ->
             llMusic.setCurMusicState(playStatus.status, playStatus.playAppType)
         })
 
-        mediaViewModel.playInfo.observe(this, Observer { playInfo: PlayInfo ->
+        mediaViewModel?.playInfo?.observe(this, Observer { playInfo: PlayInfo ->
             llMusic.setMusicNameTextView(playInfo.songName, playInfo.appType)
             llMusic.setArtistNameTextView(playInfo.singerName, playInfo.appType)
             if ("NO_MUSIC_LIST" == playInfo.songName
@@ -212,7 +212,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
             }
         })
 
-        mediaViewModel.playTime.observe(this, Observer<PlayTime> { playTime ->
+        mediaViewModel?.playTime?.observe(this, Observer<PlayTime> { playTime ->
             llMusic.setMusicSeekBar(
                 playTime.currentTime.toInt(),
                 playTime.totalTime.toInt(),
@@ -220,11 +220,11 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
             )
         })
 
-        mediaViewModel.playImage.observe(this, Observer<PlayImage> { playImage ->
+        mediaViewModel?.playImage?.observe(this, Observer<PlayImage> { playImage ->
             llMusic.setPlayImage(playImage.songId, playImage.albumId)
         })
 
-        mediaViewModel.radioInfo.observe(this, Observer<RadioInfo> { radioInfo ->
+        mediaViewModel?.radioInfo?.observe(this, Observer<RadioInfo> { radioInfo ->
             tv_radio_am_fm.text = radioInfo.radioType
             tvRadioButAFM.text = radioInfo.radioType
             tv_radio_freq.text = radioInfo.freq
@@ -331,7 +331,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
                 AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
             }
 
-            com.example.launcher_plugin.R.id.start_plugin -> {
+            R.id.start_plugin -> {
                 Log.i(TAG, "onClick: huang click start plugin 1 =>")
                 val intent = Intent(this, PluginLoadActivity::class.java)
 
@@ -364,8 +364,14 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     }
 
     override fun onNewIntent(intent: Intent?) {
+        Log.i(TAG, "onNewIntent: huang intent=>${intent}")
         AppsCustomizeControl.hideApps()
         super.onNewIntent(intent)
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+        Log.i(TAG, "dispatchKeyEvent: huang event=>${event}")
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onLongClick(v: View?): Boolean {

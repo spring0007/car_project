@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">plugin_1</string>
+
+    <string name="click_play_music">Click To Play</string>
+    <string name="music_artist">Artist</string>
+
+    <string name="radio_save">Search</string>
+    <string name="radio_dx">DX</string>
+
 </resources>

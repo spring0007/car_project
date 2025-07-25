@@ -49,6 +49,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.R;
 import com.awell.launcher2.InstallWidgetReceiver.WidgetMimeTypeHandlerData;
 
@@ -788,6 +789,7 @@ public class LauncherModel extends BroadcastReceiver {
                     if (!replacing) {
                         op = PackageUpdatedTask.OP_REMOVE;
                     }
+                    AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(false);
                     // else, we are replacing the package, so a PACKAGE_ADDED will be sent
                     // later, we will update the package at this time
                     break;

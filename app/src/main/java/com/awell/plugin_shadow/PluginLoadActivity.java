@@ -67,10 +67,6 @@ public class PluginLoadActivity extends Activity {
                 bundle.putString(Constant.KEY_PLUGIN_PART_KEY, getIntent().getStringExtra(Constant.KEY_PLUGIN_PART_KEY));
                 bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, getIntent().getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
                 Log.i(TAG, "run: huang plugin manager=>" + ((LauncherApplication) getmAppContext()).getPluginManager());
-                DynamicPluginManager dynamicPluginManager = (DynamicPluginManager) ((LauncherApplication) getmAppContext()).getPluginManager();
-                if (dynamicPluginManager != null) {
-                    dynamicPluginManager.getManagerImpl();
-                }
                 ((LauncherApplication) getmAppContext()).getPluginManager()
                         .enter(PluginLoadActivity.this, Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                             @Override
