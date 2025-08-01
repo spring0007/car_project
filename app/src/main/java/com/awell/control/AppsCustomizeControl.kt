@@ -112,7 +112,7 @@ object AppsCustomizeControl {
         )
         Log.i(
             TAG,
-            "showApps: huang show all apps viewGroup=>${viewGroup} mAppsCustomizeTabHost=${mAppsCustomizeTabHost}"
+            "showApps: huang show all apps viewGroup=>${viewGroup}"
         )
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
@@ -134,9 +134,8 @@ object AppsCustomizeControl {
      * 再添加全部app列表显示前确保先移除该View
      */
     private fun removeFromParent() {
-
+        Log.i(TAG, "removeFromParent: huang parent group=>${(mAppsCustomizeTabHost?.parent)}")
         (mAppsCustomizeTabHost?.parent as? ViewGroup)?.removeView(mAppsCustomizeTabHost)
-
         mAllIsShowing = false
 
     }
@@ -182,11 +181,26 @@ object AppsCustomizeControl {
             Log.i(TAG, "hideApps: huang already hide all apps==>")
             return
         }
+
         removeFromParent()
         restoreActivityState()
 
         Log.i(TAG, "hideApps: huang hide all apps==>")
         mAllIsShowing = false
+    }
+
+    fun delayMs(ms: Long) {
+        try {
+            // 记录开始时间
+            val startTime = System.currentTimeMillis()
+            // 模拟卡顿：阻塞主线程 2 秒
+            Thread.sleep(ms)
+            // 计算实际耗时
+            val duration = System.currentTimeMillis() - startTime
+            Log.d("BlockTest", "主线程被阻塞了：" + duration + "毫秒")
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
     }
 
     fun bindPackagesUpdated() {

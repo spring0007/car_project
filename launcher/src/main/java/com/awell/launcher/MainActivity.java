@@ -1,13 +1,16 @@
 package com.awell.launcher;
 
-import static android.os.Process.myPid;
+import static com.awell.launcher2.LauncherApplication.getmAppContext;
+import static com.awell.launcher2.LauncherApplication.mAppContext;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
@@ -15,9 +18,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.awell.launcher2.Launcher;
+import com.awell.launcher2.LauncherApplication;
+import com.awell.plugin_shadow.PluginHelper;
 import com.awell.plugin_shadow.PluginLoadActivity;
 
+import com.awell.ui.UIActivity;
 import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.dynamic.host.EnterCallback;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -31,32 +38,42 @@ public class MainActivity extends Activity implements View.OnClickListener {
      *
      */
     private final String partKey = "plugin-app";
+    private Handler mHandler = new Handler();
 
     private final String PROXY_ACTIVITY = "com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity";
-    private boolean startPlugin = true;
+    private final String PLUGIN_PKG = "com.awell.launcher";
+    private boolean mStartPlugin = false;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.select_launcher_layout);
-        //initView();
+//        setContentView(R.layout.select_launcher_layout);
+//        initView();
 
-        if (!startPlugin) {
+        if (!mStartPlugin) {
             Intent intent = new Intent(this, Launcher.class);
+//            Intent intent = new Intent(this, UIActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Log.i(TAG, "onCreate: huang start launcher==>");
             startActivity(intent);
             finish();
         } else {
-            if (!bringTaskToFront(getBaseContext(), PROXY_ACTIVITY)) {
-                startPlugin();
-            }
+            startPlugin();
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (!bringTaskToFront(getBaseContext(), PROXY_ACTIVITY)) {
+        Log.i(TAG, "onNewIntent: huang new intent==>" + intent);
+        if (!mStartPlugin) {
+            Intent launcherIntent = new Intent(this, Launcher.class);
+//            Intent launcherIntent = new Intent(this, UIActivity.class);
+            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(launcherIntent);
+            finish();
+        } else {
             startPlugin();
         }
     }
@@ -77,41 +94,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    private void startPlugin() {
-        Log.i(TAG, "onClick: huang click start plugin 1 =>");
-        Intent intent = new Intent(MainActivity.this, PluginLoadActivity.class);
-        intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, partKey);
-        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER);
-        Log.i(TAG, "onClick: huang intent=>" + intent);
-        Log.i(TAG, "onClick: huang KEY_PLUGIN_PART_KEY=>" + intent.getStringExtra(Constant.KEY_PLUGIN_PART_KEY));
-        Log.i(TAG, "onClick: huang KEY_ACTIVITY_CLASSNAME=>" + intent.getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
-        startActivity(intent);
-        finish();
-    }
 
+    public void startPlugin() {
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    public boolean bringTaskToFront(Context context, String activity) {
-        ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        try {
-            Class<?> activityManagerClass = Class.forName("android.app.ActivityManager");
-            Method moveTaskToFrontMethod = activityManagerClass.getMethod(
-                    "moveTaskToFront",
-                    int.class,      // taskId
-                    int.class       // flags
-            );
-            List<ActivityManager.RunningTaskInfo> runningTaskInfos = am.getRunningTasks(Integer.MAX_VALUE);
-            for (ActivityManager.RunningTaskInfo taskInfo : runningTaskInfos) {
-                assert taskInfo.topActivity != null;
-                if (taskInfo.topActivity.getClassName().equals(activity)) {
-                    moveTaskToFrontMethod.invoke(am, taskInfo.taskId, 0);
-                    return true;
-                }
+        PluginHelper.getInstance().singlePool.execute(new Runnable() {
+            @Override
+            public void run() {
+                ((LauncherApplication) getmAppContext()).loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
+                //bundle.putString(Constant.KEY_PLUGINS_APK_PATH, "/sdcard/launcher_plugin");
+                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey);
+                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER);
+                Log.i(TAG, "run: huang plugin manager=>" + ((LauncherApplication) getmAppContext()).getPluginManager());
+                ((LauncherApplication) getmAppContext()).getPluginManager()
+                        .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
+                            @Override
+                            public void onShowLoadingView(final View view) {
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Log.i(TAG, "run: huang add view==>");
+//                                        mViewGroup.addView(view);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCloseLoadingView() {
+                                Log.i(TAG, "onCloseLoadingView: huang finish plugin load activity==>");
+                                finish();
+                            }
+
+                            @Override
+                            public void onEnterComplete() {
+                                Log.i(TAG, "onEnterComplete: huang enter complete==>");
+                            }
+                        });
             }
-            return false;
-        } catch (Exception e) {
-            Log.e(TAG, "bringTaskToFront error: huang exception=>" + e);
-            return false;
-        }
+        });
     }
 }

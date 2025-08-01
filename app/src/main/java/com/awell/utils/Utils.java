@@ -385,6 +385,7 @@ public class Utils {
             // private contract between launcher and may be ignored in the
             // future).
             boolean useLaunchAnimation = (v != null) && !intent.hasExtra(INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION);
+            Log.i(TAG, "startActivity: huang start app use context=>" + getmAppContext());
             if (useLaunchAnimation) {
                 ActivityOptions opts = ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
 

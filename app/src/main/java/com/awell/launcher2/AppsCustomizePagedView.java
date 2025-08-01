@@ -603,8 +603,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             //mLauncher.updateWallpaperVisibility(true);
             startActivitySafely(v, appInfo.intent, appInfo);
             Log.i(TAG, "appinfo packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
-            AppsCustomizeControl.INSTANCE.hideApps();
-            Log.i(TAG, "onClick: huang hide apps==>");
         } else if (v instanceof PagedViewWidget) {
             // Let the user know that they have to long press to add a widget
             if (mWidgetInstructionToast != null) {

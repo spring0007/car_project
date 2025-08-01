@@ -22,7 +22,6 @@ import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.FrequencyTextView
 import com.awell.ctrlview.MusicWidget
 import com.awell.ctrlview.VisualizerView
-import com.awell.launcher.BuildConfig
 import com.awell.launcher.R
 import com.awell.launcher.databinding.ActivityUiactivityBinding
 import com.awell.launcher2.LauncherApplication
@@ -63,6 +62,8 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        (LauncherApplication.getmAppContext() as LauncherApplication).initLauncherModel()
+
         (LauncherApplication.getmAppContext() as LauncherApplication).getModel()
             .startLoader(true, -1)
 
@@ -79,24 +80,34 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         findViewId()
 
         initMediaObserverView()
+        Log.i(TAG, "onCreate: huang create==>")
     }
 
     override fun onStart() {
         super.onStart()
+        delayMs(100)
+        if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
+//            AppsCustomizeControl.hideApps()
+        }
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        Log.i(TAG, "onStart: huang start==>")
     }
 
 
     @CallSuper
     override fun onPause() {
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        Log.i(TAG, "onPause: huang pause==>")
         super.onPause()
     }
 
     override fun onResume() {
         if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
-            AppsCustomizeControl.hideApps()
+//            AppsCustomizeControl.hideApps()
         }
+        delayMs(100)
+
+        Log.i(TAG, "onResume: huang resume==>")
         super.onResume()
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
 
@@ -105,6 +116,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     @CallSuper
     override fun onStop() {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        Log.i(TAG, "onStop: huang stop ==>")
         super.onStop()
     }
 
@@ -113,6 +125,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         mediaControl.mediaLibrary.release()
         mMediaListener.cleanup()
+        Log.i(TAG, "onDestroy: huang destroy==>")
     }
 
 
@@ -371,6 +384,20 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onLongClick(v: View?): Boolean {
         Log.i(TAG, "onLongClick: huang v=>${v}")
         return false;
+    }
+
+    fun delayMs(ms: Long) {
+        try {
+            // 记录开始时间
+            val startTime = System.currentTimeMillis()
+            // 模拟卡顿：阻塞主线程 2 秒
+            Thread.sleep(ms)
+            // 计算实际耗时
+            val duration = System.currentTimeMillis() - startTime
+            Log.d("BlockTest", "主线程被阻塞了：" + duration + "毫秒")
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
     }
 
 }

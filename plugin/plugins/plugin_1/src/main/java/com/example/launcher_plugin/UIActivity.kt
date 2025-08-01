@@ -1,10 +1,17 @@
 package com.example.launcher_plugin
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.res.Configuration
+import android.graphics.Rect
 import android.os.Bundle
+import android.os.IBinder
+import android.os.RemoteException
 import android.text.TextUtils
 import android.util.Log
 import android.view.KeyEvent
@@ -23,8 +30,8 @@ import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.FrequencyTextView
 import com.awell.ctrlview.MusicWidget
 import com.awell.ctrlview.VisualizerView
-import com.awell.launcher.BuildConfig
 import com.awell.launcher2.LauncherApplication
+import com.awell.launcher2.LauncherApplication.mAppContext
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.model.MediaDataSelect
 import com.awell.model.MediaViewModel
@@ -37,6 +44,8 @@ import com.awell.plugin_shadow.PluginLoadActivity
 import com.awell.utils.CommonData
 import com.example.launcher_plugin.databinding.ActivityUiactivityBinding
 import com.tencent.shadow.sample.constant.Constant
+import java.lang.reflect.InvocationTargetException
+
 
 class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, LifecycleOwner {
 
@@ -56,6 +65,9 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     private val CLAZZ_NAME_LAUNCHER =
         "com.example.launcher_plugin.MainActivity" // plugin_1 apk
 
+    private val PROXY_ACTIVITY =
+        "com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
+    private val PLUGIN_PKG = "com.awell.launcher"
 
     var thisActivity = this
 
@@ -75,36 +87,48 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
 //        initMediaMusic()
         binding.hotsetAllapp.setOnClickListener(this)
         binding.startPlugin.setOnClickListener(this)
+        binding.startApp.setOnClickListener(this)
+        binding.moveTask.setOnClickListener(this)
 
         findViewId()
 
         initMediaObserverView()
+        Log.i(TAG, "onCreate: huang create ==>")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i(TAG, "onRestart: huang restart==>")
     }
 
     override fun onStart() {
         super.onStart()
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        Log.i(TAG, "onStart: huang start==>")
     }
 
 
     @CallSuper
     override fun onPause() {
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        AppsCustomizeControl.longClickUninstallAppToAppsView = false
+        Log.i(TAG, "onPause: huang pause==>")
         super.onPause()
     }
 
     override fun onResume() {
         if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
-            AppsCustomizeControl.hideApps()
+//            AppsCustomizeControl.hideApps()
         }
+        Log.i(TAG, "onResume: huang resume=>")
         super.onResume()
         lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-
     }
 
     @CallSuper
     override fun onStop() {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
+        Log.i(TAG, "onStop: huang stop =>")
         super.onStop()
     }
 
@@ -113,6 +137,7 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         mediaControl.mediaLibrary.release()
         mMediaListener.cleanup()
+        Log.i(TAG, "onDestroy: huang destroy==>")
     }
 
 
@@ -331,6 +356,19 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
                 AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
             }
 
+            R.id.start_app -> {
+                val intent = Intent()
+                val pkg = "com.awell.awellmanual"
+                val clazz = "com.awell.awellmanual.MainActivity"
+                intent.setComponent(ComponentName(pkg, clazz))
+                intent.flags = FLAG_ACTIVITY_NEW_TASK
+                mAppContext.startActivity(intent)
+            }
+
+            R.id.move_task -> {
+                getTask()
+            }
+
             R.id.start_plugin -> {
                 Log.i(TAG, "onClick: huang click start plugin 1 =>")
                 val intent = Intent(this, PluginLoadActivity::class.java)
@@ -357,6 +395,118 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         }
     }
 
+    fun getTask() {
+
+        val am = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        val runningTaskInfos = am.getRunningTasks(Int.Companion.MAX_VALUE)
+        var launcherTask: Int? = null
+        var pluginTask: Int? = null
+        for (taskInfo in runningTaskInfos) {
+            checkNotNull(taskInfo.topActivity)
+            Log.i(
+                TAG,
+                "bringTaskToFront: huang top activity getClassName=>" + taskInfo.topActivity!!.getClassName()
+            )
+            Log.i(
+                TAG,
+                "bringTaskToFront: huang top activity=>" + taskInfo.topActivity
+            )
+
+            if (taskInfo.topActivity!!.getClassName() == "com.awell.launcher.MainActivity") {
+//                launcherTask = getParentTaskId(taskInfo)
+                launcherTask = 1
+                Log.i(TAG, "getTask: huang val =>${getRootTask(baseContext, 1, 2)}")
+
+            }
+            if (taskInfo.topActivity!!.getClassName() == PROXY_ACTIVITY) {
+                pluginTask = taskInfo.id
+            }
+        }
+        Log.i(TAG, "getTask: huang launcherTask=>${launcherTask} pluginTask=>${pluginTask}")
+        launcherTask?.let {
+            pluginTask?.let {
+                Log.i(TAG, "getTask: huang move task==>")
+                callAmsMethod(pluginTask, launcherTask, true)
+            }
+        }
+
+    }
+
+    fun getParentTaskId(taskInfo: ActivityManager.RunningTaskInfo): Int {
+        return try {
+            // 使用反射获取getParentTaskId方法
+            val method = taskInfo.javaClass.getMethod("getParentTaskId")
+            Log.i(TAG, "getParentTaskId: huang get parent task id =>")
+            // 调用方法并获取结果
+            method.invoke(taskInfo) as Int
+        } catch (e: Exception) {
+            e.printStackTrace()
+            -1 // INVALID_TASK_ID
+        }
+    }
+
+    fun callAmsMethod(param1: Int, param2: Int, top: Boolean) {
+        try {
+            // 1. 获取 IActivityManager 实例
+            val activityManagerClass = Class.forName("android.app.ActivityManager")
+            val getServiceMethod = activityManagerClass.getDeclaredMethod("getService")
+
+            // 直接获取 IActivityManager 对象，不需要转换为 IBinder
+            val amsProxy = getServiceMethod.invoke(null)
+
+            // 2. 获取目标方法并调用
+            val targetMethod = amsProxy.javaClass.getMethod(
+                "moveTaskToRootTask",  // AMS 中的方法名
+                Int::class.javaPrimitiveType,
+                Int::class.javaPrimitiveType,
+                Boolean::class.java
+            )
+
+            targetMethod.invoke(amsProxy, param1, param2, top)
+            Log.d(TAG, "Method called successfully")
+
+        } catch (e: ClassNotFoundException) {
+            Log.e(TAG, "huang Class not found: ${e.message}")
+        } catch (e: NoSuchMethodException) {
+            Log.e(TAG, "huang Method not found: ${e.message}")
+        } catch (e: IllegalAccessException) {
+            Log.e(TAG, "huang Illegal access: ${e.message}")
+        } catch (e: InvocationTargetException) {
+            Log.e(TAG, "huang Invocation failed: ${e.targetException?.message}")
+        } catch (e: SecurityException) {
+            Log.e(TAG, "huang Security exception: ${e.message}")
+        } catch (e: RemoteException) {
+            Log.e(TAG, "huang Remote exception: ${e.message}")
+        }
+    }
+
+    // 获取任务列表的反射方法
+    fun getRootTask(
+        context: Context,
+        windowingMode: Int,
+        activityType: Int
+    ): Any? {
+        try {
+            // 1. 获取 ActivityTaskManager 实例
+            val atmClass = Class.forName("android.app.ActivityTaskManager")
+            val getServiceMethod = atmClass.getMethod("getService")
+            val atmService = getServiceMethod.invoke(null)
+
+            // 2. 获取 getTasks 方法
+            val getTasksMethod = atmService.javaClass.getMethod(
+                "getRootTaskInfo",
+                Int::class.java, Int::class.java
+            )
+            Log.i(TAG, "getRootTask: huang get root task ==>")
+            // 3. 调用方法获取原始结果
+            val result = getTasksMethod.invoke(atmService, windowingMode, activityType)
+            Log.i(TAG, "getRootTask: huang result =>${result}")
+            return result
+        } catch (e: Exception) {
+            Log.e("ATM", "Failed to get root tasks: ${e.message}", e)
+            return null
+        }
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -366,7 +516,6 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     override fun onNewIntent(intent: Intent?) {
         Log.i(TAG, "onNewIntent: huang intent=>${intent}")
         AppsCustomizeControl.hideApps()
-        super.onNewIntent(intent)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
@@ -378,5 +527,4 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         Log.i(TAG, "onLongClick: huang v=>${v}")
         return false;
     }
-
 }

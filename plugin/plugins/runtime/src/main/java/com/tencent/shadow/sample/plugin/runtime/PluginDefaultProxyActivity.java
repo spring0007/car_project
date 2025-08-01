@@ -20,6 +20,12 @@ package com.tencent.shadow.sample.plugin.runtime;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
@@ -30,9 +36,35 @@ import com.tencent.shadow.core.runtime.container.PluginContainerActivity;
 @SuppressLint("Registered")//无需注册在这个模块的Manifest中，要注册在宿主的Manifest中。
 public class PluginDefaultProxyActivity extends PluginContainerActivity implements ViewModelStoreOwner {
 
+    private final String TAG = PluginDefaultProxyActivity.class.getSimpleName();
+
     @Override
     protected String getDelegateProviderKey() {
         return "SAMPLE";
+    }
+
+    @Override
+    public void onCreate(Bundle arg0, PersistableBundle arg1) {
+        super.onCreate(arg0, arg1);
+        Log.i(TAG, "onCreate: huang create two pars==>");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: huang start==>");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart: huang restart==>");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: huang resume==>");
     }
 
     @NonNull

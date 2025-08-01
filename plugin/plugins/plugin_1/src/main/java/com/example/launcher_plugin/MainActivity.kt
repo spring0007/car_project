@@ -1,11 +1,12 @@
 package com.example.launcher_plugin
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.Button
+import com.awell.launcher2.LauncherApplication
+import com.awell.launcher2.LauncherApplication.getmAppContext
 import com.tencent.shadow.sample.host.lib.HostAppsHolder
 
 class MainActivity : Activity() {
@@ -14,6 +15,9 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val app: LauncherApplication = getmAppContext() as LauncherApplication
+        app.PluginInit()
 
         val btn = findViewById<Button>(R.id.SHOW_ALL_APPS)
         btn.setOnClickListener {

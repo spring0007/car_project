@@ -36,7 +36,7 @@ import com.tencent.shadow.sample.constant.Constant;
 
 public class PluginLoadActivity extends Activity {
 
-    private String TAG = PluginLoadActivity.class.getSimpleName();
+    private final String TAG = PluginLoadActivity.class.getSimpleName();
 
     private ViewGroup mViewGroup;
 
@@ -46,9 +46,9 @@ public class PluginLoadActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_load);
+//        setContentView(R.layout.activity_load);
 
-        mViewGroup = findViewById(R.id.container);
+//        mViewGroup = findViewById(R.id.container);
 
         startPlugin();
     }
@@ -74,19 +74,21 @@ public class PluginLoadActivity extends Activity {
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mViewGroup.addView(view);
+                                        Log.i(TAG, "run: huang add view==>");
+//                                        mViewGroup.addView(view);
                                     }
                                 });
                             }
 
                             @Override
                             public void onCloseLoadingView() {
+                                Log.i(TAG, "onCloseLoadingView: huang finish plugin load activity==>");
                                 finish();
                             }
 
                             @Override
                             public void onEnterComplete() {
-
+                                Log.i(TAG, "onEnterComplete: huang enter complete==>");
                             }
                         });
             }
@@ -97,6 +99,6 @@ public class PluginLoadActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ((LauncherApplication) getmAppContext()).getPluginManager().enter(this, Constant.FROM_ID_CLOSE, null, null);
-        mViewGroup.removeAllViews();
+//        mViewGroup.removeAllViews();
     }
 }

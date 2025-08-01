@@ -87,8 +87,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
         if (isProcess(this, ":plugin")) {
             Log.i(TAG, "onCreate: huang plugin ==>");
-            HostAppsHolder.init(new HostApps());
-            initLauncherModel();
+            PluginInit();
         }
 
         initPluginModel();
@@ -96,7 +95,16 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
     }
 
+    public void PluginInit() {
+        HostAppsHolder.init(new HostApps());
+        initLauncherModel();
+
+    }
+
     public void initLauncherModel() {
+        if (mModel != null) {
+            return;
+        }
         mIconCache = new IconCache(this);
         mModel = new LauncherModel(this, mIconCache);
         mModel.initialize(model);
@@ -124,7 +132,9 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         }
 
         if (isProcess(this, getPackageName())) {
-            PluginHelper.getInstance().init(this);
+            if (getPackageName().equals("com.awell.launcher")) {
+                PluginHelper.getInstance().init(this);
+            }
         }
 
         HostUiLayerProvider.init(this);

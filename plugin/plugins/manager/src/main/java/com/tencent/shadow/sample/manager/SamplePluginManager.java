@@ -55,6 +55,7 @@ public class SamplePluginManager extends FastPluginManager {
     public PluginLoader getmPluginLoader() {
         return mPluginLoader;
     }
+
     /**
      * @return PluginManager实现的别名，用于区分不同PluginManager实现的数据存储路径
      */

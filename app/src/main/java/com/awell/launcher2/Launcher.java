@@ -436,6 +436,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         super.onCreate(savedInstanceState);
 
+        Log.i(TAG, "onCreate: huang launcher activity create==>");
         mContext = this;
         mMediaListener = new MediaNotificationListener();
         mMediaListener.initDependencies(mContext);
@@ -2597,9 +2598,10 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        Log.i(TAG, "onNewIntent: huang new intent==>" + intent);
         // Close the menu
         if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+            AppsCustomizeControl.INSTANCE.hideApps();
             // also will cancel mWaitingForResult.
             closeSystemDialogs();
 

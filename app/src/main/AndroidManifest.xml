@@ -86,7 +86,9 @@
 
         <activity
             android:name="com.awell.ui.UIActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme_" />
 
 
         <activity
@@ -98,16 +100,18 @@
             android:stateNotNeeded="true"
             android:theme="@style/Theme_"
             android:windowSoftInputMode="adjustPan">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <action android:name="android.intent.action.SHOW_WORK_APPS" />-->
+            <!--            <intent-filter>
+                            <action android:name="android.intent.action.MAIN" />
+                            <action android:name="android.intent.action.SHOW_WORK_APPS" />
 
-            <!--                <category android:name="android.intent.category.HOME" />-->
-            <!--                <category android:name="android.intent.category.DEFAULT" />-->
-            <!--                <category android:name="android.intent.category.MONKEY" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
-            <!--            </intent-filter>-->
-        </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
+                            <category android:name="android.intent.category.HOME" />
+                            <category android:name="android.intent.category.DEFAULT" />
+                            <category android:name="android.intent.category.MONKEY" />
+                            <category android:name="android.intent.category.LAUNCHER_APP" />
+                        </intent-filter>-->
+        </activity>
+        <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
+
         <activity
             android:name="com.awell.launcher2.WallpaperChooser"
             android:exported="true"
@@ -130,31 +134,25 @@
 
         <activity
             android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
+            android:clearTaskOnLaunch="true"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:multiprocess="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent">
-            <intent-filter>
-                <action android:name="android.intent.action.SHOW_WORK_APPS" />
+            android:screenOrientation="portrait">
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <activity
             android:name="com.awell.plugin_shadow.PluginLoadActivity"
-            android:launchMode="standard"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent" />
 
         <service
             android:name="com.awell.plugin_shadow.PluginProcessPPS"
+            android:persistent="false"
             android:process=":plugin" />
 
         <receiver
