@@ -1,90 +1,175 @@
 package com.awell.control
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
+import android.os.RemoteException
+import android.os.UserHandle
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
 import com.awell.ctrlview.MusicWidget
-import com.awell.launcher2.LauncherApplication
+import com.awell.launcher.IDataChangeInterface
+import com.awell.launcher.IHostPluginInterface
 import com.awell.launcher2.LauncherApplication.mAppContext
 import com.awell.launcher2.MediaNotificationListener
-import com.awell.library.AwellLibrary
 import com.awell.library.AwellTool
 import com.awell.model.MediaViewModel
+import java.lang.reflect.Method
+
 
 class AwellMediaControl() {
 
     private val TAG = AwellMediaControl::class.simpleName
-    val mNullStr = "Null"
+    val mNullStr = "null"
     private var mMediaListener = MediaNotificationListener()
     private var updateMusicView: UpdateMediaDataToView? = null
 
-    val mediaLibrary = AwellLibrary(AwellTool.OPEN)
-    var mediaViewModel: MediaViewModel
-    val mDataListener = AwellLibrary.OnDataListener { bundle: Bundle? ->
-        bundle?.let {
-            val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
-            when (status) {
-                AwellTool.MEDIA_PLAY -> {
-                    handleMediaPlay(bundle)
-                }
+    var mediaViewModel: MediaViewModel? = null
 
-                AwellTool.MUSIC.PLAY_STATUS -> {
-                    handleMusicPlayStatus(bundle)
-                }
-
-                AwellTool.MUSIC.PLAY_NAME -> {
-                    handleMusicPlayName(bundle)
-                }
-
-                AwellTool.MUSIC.PLAY_IMAGE -> {
-                    handleMusicPlayImage(bundle)
-                }
-
-                AwellTool.MUSIC.PLAY_TIME -> {
-                    handleMusicPlayTime(bundle)
-                }
-
-                AwellTool.BT.PLAY_STATUS -> {
-                    handleBTPlayStatus(bundle)
-                }
-
-                AwellTool.BT.PLAY_NAME -> {
-                    handleBTPlayName(bundle)
-                }
-
-                AwellTool.BT.PLAY_TIME -> {
-                    handleBTPlayTime(bundle)
-                }
-
-                AwellTool.RADIO.FREQUENCY -> {
-                    handleRadioFreq(bundle)
-                }
-
-                MusicWidget.OTHER_MUSIC_PLAYNAME -> {
-                    handleOtherMusicPlayName(bundle)
-                }
-
-                MusicWidget.OTHER_MUSIC_PLAYSTATUS -> {
-                    handleOtherMusicStatus(bundle)
-                }
-
-                MusicWidget.OTHER_MUSIC_TIME -> {
-                    handleOtherMusicTime(bundle)
-                }
-            }
-        } ?: run {
-            Log.e(TAG, " onResult:  bundle is null!!")
-        }
-    }
+    private var hostService: IHostPluginInterface? = null
+    private var isBound = false
 
     init {
         mMediaListener.initDependencies(mAppContext)
+    }
 
-        mediaLibrary.init(mAppContext)
-        mediaLibrary.setOnDataListener(mDataListener)
-        Log.i(TAG, "huang init awell media control=>: ")
-        mediaViewModel =
-            ViewModelProvider(mAppContext as LauncherApplication).get(MediaViewModel::class.java)
+
+    val mDataChangeListener = object : IDataChangeInterface.Stub() {
+        override fun onDataChanged(bundle: Bundle?) {
+            bundle?.let {
+                val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
+                when (status) {
+                    AwellTool.MEDIA_PLAY -> {
+                        handleMediaPlay(bundle)
+                    }
+
+                    AwellTool.MUSIC.PLAY_STATUS -> {
+                        handleMusicPlayStatus(bundle)
+                    }
+
+                    AwellTool.MUSIC.PLAY_NAME -> {
+                        handleMusicPlayName(bundle)
+                    }
+
+                    AwellTool.MUSIC.PLAY_IMAGE -> {
+                        handleMusicPlayImage(bundle)
+                    }
+
+                    AwellTool.MUSIC.PLAY_TIME -> {
+                        handleMusicPlayTime(bundle)
+                    }
+
+                    AwellTool.BT.PLAY_STATUS -> {
+                        handleBTPlayStatus(bundle)
+                    }
+
+                    AwellTool.BT.PLAY_NAME -> {
+                        handleBTPlayName(bundle)
+                    }
+
+                    AwellTool.BT.PLAY_TIME -> {
+                        handleBTPlayTime(bundle)
+                    }
+
+                    AwellTool.RADIO.FREQUENCY -> {
+                        handleRadioFreq(bundle)
+                    }
+
+                    MusicWidget.OTHER_MUSIC_PLAYNAME -> {
+                        handleOtherMusicPlayName(bundle)
+                    }
+
+                    MusicWidget.OTHER_MUSIC_PLAYSTATUS -> {
+                        handleOtherMusicStatus(bundle)
+                    }
+
+                    MusicWidget.OTHER_MUSIC_TIME -> {
+                        handleOtherMusicTime(bundle)
+                    }
+                }
+            } ?: run {
+                Log.e(TAG, " onResult:  bundle is null!!")
+            }
+        }
+    }
+
+    val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
+            hostService = IHostPluginInterface.Stub.asInterface(binder)
+            isBound = true
+            hostService?.registerListener(mDataChangeListener)
+            val songName = hostService?.getSongName()
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName?) {
+            hostService = null
+            isBound = false
+        }
+    }
+
+    fun bindDataService(context: Context) {
+        val intent = Intent().apply {
+            component = ComponentName(
+                "com.awell.launcher",
+                "com.awell.impl.HostToPluginService"
+            )
+        }
+        val userHandle = android.os.Process.myUserHandle()
+        try {
+            // 使用反射调用系统API
+            val method: Method = Context::class.java.getMethod(
+                "bindServiceAsUser",
+                Intent::class.java,
+                ServiceConnection::class.java,
+                Int::class.javaPrimitiveType,
+                UserHandle::class.java
+            )
+
+            val bind: Boolean = method.invoke(
+                context,
+                intent,
+                serviceConnection,
+                Context.BIND_AUTO_CREATE,
+                userHandle
+            ) as Boolean
+
+            Log.i(TAG, "bindDataService success: $bind")
+        } catch (e: Exception) {
+            Log.e(TAG, "bindDataService failed", e)
+            // 降级处理
+            val bind = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+            Log.i(TAG, "bindDataService bindService: $bind")
+        }
+
+    }
+
+    fun unBindDataService(context: Context) {
+        if (isBound) {
+            try {
+                hostService?.unregisterListener(mDataChangeListener)
+            } catch (e: RemoteException) {
+                // Ignore
+            }
+            context.unbindService(serviceConnection)
+        }
+    }
+
+    fun sendBundleToHost(bundle: Bundle): String {
+        var data = "null"
+        if (isBound) {
+            data = hostService?.pluginToHostWithBundle(bundle).toString()
+        }
+        return data
+    }
+
+    fun sendStrToHost(string: String): String {
+        var data = "null"
+        if (isBound) {
+            data = hostService?.pluginToHostWithStr(string).toString()
+        }
+        return data
     }
 
     private fun handleMediaPlay(bundle: Bundle) {
@@ -104,10 +189,10 @@ class AwellMediaControl() {
         val isStopCommand = "stop" == command
 
         if (!isLocalMusicPackage && pkg == mMediaListener.currentPlayingPackage && isStopCommand) {
-            mediaViewModel.updatePlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
+            mediaViewModel?.updatePlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
         }
 
-        mediaViewModel.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
+        mediaViewModel?.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
 
         updateMusicView?.updateViewMusicPlay(bundle, pkg, command, mediaType, currentMedia)
     }
@@ -115,7 +200,7 @@ class AwellMediaControl() {
     private fun handleMusicPlayStatus(bundle: Bundle) {
         //在这里处理livedata的更新
         val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
-        mediaViewModel.updatePlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
+        mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
         updateMusicView?.updateViewMusicPlayStatus(bundle, musicStatus)
     }
 
@@ -123,7 +208,7 @@ class AwellMediaControl() {
         val songName = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val singerName = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
-        mediaViewModel.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.MUSIC)
+        mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.MUSIC)
         updateMusicView?.updateViewMusicPlayName(bundle, songName, singerName, album)
 
     }
@@ -135,7 +220,7 @@ class AwellMediaControl() {
         }.toTypedArray()
         val long1 = str[0].toLong()
         val long2 = str[1].toLong()
-        mediaViewModel.updatePlayImage(bundle, long1, long2)
+        mediaViewModel?.updatePlayImage(bundle, long1, long2)
         updateMusicView?.updateViewMusicPlayImage(bundle, long1, long2)
 
     }
@@ -143,13 +228,13 @@ class AwellMediaControl() {
     private fun handleMusicPlayTime(bundle: Bundle) {
         val currentTime = bundle.getLong(AwellTool.VALUE_M1)
         val totalTime = bundle.getLong(AwellTool.VALUE_M2)
-        mediaViewModel.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
+        mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
         updateMusicView?.updateViewMusicPlayTime(bundle, currentTime, totalTime)
     }
 
     private fun handleBTPlayStatus(bundle: Bundle) {
         val status = bundle.getBoolean(AwellTool.VALUE_M1)
-        mediaViewModel.updatePlayStatus(bundle, status, MusicWidget.BT)
+        mediaViewModel?.updatePlayStatus(bundle, status, MusicWidget.BT)
         updateMusicView?.updateViewBTPlayStatus(bundle, status)
 
     }
@@ -159,7 +244,7 @@ class AwellMediaControl() {
         val songName = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val singerName = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
-        mediaViewModel.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.BT)
+        mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.BT)
         updateMusicView?.updateViewBTPlayName(bundle, songName, singerName, album)
 
     }
@@ -167,7 +252,7 @@ class AwellMediaControl() {
     private fun handleBTPlayTime(bundle: Bundle) {
         val currentTime = (bundle.getInt(AwellTool.VALUE_M1) * 1000).toLong()
         val totalTime = (bundle.getInt(AwellTool.VALUE_M2) * 1000).toLong()
-        mediaViewModel.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
+        mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
         updateMusicView?.updateViewBTPlayTime(bundle, currentTime, totalTime)
     }
 
@@ -175,7 +260,7 @@ class AwellMediaControl() {
         val fmOrAm = bundle.getString(AwellTool.VALUE_M1) ?: mNullStr
         val freq = bundle.getString(AwellTool.VALUE_M2) ?: mNullStr
         val unit = bundle.getString(AwellTool.VALUE_M3) ?: mNullStr
-        mediaViewModel.updateRadioInfo(bundle, freq, unit, fmOrAm)
+        mediaViewModel?.updateRadioInfo(bundle, freq, unit, fmOrAm)
         updateMusicView?.updateViewRadioFreq(bundle, fmOrAm, freq, unit)
     }
 
@@ -183,23 +268,28 @@ class AwellMediaControl() {
         val songName = bundle.getString(AwellTool.VALUE_M1) ?: mNullStr
         val singerName = bundle.getString(AwellTool.VALUE_M2) ?: mNullStr
         val album = bundle.getString(AwellTool.VALUE_M3) ?: mNullStr
-        mediaViewModel.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.OTHER_MUSIC)
+        mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewOtherMusicPlayName(bundle, songName, singerName, album)
     }
 
     private fun handleOtherMusicStatus(bundle: Bundle) {
         val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
-        mediaViewModel.updatePlayStatus(bundle, musicStatus, MusicWidget.OTHER_MUSIC)
+        mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewOtherMusicPlayStatus(bundle, musicStatus)
     }
 
     private fun handleOtherMusicTime(bundle: Bundle) {
         val currentTime = bundle.getLong(AwellTool.VALUE_M1)
         val totalTime = bundle.getLong(AwellTool.VALUE_M1)
-        mediaViewModel.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.OTHER_MUSIC)
+        mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewOtherMusicTime(bundle, currentTime, totalTime)
     }
 
+    /**
+     * 更新媒体信息接口
+     * 如果不是用viewmodel观察数据变化
+     * 可以实现该接口接收数据
+     */
     interface UpdateMediaDataToView {
 
         fun updateViewMusicPlay(

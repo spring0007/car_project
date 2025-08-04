@@ -22,7 +22,6 @@ import com.awell.launcher2.LauncherApplication;
 import com.awell.plugin_shadow.PluginHelper;
 import com.awell.plugin_shadow.PluginLoadActivity;
 
-import com.awell.ui.UIActivity;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
 
@@ -42,7 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private final String PROXY_ACTIVITY = "com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity";
     private final String PLUGIN_PKG = "com.awell.launcher";
-    private boolean mStartPlugin = false;
+    private boolean mStartPlugin = true;
 
 
     @Override
@@ -70,7 +69,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (!mStartPlugin) {
             Intent launcherIntent = new Intent(this, Launcher.class);
 //            Intent launcherIntent = new Intent(this, UIActivity.class);
-            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(launcherIntent);
             finish();
         } else {
@@ -87,6 +86,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.start_launcher) {
             Intent intent = new Intent(this, Launcher.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         } else if (v.getId() == R.id.start_ui_activity) {
@@ -123,13 +123,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                             @Override
                             public void onCloseLoadingView() {
-                                Log.i(TAG, "onCloseLoadingView: huang finish plugin load activity==>");
                                 finish();
                             }
 
                             @Override
                             public void onEnterComplete() {
-                                Log.i(TAG, "onEnterComplete: huang enter complete==>");
                             }
                         });
             }

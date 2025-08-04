@@ -77,19 +77,15 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.BIND_MEDIA_BROWSER_SERVICE" />
 
-
     <application
         android:name="com.awell.launcher2.LauncherApplication"
         android:hardwareAccelerated="true"
         android:supportsRtl="true">
 
-
-        <activity
-            android:name="com.awell.ui.UIActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme_" />
-
+        <service
+            android:name="com.awell.impl.HostToPluginService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name="com.awell.launcher2.Launcher"
@@ -100,7 +96,9 @@
             android:stateNotNeeded="true"
             android:theme="@style/Theme_"
             android:windowSoftInputMode="adjustPan">
-            <!--            <intent-filter>
+
+            <!--
+                            <intent-filter>
                             <action android:name="android.intent.action.MAIN" />
                             <action android:name="android.intent.action.SHOW_WORK_APPS" />
 
@@ -108,10 +106,9 @@
                             <category android:name="android.intent.category.DEFAULT" />
                             <category android:name="android.intent.category.MONKEY" />
                             <category android:name="android.intent.category.LAUNCHER_APP" />
-                        </intent-filter>-->
-        </activity>
-        <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
-
+                        </intent-filter>
+            -->
+        </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
         <activity
             android:name="com.awell.launcher2.WallpaperChooser"
             android:exported="true"
@@ -130,8 +127,6 @@
                 android:name="android.wallpaper.preview"
                 android:resource="@xml/wallpaper_picker_preview" />
         </activity> <!-- Intent received used to prepopulate the default workspace. -->
-
-
         <activity
             android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
             android:clearTaskOnLaunch="true"
@@ -140,10 +135,7 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
             android:multiprocess="true"
-            android:screenOrientation="portrait">
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.awell.plugin_shadow.PluginLoadActivity"
             android:launchMode="singleTask"

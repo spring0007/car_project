@@ -1612,7 +1612,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     private void initMusicWidget() {
         mediaControl = new AwellMediaControl();
-        llMusic.setMediaLibrary(mediaControl.getMediaLibrary());
+        mediaControl.bindDataService(this);
+        llMusic.setMediaLibrary(mediaControl);
+        //llMusic.setMediaLibrary(mediaControl.getMediaLibrary());
         llMusic.setActivity(this, llMusic);
 
         initMediaObserverView();
@@ -2705,8 +2707,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaControl.getMediaLibrary().release();
-
+        //mediaControl.getMediaLibrary().release();
+        mediaControl.unBindDataService(this);
         unRegisterBroadcastReceiver();
         // Remove all pending runnables
         mHandler.removeMessages(ADVANCE_MSG);
@@ -3165,17 +3167,27 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             handler.obtainMessage(SWTWALLPAPER, value, 0).sendToTarget();
         } else if (id == R.id.tv_radio_freq || id == R.id.waveformView) {
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-        } else if (id == R.id.iv_radio_pre) {//String[] exampleData = generateRandomSpectrumData(16, 0.0, 1.0, 0.95); // 95%概率非零
-//                mediaLibrary.setDataEvent(AwellTool.RADIO.PREVIOUS);
-            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.PREVIOUS);
-        } else if (id == R.id.iv_radio_next) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
-            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.NEXT);
-        } else if (id == R.id.tv_radio_am_fm || id == R.id.iv_radio_setFM) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
-            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_FMAM);
-        } else if (id == R.id.iv_radio_setSearch) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
-            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.AUTO_SCAN);
-        } else if (id == R.id.iv_radio_setYC) {//                mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
-            mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_LocDX);
+        } else if (id == R.id.iv_radio_pre) {
+            //String[] exampleData = generateRandomSpectrumData(16, 0.0, 1.0, 0.95); // 95%概率非零
+            //mediaLibrary.setDataEvent(AwellTool.RADIO.PREVIOUS);
+            //mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.PREVIOUS);
+            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+        } else if (id == R.id.iv_radio_next) {
+            //mediaLibrary.setDataEvent(AwellTool.RADIO.NEXT);
+            //mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.NEXT);
+            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
+        } else if (id == R.id.tv_radio_am_fm || id == R.id.iv_radio_setFM) {
+            //mediaLibrary.setDataEvent(AwellTool.RADIO.SET_FMAM);
+            //mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_FMAM);
+            mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
+        } else if (id == R.id.iv_radio_setSearch) {
+            //mediaLibrary.setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+            //mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.AUTO_SCAN);
+            mediaControl.sendStrToHost(AwellTool.RADIO.AUTO_SCAN);
+        } else if (id == R.id.iv_radio_setYC) {
+            //mediaLibrary.setDataEvent(AwellTool.RADIO.SET_LocDX);
+            //mediaControl.getMediaLibrary().setDataEvent(AwellTool.RADIO.SET_LocDX);
+            mediaControl.sendStrToHost(AwellTool.RADIO.SET_LocDX);
         }
 
         for (int i = 0; i < time_img_id.length; i++) {

@@ -17,7 +17,6 @@ import com.awell.aidl.awellface.IAwellApi;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 
 public class AwellLibrary {
 
@@ -231,9 +230,7 @@ public class AwellLibrary {
         String processName = "";
         File f = new File("/proc/" + pid + "/cmdline"); ///proc/4253/cmdline
         if (pid != 0 && f != null && f.exists()) {
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"), 256);
+            try (BufferedReader br = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"), 256)) {
                 String line;
                 if ((line = br.readLine()) != null) {
                     processName = line.trim();
@@ -241,14 +238,6 @@ public class AwellLibrary {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
         return processName;

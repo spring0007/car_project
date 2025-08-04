@@ -103,7 +103,7 @@
                 android:orientation="vertical">
 
                 <include
-                    layout="@layout/widget_layout_music"
+                    layout="@layout/widget_layout_music_plugin"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="5"

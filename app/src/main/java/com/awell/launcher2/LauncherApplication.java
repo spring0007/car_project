@@ -22,6 +22,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.os.UserHandle;
 import android.util.Log;
 import android.webkit.WebView;
 
@@ -38,7 +40,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.awell.control.AwellMediaControl;
 import com.awell.impl.HostApps;
+import com.awell.impl.HostToPluginService;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
@@ -53,6 +57,7 @@ import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 
 //import cn.kuwo.autosdk.api.KWAPI;
 
@@ -70,15 +75,14 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     private final ViewModelStore store = new ViewModelStore();
     private PluginManager mPluginManager;
 
-
     public static Context mAppContext;
 
     //public  KWAPI kwapi;
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "onCreate: huang application create this==>" + this);
         mAppContext = this;
+        Log.i(TAG, "onCreate: huang application create mAppContext==>" + mAppContext);
 
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
@@ -90,7 +94,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
             PluginInit();
         }
 
-        initPluginModel();
+        initPluginModule();
 
 
     }
@@ -119,7 +123,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
     }
 
-    private void initPluginModel() {
+    private void initPluginModule() {
         detectNonSdkApiUsageOnAndroidP();
         setWebViewDataDirectorySuffix();
         LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());
@@ -133,13 +137,43 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
         if (isProcess(this, getPackageName())) {
             if (getPackageName().equals("com.awell.launcher")) {
+                //运行在宿主进程
                 PluginHelper.getInstance().init(this);
+
+                startHostService();
+
             }
         }
 
         HostUiLayerProvider.init(this);
 
 
+    }
+
+    private void startHostService() {
+        Intent service = new Intent();
+        ComponentName componentName = new ComponentName(getPackageName(), "com.awell.impl.HostToPluginService");
+        service.setComponent(componentName);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            // 使用系统用户标识
+            UserHandle userHandle = android.os.Process.myUserHandle();
+            try {
+                // 反射调用 startServiceAsUser（系统 API）
+                Method method = Context.class.getMethod(
+                        "startServiceAsUser",
+                        Intent.class,
+                        UserHandle.class
+                );
+                method.invoke(this, service, userHandle);
+                Log.i(TAG, "startHostService: huang start service=>" + service);
+            } catch (Exception e) {
+                e.printStackTrace();
+                // 降级方案
+                startService(service);
+            }
+        } else {
+            startService(service);
+        }
     }
 
     private static void detectNonSdkApiUsageOnAndroidP() {

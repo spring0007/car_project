@@ -1,4 +1,4 @@
-package com.awell.ctrlview;
+package com.example.launcher_plugin;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -25,9 +25,9 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,12 +36,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awell.control.AwellMediaControl;
-import com.awell.launcher.R;
 import com.awell.launcher2.IconCache;
 import com.awell.launcher2.Launcher;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
 import com.awell.utils.SocketThread;
+import com.example.launcher_plugin.databinding.WidgetLayoutMusicPluginBinding;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -56,8 +56,9 @@ import cn.kuwo.autosdk.api.PlayState;
 import cn.kuwo.autosdk.api.PlayerStatus;
 import cn.kuwo.base.bean.Music;*/
 
-public class MusicWidget extends RelativeLayout implements OnClickListener {
+public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
+
     private Context mContext;
     private TextView mMusicNameTextView, mArtistNameTextView;
     private TextView mCurTimeTextView, mTotalTimeTextView;
@@ -89,10 +90,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     private AwellLibrary mediaLibrary;
     private AwellMediaControl mediaControl;
 
-    public MusicWidget(Context context, AttributeSet attrs) {
+    public MusicWidgetPlugin(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
-        Log.i(TAG, "MusicWidget: huang context=>" + context);
     }
 
     /**
@@ -104,7 +104,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     public void setMediaLibrary(AwellMediaControl mediaControl) {
         this.mediaControl = mediaControl;
-        Log.i(TAG, "setMediaLibrary: huang mediaControl=>" + mediaControl);
     }
 
     private void findViews(Context context, View view) {
@@ -112,10 +111,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
         ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
         ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
-        Log.i(TAG, "findViews: huang view=>" + view);
-        Log.i(TAG, "findViews: huang rl id=>" + R.id.music_widget_rl);
-        Log.i(TAG, "findViews: huang music_widget_rl=>" + (RelativeLayout) view.findViewById(R.id.music_widget_rl));
-        printAllChildren(view);
         view.findViewById(R.id.music_widget_rl).setOnClickListener(this);
 
         mMusicNameTextView = (TextView) view.findViewById(R.id.music_widget_music_name);
@@ -149,41 +144,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         //setCurMusicState(mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
-    }
-
-    public void printAllChildren(View view) {
-        printViewWithIndent(view, 0);
-    }
-
-    private void printViewWithIndent(View view, int depth) {
-        // 创建缩进字符串（每层缩进4个空格）
-        StringBuilder indent = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            indent.append("    ");
-        }
-
-        // 打印当前View信息
-        Log.d("ViewHierarchy", indent.toString() + "└── " + view.getClass().getSimpleName() +
-                " [ID=" + getResourceName(view.getId(), view) + ", Visible=" + (view.getVisibility() == View.VISIBLE) + "]" + " view=>" + view);
-
-        // 如果是ViewGroup则递归遍历子View
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                View child = group.getChildAt(i);
-                printViewWithIndent(child, depth + 1); // 增加深度
-            }
-        }
-    }
-
-    // 将资源ID转换为可读名称
-    private String getResourceName(int id, View view) {
-        try {
-            return id != View.NO_ID ?
-                    view.getResources().getResourceEntryName(id) : "NO_ID";
-        } catch (Exception e) {
-            return "0x" + Integer.toHexString(id);
-        }
     }
 
     //private SocketThread zlinkCarPlaySocketThread;
@@ -677,7 +637,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
                 if (bm != null) {
                     if (bm.getConfig() == null) {
-                        bm = bm.copy(Bitmap.Config.RGB_565, false);
+                        bm = bm.copy(Config.RGB_565, false);
                         if (bm == null && allowdefault) {
                             return getDefaultArtwork(context);
                         }
@@ -725,7 +685,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     private static Bitmap getDefaultArtwork(Context context) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inPreferredConfig = Bitmap.Config.RGB_565;
+        opts.inPreferredConfig = Config.RGB_565;
         /*return BitmapFactory.decodeStream(
                 context.getResources().openRawResource(R.mipmap.ic_launcher), null, opts);*/
 //        return drawableToBitmap(context.getResources().getDrawable(R.mipmap.ablum_default_bg));
