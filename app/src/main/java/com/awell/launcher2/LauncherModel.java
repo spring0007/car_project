@@ -789,7 +789,7 @@ public class LauncherModel extends BroadcastReceiver {
                     if (!replacing) {
                         op = PackageUpdatedTask.OP_REMOVE;
                     }
-                    AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(false);
+                    //AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(false);
                     // else, we are replacing the package, so a PACKAGE_ADDED will be sent
                     // later, we will update the package at this time
                     break;

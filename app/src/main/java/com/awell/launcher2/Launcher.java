@@ -825,9 +825,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        if (!AppsCustomizeControl.INSTANCE.getLongClickUninstallAppToAppsView()) {
-            AppsCustomizeControl.INSTANCE.hideApps();
-        }
         // Restore the previous launcher state
         if (mOnResumeState == State.WORKSPACE) {
             showWorkspace(false);
@@ -2602,6 +2599,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.i(TAG, "onNewIntent: huang new intent==>" + intent);
+        if (intent.getComponent() != null && "com.awell.launcher2.Launcher".equals(intent.getComponent().getClassName())) {
+            AppsCustomizeControl.INSTANCE.hideApps();
+        }
         // Close the menu
         if (Intent.ACTION_MAIN.equals(intent.getAction())) {
             AppsCustomizeControl.INSTANCE.hideApps();

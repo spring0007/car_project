@@ -18,10 +18,12 @@
 
 package com.tencent.shadow.sample.manager;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_ANOTHER_APP;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_BASE;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_MAIN_APP;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -164,10 +166,19 @@ public class SamplePluginManager extends FastPluginManager {
                     Log.i(TAG, "run: huang context pluginIntent=>" + pluginIntent);
                     Intent intent = mPluginLoader.convertActivityIntent(pluginIntent);
                     Log.i(TAG, "run: huang convertActivityIntent intent=> " + intent);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                     mPluginLoader.startActivityInPluginProcess(intent);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    Log.e(TAG, "run: huang run time error:" + e);
+//                    Log.e(TAG, "run: huang start default home=>");
+//                    Intent intent = new Intent(Intent.ACTION_MAIN);
+//                    intent.addCategory(Intent.CATEGORY_HOME);
+//                    intent.putExtra("launcher", "default");
+//                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+//                    ComponentName cmp = new ComponentName("com.awell.launcher", "com.awell.launcher.MainActivity");
+//                    intent.setComponent(cmp);
+//                    context.startActivity(intent);
+//                    throw new RuntimeException(e);
                 }
                 if (callback != null) {
                     callback.onCloseLoadingView();

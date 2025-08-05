@@ -1,33 +1,21 @@
 package com.awell.launcher;
 
 import static com.awell.launcher2.LauncherApplication.getmAppContext;
-import static com.awell.launcher2.LauncherApplication.mAppContext;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
 import com.awell.plugin_shadow.PluginHelper;
-import com.awell.plugin_shadow.PluginLoadActivity;
 
-import com.tencent.shadow.dynamic.host.DynamicPluginManager;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
-
-import java.lang.reflect.Method;
-import java.util.List;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -37,7 +25,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private final String partKey = "plugin-app";
     private Handler mHandler = new Handler();
-    private boolean mStartPlugin = false;
+    private boolean mStartPlugin = true;
 
 
     @Override
@@ -45,7 +33,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.select_launcher_layout);
 //        initView();
-
+        if ("default".equals(getIntent().getStringExtra("launcher"))) {
+            mStartPlugin = false;
+        }
         if (!mStartPlugin) {
             Intent intent = new Intent(this, Launcher.class);
 //            Intent intent = new Intent(this, UIActivity.class);
@@ -120,6 +110,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                             @Override
                             public void onEnterComplete() {
+
                             }
                         });
             }

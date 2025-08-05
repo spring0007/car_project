@@ -1,6 +1,5 @@
 package com.example.launcher_plugin
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -12,12 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.annotation.CallSuper
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.ViewModelStoreOwner
+import androidx.appcompat.app.AppCompatActivity
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.FrequencyTextView
@@ -27,27 +21,21 @@ import com.awell.launcher2.LauncherApplication
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.utils.CommonData
 import com.example.launcher_plugin.databinding.ActivityUiactivityBinding
-import com.tencent.shadow.sample.host.lib.MediaViewModel
 
 
-class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, LifecycleOwner,
-    ViewModelStoreOwner {
+class UIActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = UIActivity::class.simpleName.toString()
     private lateinit var binding: ActivityUiactivityBinding
     private var mMediaListener = MediaNotificationListener()
     lateinit var llMusic: MusicWidgetPlugin
     lateinit var mediaControl: AwellMediaControl
-    var mediaViewModel: MediaViewModel? = null
     lateinit var mWaveformView: VisualizerView
     lateinit var tvRadioButAFM: Button
     lateinit var tv_radio_freq: FrequencyTextView
     lateinit var tv_radio_am_fm: TextView
     lateinit var tv_radio_freq_unit: TextView
-    private lateinit var lifecycleRegistry: LifecycleRegistry
 
-    private val PROXY_ACTIVITY =
-        "com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
 
     var thisActivity = this
 
@@ -61,65 +49,18 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         binding = ActivityUiactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleRegistry = LifecycleRegistry(this)
-        lifecycleRegistry.currentState = Lifecycle.State.CREATED
-
         binding.hotsetAllapp.setOnClickListener(this)
 
         findViewId()
         initMediaMusic()
 
-//        initMediaObserverView()
-        Log.i(TAG, "onCreate: huang create ==>")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.i(TAG, "onRestart: huang restart==>")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        Log.i(TAG, "onStart: huang start==>")
-    }
-
-
-    @CallSuper
-    override fun onPause() {
-        lifecycleRegistry.currentState = Lifecycle.State.STARTED
-        AppsCustomizeControl.longClickUninstallAppToAppsView = false
-        Log.i(TAG, "onPause: huang pause==>")
-        super.onPause()
-    }
-
-    override fun onResume() {
-        if (!AppsCustomizeControl.longClickUninstallAppToAppsView) {
-//            AppsCustomizeControl.hideApps()
-        }
-        Log.i(TAG, "onResume: huang resume=>")
-        super.onResume()
-        lifecycleRegistry.currentState = Lifecycle.State.RESUMED
-    }
-
-    @CallSuper
-    override fun onStop() {
-        lifecycleRegistry.currentState = Lifecycle.State.CREATED
-        Log.i(TAG, "onStop: huang stop =>")
-        super.onStop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        //mediaControl.mediaLibrary.release()
         mMediaListener.cleanup()
-        Log.i(TAG, "onDestroy: huang destroy==>")
     }
 
-
-    override val lifecycle: Lifecycle
-        get() = lifecycleRegistry
 
     private fun initMediaMusic() {
 
@@ -128,16 +69,9 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
 
-//        mediaViewModel =
-//            ViewModelProvider((LauncherApplication.getmAppContext() as? LauncherApplication?)!!).get<MediaViewModel>(
-//                MediaViewModel::class.java
-//            )
-
-
         llMusic = findViewById<MusicWidgetPlugin>(R.id.music_widget_layout)
 
         llMusic.setMediaLibrary(mediaControl)
-        //llMusic.setMediaLibrary(mediaControl.mediaLibrary)
         llMusic.setActivity(this, llMusic)
     }
 
@@ -378,21 +312,11 @@ class UIActivity : Activity(), View.OnClickListener, View.OnLongClickListener, L
     }
 
     override fun onNewIntent(intent: Intent?) {
-        Log.i(TAG, "onNewIntent: huang intent=>${intent}")
+        super.onNewIntent(intent)
         AppsCustomizeControl.hideApps()
     }
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
-        Log.i(TAG, "dispatchKeyEvent: huang event=>${event}")
         return super.dispatchKeyEvent(event)
     }
-
-    override fun onLongClick(v: View?): Boolean {
-        Log.i(TAG, "onLongClick: huang v=>${v}")
-        return false
-    }
-
-    private val store = ViewModelStore()
-    override val viewModelStore: ViewModelStore
-        get() = store
 }

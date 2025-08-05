@@ -112,10 +112,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
         ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
         ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
-        Log.i(TAG, "findViews: huang view=>" + view);
-        Log.i(TAG, "findViews: huang rl id=>" + R.id.music_widget_rl);
-        Log.i(TAG, "findViews: huang music_widget_rl=>" + (RelativeLayout) view.findViewById(R.id.music_widget_rl));
-        printAllChildren(view);
         view.findViewById(R.id.music_widget_rl).setOnClickListener(this);
 
         mMusicNameTextView = (TextView) view.findViewById(R.id.music_widget_music_name);
@@ -149,41 +145,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         //setCurMusicState(mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
-    }
-
-    public void printAllChildren(View view) {
-        printViewWithIndent(view, 0);
-    }
-
-    private void printViewWithIndent(View view, int depth) {
-        // 创建缩进字符串（每层缩进4个空格）
-        StringBuilder indent = new StringBuilder();
-        for (int i = 0; i < depth; i++) {
-            indent.append("    ");
-        }
-
-        // 打印当前View信息
-        Log.d("ViewHierarchy", indent.toString() + "└── " + view.getClass().getSimpleName() +
-                " [ID=" + getResourceName(view.getId(), view) + ", Visible=" + (view.getVisibility() == View.VISIBLE) + "]" + " view=>" + view);
-
-        // 如果是ViewGroup则递归遍历子View
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                View child = group.getChildAt(i);
-                printViewWithIndent(child, depth + 1); // 增加深度
-            }
-        }
-    }
-
-    // 将资源ID转换为可读名称
-    private String getResourceName(int id, View view) {
-        try {
-            return id != View.NO_ID ?
-                    view.getResources().getResourceEntryName(id) : "NO_ID";
-        } catch (Exception e) {
-            return "0x" + Integer.toHexString(id);
-        }
     }
 
     //private SocketThread zlinkCarPlaySocketThread;

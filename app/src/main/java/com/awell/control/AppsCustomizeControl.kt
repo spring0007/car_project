@@ -96,7 +96,6 @@ object AppsCustomizeControl {
             }
             return
         }
-        longClickUninstallAppToAppsView = false
         currentViewGroup = WeakReference(viewGroup)
         saveActivityState(viewGroup)
 

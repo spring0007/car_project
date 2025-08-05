@@ -173,7 +173,7 @@ public abstract class PagedViewWithDraggableItems extends PagedView
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
         Log.i(TAG, "uninstallAPK: huang mContext==>" + mContext + " uninstall intent==>" + intent);
-        AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(true);
+        //AppsCustomizeControl.INSTANCE.setLongClickUninstallAppToAppsView(true);
     }
 
 

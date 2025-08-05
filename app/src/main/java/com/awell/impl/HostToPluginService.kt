@@ -9,15 +9,12 @@ import kotlinx.parcelize.Parcelize
 import android.os.RemoteCallbackList
 import android.os.RemoteException
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
 import com.awell.launcher.IDataChangeInterface
 import com.awell.launcher.IHostPluginInterface
-import com.awell.launcher2.LauncherApplication
 import com.awell.launcher2.LauncherApplication.mAppContext
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellLibrary
 import com.awell.library.AwellTool
-import com.awell.model.MediaViewModel
 
 
 class HostToPluginService : Service() {
@@ -27,6 +24,8 @@ class HostToPluginService : Service() {
 
     var mSongName: String? = null
 
+    var mMusicPlayInfo: MusicPlayInfo? = null
+
     val listeners = RemoteCallbackList<IDataChangeInterface>()
     private var mMediaListener = MediaNotificationListener()
 
@@ -34,15 +33,7 @@ class HostToPluginService : Service() {
     val mDataListener = AwellLibrary.OnDataListener { bundle: Bundle? ->
         bundle?.let {
             notifyDataChanged(bundle)
-            val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
-            when (status) {
-                AwellTool.MUSIC.PLAY_NAME -> {
-                    val songNameTemp = bundle.getString(AwellTool.VALUE_M1, mNullStr)
-                    val singerName = bundle.getString(AwellTool.VALUE_M2, mNullStr)
-                    val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
-                    mSongName = songNameTemp
-                }
-            }
+            saveTempValue(bundle)
         } ?: run {
             Log.e(TAG, "AwellLibrary.OnDataListener onResult:  bundle is null!!")
         }
@@ -69,6 +60,7 @@ class HostToPluginService : Service() {
 
         override fun notifyData(): Bundle? {
             Log.i(TAG, "notifyData: huang notify plugin data change ==>")
+            return null
         }
 
         override fun pluginToHostWithBundle(bundle: Bundle?): String? {
@@ -83,9 +75,11 @@ class HostToPluginService : Service() {
 
 
         override fun registerListener(listener: IDataChangeInterface) {
-            Log.i(TAG, "registerListener: huang register listener ==>")
+            Log.i(TAG, "registerListener: huang register listener musicPlayInfo==>${mMusicPlayInfo}")
             listeners.register(listener)
-
+            mMusicPlayInfo?.let {
+                notifyDataChanged(musicPlayInfoToBundle(mMusicPlayInfo!!))
+            }
 
         }
 
@@ -94,6 +88,19 @@ class HostToPluginService : Service() {
         }
     }
 
+    /**
+     * 服务端保留一份数据
+     * 当客户端切换时，
+     * 可以更新到客户端的数据显示
+     */
+    private fun saveTempValue(bundle: Bundle) {
+        val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
+        when (status) {
+            AwellTool.MUSIC.PLAY_NAME -> {
+                mMusicPlayInfo = bundleToMusicPlayInfo(bundle)
+            }
+        }
+    }
     private fun notifyDataChanged(bundle: Bundle) {
 
         val count = listeners.beginBroadcast()
@@ -108,12 +115,35 @@ class HostToPluginService : Service() {
             listeners.finishBroadcast()
         }
     }
+
+    private fun bundleToMusicPlayInfo(bundle: Bundle): MusicPlayInfo {
+        val song = bundle.getString(AwellTool.VALUE_M1, mNullStr)
+        val singer = bundle.getString(AwellTool.VALUE_M2, mNullStr)
+        val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
+        val music = MusicPlayInfo(
+            songName = song,
+            singerName = singer,
+            album = album
+        )
+        return music
+    }
+
+    private fun musicPlayInfoToBundle(music: MusicPlayInfo): Bundle {
+        val b = Bundle()
+        music.let {
+            b.putString(AwellTool.STATUS_ACCEPT, AwellTool.MUSIC.PLAY_NAME)
+            b.putString(AwellTool.VALUE_M1, music.songName)
+            b.putString(AwellTool.VALUE_M2, music.singerName)
+            b.putString(AwellTool.VALUE_M3, music.album)
+        }
+        return b
+    }
 }
 
 
 @Parcelize
-data class MusicInfo(
-    val id: String,
-    val value: String,
-    val timestamp: Long
+data class MusicPlayInfo(
+    val songName: String,
+    val singerName: String,
+    val album: String
 ) : Parcelable

@@ -100,7 +100,6 @@ class AwellMediaControl() {
             hostService = IHostPluginInterface.Stub.asInterface(binder)
             isBound = true
             hostService?.registerListener(mDataChangeListener)
-            val songName = hostService?.getSongName()
         }
 
         override fun onServiceDisconnected(componentName: ComponentName?) {
@@ -199,7 +198,6 @@ class AwellMediaControl() {
     }
 
     private fun handleMusicPlayStatus(bundle: Bundle) {
-        //在这里处理livedata的更新
         val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
         updateMusicView?.updateViewPlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
