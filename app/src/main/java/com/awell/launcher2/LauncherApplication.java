@@ -37,6 +37,9 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -82,7 +85,6 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     public void onCreate() {
         super.onCreate();
         mAppContext = this;
-        Log.i(TAG, "onCreate: huang application create mAppContext==>" + mAppContext);
 
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
@@ -92,11 +94,10 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         if (isProcess(this, ":plugin")) {
             Log.i(TAG, "onCreate: huang plugin ==>");
             PluginInit();
+            Log.i(TAG, "plugin onCreate: huang application create mAppContext==>" + mAppContext);
         }
 
         initPluginModule();
-
-
     }
 
     public void PluginInit() {
@@ -139,9 +140,8 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
             if (getPackageName().equals("com.awell.launcher")) {
                 //运行在宿主进程
                 PluginHelper.getInstance().init(this);
-
                 startHostService();
-
+                Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
             }
         }
 

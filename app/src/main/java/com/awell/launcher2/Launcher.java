@@ -145,13 +145,13 @@ import com.awell.launcher.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
-import com.awell.model.MediaViewModel;
-import com.awell.model.PlayImage;
-import com.awell.model.PlayTime;
-import com.awell.model.RadioInfo;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
+import com.tencent.shadow.sample.host.lib.MediaViewModel;
+import com.tencent.shadow.sample.host.lib.PlayImage;
+import com.tencent.shadow.sample.host.lib.PlayTime;
+import com.tencent.shadow.sample.host.lib.RadioInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -1378,6 +1378,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     private void initMediaObserverView() {
         mediaViewModel = new ViewModelProvider((LauncherApplication) getmAppContext()).get(MediaViewModel.class);
+        mediaControl.setMediaViewModel(mediaViewModel);
         mediaViewModel.getMediaState().observe(this, mediaDataSelect -> {
             llMusic.switchMediaController(mediaDataSelect.getPackName(),
                     mediaDataSelect.getStatus(),

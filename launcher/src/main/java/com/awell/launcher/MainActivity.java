@@ -22,6 +22,7 @@ import com.awell.launcher2.LauncherApplication;
 import com.awell.plugin_shadow.PluginHelper;
 import com.awell.plugin_shadow.PluginLoadActivity;
 
+import com.tencent.shadow.dynamic.host.DynamicPluginManager;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
 
@@ -33,15 +34,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final String CLAZZ_NAME_LAUNCHER = "com.example.launcher_plugin.UIActivity"; // plugin_1 apk
-    /**
-     *
-     */
+
     private final String partKey = "plugin-app";
     private Handler mHandler = new Handler();
-
-    private final String PROXY_ACTIVITY = "com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity";
-    private final String PLUGIN_PKG = "com.awell.launcher";
-    private boolean mStartPlugin = true;
+    private boolean mStartPlugin = false;
 
 
     @Override
@@ -54,7 +50,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Intent intent = new Intent(this, Launcher.class);
 //            Intent intent = new Intent(this, UIActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            Log.i(TAG, "onCreate: huang start launcher==>");
             startActivity(intent);
             finish();
         } else {
@@ -65,7 +60,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.i(TAG, "onNewIntent: huang new intent==>" + intent);
         if (!mStartPlugin) {
             Intent launcherIntent = new Intent(this, Launcher.class);
 //            Intent launcherIntent = new Intent(this, UIActivity.class);
@@ -107,7 +101,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 //bundle.putString(Constant.KEY_PLUGINS_APK_PATH, "/sdcard/launcher_plugin");
                 bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey);
                 bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER);
-                Log.i(TAG, "run: huang plugin manager=>" + ((LauncherApplication) getmAppContext()).getPluginManager());
                 ((LauncherApplication) getmAppContext()).getPluginManager()
                         .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                             @Override
@@ -115,7 +108,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Log.i(TAG, "run: huang add view==>");
 //                                        mViewGroup.addView(view);
                                     }
                                 });

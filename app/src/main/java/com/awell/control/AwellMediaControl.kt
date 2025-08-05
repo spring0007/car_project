@@ -15,7 +15,7 @@ import com.awell.launcher.IHostPluginInterface
 import com.awell.launcher2.LauncherApplication.mAppContext
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
-import com.awell.model.MediaViewModel
+import com.tencent.shadow.sample.host.lib.MediaViewModel
 import java.lang.reflect.Method
 
 
@@ -24,7 +24,7 @@ class AwellMediaControl() {
     private val TAG = AwellMediaControl::class.simpleName
     val mNullStr = "null"
     private var mMediaListener = MediaNotificationListener()
-    private var updateMusicView: UpdateMediaDataToView? = null
+    var updateMusicView: UpdateMediaDataToView? = null
 
     var mediaViewModel: MediaViewModel? = null
 
@@ -173,7 +173,7 @@ class AwellMediaControl() {
     }
 
     private fun handleMediaPlay(bundle: Bundle) {
-
+        Log.i(TAG, "handleMediaPlay: huang mediaViewModel=${mediaViewModel}")
         val pkg = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val command = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val mediaType = bundle.getInt(AwellTool.VALUE_M3, 3)
@@ -190,6 +190,7 @@ class AwellMediaControl() {
 
         if (!isLocalMusicPackage && pkg == mMediaListener.currentPlayingPackage && isStopCommand) {
             mediaViewModel?.updatePlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
+            updateMusicView?.updateViewPlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
         }
 
         mediaViewModel?.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
@@ -201,7 +202,7 @@ class AwellMediaControl() {
         //在这里处理livedata的更新
         val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
-        updateMusicView?.updateViewMusicPlayStatus(bundle, musicStatus)
+        updateMusicView?.updateViewPlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
     }
 
     private fun handleMusicPlayName(bundle: Bundle) {
@@ -209,7 +210,13 @@ class AwellMediaControl() {
         val singerName = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
         mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.MUSIC)
-        updateMusicView?.updateViewMusicPlayName(bundle, songName, singerName, album)
+        updateMusicView?.updateViewPlayInfo(
+            bundle,
+            songName,
+            singerName,
+            album,
+            MusicWidget.MUSIC
+        )
 
     }
 
@@ -218,10 +225,10 @@ class AwellMediaControl() {
         val str = value1.split(" , ".toRegex()).dropLastWhile {
             it.isEmpty()
         }.toTypedArray()
-        val long1 = str[0].toLong()
-        val long2 = str[1].toLong()
-        mediaViewModel?.updatePlayImage(bundle, long1, long2)
-        updateMusicView?.updateViewMusicPlayImage(bundle, long1, long2)
+        val songId = str[0].toLong()
+        val albumId = str[1].toLong()
+        mediaViewModel?.updatePlayImage(bundle, songId, albumId)
+        updateMusicView?.updateViewMusicPlayImage(bundle, songId, albumId)
 
     }
 
@@ -229,13 +236,13 @@ class AwellMediaControl() {
         val currentTime = bundle.getLong(AwellTool.VALUE_M1)
         val totalTime = bundle.getLong(AwellTool.VALUE_M2)
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
-        updateMusicView?.updateViewMusicPlayTime(bundle, currentTime, totalTime)
+        updateMusicView?.updateViewPlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
     }
 
     private fun handleBTPlayStatus(bundle: Bundle) {
         val status = bundle.getBoolean(AwellTool.VALUE_M1)
         mediaViewModel?.updatePlayStatus(bundle, status, MusicWidget.BT)
-        updateMusicView?.updateViewBTPlayStatus(bundle, status)
+        updateMusicView?.updateViewPlayStatus(bundle, status, MusicWidget.BT)
 
     }
 
@@ -245,7 +252,7 @@ class AwellMediaControl() {
         val singerName = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val album = bundle.getString(AwellTool.VALUE_M3, mNullStr)
         mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.BT)
-        updateMusicView?.updateViewBTPlayName(bundle, songName, singerName, album)
+        updateMusicView?.updateViewPlayInfo(bundle, songName, singerName, album, MusicWidget.BT)
 
     }
 
@@ -253,7 +260,7 @@ class AwellMediaControl() {
         val currentTime = (bundle.getInt(AwellTool.VALUE_M1) * 1000).toLong()
         val totalTime = (bundle.getInt(AwellTool.VALUE_M2) * 1000).toLong()
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
-        updateMusicView?.updateViewBTPlayTime(bundle, currentTime, totalTime)
+        updateMusicView?.updateViewPlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
     }
 
     private fun handleRadioFreq(bundle: Bundle) {
@@ -269,20 +276,35 @@ class AwellMediaControl() {
         val singerName = bundle.getString(AwellTool.VALUE_M2) ?: mNullStr
         val album = bundle.getString(AwellTool.VALUE_M3) ?: mNullStr
         mediaViewModel?.updatePlayInfo(bundle, songName, singerName, album, MusicWidget.OTHER_MUSIC)
-        updateMusicView?.updateViewOtherMusicPlayName(bundle, songName, singerName, album)
+        updateMusicView?.updateViewPlayInfo(
+            bundle,
+            songName,
+            singerName,
+            album,
+            MusicWidget.OTHER_MUSIC
+        )
     }
 
     private fun handleOtherMusicStatus(bundle: Bundle) {
         val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.OTHER_MUSIC)
-        updateMusicView?.updateViewOtherMusicPlayStatus(bundle, musicStatus)
+        updateMusicView?.updateViewPlayStatus(
+            bundle,
+            musicStatus,
+            MusicWidget.OTHER_MUSIC
+        )
     }
 
     private fun handleOtherMusicTime(bundle: Bundle) {
         val currentTime = bundle.getLong(AwellTool.VALUE_M1)
         val totalTime = bundle.getLong(AwellTool.VALUE_M1)
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.OTHER_MUSIC)
-        updateMusicView?.updateViewOtherMusicTime(bundle, currentTime, totalTime)
+        updateMusicView?.updateViewPlayTime(
+            bundle,
+            currentTime,
+            totalTime,
+            MusicWidget.OTHER_MUSIC
+        )
     }
 
     /**
@@ -300,28 +322,26 @@ class AwellMediaControl() {
          * true playing
          * false not playing
          */
-        fun updateViewMusicPlayStatus(bundle: Bundle, status: Boolean)
+        fun updateViewPlayStatus(bundle: Bundle, status: Boolean, type: Int)
 
         /**
          * songName 歌曲名
          * singerName 歌手名
          * album 专辑
          */
-        fun updateViewMusicPlayName(
-            bundle: Bundle, songName: String, singerName: String, album: String
+
+        fun updateViewMusicPlayImage(bundle: Bundle, songId: Long, albumId: Long)
+
+        fun updateViewPlayInfo(
+            bundle: Bundle,
+            songName: String,
+            singerName: String,
+            album: String,
+            type: Int
         )
 
-        fun updateViewMusicPlayImage(bundle: Bundle, value1: Long, value2: Long)
-        fun updateViewMusicPlayTime(
-            bundle: Bundle, currentTime: Long, totalTime: Long
-        )
+        fun updateViewPlayTime(bundle: Bundle, currentTime: Long, totalTime: Long, type: Int)
 
-        fun updateViewBTPlayStatus(bundle: Bundle, status: Boolean)
-        fun updateViewBTPlayName(
-            bundle: Bundle, songName: String, singerName: String, album: String
-        )
-
-        fun updateViewBTPlayTime(bundle: Bundle, currentTime: Long, totalTime: Long)
 
         /**
          * fmOrAm FM or AM
@@ -331,12 +351,5 @@ class AwellMediaControl() {
         fun updateViewRadioFreq(
             bundle: Bundle, fmOrAm: String, freq: String, unit: String
         )
-
-        fun updateViewOtherMusicPlayName(
-            bundle: Bundle, songName: String, singerName: String, album: String
-        )
-
-        fun updateViewOtherMusicPlayStatus(bundle: Bundle, status: Boolean)
-        fun updateViewOtherMusicTime(bundle: Bundle, currentTime: Long, totalTime: Long)
     }
 }

@@ -1,6 +1,7 @@
 package com.tencent.shadow.sample.host.lib;
 
 import android.app.Activity;
+import android.app.Application;
 import android.view.ViewGroup;
 
 public interface HostApps {

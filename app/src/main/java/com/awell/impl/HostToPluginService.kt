@@ -31,8 +31,6 @@ class HostToPluginService : Service() {
     private var mMediaListener = MediaNotificationListener()
 
     val mediaLibrary = AwellLibrary(AwellTool.OPEN)
-    var mediaViewModel: MediaViewModel
-
     val mDataListener = AwellLibrary.OnDataListener { bundle: Bundle? ->
         bundle?.let {
             notifyDataChanged(bundle)
@@ -55,8 +53,6 @@ class HostToPluginService : Service() {
         mediaLibrary.init(mAppContext)
         mediaLibrary.setOnDataListener(mDataListener)
         Log.i(TAG, "huang init awell media control mAppContext=>${mAppContext}")
-        mediaViewModel =
-            ViewModelProvider(mAppContext as LauncherApplication).get(MediaViewModel::class.java)
     }
 
     override fun onBind(intent: Intent): IBinder {
@@ -73,7 +69,6 @@ class HostToPluginService : Service() {
 
         override fun notifyData(): Bundle? {
             Log.i(TAG, "notifyData: huang notify plugin data change ==>")
-            TODO("Not yet implemented")
         }
 
         override fun pluginToHostWithBundle(bundle: Bundle?): String? {
@@ -90,10 +85,11 @@ class HostToPluginService : Service() {
         override fun registerListener(listener: IDataChangeInterface) {
             Log.i(TAG, "registerListener: huang register listener ==>")
             listeners.register(listener)
+
+
         }
 
         override fun unregisterListener(listener: IDataChangeInterface) {
-            Log.i(TAG, "unregisterListener: huang unregister listener==>")
             listeners.unregister(listener)
         }
     }

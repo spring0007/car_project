@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher2.LauncherApplication;
-import com.tencent.shadow.core.runtime.ShadowActivity;
 
 public class HostApps implements com.tencent.shadow.sample.host.lib.HostApps {
     private final String TAG = HostApps.class.getSimpleName();

@@ -135,7 +135,9 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTask"
             android:multiprocess="true"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name="com.awell.plugin_shadow.PluginLoadActivity"
             android:launchMode="singleTask"
