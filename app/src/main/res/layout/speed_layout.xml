@@ -8,8 +8,8 @@
         android:id="@+id/iv_anim_speed_road"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:background="@drawable/rainbow_01"
         android:visibility="gone" />
@@ -31,14 +31,14 @@
         android:layout_centerVertical="true"
         android:gravity="end"
         android:paddingTop="12dp"
-        android:textStyle="bold"
+        android:shadowColor="#66000000"
+        android:shadowDx="-5"
+        android:shadowDy="-5"
+        android:shadowRadius="10"
         android:text="0"
         android:textColor="@android:color/white"
         android:textSize="80sp"
-        android:shadowColor="#66000000"
-        android:shadowRadius="10"
-        android:shadowDx="-5"
-        android:shadowDy="-5" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_gps_speed_unit"
@@ -47,11 +47,11 @@
         android:layout_alignBaseline="@+id/tv_gps_speed"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/tv_gps_speed"
+        android:shadowColor="#88000000"
+        android:shadowDx="-3"
+        android:shadowDy="-3"
+        android:shadowRadius="2"
         android:text="KM/h"
         android:textColor="@android:color/white"
-        android:textSize="26sp"
-        android:shadowColor="#88000000"
-        android:shadowRadius="2"
-        android:shadowDx="-3"
-        android:shadowDy="-3" />
+        android:textSize="26sp" />
 </RelativeLayout>

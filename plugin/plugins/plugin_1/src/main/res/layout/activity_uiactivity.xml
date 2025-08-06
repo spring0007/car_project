@@ -9,6 +9,7 @@
 
     <include
         layout="@layout/widget_layout_radio_two"
+        android:id="@+id/include_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/iv_main_xiaodeng"
@@ -44,6 +45,7 @@
         app:layout_constraintVertical_bias="0.25" />
 
     <include
+        android:id="@+id/include_speed_layout"
         layout="@layout/speed_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

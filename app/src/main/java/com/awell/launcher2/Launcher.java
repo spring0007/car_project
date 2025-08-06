@@ -1941,6 +1941,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     private void speedhome() {
         Log.i(TAG, "speed come in");
         mHandlerSpeed = new Handler() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -1991,7 +1992,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         Log.i(TAG, "mlocationManager==" + mlocationManager);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {

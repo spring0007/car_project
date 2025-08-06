@@ -4,7 +4,10 @@
     <string name="click_play_music">Click To Play</string>
     <string name="music_artist">Artist</string>
 
-    <string name="radio_save">Search</string>
     <string name="radio_dx">DX</string>
-
+    <string name="radio_loc">LOC</string>
+    <string name="radio_save">Search</string>
+    <string name="icon_add_name">Add To</string>
+    <string name="unknow_song_name">Unknown song name</string>
+    <string name="unknow_song_artist">Unknown artist</string>
 </resources>
