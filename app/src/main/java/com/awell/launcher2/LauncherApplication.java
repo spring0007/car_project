@@ -37,15 +37,10 @@ import android.util.Log;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.awell.control.AwellMediaControl;
 import com.awell.impl.HostApps;
-import com.awell.impl.HostToPluginService;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
@@ -152,7 +147,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
 
     private void startHostService() {
         Intent service = new Intent();
-        ComponentName componentName = new ComponentName(getPackageName(), "com.awell.impl.HostToPluginService");
+        ComponentName componentName = new ComponentName(getPackageName(), "com.awell.service.HostToPluginService");
         service.setComponent(componentName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             // 使用系统用户标识

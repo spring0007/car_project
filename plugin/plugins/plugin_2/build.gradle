@@ -1,0 +1,77 @@
+plugins {
+    id 'com.android.application'
+    id 'com.tencent.shadow.plugin'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.example.plugin_2'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.plugin_2"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        release {
+            storeFile file('../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    // 将插件applicationId设置为和宿主相同
+    productFlavors {
+        plugin {
+            applicationId SAMPLE_HOST_APP_APPLICATION_ID
+        }
+    }
+    // 将插件的资源ID分区改为和宿主0x7F不同的值
+    aaptOptions {
+        additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id",
+                "-I", "${project(':app').buildDir}/intermediates/compile_r_class_jar/debug/R.jar"
+    }
+}
+
+dependencies {
+
+    pluginCompileOnly project(path: ':AwellLibrary')
+    normalImplementation project(path: ':AwellLibrary')
+
+    pluginCompileOnly project(path: ':app')
+    normalImplementation project(path: ':app')
+
+    pluginCompileOnly 'com.tencent.shadow.core:runtime:1.0'
+
+    //注意host-lib要用compileOnly编译而不打包在插件中。在packagePlugin任务中配置hostWhiteList允许插件访问宿主的类。
+    pluginCompileOnly project(":plugin:plugins:host-lib")
+    normalImplementation project(":plugin:plugins:host-lib")
+
+    pluginCompileOnly project(':plugin:plugins:constant')
+    normalImplementation project(':plugin:plugins:constant')
+
+}

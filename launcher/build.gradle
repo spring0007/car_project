@@ -191,6 +191,15 @@ shadow {
                                          "com.awell.control", "com.awell.model", "com.awell.utils",
                                          "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]
                     }
+                    pluginApk2 {
+                        businessName = 'plugin2-app'
+                        partKey = 'plugin2-app'
+                        buildTask = ':plugin:plugins:plugin_2:assemblePluginDebug'
+                        apkPath = 'plugin/plugins/plugin_2/build/intermediates/apk/plugin/debug/plugin_2-plugin-debug.apk'
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib", "com.awell.launcher.databinding",
+                                         "com.awell.control", "com.awell.model", "com.awell.utils",
+                                         "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]
+                    }
                 }
             }
 
@@ -203,6 +212,15 @@ shadow {
                         partKey = 'plugin-app'
                         buildTask = ':plugin:plugins:plugin_1:assemblePluginRelease'
                         apkPath = 'plugin/plugins/plugin_1/build/intermediates/apk/plugin/release/plugin_1-plugin-release.apk'
+                        hostWhiteList = ["com.tencent.shadow.sample.host.lib", "com.awell.launcher.databinding",
+                                         "com.awell.control", "com.awell.model", "com.awell.utils",
+                                         "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]
+                    }
+                    pluginApk2 {
+                        businessName = 'plugin2-app'
+                        partKey = 'plugin2-app'
+                        buildTask = ':plugin:plugins:plugin_2:assemblePluginDebug'
+                        apkPath = 'plugin/plugins/plugin_2/build/intermediates/apk/plugin/debug/plugin_2-plugin-debug.apk'
                         hostWhiteList = ["com.tencent.shadow.sample.host.lib", "com.awell.launcher.databinding",
                                          "com.awell.control", "com.awell.model", "com.awell.utils",
                                          "com.awell.launcher2", "com.awell.ctrlview", "androidx.recyclerview.widget"]

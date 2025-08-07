@@ -112,7 +112,7 @@ class AwellMediaControl() {
         val intent = Intent().apply {
             component = ComponentName(
                 "com.awell.launcher",
-                "com.awell.impl.HostToPluginService"
+                "com.awell.service.HostToPluginService"
             )
         }
         val userHandle = android.os.Process.myUserHandle()

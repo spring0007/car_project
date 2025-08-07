@@ -8,8 +8,8 @@
     tools:context=".UIActivity">
 
     <include
-        layout="@layout/widget_layout_radio_two"
         android:id="@+id/include_radio"
+        layout="@layout/widget_layout_radio_two"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/iv_main_xiaodeng"

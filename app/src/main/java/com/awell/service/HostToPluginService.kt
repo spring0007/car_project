@@ -1,4 +1,4 @@
-package com.awell.impl
+package com.awell.service
 
 import android.app.Service
 import android.content.Intent

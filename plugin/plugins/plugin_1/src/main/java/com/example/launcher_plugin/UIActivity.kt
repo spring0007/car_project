@@ -2,6 +2,7 @@ package com.example.launcher_plugin
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -23,9 +24,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresPermission
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColorInt
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
@@ -42,7 +42,7 @@ import com.example.launcher_plugin.databinding.WidgetLayoutRadioTwoBinding
 import kotlin.math.abs
 
 
-class UIActivity : AppCompatActivity(), View.OnClickListener {
+class UIActivity : Activity(), View.OnClickListener {
 
     private val TAG = UIActivity::class.simpleName.toString()
     private lateinit var mBinding: ActivityUiactivityBinding
@@ -98,6 +98,9 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
 
         handler = Handler(Looper.getMainLooper())
         viewConfiguration = ViewConfiguration.get(this)
+
+        val value = Settings.System.getInt(contentResolver, "launcherTypeDN", 0)
+        dayNightImages(if (value == 1) 1 else 0)
 
         initBroadcastReceiver()
 
@@ -296,6 +299,33 @@ class UIActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    var radio_bar_icon_bgID: IntArray =
+        intArrayOf(R.drawable.radio_bar_icon_bg, R.drawable.radio_bar_icon_bg_n)
+    var sf_radio_preID: IntArray = intArrayOf(R.drawable.sf_radio_pre, R.drawable.sf_radio_pre_n)
+    var sf_radio_nextID: IntArray = intArrayOf(R.drawable.sf_radio_next, R.drawable.sf_radio_next_n)
+    var textColorId: IntArray =
+        intArrayOf("#99ffffff".toColorInt(), "#99ffffff".toColorInt())
+    var date_bgID: IntArray = intArrayOf(R.drawable.date_bg, R.drawable.date_bg_n)
+
+    private fun dayNightImages(dayNight: Int) {
+        llMusic.setDayNight(dayNight)
+
+        mRadioLayout.radioIv.setBackgroundResource(radio_bar_icon_bgID[dayNight])
+        mRadioLayout.ivRadioPre.setImageResource(sf_radio_preID[dayNight])
+        mRadioLayout.ivRadioNext.setImageResource(sf_radio_nextID[dayNight])
+        mRadioLayout.tvRadioAmFm.setTextColor(textColorId[dayNight])
+        mRadioLayout.tvRadioFreq.setFlag(dayNight)
+        mRadioLayout.tvRadioFreqUnit.setTextColor(textColorId[dayNight])
+        mRadioLayout.radioControlLl.setBackgroundResource(date_bgID[dayNight])
+        mRadioLayout.ivRadioSetFM.setTextColor(textColorId[dayNight])
+        mRadioLayout.ivRadioSetSearch.setTextColor(textColorId[dayNight])
+        mRadioLayout.ivRadioSetYC.setTextColor(textColorId[dayNight])
+
+        mCarSpeedLayout.tvGpsSpeed.setTextColor("#ccffffff".toColorInt())
+        mCarSpeedLayout.tvGpsSpeedUnit.setTextColor("#ccffffff".toColorInt())
+
     }
 
     /**
