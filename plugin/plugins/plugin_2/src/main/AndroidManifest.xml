@@ -2,17 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Light">
+        android:theme="@style/Plugin2_Theme">
         <activity
-            android:name=".UIActivity"
+            android:name=".UI2Activity"
             android:enabled="true"
             android:exported="true">
-
 
         </activity>
     </application>

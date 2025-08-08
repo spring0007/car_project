@@ -302,6 +302,8 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
                 mediaControl.sendStrToHost(AwellTool.BT.NEXT);
             } else if (currentMedia == KUMUSIC) {
                 //kwapi.setPlayState(PlayState.STATE_NEXT);
+                //todo huang next music
+                //mediaControl.getMMediaListener().skipToNext();
                 Launcher.mMediaListener.skipToNext();
             } else if (currentMedia == CARPLAY) {
                 //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);

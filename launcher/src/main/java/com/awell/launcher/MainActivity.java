@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final String CLAZZ_NAME_LAUNCHER_1 = "com.example.launcher_plugin.UIActivity"; // plugin_1 apk
-    private final String CLAZZ_NAME_LAUNCHER_2 = "com.example.plugin_2.UIActivity"; // plugin_2 apk
+    private final String CLAZZ_NAME_LAUNCHER_2 = "com.example.plugin_2.UI2Activity"; // plugin_2 apk
 
     private final String partKey1 = "plugin-app";
     private final String partKey2 = "plugin2-app";

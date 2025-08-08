@@ -23,7 +23,7 @@ class AwellMediaControl() {
 
     private val TAG = AwellMediaControl::class.simpleName
     val mNullStr = "null"
-    private var mMediaListener = MediaNotificationListener()
+    var mMediaListener = MediaNotificationListener()
     var updateMusicView: UpdateMediaDataToView? = null
 
     var mediaViewModel: MediaViewModel? = null

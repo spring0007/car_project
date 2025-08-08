@@ -16,6 +16,9 @@ android {
         versionName "1.0"
 
     }
+    buildFeatures {
+        viewBinding true
+    }
 
     buildTypes {
         release {
@@ -58,6 +61,12 @@ android {
 }
 
 dependencies {
+
+
+    implementation "androidx.constraintlayout:constraintlayout:2.0.1"
+
+    pluginCompileOnly 'androidx.recyclerview:recyclerview:1.1.0'
+    normalImplementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     pluginCompileOnly project(path: ':AwellLibrary')
     normalImplementation project(path: ':AwellLibrary')

@@ -109,7 +109,7 @@ class GpsSimulationService : Service() {
             speedMps += speedIncrement
 
             // 计算新位置 (简化的圆周运动模型)
-            val radius = 30.5 // 移动半径 (度)
+            val radius = 10.5 // 移动半径 (度)
             val radian = Math.toRadians(direction)
             val newLat = baseLatitude + radius * cos(radian)
             val newLon = baseLongitude + radius * sin(radian)
