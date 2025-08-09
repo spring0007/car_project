@@ -257,7 +257,7 @@ class UIActivity : Activity(), View.OnClickListener {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
                         mCarSpeedLayout.tvGpsSpeed.text = speedKm
-                        if (accRecor == true) {
+                        if (accRecor == false) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()

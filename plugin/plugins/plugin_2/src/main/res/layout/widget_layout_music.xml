@@ -1,4 +1,4 @@
-<com.awell.ctrlview.MusicWidget xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.plugin_2.MusicWidgetPlugin2 xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/music_widget_layout"
@@ -248,4 +248,4 @@
                 android:layout_weight="0.8" />
         </LinearLayout>
     </LinearLayout>
-</com.awell.ctrlview.MusicWidget>
+</com.example.plugin_2.MusicWidgetPlugin2>
