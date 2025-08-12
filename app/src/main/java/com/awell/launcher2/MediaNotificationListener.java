@@ -49,6 +49,7 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
@@ -91,7 +92,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
 
     private MediaController mMediaController;
-    private MediaController.Callback mMediaControllerCallback;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     private Handler mHandler = new Handler();
@@ -106,6 +106,85 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private Handler mUpdateHandler = new Handler(Looper.getMainLooper());
 
     private static final long AUTO_UPDATE_THRESHOLD_MS = 500;
+    private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
+        @Override
+        public void onPlaybackStateChanged(PlaybackState state) {
+            Log.d(TAG, "onPlaybackStateChanged--state: " + state);
+            mExecutor.execute(() -> {
+                if (state != null) {
+                    boolean isPlay = state.getState() == PlaybackState.STATE_PLAYING;
+                    boolean isPause = state.getState() == PlaybackState.STATE_PAUSED;
+                    Log.d(TAG, "onPlaybackStateChanged--state: " + state.getState() + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
+                    if (isPlay || isPause) {
+                        if (mPlayState != state.getState()) {
+                            if (isPlay) {
+                                //mMainHandler.removeCallbacksAndMessages(null);
+                                mMainHandler.postDelayed(() -> {
+                                    sendMediaPlayInfoToWidget(mMediaController, isPlay);
+                                    MediaMetadata metadata = mMediaController.getMetadata();
+                                    if (metadata != null) {
+                                        Log.d(TAG, "onPlaybackStateChanged-Title: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
+                                        Log.d(TAG, "onPlaybackStateChanged-Artist: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
+                                        handleMetadataChange(mMediaController, metadata);
+                                    }
+                                }, 100);
+                            }
+                        }
+                        handlePlaybackStateChange(mMediaController);
+                    }
+                    mPlayState = state.getState();
+                }
+            });
+        }
+
+        @Override
+        public void onMetadataChanged(MediaMetadata metadata) {
+            mPlayState = 0;
+            Log.d(TAG, "onMetadataChanged---metadata: " + metadata);
+            if (metadata != null) {
+                mMainHandler.postDelayed(() -> {
+                    PlaybackState state = mMediaController.getPlaybackState();
+                    Log.d(TAG, "onMetadataChanged-state: " + state + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
+                    boolean playing = false;
+                    if (state != null) {
+                        playing = (state.getState() == PlaybackState.STATE_PLAYING);
+                    }
+
+                    if (metadata != null) {
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_SUBTITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_AUTHOR: " + metadata.getString(MediaMetadata.METADATA_KEY_AUTHOR));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_WRITER: " + metadata.getString(MediaMetadata.METADATA_KEY_WRITER));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_COMPOSER: " + metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ART: " + metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART));
+                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST));
+                    }
+                    if (playing) {
+                        sendMediaPlayInfoToWidget(mMediaController, playing);
+                        handleMetadataChange(mMediaController, metadata);
+                        if (!mUpdateRunnables.containsKey(mMediaController.getPackageName())) {
+                            if (shouldManualUpdate(mMediaController.getPackageName())) {
+                                //stopManualUpdate(mMediaController);
+                                startManualUpdate(mMediaController);
+                            } else {
+                                cleanup();
+                                handlePlayingTime(mMediaController);
+                            }
+                        }
+                    }
+                }, 300);
+            }
+        }
+
+        @Override
+        public void onSessionDestroyed() {
+            Log.d(TAG, "--onSessionDestroyed- ");
+            cleanup();
+        }
+    };
 
     public void initDependencies(Context context) {
         mContext = context;
@@ -136,8 +215,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             ComponentName componentName = new ComponentName(context, NotificationListenerService.class);
             List<MediaController> controllers = mMediaSessionManager.getActiveSessions(
                     new ComponentName(mContext, NotificationListenerService.class));
-            mMediaSessionManager.addOnActiveSessionsChangedListener(
-                    mSessionsListener, componentName);
+            mMediaSessionManager.addOnActiveSessionsChangedListener(mSessionsListener, componentName);
             Log.d(TAG, "initDependencies--mControllers:" + mControllers.size());
         }
 
@@ -224,7 +302,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
     }
 
-    private Bitmap getPlayingAlbumBitmap() {
+    public Bitmap getPlayingAlbumBitmap() {
         Bitmap albumArt = null;
         if (mMediaController == null) return albumArt;
         // 获取当前播放状态
@@ -254,7 +332,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         return albumArt;
     }
 
-    private Uri getPlayingAlbumUri() {
+    public Uri getPlayingAlbumUri() {
         Uri albumArtUri = null;
         if (mMediaController == null) return albumArtUri;
         // 获取当前播放状态
@@ -280,6 +358,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
         return albumArtUri;
     }
+
 
     private void updateMediaController() {
         MediaController activeController = null;
@@ -310,85 +389,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
 
         mMediaController = activeController;
-        mMediaControllerCallback = new MediaController.Callback() {
-            @Override
-            public void onPlaybackStateChanged(PlaybackState state) {
-                Log.d(TAG, "onPlaybackStateChanged--state: " + state);
-                mExecutor.execute(() -> {
-                    if (state != null) {
-                        boolean isPlay = state.getState() == PlaybackState.STATE_PLAYING;
-                        boolean isPause = state.getState() == PlaybackState.STATE_PAUSED;
-                        Log.d(TAG, "onPlaybackStateChanged--state: " + state.getState() + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
-                        if (isPlay || isPause) {
-                            if (mPlayState != state.getState()) {
-                                if (isPlay) {
-                                    //mMainHandler.removeCallbacksAndMessages(null);
-                                    mMainHandler.postDelayed(() -> {
-                                        sendMediaPlayInfoToWidget(mMediaController, isPlay);
-                                        MediaMetadata metadata = mMediaController.getMetadata();
-                                        if (metadata != null) {
-                                            Log.d(TAG, "onPlaybackStateChanged-Title: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
-                                            Log.d(TAG, "onPlaybackStateChanged-Artist: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-                                            handleMetadataChange(mMediaController, metadata);
-                                        }
-                                    }, 100);
-                                }
-                            }
-                            handlePlaybackStateChange(mMediaController);
-                        }
-                        mPlayState = state.getState();
-                    }
-                });
-            }
-
-            @Override
-            public void onMetadataChanged(MediaMetadata metadata) {
-                mPlayState = 0;
-                Log.d(TAG, "onMetadataChanged---metadata: " + metadata);
-                if (metadata != null) {
-                    mMainHandler.postDelayed(() -> {
-                        PlaybackState state = mMediaController.getPlaybackState();
-                        Log.d(TAG, "onMetadataChanged-state: " + state + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
-                        boolean playing = false;
-                        if (state != null) {
-                            playing = (state.getState() == PlaybackState.STATE_PLAYING);
-                        }
-
-                        if (metadata != null) {
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_SUBTITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_AUTHOR: " + metadata.getString(MediaMetadata.METADATA_KEY_AUTHOR));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_WRITER: " + metadata.getString(MediaMetadata.METADATA_KEY_WRITER));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_COMPOSER: " + metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ART: " + metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART));
-                            Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST));
-                        }
-                        if (playing) {
-                            sendMediaPlayInfoToWidget(mMediaController, playing);
-                            handleMetadataChange(mMediaController, metadata);
-                            if (!mUpdateRunnables.containsKey(mMediaController.getPackageName())) {
-                                if (shouldManualUpdate(mMediaController.getPackageName())) {
-                                    //stopManualUpdate(mMediaController);
-                                    startManualUpdate(mMediaController);
-                                } else {
-                                    cleanup();
-                                    handlePlayingTime(mMediaController);
-                                }
-                            }
-                        }
-                    }, 300);
-                }
-            }
-
-            @Override
-            public void onSessionDestroyed() {
-                Log.d(TAG, "--onSessionDestroyed- ");
-                cleanup();
-            }
-        };
 
         mMediaController.registerCallback(mMediaControllerCallback);
 
@@ -646,6 +646,14 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private void sendPlayStateToWidget(boolean isPlaying) {
         Bundle bundle = new Bundle();
         bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAYSTATUS);
+        bundle.putBoolean(AwellTool.VALUE_M1, isPlaying);
+        sendDataToAwellApi(bundle);
+    }
+
+    private void notifyClientAlbumPath(boolean isPlaying) {
+        Log.d(TAG, "notifyClientAlbumPath isPlaying: " + isPlaying);
+        Bundle bundle = new Bundle();
+        bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE);
         bundle.putBoolean(AwellTool.VALUE_M1, isPlaying);
         sendDataToAwellApi(bundle);
     }

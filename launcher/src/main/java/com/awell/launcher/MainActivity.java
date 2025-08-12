@@ -130,10 +130,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
                 //bundle.putString(Constant.KEY_PLUGINS_APK_PATH, "/sdcard/launcher_plugin");
-                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey1);
-                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_1);
-//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
-//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
+//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey1);
+//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_1);
+                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
+                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
                 ((LauncherApplication) getmAppContext()).getPluginManager()
                         .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                             @Override

@@ -27,8 +27,8 @@ import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
-import com.awell.launcher2.Launcher
 import com.awell.launcher2.MediaNotificationListener
+import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
 import com.example.plugin_2.databinding.SpeedLayoutBinding
@@ -84,6 +84,7 @@ class UI2Activity : Activity() {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i(TAG, "onCreate: huang ui2 create==>")
         mViewBinding = Ui2ActivityBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
 
@@ -120,7 +121,7 @@ class UI2Activity : Activity() {
     }
 
     private fun initCarView() {
-        mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
+        mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 1 * 1000)
         if (Settings.System.getInt(contentResolver, "Headlamp", 0) == 1) {
             mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.open)
         } else {
@@ -188,6 +189,14 @@ class UI2Activity : Activity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mMediaListener.cleanup()
+        mediaControl.unBindDataService(this)
+        unregisterReceiver(receiver)
+        cancelLongPressDetection()
+    }
+
     /**
      * 初始化媒体信息
      * 以及绑定宿主服务
@@ -204,7 +213,9 @@ class UI2Activity : Activity() {
             findViewById<MusicWidgetPlugin2>(mViewBinding.includeWidgetMusic.musicWidgetLayout.id)
 
         llMusic.setMediaLibrary(mediaControl)
+        llMusic.setMediaNotificationListener(mMediaListener)
         llMusic.setActivity(this, llMusic)
+
     }
 
 
@@ -325,6 +336,7 @@ class UI2Activity : Activity() {
                     llMusic.switchMediaController(
                         pkg, command, mediaType, currentMedia
                     )
+
                 }
             }
 
@@ -400,6 +412,13 @@ class UI2Activity : Activity() {
                 runOnUiThread {
 
                 }
+            }
+
+            override fun handleOriginBundle(bundle: Bundle) {
+                //todo update music widget
+                val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
+
+
             }
         }
     }
@@ -541,6 +560,9 @@ class UI2Activity : Activity() {
     }
 
 
+    /**
+     * 重写只为长按弹出壁纸选择
+     */
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         // 先让子 View 处理事件
 

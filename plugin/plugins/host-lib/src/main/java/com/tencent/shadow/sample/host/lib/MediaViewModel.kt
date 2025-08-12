@@ -30,9 +30,10 @@ class MediaViewModel : ViewModel() {
     private val _radioInfo = MutableLiveData<RadioInfo>()
     val radioInfo: LiveData<RadioInfo> get() = _radioInfo
 
+    private val _bundle = MutableLiveData<Bundle>()
+    val bundle: LiveData<Bundle> get() = _bundle
+
     fun updateRadioInfo(bundle: Bundle, freq: String, unit: String, radioType: String) {
-//        _radioInfo.value =
-//            RadioInfo(bundle = bundle, freq = freq, unit = unit, radioType = radioType)
 
         _radioInfo.postValue(
             RadioInfo(
@@ -45,14 +46,10 @@ class MediaViewModel : ViewModel() {
     }
 
     fun updatePlayImage(bundle: Bundle, songId: Long, albumId: Long) {
-//        _playImage.value = PlayImage(bundle = bundle, songId = songId, albumId = albumId)
         _playImage.postValue(PlayImage(bundle = bundle, songId = songId, albumId = albumId))
     }
 
     fun updatePlayTime(bundle: Bundle, currentTime: Long, totalTime: Long, playType: Int) {
-//        _playTime.value = PlayTime(
-//            bundle = bundle, currentTime = currentTime, totalTime = totalTime, playType = playType
-//        )
         _playTime.postValue(
             PlayTime(
                 bundle = bundle,
@@ -67,13 +64,6 @@ class MediaViewModel : ViewModel() {
     fun updatePlayInfo(
         bundle: Bundle, songName: String, singerName: String, album: String, appType: Int
     ) {
-//        _playInfo.value = PlayInfo(
-//            bundle = bundle,
-//            songName = songName,
-//            singerName = singerName,
-//            album = album,
-//            appType = appType
-//        )
         _playInfo.postValue(
             PlayInfo(
                 bundle = bundle,
@@ -88,20 +78,13 @@ class MediaViewModel : ViewModel() {
 
 
     fun updatePlayStatus(bundle: Bundle, status: Boolean, appType: Int) {
-//        _playStatus.value = PlayStatus(bundle = bundle, status = status, playAppType = appType)
         _playStatus.postValue(PlayStatus(bundle = bundle, status = status, playAppType = appType))
     }
 
     fun updateMediaState(
         bundle: Bundle, packName: String, status: String, mediaType: Int, curMedia: Int
     ) {
-//        _mediaState.value = MediaDataSelect(
-//            bundle = bundle,
-//            packName = packName,
-//            status = status,
-//            mediaType = mediaType,
-//            curMedia = curMedia
-//        )
+
         _mediaState.postValue(
             MediaDataSelect(
                 bundle = bundle,
@@ -111,6 +94,10 @@ class MediaViewModel : ViewModel() {
                 curMedia = curMedia
             )
         )
+    }
+
+    fun handleOriginBundle(bundle: Bundle) {
+        _bundle.postValue(bundle)
     }
 }
 

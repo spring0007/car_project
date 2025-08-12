@@ -27,6 +27,9 @@ import android.widget.TextView;
  */
 @SuppressLint("AppCompatCustomView")
 public class EarqueeTextView extends TextView {
+
+    private boolean mShouldMarquee = true;
+
     public EarqueeTextView(Context context) {
         super(context);
     }
@@ -43,6 +46,14 @@ public class EarqueeTextView extends TextView {
     @Override
     public boolean isFocused() {
         return true;
+    }
+    public void setMarqueeEnabled(boolean enabled) {
+        if (mShouldMarquee != enabled) {
+            mShouldMarquee = enabled;
+            // 强制刷新视图
+            setSelected(enabled);
+            invalidate();
+        }
     }
 }
 

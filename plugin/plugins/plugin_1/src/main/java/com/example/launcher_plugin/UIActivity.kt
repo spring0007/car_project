@@ -196,6 +196,7 @@ class UIActivity : Activity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         mMediaListener.cleanup()
+        mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
     }
@@ -427,6 +428,10 @@ class UIActivity : Activity(), View.OnClickListener {
                     mRadioLayout.tvRadioFreq.text = freq
                     mRadioLayout.tvRadioFreqUnit.text = unit
                 }
+            }
+
+            override fun handleOriginBundle(bundle: Bundle) {
+                Log.i(TAG, "handleOriginBundle: huang not to impl")
             }
         }
 

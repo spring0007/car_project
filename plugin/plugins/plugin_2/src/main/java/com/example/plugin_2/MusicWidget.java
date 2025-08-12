@@ -39,11 +39,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
 import com.awell.launcher2.IconCache;
-import com.awell.launcher2.MediaNotificationListener;
-import com.awell.library.AwellLibrary;
+import com.awell.launcher2.Launcher;
 import com.awell.library.AwellTool;
 import com.awell.utils.SocketThread;
 import com.bumptech.glide.Glide;
@@ -69,22 +67,18 @@ import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-/*import cn.kuwo.autosdk.api.KWAPI;
-import cn.kuwo.autosdk.api.OnGetSongImgUrlListener;
-import cn.kuwo.autosdk.api.OnPlayPaySongListener;
-import cn.kuwo.autosdk.api.PlayState;
-import cn.kuwo.autosdk.api.PlayerStatus;
-import cn.kuwo.base.bean.Music;*/
-
-public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListener {
+public class MusicWidget extends RelativeLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
-
+    private static final boolean D = false;
     private Context mContext;
     private EarqueeTextView mMusicNameTextView, mArtistNameTextView;
     private TextView mCurTimeTextView, mTotalTimeTextView;
     private ImageView ivLoadnim, ivLoadnim_bar, icon_music_img;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
+    //private SeekBar bar = null;
     private ProgressBar mBar = null;
+
+    private ObjectAnimator objectAnimator;
     //private KWAPI kwapi;
     private int dayNight = 0;
     private boolean musicState = false;
@@ -101,19 +95,14 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     public final static String OTHER_MUSIC_PLAYNAME = "other_music_playName";
     public final static String OTHER_MUSIC_TIME = "other_music_playTime";
     public final static String OTHER_MUSIC_PLAY_IMAGE = "other_music_playImage";
-    private int currentMedia = MUSIC;//0 music   1 bt   2 kw music  3 carplay
+    private static int currentMedia = MUSIC;//0 music   1 bt   2 kw music  3 carplay
     private String currentPlayingPackage = null;
 
     private LinearLayout ll_control_layout_music, ll_name_layout_music;
     private RelativeLayout ll_time_layout_music;
+    private ImageView img_song_art_bg,img_song_art;
 
-    private AwellLibrary mediaLibrary;
-    private AwellMediaControl mediaControl;
-    private ObjectAnimator mObjectAnimator = null;
-
-    private MediaNotificationListener mediaNotificationListener = null;
-
-    public MusicWidgetPlugin2(Context context, AttributeSet attrs) {
+    public MusicWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
     }
@@ -125,21 +114,14 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         findViews(context, view);
     }
 
-    public void setMediaLibrary(AwellMediaControl mediaControl) {
-        this.mediaControl = mediaControl;
-    }
-
-
-    public void setMediaNotificationListener(MediaNotificationListener mediaNotificationListener) {
-        this.mediaNotificationListener = mediaNotificationListener;
-    }
-
     private void findViews(Context context, View view) {
         this.mContext = context;
         ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
         ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
+        img_song_art_bg = view.findViewById(R.id.img_song_art_bg);
+        img_song_art = view.findViewById(R.id.img_song_art);
         ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
-        view.findViewById(R.id.music_widget_rl).setOnClickListener(this);
+        //view.findViewById(R.id.music_widget_rl).setOnClickListener(this);
 
         mMusicNameTextView = (EarqueeTextView) view.findViewById(R.id.music_widget_music_name);
 
@@ -149,9 +131,8 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         mBar.setOnClickListener(this);
         mBar.setMax(100);
         mBar.setProgress(0);
-
-        mCurTimeTextView = (TextView) view.findViewById(R.id.music_widget_cur_time_textview);
-        mTotalTimeTextView = (TextView) view.findViewById(R.id.music_widget_total_time_textview);
+        //mCurTimeTextView = (TextView) view.findViewById(R.id.music_widget_cur_time_textview);
+        //mTotalTimeTextView = (TextView) view.findViewById(R.id.music_widget_total_time_textview);
 
         /*
         icon_music_img = view.findViewById(R.id.icon_music_img);
@@ -160,6 +141,11 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         objectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
         objectAnimator.setInterpolator(new LinearInterpolator());
         stopLoadAnim();*/
+
+        ivLoadnim = view.findViewById(R.id.img_song_art);
+        objectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        stopLoadAnim();
 
         mPlayStateImageView = (ImageView) view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
@@ -170,19 +156,13 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
 
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
-
-        ivLoadnim = view.findViewById(R.id.img_song_art);
-        ivLoadnim.setOnClickListener(this);
-        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
-        mObjectAnimator.setInterpolator(new LinearInterpolator());
-        stopLoadAnim();
+        view.findViewById(R.id.img_song_art).setOnClickListener(this);
 
         //getKwMusicApi();
 
         setImageIcon(currentMedia);
-        //setCurMusicState(mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
-        setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
-
+        //setCurMusicState(Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
+        setCurMusicState(false, MUSIC);
     }
 
     //private SocketThread zlinkCarPlaySocketThread;
@@ -195,7 +175,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             //currentMedia = CARPLAY;
             setImageIcon(currentMedia);
         } else if ("DISCONNECT".equals(zlinStatus)) {
-            setCurMusicState(false, OTHER_MUSIC);
+            //setCurMusicState(false, OTHER_MUSIC);
             //if(zlinkCarPlaySocketThread!=null) {
             //    zlinkCarPlaySocketThread.disSocket();
             //}
@@ -205,16 +185,17 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                 setImageIcon(currentMedia);
             } else if (phoneMode.contains("auto")) {
                 //currentMedia = CARPLAY;
-//                if (icon_music_img != null) {
+//                if(icon_music_img!=null) {
 //                    icon_music_img.setImageResource(R.drawable.icon_autoplay_img);
 //                }
             }
         } else if (zlinStatus.equals("MAIN_AUDIO_STOP")) {
-            setCurMusicState(false, OTHER_MUSIC);
+            Log.d(TAG, "MAIN_AUDIO_STOP-currentMedia: " + currentMedia);
+            //setCurMusicState(false, OTHER_MUSIC);
         } else if (zlinStatus.equals("MAIN_AUDIO_START")) {
             //currentMedia = CARPLAY;
-            Log.d(TAG, "getCarPlayData-currentMedia: " + currentMedia);
-            setCurMusicState(true, OTHER_MUSIC);
+            Log.d(TAG, "MAIN_AUDIO_START-currentMedia: " + currentMedia);
+            //setCurMusicState(true, OTHER_MUSIC);
         }
     }
 
@@ -246,56 +227,56 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                     setMusicNameTextView((String) msg.obj, CARPLAY);
                     break;
                 case SocketThread.MESSAGE_RECEIVE_TIME:
-                    setMusicSeekBar((int) msg.obj, mCarPlayTotalTime, OTHER_MUSIC);
+                    setMusicSeekBar((int) msg.obj, mCarPlayTotalTime,OTHER_MUSIC);
                     break;
                 default:
                     break;
             }
         }
     };
+/*
+    private void getKwMusicApi() {
+        kwapi = KWAPI.getKWAPI();
+        boolean kwFlag = kwapi.bindAutoSdkService(mContext);
+        Log.e(TAG, "kwFlag = " + kwFlag);
+        kwapi.registerPlayerStatusListener(mContext, (playerStatus, music) -> {
+            if (music == null) return;
+            if (mMusicNameTextView != null && music.name != null)
+                setMusicNameTextView(music.name, KUMUSIC);
 
-    /*
-        private void getKwMusicApi() {
-            kwapi = KWAPI.getKWAPI();
-            boolean kwFlag = kwapi.bindAutoSdkService(mContext);
-            Log.e(TAG, "kwFlag = " + kwFlag);
-            kwapi.registerPlayerStatusListener(mContext, (playerStatus, music) -> {
-                if (music == null) return;
-                Log.e(TAG, "image URL = " + music.imageURL);
+            if (mArtistNameTextView != null && music.artist != null)
+                setArtistNameTextView(music.artist, KUMUSIC);
 
-                Log.e(TAG, "playerStatus = " + playerStatus.name());
-                if (playerStatus.equals(PlayerStatus.PLAYING)) {
-                    setCurMusicState(true, KUMUSIC);
-                    if (mMusicNameTextView != null && music.name != null)
-                        setMusicNameTextView(music.name, KUMUSIC);
+            Log.e(TAG, "image URL = " + music.imageURL);
 
-                    if (mArtistNameTextView != null && music.artist != null)
-                        setArtistNameTextView(music.artist, KUMUSIC);
-                } else if (playerStatus.equals(PlayerStatus.PAUSE)) {
-                    setCurMusicState(false, KUMUSIC);
+            Log.e(TAG, "playerStatus = " + playerStatus.name());
+            if (playerStatus.equals(PlayerStatus.PLAYING)) {
+                setCurMusicState(true, KUMUSIC);
+            } else if (playerStatus.equals(PlayerStatus.PAUSE)) {
+                setCurMusicState(false, KUMUSIC);
+            }
+
+            kwapi.getSongPicUrl(music, new OnGetSongImgUrlListener() {
+                @Override
+                public void onGetSongImgUrlSucessed(Music music, String s) {
+                    Log.i(TAG, "music = " + music.toString());
+                    Log.i(TAG, "music = " + s);
+//                    setPlayImage(s);
                 }
 
-                kwapi.getSongPicUrl(music, new OnGetSongImgUrlListener() {
-                    @Override
-                    public void onGetSongImgUrlSucessed(Music music, String s) {
-                        Log.i(TAG, "music = " + music.toString());
-                        Log.i(TAG, "music = " + s);
-    //                    setPlayImage(s);
-                    }
-
-                    @Override
-                    public void onGetSongImgUrlFailed(Music music, int i) {
-                        Log.i(TAG, "music = " + music.toString());
-                        Log.i(TAG, "music = " + i);
-                    }
-                });
+                @Override
+                public void onGetSongImgUrlFailed(Music music, int i) {
+                    Log.i(TAG, "music = " + music.toString());
+                    Log.i(TAG, "music = " + i);
+                }
             });
-            //监听酷我退出
-            kwapi.registerExitListener(() -> {
+        });
+        //监听酷我退出
+        kwapi.registerExitListener(() -> {
 
-            });
-        }
-    */
+        });
+    }
+*/
     public Bitmap drawCircleView(Bitmap bitmap) {
         bitmap = Bitmap.createScaledBitmap(bitmap, 118, 118, true);
         Bitmap bm = Bitmap.createBitmap(180, 186, Config.ARGB_8888);
@@ -309,7 +290,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
 
-    int[] textColorId = {Color.BLACK, Color.WHITE};
+    int[] textColorId = {Color.WHITE, Color.WHITE};
     int[] sf_music_nextId = {R.drawable.sf_music_next, R.drawable.sf_music_next_n};
     int[] sf_music_preId = {R.drawable.sf_music_pre, R.drawable.sf_music_pre_n};
     int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang_n};
@@ -320,115 +301,121 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         this.dayNight = dayNight;
         mMusicNameTextView.setTextColor(textColorId[dayNight]);
         mArtistNameTextView.setTextColor(textColorId[dayNight]);
-        mCurTimeTextView.setTextColor(textColorId[dayNight]);
-        mTotalTimeTextView.setTextColor(textColorId[dayNight]);
+        //mCurTimeTextView.setTextColor(textColorId[dayNight]);
+        //mTotalTimeTextView.setTextColor(textColorId[dayNight]);
         mPlayStateImageView.setImageResource(musicState ? sf_music_zantingId[dayNight] : sf_music_bofangId[dayNight]);
         musicPreIv.setImageResource(sf_music_preId[dayNight]);
         musicNextIv.setImageResource(sf_music_nextId[dayNight]);
-        //mBar.setProgressDrawable(mContext.getDrawable(sf_music_seekbarId[dayNight]));
+        //bar.setProgressDrawable(mContext.getDrawable(sf_music_seekbarId[dayNight]));
     }
 
     @Override
     public void onClick(View v) {
         Log.i(TAG, "onClick v.getId() " + v.getId());
-        int id = v.getId();
-        if (id == R.id.music_widget_next) {
-            if (currentMedia == MUSIC) {
-                //mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
-                mediaControl.sendStrToHost(AwellTool.MUSIC.NEXT);
-            } else if (currentMedia == BT) {
-                //mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
-                mediaControl.sendStrToHost(AwellTool.BT.NEXT);
-            } else if (currentMedia == KUMUSIC) {
-                //kwapi.setPlayState(PlayState.STATE_NEXT);
-                //todo huang next music
-                mediaControl.getMMediaListener().skipToNext();
-//                Launcher.mMediaListener.skipToNext();
-            } else if (currentMedia == CARPLAY) {
-                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
-                mediaControl.getMMediaListener().skipToNext();
-//                Launcher.mMediaListener.skipToNext();
-            } else if (currentMedia == OTHER_MUSIC) {
-                mediaControl.getMMediaListener().skipToNext();
-//                Launcher.mMediaListener.skipToNext();
-            }
-        } else if (id == R.id.music_widget_pre) {
-            if (currentMedia == MUSIC) {
-                //mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
-                mediaControl.sendStrToHost(AwellTool.MUSIC.PREVIOUS);
-            } else if (currentMedia == BT) {
-                //mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
-                mediaControl.sendStrToHost(AwellTool.BT.PREVIOUS);
-            } else if (currentMedia == KUMUSIC) {
-                //kwapi.setPlayState(PlayState.STATE_PRE);
-                mediaControl.getMMediaListener().skipToPrevious();
-//                Launcher.mMediaListener.skipToPrevious();
-            } else if (currentMedia == CARPLAY) {
-                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-                mediaControl.getMMediaListener().skipToPrevious();
-//                Launcher.mMediaListener.skipToPrevious();
-            } else if (currentMedia == OTHER_MUSIC) {
-                mediaControl.getMMediaListener().skipToPrevious();
-//                Launcher.mMediaListener.skipToPrevious();
-            }
-        } else if (id == R.id.music_widget_play) {
-            if (currentMedia == MUSIC) {
-                //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
-                if (musicState) {
-                    //mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
-                    mediaControl.sendStrToHost(AwellTool.MUSIC.PAUSE);
-                } else {
-                    //mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
-                    mediaControl.sendStrToHost(AwellTool.MUSIC.PLAY);
+        switch (v.getId()) {
+            case R.id.music_widget_next:
+                stopLoadAnim();
+                if (currentMedia == MUSIC) {
+                    Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
+                } else if (currentMedia == BT) {
+                    Launcher.mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
+                } else if (currentMedia == KUMUSIC) {
+                    //kwapi.setPlayState(PlayState.STATE_NEXT);
+                    Launcher.mMediaListener.skipToNext();
+                } else if (currentMedia == CARPLAY) {
+                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
+                    Launcher.mMediaListener.skipToNext();
+                } else if (currentMedia == OTHER_MUSIC){
+                    Launcher.mMediaListener.skipToNext();
                 }
-            } else if (currentMedia == BT) {
-                if (mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
-                    //mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
-                    mediaControl.sendStrToHost(AwellTool.BT.PAUSE);
-                } else {
-                    //mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
-                    mediaControl.sendStrToHost(AwellTool.BT.PLAY);
+                break;
+            case R.id.music_widget_pre:
+                stopLoadAnim();
+                if (currentMedia == MUSIC) {
+                    Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
+                } else if (currentMedia == BT) {
+                    Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
+                } else if (currentMedia == KUMUSIC) {
+                    //kwapi.setPlayState(PlayState.STATE_PRE);
+                    Launcher.mMediaListener.skipToPrevious();
+                } else if (currentMedia == CARPLAY) {
+                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
+                    Launcher.mMediaListener.skipToPrevious();
+                } else if (currentMedia == OTHER_MUSIC){
+                    Launcher.mMediaListener.skipToPrevious();
                 }
-            } else if (currentMedia == KUMUSIC) {
+                break;
+            case R.id.music_widget_play:
+                if (currentMedia == MUSIC) {
+                    //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
+                    if (musicState) {
+                        Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
+                    }else {
+                        resumeLoadAnim();
+                        Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
+                    }
+                } else if (currentMedia == BT) {
+                    if (Launcher.mediaLibrary.setDataEvent(AwellTool.BT.GET_STATE).equals("true")) {
+                        pauseLoadAnim();
+                        Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
+                    }else {
+                        resumeLoadAnim();
+                        Launcher.mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
+                    }
+                } else if (currentMedia == KUMUSIC) {
                     /*if (kwapi.getPlayerStatus().equals(PlayerStatus.PAUSE))
                         kwapi.setPlayState(PlayState.STATE_PLAY);
                     else if (kwapi.getPlayerStatus().equals(PlayerStatus.PLAYING))
                         kwapi.setPlayState(PlayState.STATE_PAUSE);*/
-                mediaControl.getMMediaListener().togglePlayPause();
-//                Launcher.mMediaListener.togglePlayPause();
-            } else if (currentMedia == CARPLAY) {
-                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-                mediaControl.getMMediaListener().togglePlayPause();
-//                Launcher.mMediaListener.togglePlayPause();
-            } else if (currentMedia == OTHER_MUSIC) {
-                mediaControl.getMMediaListener().togglePlayPause();
-//                Launcher.mMediaListener.togglePlayPause();
-            }
-        } else if (id == R.id.ll_name_layout_music
-                || id == R.id.img_song_art
-                || id == R.id.img_song_art_bg
-                || id == R.id.music_widget_seekbars
-                || id == R.id.music_widget_rl) {
-            Log.i(TAG, "onClick MUSIC_MEDIA_PLAY -currentMedia=" + currentMedia);
-            if (currentMedia == MUSIC) {
-                startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-            } else if (currentMedia == BT) {
-                try {
-                    Intent btIntent = new Intent("com.awell.bluetooth");
-                    btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-                    btIntent.putExtra("bt_preference_key", 3);
-                    mContext.startActivity(btIntent);
-                } catch (ActivityNotFoundException e) {
-                    Log.e("TAG", "Activity not found: " + e.getMessage());
-                    // 可以提示用户安装目标应用
+//                    if(Launcher.mMediaListener.isPlayingState()) {
+//                        pauseLoadAnim();
+//                    }else{
+//                        resumeLoadAnim();
+//                    }
+                    Launcher.mMediaListener.togglePlayPause();
+                } else if (currentMedia == CARPLAY) {
+                    //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
+//                    if(Launcher.mMediaListener.isPlayingState()) {
+//                        pauseLoadAnim();
+//                    }else{
+//                        resumeLoadAnim();
+//                    }
+                    Launcher.mMediaListener.togglePlayPause();
+                } else if (currentMedia == OTHER_MUSIC){
+//                    if(Launcher.mMediaListener.isPlayingState()) {
+//                        pauseLoadAnim();
+//                    }else{
+//                        resumeLoadAnim();
+//                    }
+                    Launcher.mMediaListener.togglePlayPause();
                 }
+                break;
+            case R.id.ll_name_layout_music:
+            case R.id.img_song_art_bg:
+            case R.id.img_song_art:
+            case R.id.music_widget_seekbars:
+                if (currentMedia == MUSIC) {
+                    startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
+                } else if (currentMedia == BT) {
+                    try {
+                        Intent btIntent = new Intent("com.awell.bluetooth");
+                        btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+                        btIntent.putExtra("bt_preference_key", 3);
+                        mContext.startActivity(btIntent);
+                    } catch (ActivityNotFoundException e) {
+                        Log.e("TAG", "Activity not found: " + e.getMessage());
+                        // 可以提示用户安装目标应用
+                    }
                 /*} else if (currentMedia == KUMUSIC) {
                     startActivity("cn.kuwo.kwmusiccar", "cn.kuwo.kwmusiccar.MainActivity");
                 } else if (currentMedia == CARPLAY) {
                     startActivity("com.zjinnova.zlink", "com.zjinnova.android.zlink.features.main.MainActivity");*/
-            } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
-                launchAppByPackageName(mContext, currentPlayingPackage);
-            }
+                } else if(currentMedia == OTHER_MUSIC&&!TextUtils.isEmpty(currentPlayingPackage)){
+                    launchAppByPackageName(mContext, currentPlayingPackage);
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -438,61 +425,56 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         //    ivLoadnim_bar.setPivotY(0);
         //    ivLoadnim_bar.setRotation(-10);
         //}
-        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null) {
-            mObjectAnimator.cancel();
+        Log.d(TAG, "stopLoadAnim--objectAnimator = " + objectAnimator);
+        if(objectAnimator!=null) {
+            objectAnimator.cancel();
         }
     }
-
     public void pauseLoadAnim() {
         //if(ivLoadnim_bar!=null) {
         //    ivLoadnim_bar.setPivotX(0);
         //    ivLoadnim_bar.setPivotY(0);
         //    ivLoadnim_bar.setRotation(-10);
         //}
-        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
-            mObjectAnimator.pause();
+        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + objectAnimator);
+        if(objectAnimator!=null&&objectAnimator.isRunning()) {
+            objectAnimator.pause();
         }
     }
-
     public void resumeLoadAnim() {
         //if(ivLoadnim_bar!=null) {
         //    ivLoadnim_bar.setPivotX(0);
         //    ivLoadnim_bar.setPivotY(0);
         //    ivLoadnim_bar.setRotation(-10);
         //}
-        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
-            mObjectAnimator.resume();
+        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + objectAnimator);
+        if(objectAnimator!=null&&objectAnimator.isPaused()) {
+            objectAnimator.resume();
         }
     }
-
     public void startLoadAnim() {
         //if(ivLoadnim_bar!=null) {
         //    ivLoadnim_bar.setPivotX(0);
         //    ivLoadnim_bar.setPivotY(0);
         //    ivLoadnim_bar.setRotation(0);
         //}
-        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null) {
-            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        Log.d(TAG, "startLoadAnim--objectAnimator = " + objectAnimator);
+        if(objectAnimator!=null) {
+            objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
             //objectAnimator.setStartDelay(500);
-            mObjectAnimator.setDuration(40000);
-            mObjectAnimator.start();
+            objectAnimator.setDuration(40000);
+            objectAnimator.start();
         }
     }
-
-    public void updateAlbumartAnimation(boolean playing) {
-        Log.d(TAG, "updateAlbumartAnimation--playing = " + playing + "--currentMedia =" + currentMedia);
+    public void updateAlbumartAnimation(boolean playing){
+        Log.d(TAG, "updateAlbumartAnimation--playing = " + playing+"--currentMedia ="+currentMedia);
         if (playing) {
             resumeLoadAnim();
         } else {
             pauseLoadAnim();
         }
     }
-
     private void startActivity(String packName, String className) {
         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(packName);
         boolean isboot = true;
@@ -516,22 +498,22 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        Log.d(TAG, "setMusicNameTextView = " + flag + "--musicname=" + musicname + "--mMusicNameTextView=" + mMusicNameTextView + "--currentMedia=" + currentMedia);
+        Log.d(TAG,"setMusicNameTextView = " + flag+"--musicname="+musicname+"--mMusicNameTextView="+mMusicNameTextView+"--currentMedia="+currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
-            if (!TextUtils.isEmpty(musicname)) {
+            if(!TextUtils.isEmpty(musicname)){
                 mMusicNameTextView.setText(musicname);
-            } else {
+            }else{
                 mMusicNameTextView.setText(getResources().getString(R.string.click_play_music));
             }
         }
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
-        if (mArtistNameTextView != null && currentMedia == flag) {
-            if (!TextUtils.isEmpty(artistName)) {
+        Log.d(TAG, "setArtistNameTextView = " + flag+"--artistName="+artistName+"--mArtistNameTextView="+mArtistNameTextView);
+        if (mArtistNameTextView != null && currentMedia == flag){
+            if(!TextUtils.isEmpty(artistName)){
                 mArtistNameTextView.setText(artistName);
-            } else {
+            }else{
                 mArtistNameTextView.setText(getResources().getString(R.string.music_artist));
             }
         }
@@ -541,10 +523,9 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         Bitmap bitmap = getArtwork(mContext, long1, long2, true);
         setPlayImage(bitmap);
     }
-
     public void setPlayImageByPath(String songPath) {
         byte[] albumart = getSongAlbumartBitmapByPath(songPath);
-        if (albumart != null) {
+        if(albumart!=null) {
             Glide.with(this)
                     .load(albumart)
                     .apply(new RequestOptions()
@@ -553,19 +534,18 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                             .error(R.drawable.ablum_default_bg)
                     )
                     .into(ivLoadnim);
-        } else {
+        }else {
             ivLoadnim.setImageResource(R.drawable.ablum_default_bg);
         }
         if (musicState) {
-            if (mObjectAnimator != null && !mObjectAnimator.isRunning()) {
+            if(!objectAnimator.isRunning()) {
                 startLoadAnim();
             }
         }
     }
-
-    public void setPlayImageByFile(Context context, File imageFile) {
-        Log.d(TAG, "setPlayImageByFile-imageFile:" + imageFile);
-        if (imageFile != null && imageFile.exists()) {
+    public void setPlayImageByFile(Context context,File imageFile) {
+        Log.d(TAG,"setPlayImageByFile-imageFile:" +imageFile);
+        if(imageFile!=null&&imageFile.exists()) {
             long lastModified = imageFile.lastModified();
             RequestOptions requestOptions = new RequestOptions()
                     .circleCrop()
@@ -576,16 +556,15 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                     .load(imageFile)
                     .apply(requestOptions)
                     .into(ivLoadnim);
-        } else {
+        }else {
             ivLoadnim.setImageResource(R.drawable.ablum_default_bg);
         }
         if (musicState) {
-            if (!mObjectAnimator.isRunning()) {
+            if(!objectAnimator.isRunning()) {
                 startLoadAnim();
             }
         }
     }
-
     public void setPlayImage(String imageUrl) {
         Bitmap bitmap = BitmapFactory.decodeFile(imageUrl);
         setPlayImage(bitmap);
@@ -605,22 +584,19 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         }
 
         if (musicState) {
-            if (!mObjectAnimator.isRunning()) {
+            if(!objectAnimator.isRunning()) {
                 startLoadAnim();
             }
         }
     }
-
-
     private boolean previousMusicStatus = false;
     private Bitmap tempBitmap = null;
     private Uri bitmapUrl = null;
-
     public void setPlayImage(boolean isPlaying) {
         if (ivLoadnim == null) return;
 
-        tempBitmap = mediaNotificationListener.getPlayingAlbumBitmap();
-        bitmapUrl = mediaNotificationListener.getPlayingAlbumUri();
+//        tempBitmap = MediaNotificationListener.getPlayingAlbumBitmap();
+//        bitmapUrl = MediaNotificationListener.getPlayingAlbumUri();
         Log.d(TAG, "setPlayImage = " + isPlaying + "--bitmapUrl=" + bitmapUrl + "-METADATA_KEY_ALBUM_ART-tempBitmap=" + tempBitmap);
 
         RequestOptions requestOptions = new RequestOptions()
@@ -634,12 +610,11 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             setDefaultImage();
         }
         if (musicState) {
-            if (!mObjectAnimator.isRunning()) {
+            if(!objectAnimator.isRunning()) {
                 startLoadAnim();
             }
         }
     }
-
     private void loadFromUriWithFallback(Uri uri, Bitmap fallbackBitmap, RequestOptions requestOptions) {
         String imageUrl = uri.toString();
         String httpsUrl = imageUrl.replace("http://", "https://");
@@ -733,22 +708,22 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
-        if (currentMedia == flag) {
-            if (mBar != null) {
-                mBar.setMax(totalProgress);
-                mBar.setProgress(curProgress);
-            }
-            if (curProgress > 0 && curProgress < 1000) {
+        if(currentMedia == flag) {
+	        if (mBar != null) {
+	            mBar.setMax(totalProgress);
+	            mBar.setProgress(curProgress);
+	        }
+            if(curProgress>0&&curProgress<1000){
                 stopLoadAnim();
                 startLoadAnim();
             }
-            //if (mTotalTimeTextView != null) {
-            //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
-            //}
+	        //if (mTotalTimeTextView != null) {
+	        //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
+	        //}
 
-            //if (mCurTimeTextView != null) {
-            //    mCurTimeTextView.setText(getCurOrTotalTime(curProgress));
-            //}
+	        //if (mCurTimeTextView != null) {
+	        //    mCurTimeTextView.setText(getCurOrTotalTime(curProgress));
+	        //}
         }
     }
 
@@ -771,7 +746,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
     public void setCurMusicState(boolean musicState, int flag) {
-        Log.e(TAG, "flag = " + flag + "--currentMedia=" + currentMedia);
+        Log.e(TAG, "flag = " + flag+"--currentMedia="+currentMedia);
         if (currentMedia == flag) {
             setCurMusicState(musicState);
         }
@@ -788,11 +763,11 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         if (mPlayStateImageView == null) return;
         this.musicState = musicState;
         if (musicState) {
-            if (currentMedia <= BT && mObjectAnimator != null) {
-                Log.e(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
-                if (!mObjectAnimator.isRunning()) {
+            if(currentMedia<=BT&&objectAnimator!=null) {
+                Log.e(TAG, "setCurMusicState objectAnimator.isRunning()= " + objectAnimator.isRunning());
+                if(!objectAnimator.isRunning()) {
                     startLoadAnim();
-                } else {
+                }else{
                     resumeLoadAnim();
                 }
             }
@@ -808,7 +783,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
 //            icon_music_img.setImageResource(musicId[index]);
 
         //if (index == BT || index == KUMUSIC) {
-        ll_time_layout_music.setVisibility(INVISIBLE);
+            ll_time_layout_music.setVisibility(INVISIBLE);
         //} else {
         //    ll_time_layout_music.setVisibility(VISIBLE);
         //}
@@ -817,8 +792,8 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         //    ll_control_layout_music.setVisibility(INVISIBLE);
         //    ll_name_layout_music.setVisibility(INVISIBLE);
         //} else {
-        ll_control_layout_music.setVisibility(VISIBLE);
-        ll_name_layout_music.setVisibility(VISIBLE);
+            ll_control_layout_music.setVisibility(VISIBLE);
+            ll_name_layout_music.setVisibility(VISIBLE);
         //}
 
 
@@ -835,16 +810,16 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         if (packName.contains("localmusic")) {//本地音乐
             if ("start".equals(status)) {
                 currentMedia = MUSIC;
-                currentPlayingPackage = packName;
+                currentPlayingPackage=packName;
                 setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
 
             }
-        } else if (packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
+        } else if (packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
-                currentPlayingPackage = packName;
+                currentPlayingPackage=packName;
                 setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
@@ -868,10 +843,10 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             } else if ("stop".equals(status)) {
 
             }*/
-        } else if (!TextUtils.isEmpty(packName) && curMedia > BT) {
+        } else if (!TextUtils.isEmpty(packName)&&curMedia>BT) {
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-                currentPlayingPackage = packName;
+                currentPlayingPackage=packName;
                 setImageIcon(currentMedia);
                 //setCurMusicState(true);
             } else if ("stop".equals(status)) {
@@ -908,6 +883,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             } catch (FileNotFoundException ex) {
                 // The album art thumbnail does not actually exist. Maybe the user deleted it, or
                 // maybe it never existed to begin with.
+                ex.printStackTrace();
                 Bitmap bm = getArtworkFromFile(context, song_id, album_id);
 
                 if (bm != null) {
@@ -954,7 +930,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                 bm = BitmapFactory.decodeFileDescriptor(fd);
             }
         } catch (FileNotFoundException ex) {
-
+            ex.printStackTrace();
         }
         return bm;
     }
@@ -967,8 +943,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
 //        return drawableToBitmap(context.getResources().getDrawable(R.mipmap.ablum_default_bg));
         return null;
     }
-
-    private void keyDealToZlink(int keycode) {
+    private void keyDealToZlink(int keycode){
         Intent intent = new Intent();
         intent.setAction("com.zjinnova.zlink");
         intent.setPackage("com.zjinnova.zlink");
@@ -977,7 +952,6 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         intent.putExtra("specFuncCode", keycode);
         mContext.sendBroadcast(intent);
     }
-
     public static boolean launchAppByPackageName(Context context, String packageName) {
         PackageManager pm = context.getPackageManager();
         // 检查应用是否安装
@@ -999,7 +973,6 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             return false;
         }
     }
-
     public static boolean isMusicApp(Context context, String packageName) {
         // 检查是否响应音频文件播放
         PackageManager pm = context.getPackageManager();
@@ -1024,9 +997,8 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
 
         return false;
     }
-
-    public static byte[] getSongAlbumartBitmapByPath(String filePath) {
-        byte[] bitmap = null;
+    public static byte[] getSongAlbumartBitmapByPath(String filePath){
+        byte[] bitmap=null;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         try {
             mmr.setDataSource(filePath);
@@ -1040,14 +1012,14 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                 Log.w(TAG, "释放 MediaMetadataRetriever 时出错", e);
             }
         }
+
         return bitmap;
     }
-
-    private void setTextEarquee(boolean earquee) {
-        if (mMusicNameTextView != null) {
+    private void setTextEarquee(boolean earquee){
+        if(mMusicNameTextView!=null){
             mMusicNameTextView.setMarqueeEnabled(earquee);
         }
-        if (mArtistNameTextView != null) {
+        if(mArtistNameTextView!=null) {
             mArtistNameTextView.setMarqueeEnabled(earquee);
         }
     }

@@ -19,6 +19,10 @@ import com.tencent.shadow.sample.host.lib.MediaViewModel
 import java.lang.reflect.Method
 
 
+/**
+ * Activity 持有该对象
+ * MusicWidget 持有该对象用于控制音乐播放、上下曲切换等
+ */
 class AwellMediaControl() {
 
     private val TAG = AwellMediaControl::class.simpleName
@@ -87,6 +91,10 @@ class AwellMediaControl() {
 
                     MusicWidget.OTHER_MUSIC_TIME -> {
                         handleOtherMusicTime(bundle)
+                    }
+
+                    else -> {
+                        handleOriginBundle(bundle)
                     }
                 }
             } ?: run {
@@ -182,7 +190,8 @@ class AwellMediaControl() {
             (pkg.contains("localmusic") || pkg.contains("com.awell.bluetooth") || pkg.contains("/system/bin/gocsdk"))
 
         mMediaListener.let {
-            if (isLocalMusicPackage && isStartCommand) it.removeCallbacks()
+            if (isLocalMusicPackage && isStartCommand)
+                it.removeCallbacks()
         }
 
         val isStopCommand = "stop" == command
@@ -305,6 +314,12 @@ class AwellMediaControl() {
         )
     }
 
+
+    private fun handleOriginBundle(bundle: Bundle) {
+        mediaViewModel?.handleOriginBundle(bundle)
+
+    }
+
     /**
      * 更新媒体信息接口
      * 如果不是用viewmodel观察数据变化
@@ -349,5 +364,7 @@ class AwellMediaControl() {
         fun updateViewRadioFreq(
             bundle: Bundle, fmOrAm: String, freq: String, unit: String
         )
+
+        fun handleOriginBundle(bundle: Bundle)
     }
 }

@@ -4,6 +4,7 @@
     android:id="@+id/music_widget_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    tools:context=".UI2Activity"
     tools:ignore="MissingDefaultResource">
 
     <LinearLayout
@@ -196,7 +197,7 @@
                     android:indeterminate="false"
                     android:max="100"
                     android:progress="0"
-                    android:progressDrawable="@drawable/circular_progress_bar" />-->
+                    android:progressDrawable="@drawable/circular_progress_bar" />
             </RelativeLayout>
         </LinearLayout>
         <!-- 音乐控制 -->

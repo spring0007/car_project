@@ -80,6 +80,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     public final static String OTHER_MUSIC_PLAYSTATUS = "other_music_playStatus";
     public final static String OTHER_MUSIC_PLAYNAME = "other_music_playName";
     public final static String OTHER_MUSIC_TIME = "other_music_playTime";
+    public final static String OTHER_MUSIC_PLAY_IMAGE = "other_music_playImage";
+
     private int currentMedia = MUSIC;//0 music   1 bt   2 kw music  3 carplay
     private String currentPlayingPackage = null;
 
