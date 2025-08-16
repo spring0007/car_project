@@ -331,7 +331,6 @@ class UI2Activity : Activity() {
                 bundle: Bundle, pkg: String, command: String, mediaType: Int, currentMedia: Int
             ) {
                 runOnUiThread {
-                    Log.i(TAG, "updateViewMusicPlay: huang mediaType=${mediaType}")
                     llMusic.switchMediaController(
                         pkg, command, mediaType, currentMedia
                     )
@@ -349,12 +348,11 @@ class UI2Activity : Activity() {
             @SuppressLint("UseKtx")
             override fun updateViewMusicPlayImage(bundle: Bundle) {
                 runOnUiThread {
-                    Log.i(TAG, "updateViewMusicPlayImage: huang bundle=${bundle}")
                     val uriStr = bundle.getString(AwellTool.VALUE_M1, null)
-                    val uri = when {
-                        uriStr == null -> null
-                        else -> Uri.parse(uriStr)
+                    val uri = uriStr?.let {
+                        Uri.parse(it).takeIf { uri -> uri.scheme != null }
                     }
+                    Log.i(TAG, "updateViewMusicPlayImage: huang uri=>${uri}")
                     llMusic.loadAlbumArtByUri(uri)
                 }
             }

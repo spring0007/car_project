@@ -494,7 +494,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
     fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
 
-        val oldPlayingPackage = mMediaListener.currentPlayingPackage
+        val oldPlayingPackage = mMediaListener.playingPackageName
         val isStartCommand = "start" == value2
         val isStopCommand = "stop" == value2
         val isValidPackage = !TextUtils.isEmpty(value1)
@@ -521,7 +521,7 @@ class UIActivity : Activity(), View.OnClickListener {
                 mMediaListener.removeCallbacks()
             }
 
-            mMediaListener.setPlayingPackage(value1)
+            mMediaListener.setPlayingPackageName(value1)
             mMediaListener.startCallbacks()
         }
     }

@@ -42,6 +42,18 @@ class HostToPluginService : Service() {
     private var albumArtProvider: AlbumArtProvider
 
     /**
+     * 添加同步锁对象
+     * fix bug IllegalStateException: beginBroadcast() called while already in a broadcast
+     */
+    private val broadcastLock = Any()
+
+    /**
+     * 防止同一线程嵌套重入
+     * fix bug IllegalStateException: beginBroadcast() called while already in a broadcast
+     */
+    private var isBroadcasting = false
+
+    /**
      * data数据显示
      */
     var mMusicPlayInfo: MusicPlayInfo? = null
@@ -121,7 +133,7 @@ class HostToPluginService : Service() {
         }
 
         override fun getCurrentMeidaPlayingPkg(): String? {
-            return mMediaListener.currentPlayingPackage
+            return mMediaListener.playingPackageName
         }
 
         override fun setCurrentTrack(trackInfo: TrackInfo?) {
@@ -189,14 +201,18 @@ class HostToPluginService : Service() {
                 val pkg = bundle.getString(AwellTool.VALUE_M1, null)
                 val command = bundle.getString(AwellTool.VALUE_M2, null)
                 pkg?.let {
+                    mMediaListener.playingPackageName = pkg
+                    Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
                     if (pkg.contains("cn.kuwo.kwmusiccar")
                         && command != null && command.contains("start")
                     ) {
-                        Log.i(TAG, "saveTempValue: huang updateMediaController start register ==>")
+                        //只有三方注册到media session服务里的媒体开始播放的时候才注册监听
                         mMediaListener.startCallbacks()
-                    } else if (pkg.contains("localmusic")
-                        || pkg.contains("/system/bin/gocsdk")
+                    } else if ((pkg.contains("localmusic") || pkg.contains("/system/bin/gocsdk"))
+                        && command != null && command.contains("start")
                     ) {
+                        //只有未注册到media session服务里的媒体开始播放的时候
+                        //才将注册到media session服务里的媒体断开回调
                         mMediaListener.removeCallbacks()
                     }
                 }
@@ -218,7 +234,6 @@ class HostToPluginService : Service() {
                 trackMutex.withLock {
                     uri = processTrackUpdate(bundle)
                 }
-
                 uri?.let {
                     val updateArtUriBundle = Bundle()
                     updateArtUriBundle.putString(
@@ -276,16 +291,36 @@ class HostToPluginService : Service() {
      * 客户端可解析bundle获取所需数据
      */
     private fun notifyClientDataChanged(bundle: Bundle) {
-        val count = listeners.beginBroadcast()
-        try {
-            for (i in 0..<count) {
-                val listener: IDataChangeInterface = listeners.getBroadcastItem(i)
-                listener.onDataChanged(bundle)
+        // 外层同步：防止多线程同时进入
+        synchronized(broadcastLock) {
+            // 检查是否已在广播中,防止同一线程嵌套进入
+            if (isBroadcasting) {
+                Log.e(
+                    TAG,
+                    "notifyClientDataChanged: huang Skipping nested broadcast attempt bundle=${bundle}"
+                )
+                return
             }
-        } catch (e: RemoteException) {
-            e.printStackTrace()
+            isBroadcasting = true
+        }
+
+        try {
+            val count = listeners.beginBroadcast()
+            try {
+                for (i in 0..<count) {
+                    val listener: IDataChangeInterface = listeners.getBroadcastItem(i)
+                    listener.onDataChanged(bundle)
+                }
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+            } finally {
+                listeners.finishBroadcast()
+            }
         } finally {
-            listeners.finishBroadcast()
+            // 重置标志位
+            synchronized(broadcastLock) {
+                isBroadcasting = false
+            }
         }
     }
 

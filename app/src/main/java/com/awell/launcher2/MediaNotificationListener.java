@@ -37,6 +37,9 @@ import com.awell.ctrlview.MusicWidget;
 import com.awell.launcher.R;
 import com.awell.library.AwellTool;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +55,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private static final String TAG = "MediaNotificationListenerLog";
     // 常量定义
     private static final long UPDATE_INTERVAL_MS = 500;
+    private static final Logger log = LoggerFactory.getLogger(MediaNotificationListener.class);
 
     // 依赖组件
     private Context mContext;
@@ -102,21 +106,38 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
             mExecutor.execute(() -> {
                 if (state != null) {
+
+
                     if (mPlayState != state.getState()) {
                         //todo update ui status
 
-                        sendMediaPlayInfoToWidget(mMediaController, state.getState() == PlaybackState.STATE_PLAYING);
+                        //sendMediaPlayInfoToWidget(mMediaController, state.getState() == PlaybackState.STATE_PLAYING);
+                        sendPlayStateToWidget(state.getState() == PlaybackState.STATE_PLAYING);
+
                         mPlayState = state.getState();
                     }
 
                     long currentTime = System.currentTimeMillis();
-                    // 检查是否达到时间间隔
+                    // 检查是否达到时间间隔,到达指定间隔发送数据
                     if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
                         lastUpdateTime = currentTime;
                         handlePlayingTime(mMediaController);
+
+                        handleMetadataArtUri();
                     }
                 }
             });
+        }
+
+        private void handleMetadataArtUri() {
+            if (mMediaController.getMetadata() != null) {
+                String metaArtUri = mMediaController.getMetadata().
+                        getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
+                if (metaArtUri.contains(mKwPlayImageUri) && !metaArtUri.equals(mLastUri)) {
+                    mLastUri = metaArtUri;
+                    notifyHostAlbumArtUpdate(metaArtUri);
+                }
+            }
         }
 
 
@@ -130,7 +151,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                 String metaArtUri = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
                 if (metaArtUri.contains(mKwPlayImageUri) && !metaArtUri.equals(mLastUri)) {
                     mLastUri = metaArtUri;
-                    notifyHostAlbumArtUpdate(mLastUri);
+                    notifyHostAlbumArtUpdate(metaArtUri);
                 }
 
                 handleMetadataChange(mMediaController, metadata);
@@ -192,7 +213,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             assert controllers != null;
             Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size() + "--mPlayState=" + mPlayState);
             if (controllers.isEmpty()) {
-                mPlayingPackageName = null;
+                //setPlayingPackage(null);
                 cleanup();
                 sendPlayStateToWidget(false);
             }
@@ -222,11 +243,11 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
     }
 
-    public void setPlayingPackage(String pkg) {
+    public void setPlayingPackageName(String pkg) {
         mPlayingPackageName = pkg;
     }
 
-    public String getCurrentPlayingPackage() {
+    public String getPlayingPackageName() {
         return mPlayingPackageName;
     }
 
@@ -285,10 +306,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         for (MediaController controller : mMediaSessionManager.getActiveSessions(null)) {
             PlaybackState state = controller.getPlaybackState();
 
-            Log.i(TAG, "updateMediaController: huang state=" + state);
-
             if (state != null) {
-                mPlayingPackageName = controller.getPackageName();
+                setPlayingPackageName(controller.getPackageName());
                 activeController = controller;
                 //sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
                 break;
@@ -317,8 +336,9 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
         //可能播放了本地音乐图片已切换
         //重新注册到系统的media session需要重新更新一次图片
-        Log.i(TAG, "updateMediaController: huang register ==>");
-        notifyHostAlbumArtUpdate(mLastUri);
+        if (mLastUri != null) {
+            notifyHostAlbumArtUpdate(mLastUri);
+        }
     }
 
     private void detectAutoUpdateBehavior(MediaController controller, PlaybackState state) {
@@ -445,7 +465,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
         boolean playing = playbackState.getState() == PlaybackState.STATE_PLAYING;
         if (!playing) return;
-        //mPlayingPackageName = controller.getPackageName();
         mCurrentPosition = playbackState.getPosition();
 
         // 确保我们有最新的元数据
@@ -472,7 +491,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             // 这里可以使用currentPosition来更新UI或其他逻辑
             updatePlaybackPosition(playing, mCurrentPosition, mDuration);
         }
-        Log.d(TAG, "handlePlayingTime -started - mCurrentPosition: " + mCurrentPosition + "--mPlayingPackageName=" + mPlayingPackageName);
+        Log.d(TAG, "handlePlayingTime -started - mCurrentPosition: " + mCurrentPosition + "--mPlayingPackageName=" + getPlayingPackageName());
 
     }
 

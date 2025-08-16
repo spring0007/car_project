@@ -1064,7 +1064,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        String oldPlayingPackage = mMediaListener.getCurrentPlayingPackage();
+        String oldPlayingPackage = mMediaListener.getPlayingPackageName();
         boolean isStartCommand = "start".equals(value2);
         boolean isStopCommand = "stop".equals(value2);
         boolean isValidPackage = !TextUtils.isEmpty(value1);
@@ -1090,7 +1090,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                 mMediaListener.removeCallbacks();
             }
 
-            mMediaListener.setPlayingPackage(value1);
+            mMediaListener.setPlayingPackageName(value1);
             mMediaListener.startCallbacks();
             //Log.i(TAG, "0000----Switched to new package: " + value1);
         }
@@ -1114,7 +1114,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                         //    value4=MusicWidget.OTHER_MUSIC;
                         //}
                         Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + value1 + " " + value2 + " " + value3 + " " + value4);
-                        Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + mMediaListener.getCurrentPlayingPackage());
+                        Log.i(TAG, "onResult---MUSIC_MEDIA_PLAY : " + mMediaListener.getPlayingPackageName());
                         //handleMediaPlaybackResult(value1,value2,value3,value4);
                         boolean isStartCommand = "start".equals(value2);
                         boolean isStopCommand = "stop".equals(value2);
@@ -1123,7 +1123,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                         if (isValidPackage && mMediaListener != null) {
                             if (isLocalMusicPackage && isStartCommand) {
                                 mMediaListener.removeCallbacks();
-                            } else if (!isLocalMusicPackage && value1.equals(mMediaListener.getCurrentPlayingPackage()) && isStopCommand && llMusic != null) {
+                            } else if (!isLocalMusicPackage && value1.equals(mMediaListener.getPlayingPackageName()) && isStopCommand && llMusic != null) {
                                 llMusic.setCurMusicState(false, MusicWidget.OTHER_MUSIC);
                             }
                         }
