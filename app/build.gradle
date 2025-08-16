@@ -100,6 +100,7 @@ dependencies {
 
     implementation "org.slf4j:slf4j-api:$slf4j_version"
 
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.12.0'
 
 
 }

@@ -22,7 +22,7 @@ object AppsCustomizeControl {
 
     private val TAG = AppsCustomizeControl::class.simpleName
 
-    private var DEBUG = true
+    private var DEBUG = false
 
     private var currentViewGroup: WeakReference<ViewGroup>? = null
 
@@ -109,10 +109,9 @@ object AppsCustomizeControl {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        Log.i(
-            TAG,
-            "showApps: huang show all apps viewGroup=>${viewGroup}"
-        )
+        if (DEBUG) {
+            Log.i(TAG, "showApps: huang show all apps=>")
+        }
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
 

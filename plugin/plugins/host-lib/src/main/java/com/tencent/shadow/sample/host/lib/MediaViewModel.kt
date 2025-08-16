@@ -45,8 +45,8 @@ class MediaViewModel : ViewModel() {
         )
     }
 
-    fun updatePlayImage(bundle: Bundle, songId: Long, albumId: Long) {
-        _playImage.postValue(PlayImage(bundle = bundle, songId = songId, albumId = albumId))
+    fun updatePlayImage(bundle: Bundle) {
+        _playImage.postValue(PlayImage(bundle = bundle, songId = -1, albumId = -1))
     }
 
     fun updatePlayTime(bundle: Bundle, currentTime: Long, totalTime: Long, playType: Int) {

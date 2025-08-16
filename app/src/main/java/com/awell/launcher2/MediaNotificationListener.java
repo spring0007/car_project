@@ -16,44 +16,22 @@
 
 package com.awell.launcher2;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.AudioAttributes;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.media.MediaDescription;
 import android.media.MediaMetadata;
-import android.media.browse.MediaBrowser;
 import android.media.session.MediaController;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.service.notification.NotificationListenerService;
-import android.service.notification.StatusBarNotification;
-import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.NotificationCompat;
-
-import com.awell.aidl.awellautointer.IAwellCallBack;
 import com.awell.aidl.awellface.IAwellApi;
 import com.awell.ctrlview.MusicWidget;
 import com.awell.launcher.R;
@@ -67,6 +45,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 处理注册到media session服务中的媒体
+ */
 public class MediaNotificationListener/* extends ServiceNotificationListenerService*/ {
     private static final String TAG = "MediaNotificationListenerLog";
     // 常量定义
@@ -76,7 +57,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private Context mContext;
     private IAwellApi mAwellApi;
     private MediaSessionManager mMediaSessionManager;
-    private MediaSessionManager.OnActiveSessionsChangedListener mSessionsListener;
 
     // 状态变量
     private final CopyOnWriteArrayList<MediaController> mControllers = new CopyOnWriteArrayList<>();
@@ -86,7 +66,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private int mActivePlaybackCount = 0;
     private long mCurrentPosition = 0;
     private long mDuration = 0;
-    public static String mPlayingPackageName;
+    public String mPlayingPackageName;
 
     // 线程处理
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
@@ -94,88 +74,101 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private MediaController mMediaController;
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
-    private Handler mHandler = new Handler();
     private Map<String, Boolean> mAutoUpdateControllers = new HashMap<>();
 
     // 记录每个控制器的最后更新时间戳
     private Map<String, Long> mLastUpdateTime = new HashMap<>();
 
     // 手动更新任务集合
-    private Map<String, Runnable> mUpdateRunnables = new HashMap<>();
+    private final Map<String, Runnable> mUpdateRunnables = new HashMap<>();
 
-    private Handler mUpdateHandler = new Handler(Looper.getMainLooper());
+    private final Handler mUpdateHandler = new Handler(Looper.getMainLooper());
 
     private static final long AUTO_UPDATE_THRESHOLD_MS = 500;
+    private long lastUpdateTime = 0;
+    private final long UPDATE_INTERVAL = 1000; // 间隔
+
+
+    /**
+     * 记录可访问的图片Uri
+     */
+    private String mLastUri = null;
+    private String mKwPlayImageUri = "img4.kuwo.cn";
+    private boolean isRegisterCallback = false;
+
     private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackState state) {
-            Log.d(TAG, "onPlaybackStateChanged--state: " + state);
+
             mExecutor.execute(() -> {
                 if (state != null) {
-                    boolean isPlay = state.getState() == PlaybackState.STATE_PLAYING;
-                    boolean isPause = state.getState() == PlaybackState.STATE_PAUSED;
-                    Log.d(TAG, "onPlaybackStateChanged--state: " + state.getState() + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
-                    if (isPlay || isPause) {
-                        if (mPlayState != state.getState()) {
-                            if (isPlay) {
-                                //mMainHandler.removeCallbacksAndMessages(null);
-                                mMainHandler.postDelayed(() -> {
-                                    sendMediaPlayInfoToWidget(mMediaController, isPlay);
-                                    MediaMetadata metadata = mMediaController.getMetadata();
-                                    if (metadata != null) {
-                                        Log.d(TAG, "onPlaybackStateChanged-Title: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
-                                        Log.d(TAG, "onPlaybackStateChanged-Artist: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-                                        handleMetadataChange(mMediaController, metadata);
-                                    }
-                                }, 100);
-                            }
-                        }
-                        handlePlaybackStateChange(mMediaController);
+                    if (mPlayState != state.getState()) {
+                        //todo update ui status
+
+                        sendMediaPlayInfoToWidget(mMediaController, state.getState() == PlaybackState.STATE_PLAYING);
+                        mPlayState = state.getState();
                     }
-                    mPlayState = state.getState();
+
+                    long currentTime = System.currentTimeMillis();
+                    // 检查是否达到时间间隔
+                    if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
+                        lastUpdateTime = currentTime;
+                        handlePlayingTime(mMediaController);
+                    }
                 }
             });
         }
+
 
         @Override
         public void onMetadataChanged(MediaMetadata metadata) {
             mPlayState = 0;
             Log.d(TAG, "onMetadataChanged---metadata: " + metadata);
             if (metadata != null) {
-                mMainHandler.postDelayed(() -> {
-                    PlaybackState state = mMediaController.getPlaybackState();
-                    Log.d(TAG, "onMetadataChanged-state: " + state + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
-                    boolean playing = false;
-                    if (state != null) {
-                        playing = (state.getState() == PlaybackState.STATE_PLAYING);
-                    }
 
-                    if (metadata != null) {
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_SUBTITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_AUTHOR: " + metadata.getString(MediaMetadata.METADATA_KEY_AUTHOR));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_WRITER: " + metadata.getString(MediaMetadata.METADATA_KEY_WRITER));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_COMPOSER: " + metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ART: " + metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART));
-                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST));
-                    }
-                    if (playing) {
-                        sendMediaPlayInfoToWidget(mMediaController, playing);
-                        handleMetadataChange(mMediaController, metadata);
-                        if (!mUpdateRunnables.containsKey(mMediaController.getPackageName())) {
-                            if (shouldManualUpdate(mMediaController.getPackageName())) {
-                                //stopManualUpdate(mMediaController);
-                                startManualUpdate(mMediaController);
-                            } else {
-                                cleanup();
-                                handlePlayingTime(mMediaController);
-                            }
-                        }
-                    }
-                }, 300);
+
+                String metaArtUri = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
+                if (metaArtUri.contains(mKwPlayImageUri) && !metaArtUri.equals(mLastUri)) {
+                    mLastUri = metaArtUri;
+                    notifyHostAlbumArtUpdate(mLastUri);
+                }
+
+                handleMetadataChange(mMediaController, metadata);
+
+//                mMainHandler.postDelayed(() -> {
+//                    PlaybackState state = mMediaController.getPlaybackState();
+//                    Log.d(TAG, "onMetadataChanged-state: " + state + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
+//                    boolean playing = false;
+//                    if (state != null) {
+//                        playing = (state.getState() == PlaybackState.STATE_PLAYING);
+//                    }
+//
+//                    if (metadata != null) {
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_SUBTITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_AUTHOR: " + metadata.getString(MediaMetadata.METADATA_KEY_AUTHOR));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_WRITER: " + metadata.getString(MediaMetadata.METADATA_KEY_WRITER));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_COMPOSER: " + metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ART: " + metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART));
+//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST));
+//                    }
+//                    if (playing) {
+//                        //sendMediaPlayInfoToWidget(mMediaController, playing);
+//                        handleMetadataChange(mMediaController, metadata);
+//                        if (!mUpdateRunnables.containsKey(mMediaController.getPackageName())) {
+//                            if (shouldManualUpdate(mMediaController.getPackageName())) {
+//                                //stopManualUpdate(mMediaController);
+//                                startManualUpdate(mMediaController);
+//                            } else {
+//                                cleanup();
+//                                handlePlayingTime(mMediaController);
+//                            }
+//                        }
+//                    }
+//                }, 1000);
             }
         }
 
@@ -192,22 +185,16 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         mAwellApi = binder != null ? IAwellApi.Stub.asInterface(binder) : null;
 
         mMediaSessionManager = (MediaSessionManager) context.getSystemService(Context.MEDIA_SESSION_SERVICE);
-        mSessionsListener = new MediaSessionManager.OnActiveSessionsChangedListener() {
-            @Override
-            public void onActiveSessionsChanged(List<MediaController> controllers) {
-                // 处理会话变化
-                mPlayState = 0;
-                Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size() + "--mPlayState=" + mPlayState);
-                if (controllers.size() <= 0) {
-                    mPlayingPackageName = null;
-                    //mEntryPackageName=null;
-                    cleanup();
-                    sendPlayStateToWidget(false);
-                    //sendMediaPlayInfoToWidget(null,false);
-                    //sendMusicInfoToWidget(null,null);
-                    //Bundle bundle = createPlaybackDataBundle(0,0);
-                    //sendDataToAwellApi(bundle);
-                }
+
+        MediaSessionManager.OnActiveSessionsChangedListener mSessionsListener = controllers -> {
+            // 处理会话变化
+            mPlayState = 0;
+            assert controllers != null;
+            Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size() + "--mPlayState=" + mPlayState);
+            if (controllers.isEmpty()) {
+                mPlayingPackageName = null;
+                cleanup();
+                sendPlayStateToWidget(false);
             }
         };
         Log.d(TAG, "initDependencies--mMediaSessionManager:" + mMediaSessionManager);
@@ -221,28 +208,17 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
     }
 
-    private Runnable mPollingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateMediaController();
-        }
-    };
-
     public void removeCallbacks() {
-        Log.d(TAG, "removeCallbacks--mHandler:" + mHandler + "--mPlayingPackageName=" + mPlayingPackageName);
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (mMediaController != null) {
+        if (mMediaController != null && isRegisterCallback) {
             mMediaController.unregisterCallback(mMediaControllerCallback);
+            isRegisterCallback = false;
         }
     }
 
     public void startCallbacks() {
-        Log.d(TAG, "startCallbacks--mHandler:" + mHandler + "--mPlayingPackageName=" + mPlayingPackageName);
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler.postDelayed(mPollingRunnable, UPDATE_INTERVAL_MS);
+        if (!isRegisterCallback) {
+            updateMediaController();
+            isRegisterCallback = true;
         }
     }
 
@@ -302,76 +278,19 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
     }
 
-    public Bitmap getPlayingAlbumBitmap() {
-        Bitmap albumArt = null;
-        if (mMediaController == null) return albumArt;
-        // 获取当前播放状态
-        PlaybackState playbackState = mMediaController.getPlaybackState();
-        if (playbackState == null) {
-            return albumArt;  // 如果没有播放状态，直接返回
-        }
-        boolean playing = playbackState.getState() == PlaybackState.STATE_PLAYING;//(state.getState()==PlaybackState.STATE_PLAYING);
-        if (!playing) return albumArt;
-        // 确保我们有最新的元数据
-        MediaMetadata metadata = mMediaController.getMetadata();
+    public void updateMediaController() {
 
-        // 获取高分辨率专辑图（Bitmap）
-        albumArt = metadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
-        Log.d(TAG, "Unhandled playback state: albumArt00=" + albumArt);
-        // 如果没有高分辨率图，尝试低分辨率图
-        if (albumArt == null) {
-            albumArt = metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART);
-            Log.d(TAG, "Unhandled playback state: albumArt11=" + albumArt);
-        }
-
-        // 如果仍然没有，检查是否有显示图标（如通知栏小图标）
-        if (albumArt == null) {
-            albumArt = metadata.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON);
-            Log.d(TAG, "Unhandled playback state: albumArt22=" + albumArt);
-        }
-        return albumArt;
-    }
-
-    public Uri getPlayingAlbumUri() {
-        Uri albumArtUri = null;
-        if (mMediaController == null) return albumArtUri;
-        // 获取当前播放状态
-        PlaybackState playbackState = mMediaController.getPlaybackState();
-        if (playbackState == null) {
-            return albumArtUri;  // 如果没有播放状态，直接返回
-        }
-        boolean playing = playbackState.getState() == PlaybackState.STATE_PLAYING;//(state.getState()==PlaybackState.STATE_PLAYING);
-        if (!playing) return albumArtUri;
-        // 确保我们有最新的元数据
-        MediaMetadata metadata = mMediaController.getMetadata();
-
-        MediaDescription description = metadata.getDescription();
-        if (description != null) {
-            albumArtUri = description.getIconUri();
-            Log.d(TAG, "Unhandled playback state: albumArtUri=" + albumArtUri);
-            if (albumArtUri != null) {
-                // 使用 Glide/Picasso 加载图片
-                //Glide.with(context)
-                //        .load(albumArtUri)
-                //        .into(imageView);
-            }
-        }
-        return albumArtUri;
-    }
-
-
-    private void updateMediaController() {
         MediaController activeController = null;
-        //ComponentName componentName = new ComponentName(mContext, NotificationListenerService.class);
-        Log.d(TAG, "------updateMediaController------");
         // 获取当前正在播放的controller
         for (MediaController controller : mMediaSessionManager.getActiveSessions(null)) {
             PlaybackState state = controller.getPlaybackState();
-            Log.d(TAG, "updateMediaController package list: " + controller.getPackageName() + "--mPlayingPackageName=" + mPlayingPackageName + "--mPlayState=" + mPlayState + "--state=" + state);
-            if (state != null && state.getState() == PlaybackState.STATE_PLAYING || (mPlayingPackageName != null && controller.getPackageName().equals(mPlayingPackageName))) {
+
+            Log.i(TAG, "updateMediaController: huang state=" + state);
+
+            if (state != null) {
                 mPlayingPackageName = controller.getPackageName();
                 activeController = controller;
-                sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
+                //sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
                 break;
             }
         }
@@ -380,8 +299,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             Log.d(TAG, "No active playing controller found");
             return;
         }
-
-        Log.d(TAG, "Active controller package: " + activeController.getPackageName());
 
         // 取消之前的回调
         if (mMediaController != null) {
@@ -398,6 +315,10 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         if (currentMetadata != null) {
             handleMetadataChange(mMediaController, currentMetadata);
         }
+        //可能播放了本地音乐图片已切换
+        //重新注册到系统的media session需要重新更新一次图片
+        Log.i(TAG, "updateMediaController: huang register ==>");
+        notifyHostAlbumArtUpdate(mLastUri);
     }
 
     private void detectAutoUpdateBehavior(MediaController controller, PlaybackState state) {
@@ -419,10 +340,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         if (state.getState() == PlaybackState.STATE_PLAYING) {
             if (lastUpdateTimeObj != null && timeDiff < AUTO_UPDATE_THRESHOLD_MS) {
                 mAutoUpdateControllers.put(packageName, true);
-                //Log.d(TAG, packageName + " confirmed auto-update");
             } else {
                 mAutoUpdateControllers.put(packageName, false);
-                //Log.d(TAG, packageName + " requires manual update");
             }
         }
     }
@@ -461,24 +380,14 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                     float validSpeed = speed <= 0 ? 1.0f : speed;
                     long refreshInterval = Math.max(16, (long) (1000 / validSpeed));
                     //Log.d(TAG, "startManualUpdate-updateTask: " + packageName+"--refreshInterval="+refreshInterval+"--speed="+speed);
-                    mUpdateHandler.postDelayed(this, refreshInterval);
+                    //mUpdateHandler.postDelayed(this, refreshInterval);
                 }
             }
         };
 
-        mUpdateRunnables.put(packageName, updateTask);
-        mUpdateHandler.post(updateTask);
+        //mUpdateRunnables.put(packageName, updateTask);
+        //mUpdateHandler.post(updateTask);
         //Log.d(TAG, "Started manual update for " + packageName);
-    }
-
-    private void stopManualUpdate(MediaController controller) {
-        String packageName = controller.getPackageName();
-        Runnable task = mUpdateRunnables.get(packageName);
-        if (task != null) {
-            mUpdateHandler.removeCallbacks(task);
-            mUpdateRunnables.remove(packageName);
-            //Log.d(TAG, "Stopped manual update for " + packageName);
-        }
     }
 
     public void cleanup() {
@@ -500,7 +409,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         int state = playbackState.getState();
         String packageName = controller.getPackageName();
         Log.d(TAG, "handlePlaybackStateChange from " + packageName + ", state: " + state);
-        sendPlayStateToWidget(state == PlaybackState.STATE_PLAYING);
+
+        //sendPlayStateToWidget(state == PlaybackState.STATE_PLAYING);
 
         detectAutoUpdateBehavior(controller, playbackState);
 
@@ -549,7 +459,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         // 获取状态最后更新时间
         long updateTime = playbackState.getLastPositionUpdateTime();
         long currentTime = SystemClock.elapsedRealtime();
-        Log.d(TAG, "handlePlayingTime 000---started - position: " + mCurrentPosition + "--updateTime=" + updateTime + "--speed=" + speed + "--currentTime=" + currentTime);
+
         // 计算时间差并更新位置
         if (updateTime > 0) {
             long timeDiff = currentTime - updateTime;
@@ -560,9 +470,9 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             }
 
             // 这里可以使用currentPosition来更新UI或其他逻辑
+            updatePlaybackPosition(playing, mCurrentPosition, mDuration);
         }
-        Log.d(TAG, "handlePlayingTime 111---started - position: " + mCurrentPosition + "--mPlayingPackageName=" + mPlayingPackageName);
-        updatePlaybackPosition(playing, mCurrentPosition, mDuration);
+        Log.d(TAG, "handlePlayingTime -started - mCurrentPosition: " + mCurrentPosition + "--mPlayingPackageName=" + mPlayingPackageName);
 
     }
 
@@ -573,7 +483,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
     private void handleMetadataChange(MediaController controller, MediaMetadata metadata) {
         Log.d(TAG, "handleMetadataChange--metadata:" + metadata);
-        mCurrentPosition = 0;
         mDuration = metadata.getLong(MediaMetadata.METADATA_KEY_DURATION);
         sendMusicInfoToWidget(controller, metadata);
     }
@@ -637,23 +546,19 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             //}
             Log.d(TAG, "sendMusicInfoToWidget title: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
         }
-        //Log.d(TAG, "sendMusicInfoToWidget ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-        //Log.d(TAG, "sendMusicInfoToWidget ALBUM): " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
-        //Log.d(TAG, "sendMusicInfoToWidget getPackageName: " + controller.getPackageName());
+        sendDataToAwellApi(bundle);
+    }
+
+    private void notifyHostAlbumArtUpdate(String uri) {
+        Bundle bundle = new Bundle();
+        bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE);
+        bundle.putString(AwellTool.VALUE_M3, uri);
         sendDataToAwellApi(bundle);
     }
 
     private void sendPlayStateToWidget(boolean isPlaying) {
         Bundle bundle = new Bundle();
         bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAYSTATUS);
-        bundle.putBoolean(AwellTool.VALUE_M1, isPlaying);
-        sendDataToAwellApi(bundle);
-    }
-
-    private void notifyClientAlbumPath(boolean isPlaying) {
-        Log.d(TAG, "notifyClientAlbumPath isPlaying: " + isPlaying);
-        Bundle bundle = new Bundle();
-        bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE);
         bundle.putBoolean(AwellTool.VALUE_M1, isPlaying);
         sendDataToAwellApi(bundle);
     }
@@ -666,5 +571,9 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         } catch (RemoteException e) {
             Log.e(TAG, "Failed to send data to AwellApi", e);
         }
+    }
+
+    public MediaController getmMediaController() {
+        return mMediaController;
     }
 }

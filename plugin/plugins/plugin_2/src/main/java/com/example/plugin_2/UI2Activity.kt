@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -27,7 +28,6 @@ import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
-import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
@@ -42,7 +42,8 @@ class UI2Activity : Activity() {
     private val TAG = UI2Activity::class.simpleName
     private lateinit var mViewBinding: Ui2ActivityBinding
     private lateinit var mCarSpeedLayout: SpeedLayoutBinding
-    private var mMediaListener = MediaNotificationListener()
+
+    //    private var mMediaListener = MediaNotificationListener()
     lateinit var llMusic: MusicWidgetPlugin2
     lateinit var mediaControl: AwellMediaControl
     lateinit var locationManager: LocationManager
@@ -191,7 +192,7 @@ class UI2Activity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mMediaListener.cleanup()
+//        mMediaListener.cleanup()
         mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
@@ -204,7 +205,7 @@ class UI2Activity : Activity() {
      */
     private fun initMediaMusic() {
 
-        mMediaListener.initDependencies(baseContext)
+//        mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
@@ -213,7 +214,7 @@ class UI2Activity : Activity() {
             findViewById<MusicWidgetPlugin2>(mViewBinding.includeWidgetMusic.musicWidgetLayout.id)
 
         llMusic.setMediaLibrary(mediaControl)
-        llMusic.setMediaNotificationListener(mMediaListener)
+//        llMusic.setMediaNotificationListener(mMediaListener)
         llMusic.setActivity(this, llMusic)
 
     }
@@ -254,13 +255,10 @@ class UI2Activity : Activity() {
                     if (zlinkStatus == null) {
                         return
                     }
-                    llMusic.getCarPlayData(zlinkStatus, phoneMode)
+                    llMusic.setCarPlayData(zlinkStatus, phoneMode)
                 }
 
                 "android.launcher.show.allApp" -> {
-                    //showAllApps(true)
-                    //setSettingOrAndroidPage(true)
-                    //mModel.startLoader(true, -1)
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                 }
 
@@ -290,16 +288,16 @@ class UI2Activity : Activity() {
 
     fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
 
-        val oldPlayingPackage = mMediaListener.currentPlayingPackage
+        val oldPlayingPackage = mediaControl.getCurrentPkgName()
         val isStartCommand = "start" == value2
         val isStopCommand = "stop" == value2
         val isValidPackage = !TextUtils.isEmpty(value1)
         // 处理本地音乐的特殊情况
-        if (isValidPackage && (value1.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains(
-                "/system/bin/gocsdk"
-            )) && isStartCommand
+        if (isValidPackage && (value1.contains("localmusic")
+                    || value1.contains("com.awell.bluetooth")
+                    || value1.contains("/system/bin/gocsdk")) && isStartCommand
         ) {
-            mMediaListener.removeCallbacks()
+//            mMediaListener.removeCallbacks()
             return
         }
 
@@ -313,12 +311,12 @@ class UI2Activity : Activity() {
         if (isValidPackage && isStartCommand) {
             // 当前没有播放或切换到新包时，更新并启动回调
             if (oldPlayingPackage != null && oldPlayingPackage != value1) {
-                mMediaListener.togglePause() //有些播放器未暂停，手动暂停
-                mMediaListener.removeCallbacks()
+//                mMediaListener.togglePause() //有些播放器未暂停，手动暂停
+//                mMediaListener.removeCallbacks()
             }
 
-            mMediaListener.setPlayingPackage(value1)
-            mMediaListener.startCallbacks()
+//            mMediaListener.setPlayingPackage(value1)
+//            mMediaListener.startCallbacks()
         }
     }
 
@@ -333,10 +331,10 @@ class UI2Activity : Activity() {
                 bundle: Bundle, pkg: String, command: String, mediaType: Int, currentMedia: Int
             ) {
                 runOnUiThread {
+                    Log.i(TAG, "updateViewMusicPlay: huang mediaType=${mediaType}")
                     llMusic.switchMediaController(
                         pkg, command, mediaType, currentMedia
                     )
-
                 }
             }
 
@@ -348,11 +346,16 @@ class UI2Activity : Activity() {
                 }
             }
 
-            override fun updateViewMusicPlayImage(
-                bundle: Bundle, songId: Long, albumId: Long
-            ) {
+            @SuppressLint("UseKtx")
+            override fun updateViewMusicPlayImage(bundle: Bundle) {
                 runOnUiThread {
-                    llMusic.setPlayImage(songId, albumId)
+                    Log.i(TAG, "updateViewMusicPlayImage: huang bundle=${bundle}")
+                    val uriStr = bundle.getString(AwellTool.VALUE_M1, null)
+                    val uri = when {
+                        uriStr == null -> null
+                        else -> Uri.parse(uriStr)
+                    }
+                    llMusic.loadAlbumArtByUri(uri)
                 }
             }
 
@@ -364,11 +367,11 @@ class UI2Activity : Activity() {
                     llMusic.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
                         llMusic.setMusicNameTextView(
-                            getResources().getString(com.awell.launcher.R.string.click_play_music),
+                            getResources().getString(R.string.click_play_music),
                             MusicWidget.MUSIC
                         )
                         llMusic.setArtistNameTextView(
-                            getResources().getString(com.awell.launcher.R.string.music_artist),
+                            getResources().getString(R.string.music_artist),
                             MusicWidget.MUSIC
                         )
                     }
@@ -378,7 +381,7 @@ class UI2Activity : Activity() {
                             llMusic.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC)
                         } else {
                             llMusic.setMusicNameTextView(
-                                getResources().getString(com.awell.launcher.R.string.click_play_music),
+                                getResources().getString(R.string.click_play_music),
                                 MusicWidget.OTHER_MUSIC
                             )
                         }
@@ -388,7 +391,7 @@ class UI2Activity : Activity() {
                             )
                         } else {
                             llMusic.setArtistNameTextView(
-                                getResources().getString(com.awell.launcher.R.string.music_artist),
+                                getResources().getString(R.string.music_artist),
                                 MusicWidget.OTHER_MUSIC
                             )
                         }

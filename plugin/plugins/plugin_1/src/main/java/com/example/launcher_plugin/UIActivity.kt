@@ -86,8 +86,6 @@ class UIActivity : Activity(), View.OnClickListener {
 
         findViewId()
 
-
-
         initMediaMusic()
         initRadioWidget()
         initCarView()
@@ -364,10 +362,10 @@ class UIActivity : Activity(), View.OnClickListener {
             }
 
             override fun updateViewMusicPlayImage(
-                bundle: Bundle, songId: Long, albumId: Long
+                bundle: Bundle
             ) {
                 runOnUiThread {
-                    llMusic.setPlayImage(songId, albumId)
+                    //llMusic.setPlayImage(songId, albumId)
                 }
             }
 
