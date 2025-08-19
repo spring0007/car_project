@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.select_launcher_layout);
 //        initView();
-        startGpsService();
+//        startGpsService();
 
         if ("default".equals(getIntent().getStringExtra("launcher"))) {
             mStartPlugin = false;
@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         UserHandle.class
                 );
                 method.invoke(this, service, userHandle);
-                Log.i(TAG, "startHostService: huang start service=>" + service);
+                Log.i(TAG, "startGpsService: huang start service=>" + service);
             } catch (Exception e) {
                 e.printStackTrace();
                 // 降级方案

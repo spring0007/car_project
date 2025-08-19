@@ -1,9 +1,12 @@
 package com.awell.service
 
+import android.app.ActivityManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadata
 import android.net.Uri
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Parcelable
@@ -30,6 +33,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import kotlin.math.log
 
 
 class HostToPluginService : Service() {
@@ -51,7 +55,10 @@ class HostToPluginService : Service() {
      * 防止同一线程嵌套重入
      * fix bug IllegalStateException: beginBroadcast() called while already in a broadcast
      */
+    @Volatile
     private var isBroadcasting = false
+
+    private var pendingBundle: Bundle? = null // 暂存最新待处理数据
 
     /**
      * data数据显示
@@ -65,7 +72,23 @@ class HostToPluginService : Service() {
     private var mMediaListener = MediaNotificationListener()
 
     /**
+     * 注册到media session服务里三方媒体
+     */
+    private val MEDIA_SESSION_PKG_KEYWORDS = setOf(
+        "cn.kuwo.kwmusiccar",
+        "com.zjinnova.zlink", //尽管carplay注册到media session，但未向metadata提供信息
+    )
+
+    private val LOCAL_MEDIA_PKG = setOf(
+        "/system/bin/gocsdk",
+        "com.awell.localmusic",
+    )
+
+    /**
      * 和AwellAutoApi服务的通信
+     * 由于framework下也有相同的包名、类名
+     * 该对象优先实例化framework下的类
+     * AwellLibrary模块下的类修改无效
      */
     val mediaLibrary = AwellLibrary(AwellTool.OPEN)
 
@@ -75,8 +98,19 @@ class HostToPluginService : Service() {
      */
     val mDataListener = AwellLibrary.OnDataListener { bundle: Bundle? ->
         bundle?.let {
+
+            //printThreadInfo(bundle)
+            Log.i(TAG, "AwellLibrary.OnDataListener: huang bundle=${bundle}")
             saveTempValue(bundle)
-            notifyClientDataChanged(bundle)
+
+            val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
+            if (status != MusicWidget.OTHER_MUSIC_PLAY_IMAGE
+                && status != AwellTool.MUSIC.PLAY_IMAGE
+            ) {
+                //客户端不暂时不处理图片，saveTempValue稍后会通知客户端处理
+                notifyClientDataChanged(bundle)
+            }
+
         } ?: run {
             Log.e(TAG, "AwellLibrary.OnDataListener onResult:  bundle is null!!")
         }
@@ -85,6 +119,7 @@ class HostToPluginService : Service() {
     init {
         albumArtProvider = AlbumArtProvider(mAppContext)
         mMediaListener.initDependencies(mAppContext)
+        Log.i(TAG, "huang init ==>: mediaLibrary=${mediaLibrary.javaClass.classLoader}")
         mediaLibrary.init(mAppContext)
         mediaLibrary.setOnDataListener(mDataListener)
     }
@@ -122,14 +157,19 @@ class HostToPluginService : Service() {
             return null
         }
 
-        override fun pluginToHostWithBundle(bundle: Bundle?): String? {
-            Log.i(TAG, "pluginToHost: receiver bundle==>${bundle}")
+        override fun pluginToOtherAppWithBundle(bundle: Bundle?): String? {
+            Log.i(TAG, "pluginToOtherAppWithBundle: huang bundle=>${bundle}")
             return mediaLibrary.setDataEvent(bundle)
         }
 
-        override fun pluginToHostWithStr(status: String?): String? {
-            Log.i(TAG, "pluginToHostWithStr: huang host receiver str=>${status}")
+        override fun pluginToOtherAppWithStr(status: String?): String? {
+            Log.i(TAG, "pluginToOtherAppWithStr: huang status=${status}")
             return mediaLibrary.setDataEvent(status)
+        }
+
+        override fun pluginToInternalImplWithBundle(bundle: Bundle?) {
+            Log.i(TAG, "pluginToInternalImplWithBundle: huang bundle=>${bundle}")
+            mMediaListener.sendDataToAwellApi(bundle)
         }
 
         override fun getCurrentMeidaPlayingPkg(): String? {
@@ -203,20 +243,62 @@ class HostToPluginService : Service() {
                 pkg?.let {
                     mMediaListener.playingPackageName = pkg
                     Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
-                    if (pkg.contains("cn.kuwo.kwmusiccar")
-                        && command != null && command.contains("start")
-                    ) {
+                    if (isMediaSessionPkg(pkg, command)) {
                         //只有三方注册到media session服务里的媒体开始播放的时候才注册监听
                         mMediaListener.startCallbacks()
-                    } else if ((pkg.contains("localmusic") || pkg.contains("/system/bin/gocsdk"))
-                        && command != null && command.contains("start")
-                    ) {
+                    } else if (isLocalMediaStart(pkg, command)) {
                         //只有未注册到media session服务里的媒体开始播放的时候
                         //才将注册到media session服务里的媒体断开回调
                         mMediaListener.removeCallbacks()
+
+                        //蓝牙音乐没有专辑图片，设置默认图片
+                        setDefaultBtArt(pkg, bundle)
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 检查是否是本地媒体开始播放 command==start
+     * local music
+     * bt music
+     * ...
+     */
+    private fun isLocalMediaStart(pkg: String?, command: String?): Boolean {
+        if (pkg == null || command == null)
+            return false
+        return command.contains("start", ignoreCase = true)
+                && LOCAL_MEDIA_PKG.any { keyword ->
+            pkg.contains(keyword, ignoreCase = true)
+        }
+    }
+
+
+    /**
+     * 检查是否是三方媒体开始播放 command==start
+     */
+    private fun isMediaSessionPkg(pkg: String?, command: String?): Boolean {
+        if (pkg == null || command == null)
+            return false
+
+        return command.contains("start", ignoreCase = true)
+                && MEDIA_SESSION_PKG_KEYWORDS.any { keyword ->
+            pkg.contains(keyword, ignoreCase = true)
+        }
+    }
+
+    /**
+     * 处理蓝牙图片
+     * 蓝牙音乐无专辑图片设为默认
+     */
+    private fun setDefaultBtArt(pkg: String, bundle: Bundle) {
+        if (pkg.contains("/system/bin/gocsdk")) {
+            //更新图片 delete value
+            val tempBundle = bundle.deepCopy()
+            tempBundle.putString(AwellTool.VALUE_M1, null)
+            tempBundle.putString(AwellTool.VALUE_M3, null)
+            handleLocalMusicImageByScope(tempBundle)
         }
     }
 
@@ -234,18 +316,20 @@ class HostToPluginService : Service() {
                 trackMutex.withLock {
                     uri = processTrackUpdate(bundle)
                 }
+                val updateArtUriBundle = Bundle()
+                updateArtUriBundle.putString(
+                    AwellTool.STATUS_ACCEPT,
+                    MusicWidget.OTHER_MUSIC_PLAY_IMAGE
+                )
+                updateArtUriBundle.putString(AwellTool.VALUE_M1, null)
                 uri?.let {
-                    val updateArtUriBundle = Bundle()
-                    updateArtUriBundle.putString(
-                        AwellTool.STATUS_ACCEPT,
-                        MusicWidget.OTHER_MUSIC_PLAY_IMAGE
-                    )
                     updateArtUriBundle.putString(AwellTool.VALUE_M1, uri.toString())
-                    notifyClientDataChanged(updateArtUriBundle)
                 }
+                notifyClientDataChanged(updateArtUriBundle)
 
             } catch (e: CancellationException) {
                 //任务取消
+                Log.i(TAG, "handleLocalMusicImageByScope: huang cancellation mission=${e.message}")
             } catch (e: Exception) {
                 //任务异常
                 Log.i(TAG, "handleLocalMusicImageByScope: huang error=${e}")
@@ -253,6 +337,9 @@ class HostToPluginService : Service() {
         }
     }
 
+    /**
+     * 解析bundle提供给albumArtProvider处理图片
+     */
     private suspend fun processTrackUpdate(bundle: Bundle) = withContext(Dispatchers.IO) {
         val value1 = bundle.getString(AwellTool.VALUE_M1, "0 , 0")
         //播放本地音乐，解析播放的图片
@@ -263,18 +350,21 @@ class HostToPluginService : Service() {
         val albumId = str[1].toLong()
         val filePath = bundle.getString(AwellTool.VALUE_M2, null)
         val artUri = bundle.getString(AwellTool.VALUE_M3, null)
+        val imagePath = bundle.getString(AwellTool.VALUE_M4, null)
 
         val trackInfo = TrackInfo(
             null,
             songId,
             albumId,
             filePath,
+            imagePath = imagePath,
             metadata = when {
                 //酷我音乐在后台，切换本地音乐播放，MediaController还持有metadata
                 //如果本地音乐这时候获取图片会直接拿到metadata的图片，需要使用传递过来的VALUE_M3判断
                 //useMetadata为null代表本地音乐发送图片处理请求，不在metadata对象获取专辑图片
-                artUri != null -> {
-                    val originMetadata = mMediaListener.getmMediaController()?.metadata;
+                //artUri != "default" 酷我音乐切换到本地音乐更新图片
+                artUri != null && artUri != "default" -> {
+                    val originMetadata = mMediaListener.getmMediaController()?.metadata
                     val builder = MediaMetadata.Builder(originMetadata)
                     builder.putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, artUri)
                     builder.build()
@@ -291,37 +381,72 @@ class HostToPluginService : Service() {
      * 客户端可解析bundle获取所需数据
      */
     private fun notifyClientDataChanged(bundle: Bundle) {
-        // 外层同步：防止多线程同时进入
+        // 步骤1：原子性更新待处理数据
+        var shouldProcessImmediately = false
         synchronized(broadcastLock) {
-            // 检查是否已在广播中,防止同一线程嵌套进入
-            if (isBroadcasting) {
-                Log.e(
-                    TAG,
-                    "notifyClientDataChanged: huang Skipping nested broadcast attempt bundle=${bundle}"
-                )
-                return
+            // 保存最新数据（覆盖旧值）
+            pendingBundle = bundle
+
+            // 检查是否可立即处理
+            if (!isBroadcasting) {
+                isBroadcasting = true
+                shouldProcessImmediately = true
             }
-            isBroadcasting = true
         }
 
-        try {
-            val count = listeners.beginBroadcast()
-            try {
-                for (i in 0..<count) {
-                    val listener: IDataChangeInterface = listeners.getBroadcastItem(i)
-                    listener.onDataChanged(bundle)
-                }
-            } catch (e: RemoteException) {
-                e.printStackTrace()
-            } finally {
-                listeners.finishBroadcast()
-            }
-        } finally {
-            // 重置标志位
-            synchronized(broadcastLock) {
-                isBroadcasting = false
-            }
+        // 步骤2：立即处理或等待后续处理
+        if (shouldProcessImmediately) {
+            processPendingBundles()
         }
+    }
+
+    /**
+     * 处理所有待发数据（确保处理最新数据）
+     */
+    private fun processPendingBundles() {
+        var currentBundle: Bundle?
+
+        do {
+            // 步骤3：原子获取最新数据
+            synchronized(broadcastLock) {
+                currentBundle = pendingBundle
+                pendingBundle = null // 清空暂存
+            }
+
+            // 步骤4：处理有效数据
+            currentBundle?.let { bundle ->
+                try {
+                    // 实际广播逻辑
+                    val count = listeners.beginBroadcast()
+                    try {
+                        for (i in 0..<count) {
+                            listeners.getBroadcastItem(i).onDataChanged(bundle)
+                        }
+                    } catch (e: RemoteException) {
+                        Log.e(
+                            TAG,
+                            "processPendingBundles: huang RemoteException in broadcast ${e.message}"
+                        )
+                    } finally {
+                        listeners.finishBroadcast()
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "processPendingBundles: huang Error processing bundle ${e.message}")
+                }
+            }
+
+            // 步骤5：检查是否有新数据到达
+            synchronized(broadcastLock) {
+                currentBundle = if (pendingBundle != null) {
+                    // 有新数据则继续循环
+                    pendingBundle.also { pendingBundle = null }
+                } else {
+                    // 无新数据则结束处理
+                    isBroadcasting = false
+                    null
+                }
+            }
+        } while (currentBundle != null)
     }
 
     private fun bundleToMusicPlayInfo(bundle: Bundle): MusicPlayInfo {
@@ -345,6 +470,26 @@ class HostToPluginService : Service() {
             b.putString(AwellTool.VALUE_M3, music.album)
         }
         return b
+    }
+
+    private fun printThreadInfo(bundle: Bundle) {
+
+        val callPid = Binder.getCallingPid()
+        val callUid = Binder.getCallingUid()
+        val currentThread = Thread.currentThread()
+        val threadInfo = "Thread:${currentThread.name} (ID=${currentThread.id})"
+        val callingProcessName = runCatching {
+            val manager =
+                mAppContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val runningProcess = manager.runningAppProcesses
+            runningProcess?.find { it.pid == callPid }?.processName
+        }.getOrNull()
+        Log.i(TAG, "printThreadInfo: huang bundle =>${bundle}")
+        Log.i(
+            TAG,
+            "printThreadInfo: huang Pid=$callPid Uid=$callUid processName=$callingProcessName"
+        )
+        Log.i(TAG, "printThreadInfo: huang thread info=>${threadInfo}")
     }
 }
 

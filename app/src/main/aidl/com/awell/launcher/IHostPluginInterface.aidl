@@ -12,8 +12,10 @@ interface IHostPluginInterface {
 
     Bundle notifyData();
 
-    String pluginToHostWithBundle(in Bundle bundle);
-    String pluginToHostWithStr(in String status);
+    String pluginToOtherAppWithBundle(in Bundle bundle);
+    String pluginToOtherAppWithStr(in String status);
+
+    void pluginToInternalImplWithBundle(in Bundle bundle);
 
     String getCurrentMeidaPlayingPkg();
 

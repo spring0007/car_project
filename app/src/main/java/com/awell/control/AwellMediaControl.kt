@@ -13,8 +13,6 @@ import android.util.Log
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher.IDataChangeInterface
 import com.awell.launcher.IHostPluginInterface
-import com.awell.launcher2.LauncherApplication.mAppContext
-import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
 import com.tencent.shadow.sample.host.lib.MediaViewModel
 import java.lang.reflect.Method
@@ -29,7 +27,6 @@ class AwellMediaControl() {
     private val TAG = AwellMediaControl::class.simpleName
     val mNullStr = "null"
 
-    //    var mMediaListener = MediaNotificationListener()
     var updateMusicView: UpdateMediaDataToView? = null
 
     var mediaViewModel: MediaViewModel? = null
@@ -38,7 +35,7 @@ class AwellMediaControl() {
     private var isBound = false
 
     init {
-//        mMediaListener.initDependencies(mAppContext)
+        Log.i(TAG, "huang init ==>: this=${this}")
     }
 
 
@@ -46,7 +43,7 @@ class AwellMediaControl() {
      * 实现服务端的回调
      * 第一次注册和服务端有数据更新时回调
      * 服务端会发送数据过来，
-     * 其他程序也会发送信息过来，
+     * 其他程序也会发送信息过来，但都是通过服务端通知到这里
      * 服务端负责转发来自其他程序的信息
      *
      */
@@ -54,7 +51,6 @@ class AwellMediaControl() {
         override fun onDataChanged(bundle: Bundle?) {
             bundle?.let {
                 val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
-                Log.i(TAG, "onDataChanged: huang bundle=>${bundle}")
                 when (status) {
                     AwellTool.MEDIA_PLAY -> {
                         handleMediaPlay(bundle)
@@ -149,22 +145,37 @@ class AwellMediaControl() {
         }
     }
 
-    fun sendBundleToHost(bundle: Bundle): String {
-        var data = "null"
+    /**
+     * 发送到其他程序的数据
+     * client --> host --> otherApp
+     */
+    fun sendBundleToOtherApp(bundle: Bundle): String {
+        var data = "default value"
         if (isBound) {
-            data = hostService?.pluginToHostWithBundle(bundle).toString()
+            data = hostService?.pluginToOtherAppWithBundle(bundle).toString()
         }
         return data
     }
 
     /**
+     * 会回调到客户端内部实现
+     * client --> host --> client Impl
+     */
+    fun sendBundleToInternal(bundle: Bundle) {
+        if (isBound) {
+            hostService?.pluginToInternalImplWithBundle(bundle).toString()
+        }
+    }
+
+    /**
      * 客户端发送数据到服务端
      * 用于自定义的数据处理如本地音乐应用的上下曲
+     * client --> host --> otherApp
      */
     fun sendStrToHost(string: String): String {
-        var data = "null"
+        var data = "default value"
         if (isBound) {
-            data = hostService?.pluginToHostWithStr(string).toString()
+            data = hostService?.pluginToOtherAppWithStr(string).toString()
         }
         return data
     }
@@ -237,23 +248,15 @@ class AwellMediaControl() {
     }
 
     private fun handleMediaPlay(bundle: Bundle) {
-        Log.i(TAG, "handleMediaPlay: huang mediaViewModel=${mediaViewModel}")
+        Log.i(TAG, "handleMediaPlay: huang bundle=${bundle}")
         val pkg = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val command = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val mediaType = bundle.getInt(AwellTool.VALUE_M3, 3)
         val currentMedia = bundle.getInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
-        Log.i(
-            TAG,
-            "handleMediaPlay: huang pck=>${pkg} command=${command} mediaType=${mediaType} currentMedia=${currentMedia}"
-        )
         val isStartCommand = "start" == command
-        val isLocalMusicPackage =
-            (pkg.contains("localmusic") || pkg.contains("com.awell.bluetooth") || pkg.contains("/system/bin/gocsdk"))
-
-//        mMediaListener.let {
-//            if (isLocalMusicPackage && isStartCommand)
-//                it.removeCallbacks()
-//        }
+        val isLocalMusicPackage = (pkg.contains("localmusic")
+                || pkg.contains("com.awell.bluetooth")
+                || pkg.contains("/system/bin/gocsdk"))
 
         val isStopCommand = "stop" == command
 

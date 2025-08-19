@@ -40,14 +40,16 @@ class AlbumArtProvider(private val context: Context) {
         Source.MEDIA_METADATA,  // 最高优先级
         Source.SONG_ID,
         Source.ALBUM_ID,
-        Source.FILE_EMBEDDED    // 最低优先级
+        Source.FILE_EMBEDDED,
+        Source.FILE_PATH      // 最低优先级
     )
 
     private enum class Source {
         MEDIA_METADATA,
         SONG_ID,
         ALBUM_ID,
-        FILE_EMBEDDED
+        FILE_EMBEDDED,
+        FILE_PATH
     }
 
     private val httpClient by lazy {
@@ -73,6 +75,7 @@ class AlbumArtProvider(private val context: Context) {
     /**
      * 更新当前播放的歌曲，并生成专辑图片临时文件
      * todo 如果保存了文件机器重启会来不及删除图片 需要清理
+     * todo add carplay art
      */
     fun updateTrack(trackInfo: TrackInfo): Uri? {
         cleanup()  // 清理前一个资源
@@ -84,7 +87,8 @@ class AlbumArtProvider(private val context: Context) {
                 Source.MEDIA_METADATA -> getFromMediaMetadata(trackInfo.metadata)
                 Source.SONG_ID -> trackInfo.songId?.let { getFromMediaStoreBySongId(it) }
                 Source.ALBUM_ID -> trackInfo.albumId?.let { getFromMediaStoreByAlbumId(it) }
-                Source.FILE_EMBEDDED -> trackInfo.filePath?.let { getFromFileEmbedded(it) }
+                Source.FILE_EMBEDDED -> trackInfo.fileMusicPath?.let { getFromFileEmbedded(it) }
+                Source.FILE_PATH -> trackInfo.imagePath?.let { getFromPath(it) }
             }
             if (bitmap != null) break
         }
@@ -133,12 +137,12 @@ class AlbumArtProvider(private val context: Context) {
         )
 
         // 查找第一个有效的URI
-        var uriString = uriKeys.firstNotNullOfOrNull { key ->
+        val uriString = uriKeys.firstNotNullOfOrNull { key ->
             metadata.getString(key)?.takeIf { it.isNotBlank() }
         } ?: return null
 
         return try {
-            uriString = uriString.replace("http://", "https://")
+            Log.i(TAG, "tryDownloadFromMetadata: huang download uri=${uriString}")
             // 使用OkHttp下载
             downloadWithOkHttp(uriString)?.let { bytes ->
                 BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
@@ -265,6 +269,16 @@ class AlbumArtProvider(private val context: Context) {
             release() // 在 finally 中释放资源
         }
     }
+
+    private fun getFromPath(path: String): Bitmap? {
+        return try {
+            BitmapFactory.decodeFile(path)
+        } catch (e: Exception) {
+            Log.w(TAG, "getFromPath: file to get album art from: $path")
+            null
+        }
+    }
+
 
     // 保存为临时文件
     private fun saveAsTempFile(bitmap: Bitmap, mediaId: String): Uri? {

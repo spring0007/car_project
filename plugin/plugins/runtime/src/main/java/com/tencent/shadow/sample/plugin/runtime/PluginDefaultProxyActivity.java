@@ -43,30 +43,6 @@ public class PluginDefaultProxyActivity extends PluginContainerActivity implemen
         return "SAMPLE";
     }
 
-    @Override
-    public void onCreate(Bundle arg0, PersistableBundle arg1) {
-        super.onCreate(arg0, arg1);
-        Log.i(TAG, "onCreate: huang create two pars==>");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart: huang start==>");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i(TAG, "onRestart: huang restart==>");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: huang resume==>");
-    }
-
     @NonNull
     @Override
     public ViewModelStore getViewModelStore() {

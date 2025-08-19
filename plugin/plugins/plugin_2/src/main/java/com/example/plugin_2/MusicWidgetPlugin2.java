@@ -117,8 +117,6 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         mObjectAnimator.setInterpolator(new LinearInterpolator());
         stopLoadAnim();
 
-        //getKwMusicApi();
-
         setImageIcon(currentMedia);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
@@ -156,7 +154,6 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     int[] sf_music_preId = {R.drawable.sf_music_pre, R.drawable.sf_music_pre_n};
     int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang_n};
     int[] sf_music_zantingId = {R.drawable.sf_music_zanting, R.drawable.sf_music_zanting_n};
-    int[] sf_music_seekbarId = {R.drawable.sf_music_seekbar, R.drawable.sf_music_seekbar_n};
 
     public void setDayNight(int dayNight) {
         this.dayNight = dayNight;
@@ -299,7 +296,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        Log.d(TAG, "setMusicNameTextView = " + flag + "--musicname=" + musicname + "--mMusicNameTextView=" + mMusicNameTextView + "--currentMedia=" + currentMedia);
+        Log.d(TAG, "setMusicNameTextView: flag= " + flag + " musicname=" + musicname  + " currentMedia=" + currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
@@ -375,13 +372,13 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
      * 根据当前播放状态，切换UI
      */
     private void setCurMusicState(boolean musicState) {
-        Log.e(TAG, "setCurMusicState = " + musicState);
+        Log.i(TAG, "setCurMusicState = " + musicState);
         setTextEarquee(musicState);
         if (mPlayStateImageView == null) return;
         this.musicState = musicState;
         if (musicState) {
             if (currentMedia <= BT && mObjectAnimator != null) {
-                Log.e(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
+                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
                 if (!mObjectAnimator.isRunning()) {
                     startLoadAnim();
                 } else {
@@ -414,7 +411,6 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             if ("start".equals(status)) {
                 currentMedia = MUSIC;
                 currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
 
@@ -423,39 +419,21 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
                 currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
                 setCurMusicState(true);
             } else if ("stop".equals(status)) {
+                setCurMusicState(false);
 
             }
-        /*} else if (packName.contains("kwmusiccar")) {//酷我音乐
-            if ("start".equals(status)) {
-                currentMedia = KUMUSIC;
-                currentPlayingPackage=packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }
-        } else if (packName.contains("com.zjinnova.zlink")) {//蓝牙音乐
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
-                currentMedia = CARPLAY;
-                currentPlayingPackage=packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }*/
-        } else if (!TextUtils.isEmpty(packName) && curMedia > BT) {
+        } else if (!TextUtils.isEmpty(packName)) {
             if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
                 currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
                 //setCurMusicState(true);
             } else if ("stop".equals(status)) {
 
             }
         }
+        setImageIcon(currentMedia);
     }
 
 

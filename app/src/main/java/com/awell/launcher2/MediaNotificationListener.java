@@ -96,8 +96,10 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     /**
      * 记录可访问的图片Uri
      */
-    private String mLastUri = null;
-    private String mKwPlayImageUri = "img4.kuwo.cn";
+    private String mLastUri = "default";
+    //该目录下可能无图片，当前播放的歌曲如果没有专辑图片，bug:会显示上一曲的专辑图片
+    private String mKwPlayImageUri_300 = "/albumcover/300";
+    private String mKwPlayImageUri_700 = "/albumcover/700";
     private boolean isRegisterCallback = false;
 
     private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
@@ -107,7 +109,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             mExecutor.execute(() -> {
                 if (state != null) {
 
-
+                    Log.i(TAG, "onPlaybackStateChanged: huang state=>" + state);
                     if (mPlayState != state.getState()) {
                         //todo update ui status
 
@@ -122,7 +124,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                     if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
                         lastUpdateTime = currentTime;
                         handlePlayingTime(mMediaController);
-
                         handleMetadataArtUri();
                     }
                 }
@@ -133,7 +134,9 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             if (mMediaController.getMetadata() != null) {
                 String metaArtUri = mMediaController.getMetadata().
                         getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
-                if (metaArtUri.contains(mKwPlayImageUri) && !metaArtUri.equals(mLastUri)) {
+                if (metaArtUri != null
+                        && metaArtUri.contains(mKwPlayImageUri_700)
+                        && !metaArtUri.equals(mLastUri)) {
                     mLastUri = metaArtUri;
                     notifyHostAlbumArtUpdate(metaArtUri);
                 }
@@ -149,7 +152,9 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
 
                 String metaArtUri = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
-                if (metaArtUri.contains(mKwPlayImageUri) && !metaArtUri.equals(mLastUri)) {
+                if (metaArtUri != null
+                        && metaArtUri.contains(mKwPlayImageUri_700)
+                        && !metaArtUri.equals(mLastUri)) {
                     mLastUri = metaArtUri;
                     notifyHostAlbumArtUpdate(metaArtUri);
                 }
@@ -232,6 +237,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     public void removeCallbacks() {
         if (mMediaController != null && isRegisterCallback) {
             mMediaController.unregisterCallback(mMediaControllerCallback);
+            mLastUri = "default";
             isRegisterCallback = false;
         }
     }
@@ -307,7 +313,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             PlaybackState state = controller.getPlaybackState();
 
             if (state != null) {
-                setPlayingPackageName(controller.getPackageName());
+                //setPlayingPackageName(controller.getPackageName());
                 activeController = controller;
                 //sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
                 break;
@@ -336,7 +342,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
         //可能播放了本地音乐图片已切换
         //重新注册到系统的media session需要重新更新一次图片
-        if (mLastUri != null) {
+        if (!mLastUri.equals("default")) {
             notifyHostAlbumArtUpdate(mLastUri);
         }
     }
@@ -582,7 +588,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         sendDataToAwellApi(bundle);
     }
 
-    private void sendDataToAwellApi(Bundle bundle) {
+    public void sendDataToAwellApi(Bundle bundle) {
         try {
             if (mAwellApi != null) {
                 mAwellApi.sendData(bundle);

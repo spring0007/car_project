@@ -255,7 +255,7 @@ public class AwellLibrary {
         StringBuffer sb = new StringBuffer();
         sb.append("Bundle[{");
         for (String key : bundle.keySet()) {
-            sb.append(key + "=" + bundle.get(key) + ", ");
+            sb.append(key + "=" + bundle.get(key) + ",");
         }
         sb.append("}]");
         return sb.toString();
@@ -294,7 +294,7 @@ public class AwellLibrary {
                 Bundle bundle = msg.getData();
                 if (bundle != null)
                     mDataListener.onResult(bundle);
-//                Log.i(TAG,"handleMessage() over " + mCallerName + "  " + getBundle(bundle));
+                Log.i(TAG,"handleMessage() over " + mCallerName + "  " + getBundle(bundle));
             }
         }
     }

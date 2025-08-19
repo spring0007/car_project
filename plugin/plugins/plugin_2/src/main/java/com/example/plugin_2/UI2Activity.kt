@@ -13,6 +13,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
@@ -33,6 +34,7 @@ import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
 import com.example.plugin_2.databinding.SpeedLayoutBinding
 import com.example.plugin_2.databinding.Ui2ActivityBinding
+import java.io.File
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -255,6 +257,16 @@ class UI2Activity : Activity() {
                     if (zlinkStatus == null) {
                         return
                     }
+                    if ("REFRESH_JEPG" == zlinkStatus) {
+                        val sdcardDir = Environment.getExternalStorageDirectory()
+                        val imageFile = File(sdcardDir, "cp.jpg")
+                        val bundle = Bundle()
+                        bundle.putString(
+                            AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE
+                        )
+                        bundle.putString(AwellTool.VALUE_M4, imageFile.absoluteFile.toString())
+                        mediaControl.sendBundleToInternal(bundle)
+                    }
                     llMusic.setCarPlayData(zlinkStatus, phoneMode)
                 }
 
@@ -361,6 +373,7 @@ class UI2Activity : Activity() {
                 bundle: Bundle, songName: String, singerName: String, album: String, type: Int
             ) {
                 runOnUiThread {
+                    //Log.i(TAG, "updateViewPlayInfo: huang bundle=${bundle}")
                     llMusic.setMusicNameTextView(songName, type)
                     llMusic.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {

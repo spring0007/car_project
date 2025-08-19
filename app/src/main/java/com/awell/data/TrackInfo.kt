@@ -8,23 +8,26 @@ data class TrackInfo(
     val mediaId: String? = null,         // 唯一媒体ID
     val songId: Long? = null,            // 媒体库歌曲ID
     val albumId: Long? = null,           // 媒体库专辑ID
-    val filePath: String? = null,        // 文件路径
-    val metadata: MediaMetadata? = null  // MediaMetadata 对象
+    val fileMusicPath: String? = null,        // 文件路径
+    val metadata: MediaMetadata? = null,  // MediaMetadata 对象
+    val imagePath: String? = null  // 图片路径
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         mediaId = parcel.readString(),
         songId = parcel.readValue(Long::class.java.classLoader) as? Long,
         albumId = parcel.readValue(Long::class.java.classLoader) as? Long,
-        filePath = parcel.readString(),
-        metadata = parcel.readParcelable(MediaMetadata::class.java.classLoader)
+        fileMusicPath = parcel.readString(),
+        metadata = parcel.readParcelable(MediaMetadata::class.java.classLoader),
+        imagePath = parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(mediaId)
         parcel.writeValue(songId)
         parcel.writeValue(albumId)
-        parcel.writeString(filePath)
+        parcel.writeString(fileMusicPath)
         parcel.writeParcelable(metadata, flags)
+        parcel.writeString(imagePath)
     }
 
     override fun describeContents(): Int = 0
