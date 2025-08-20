@@ -73,7 +73,7 @@ android {
 
 dependencies {
     implementation 'com.tencent.shadow.core:activity-container:1.0'
-    implementation 'androidx.lifecycle:lifecycle-common:2.6.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
+    //implementation 'androidx.lifecycle:lifecycle-common:2.6.1'
+    //implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
 }
 

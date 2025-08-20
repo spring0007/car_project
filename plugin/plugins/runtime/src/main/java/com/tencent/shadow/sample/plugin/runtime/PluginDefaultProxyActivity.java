@@ -27,14 +27,14 @@ import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelStore;
-import androidx.lifecycle.ViewModelStoreOwner;
+//import androidx.annotation.NonNull;
+//import androidx.lifecycle.ViewModelStore;
+//import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.tencent.shadow.core.runtime.container.PluginContainerActivity;
 
 @SuppressLint("Registered")//无需注册在这个模块的Manifest中，要注册在宿主的Manifest中。
-public class PluginDefaultProxyActivity extends PluginContainerActivity implements ViewModelStoreOwner {
+public class PluginDefaultProxyActivity extends PluginContainerActivity {
 
     private final String TAG = PluginDefaultProxyActivity.class.getSimpleName();
 
@@ -43,9 +43,9 @@ public class PluginDefaultProxyActivity extends PluginContainerActivity implemen
         return "SAMPLE";
     }
 
-    @NonNull
-    @Override
-    public ViewModelStore getViewModelStore() {
-        return null;
-    }
+//    @NonNull
+//    @Override
+//    public ViewModelStore getViewModelStore() {
+//        return null;
+//    }
 }
