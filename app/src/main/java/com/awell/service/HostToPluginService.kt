@@ -8,6 +8,7 @@ import android.media.MediaMetadata
 import android.net.Uri
 import android.os.Binder
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.os.Parcelable
 import android.os.RemoteCallbackList
@@ -33,6 +34,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
+import java.io.File
 import kotlin.math.log
 
 
@@ -76,7 +78,7 @@ class HostToPluginService : Service() {
      */
     private val MEDIA_SESSION_PKG_KEYWORDS = setOf(
         "cn.kuwo.kwmusiccar",
-        "com.zjinnova.zlink", //尽管carplay注册到media session，但未向metadata提供信息
+        "com.zjinnova.zlink",
     )
 
     private val LOCAL_MEDIA_PKG = setOf(
@@ -100,7 +102,6 @@ class HostToPluginService : Service() {
         bundle?.let {
 
             //printThreadInfo(bundle)
-            Log.i(TAG, "AwellLibrary.OnDataListener: huang bundle=${bundle}")
             saveTempValue(bundle)
 
             val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
@@ -240,19 +241,32 @@ class HostToPluginService : Service() {
                 //只有在start播放的时候监听，其他命令移除监听
                 val pkg = bundle.getString(AwellTool.VALUE_M1, null)
                 val command = bundle.getString(AwellTool.VALUE_M2, null)
-                pkg?.let {
-                    mMediaListener.playingPackageName = pkg
-                    Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
-                    if (isMediaSessionPkg(pkg, command)) {
-                        //只有三方注册到media session服务里的媒体开始播放的时候才注册监听
-                        mMediaListener.startCallbacks()
-                    } else if (isLocalMediaStart(pkg, command)) {
-                        //只有未注册到media session服务里的媒体开始播放的时候
-                        //才将注册到media session服务里的媒体断开回调
-                        mMediaListener.removeCallbacks()
 
-                        //蓝牙音乐没有专辑图片，设置默认图片
-                        setDefaultBtArt(pkg, bundle)
+
+                when {
+                    //只在start的时候更新播放的包名
+                    command == "start" -> {
+                        pkg?.let {
+                            mMediaListener.playingPackageName = pkg
+                            Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
+                            if (isMediaSessionPkg(pkg, command)) {
+                                //只有三方注册到media session服务里的媒体开始播放的时候才注册监听
+                                mMediaListener.startCallbacks()
+
+                                //单独更新carplay图片
+                                if (pkg.contains("com.zjinnova.zlink")) {
+                                    updateCarplayImageAlbum()
+                                }
+
+                            } else if (isLocalMediaStart(pkg, command)) {
+                                //只有未注册到media session服务里的媒体开始播放的时候
+                                //才将注册到media session服务里的媒体断开回调
+                                mMediaListener.removeCallbacks()
+
+                                //蓝牙音乐没有专辑图片，设置默认图片
+                                setDefaultBtArt(pkg, bundle)
+                            }
+                        }
                     }
                 }
             }
@@ -299,6 +313,26 @@ class HostToPluginService : Service() {
             tempBundle.putString(AwellTool.VALUE_M1, null)
             tempBundle.putString(AwellTool.VALUE_M3, null)
             handleLocalMusicImageByScope(tempBundle)
+        }
+    }
+
+    /**
+     * 处理carplay图片
+     * carplay播放酷狗音乐会有广播通知图片更新
+     * 切换成其他媒体，在切回carplay不发送广播通知图片更新
+     * 需要单独处理
+     */
+    private fun updateCarplayImageAlbum() {
+        val sdcardDir = Environment.getExternalStorageDirectory()
+        val imageFile = File(sdcardDir, "cp.jpg")
+
+        if (imageFile.exists()) {
+            val bundle = Bundle()
+            bundle.putString(
+                AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE
+            )
+            bundle.putString(AwellTool.VALUE_M4, imageFile.absoluteFile.toString())
+            handleLocalMusicImageByScope(bundle)
         }
     }
 

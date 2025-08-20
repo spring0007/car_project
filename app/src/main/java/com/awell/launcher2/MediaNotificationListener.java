@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -66,7 +67,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private final CopyOnWriteArrayList<MediaController> mControllers = new CopyOnWriteArrayList<>();
     private final List<MediaController.Callback> mCallbacks = new ArrayList<>();
 
-    private int mPlayState = 0;
     private int mActivePlaybackCount = 0;
     private long mCurrentPosition = 0;
     private long mDuration = 0;
@@ -92,6 +92,10 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private long lastUpdateTime = 0;
     private final long UPDATE_INTERVAL = 1000; // 间隔
 
+    private int CURRENT_UPDATE_TIMES = 0;
+    private final int TOTAL_UPDATE_TIMES = 5;
+    private int mLastPlayState = 0;
+
 
     /**
      * 记录可访问的图片Uri
@@ -109,15 +113,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             mExecutor.execute(() -> {
                 if (state != null) {
 
-                    Log.i(TAG, "onPlaybackStateChanged: huang state=>" + state);
-                    if (mPlayState != state.getState()) {
-                        //todo update ui status
-
-                        //sendMediaPlayInfoToWidget(mMediaController, state.getState() == PlaybackState.STATE_PLAYING);
-                        sendPlayStateToWidget(state.getState() == PlaybackState.STATE_PLAYING);
-
-                        mPlayState = state.getState();
-                    }
+                    //Log.i(TAG, "onPlaybackStateChanged: huang state=>" + state);
 
                     long currentTime = System.currentTimeMillis();
                     // 检查是否达到时间间隔,到达指定间隔发送数据
@@ -125,76 +121,29 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                         lastUpdateTime = currentTime;
                         handlePlayingTime(mMediaController);
                         handleMetadataArtUri();
+
+                        //减少状态更新频率
+                        if (mLastPlayState != state.getState()
+                                || CURRENT_UPDATE_TIMES++ < TOTAL_UPDATE_TIMES) {
+                            sendPlayStateToWidget(state.getState() == PlaybackState.STATE_PLAYING);
+                            mLastPlayState = state.getState();
+                        }
+
                     }
                 }
             });
         }
 
-        private void handleMetadataArtUri() {
-            if (mMediaController.getMetadata() != null) {
-                String metaArtUri = mMediaController.getMetadata().
-                        getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
-                if (metaArtUri != null
-                        && metaArtUri.contains(mKwPlayImageUri_700)
-                        && !metaArtUri.equals(mLastUri)) {
-                    mLastUri = metaArtUri;
-                    notifyHostAlbumArtUpdate(metaArtUri);
-                }
-            }
-        }
-
-
         @Override
         public void onMetadataChanged(MediaMetadata metadata) {
-            mPlayState = 0;
             Log.d(TAG, "onMetadataChanged---metadata: " + metadata);
+            CURRENT_UPDATE_TIMES = 0;
             if (metadata != null) {
 
-
-                String metaArtUri = metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
-                if (metaArtUri != null
-                        && metaArtUri.contains(mKwPlayImageUri_700)
-                        && !metaArtUri.equals(mLastUri)) {
-                    mLastUri = metaArtUri;
-                    notifyHostAlbumArtUpdate(metaArtUri);
-                }
+                handleMetadataArtUri();
 
                 handleMetadataChange(mMediaController, metadata);
 
-//                mMainHandler.postDelayed(() -> {
-//                    PlaybackState state = mMediaController.getPlaybackState();
-//                    Log.d(TAG, "onMetadataChanged-state: " + state + " from " + mMediaController.getPackageName() + "--mPlayState=" + mPlayState);
-//                    boolean playing = false;
-//                    if (state != null) {
-//                        playing = (state.getState() == PlaybackState.STATE_PLAYING);
-//                    }
-//
-//                    if (metadata != null) {
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ARTIST));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_TITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_TITLE));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_DISPLAY_SUBTITLE: " + metadata.getString(MediaMetadata.METADATA_KEY_DISPLAY_SUBTITLE));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_AUTHOR: " + metadata.getString(MediaMetadata.METADATA_KEY_AUTHOR));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_WRITER: " + metadata.getString(MediaMetadata.METADATA_KEY_WRITER));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_COMPOSER: " + metadata.getString(MediaMetadata.METADATA_KEY_COMPOSER));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ART: " + metadata.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART));
-//                        Log.d(TAG, "onMetadataChanged---METADATA_KEY_ALBUM_ARTIST: " + metadata.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST));
-//                    }
-//                    if (playing) {
-//                        //sendMediaPlayInfoToWidget(mMediaController, playing);
-//                        handleMetadataChange(mMediaController, metadata);
-//                        if (!mUpdateRunnables.containsKey(mMediaController.getPackageName())) {
-//                            if (shouldManualUpdate(mMediaController.getPackageName())) {
-//                                //stopManualUpdate(mMediaController);
-//                                startManualUpdate(mMediaController);
-//                            } else {
-//                                cleanup();
-//                                handlePlayingTime(mMediaController);
-//                            }
-//                        }
-//                    }
-//                }, 1000);
             }
         }
 
@@ -205,6 +154,20 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
     };
 
+    private void handleMetadataArtUri() {
+        if (mMediaController.getMetadata() != null) {
+            String metaArtUri = mMediaController.getMetadata().
+                    getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
+            Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
+            if (metaArtUri != null && metaArtUri.contains(mKwPlayImageUri_700) && !metaArtUri.equals(mLastUri)
+                    //"default" 重新注册到media session里的元数据可能只包含300的图片
+                    || ("default".equals(mLastUri) && metaArtUri != null)) {
+                mLastUri = metaArtUri;
+                notifyHostAlbumArtUpdate(metaArtUri);
+            }
+        }
+    }
+
     public void initDependencies(Context context) {
         mContext = context;
         IBinder binder = ServiceManager.getService("AwellAutoApi");
@@ -214,9 +177,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
         MediaSessionManager.OnActiveSessionsChangedListener mSessionsListener = controllers -> {
             // 处理会话变化
-            mPlayState = 0;
             assert controllers != null;
-            Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size() + "--mPlayState=" + mPlayState);
+            Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size());
             if (controllers.isEmpty()) {
                 //setPlayingPackage(null);
                 cleanup();
@@ -243,12 +205,27 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     }
 
     public void startCallbacks() {
-        if (!isRegisterCallback) {
+        Log.i(TAG, "startCallbacks: huang currentControlPkgIsChange()=>" + currentControlPkgIsChange() + " isRegisterCallback=>" + isRegisterCallback);
+        if (!isRegisterCallback || currentControlPkgIsChange()) {
             updateMediaController();
             isRegisterCallback = true;
         }
     }
 
+    /**
+     * 当前的媒体控制应用是否和当前播放的应用一致
+     *
+     * @return true: current pkg == media control pkg
+     */
+    private boolean currentControlPkgIsChange() {
+        return mMediaController != null && !mMediaController.getPackageName().equals(getPlayingPackageName());
+    }
+
+    /**
+     * 收到AwellTool.MEDIA_PLAY start的时候赋值
+     *
+     * @param pkg 当前start的应用包名
+     */
     public void setPlayingPackageName(String pkg) {
         mPlayingPackageName = pkg;
     }
@@ -311,8 +288,10 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         // 获取当前正在播放的controller
         for (MediaController controller : mMediaSessionManager.getActiveSessions(null)) {
             PlaybackState state = controller.getPlaybackState();
+            //Log.i(TAG, "updateMediaController: huang control pkg=>" + controller.getPackageName());
+            //Log.i(TAG, "updateMediaController: huang getPlayingPackageName()=>" + getPlayingPackageName());
 
-            if (state != null) {
+            if (Objects.equals(controller.getPackageName(), getPlayingPackageName())) {
                 //setPlayingPackageName(controller.getPackageName());
                 activeController = controller;
                 //sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
@@ -342,9 +321,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
         //可能播放了本地音乐图片已切换
         //重新注册到系统的media session需要重新更新一次图片
-        if (!mLastUri.equals("default")) {
-            notifyHostAlbumArtUpdate(mLastUri);
-        }
+        mLastUri = "default";
     }
 
     private void detectAutoUpdateBehavior(MediaController controller, PlaybackState state) {

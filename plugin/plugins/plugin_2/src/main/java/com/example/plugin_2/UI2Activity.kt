@@ -257,17 +257,16 @@ class UI2Activity : Activity() {
                     if (zlinkStatus == null) {
                         return
                     }
-                    if ("REFRESH_JEPG" == zlinkStatus) {
-                        val sdcardDir = Environment.getExternalStorageDirectory()
-                        val imageFile = File(sdcardDir, "cp.jpg")
-                        val bundle = Bundle()
-                        bundle.putString(
-                            AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE
-                        )
-                        bundle.putString(AwellTool.VALUE_M4, imageFile.absoluteFile.toString())
-                        mediaControl.sendBundleToInternal(bundle)
+                    Log.i(
+                        TAG,
+                        "onReceive: huang mediaControl.getCurrentPkgName()=>${mediaControl.getCurrentPkgName()}"
+                    )
+                    if (mediaControl.getCurrentPkgName()?.equals("com.zjinnova.zlink") == true) {
+                        if ("REFRESH_JEPG" == zlinkStatus) {
+                            updateCarplayImageAlbum()
+                        }
+                        llMusic.setCarPlayData(zlinkStatus, phoneMode)
                     }
-                    llMusic.setCarPlayData(zlinkStatus, phoneMode)
                 }
 
                 "android.launcher.show.allApp" -> {
@@ -283,6 +282,17 @@ class UI2Activity : Activity() {
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
             }
+        }
+
+        private fun updateCarplayImageAlbum() {
+            val sdcardDir = Environment.getExternalStorageDirectory()
+            val imageFile = File(sdcardDir, "cp.jpg")
+            val bundle = Bundle()
+            bundle.putString(
+                AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE
+            )
+            bundle.putString(AwellTool.VALUE_M4, imageFile.absoluteFile.toString())
+            mediaControl.sendBundleToInternal(bundle)
         }
     }
 
@@ -353,6 +363,10 @@ class UI2Activity : Activity() {
                 bundle: Bundle, status: Boolean, type: Int
             ) {
                 runOnUiThread {
+                    Log.i(
+                        TAG,
+                        "updateViewPlayStatus: huang update play status bundle=${bundle} status=${status} type=${type}"
+                    )
                     llMusic.setCurMusicState(status, type)
                 }
             }

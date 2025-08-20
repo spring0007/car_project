@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -23,12 +24,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 /*import cn.kuwo.autosdk.api.KWAPI;
 import cn.kuwo.autosdk.api.OnGetSongImgUrlListener;
@@ -63,6 +71,22 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
 
     private AwellMediaControl mediaControl;
     private ObjectAnimator mObjectAnimator = null;
+
+    private RequestListener<Drawable> listener = new RequestListener<Drawable>() {
+        @Override
+        public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
+            if (e != null) {
+                Log.e(TAG, "Glide load uri failed!! " + e.getMessage());
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onResourceReady(@NonNull Drawable resource, @NonNull Object model, Target<Drawable> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+            return false;
+        }
+    };
 
 //    private MediaNotificationListener mediaNotificationListener = null;
 
@@ -296,7 +320,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        Log.d(TAG, "setMusicNameTextView: flag= " + flag + " musicname=" + musicname  + " currentMedia=" + currentMedia);
+        Log.d(TAG, "setMusicNameTextView: flag= " + flag + " musicname=" + musicname + " currentMedia=" + currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
@@ -328,6 +352,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                 .load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
+                .addListener(listener)
                 .circleCrop()
                 .placeholder(R.drawable.ablum_default_bg)
                 .error(R.drawable.ablum_default_bg)
@@ -407,33 +432,47 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     public void switchMediaController(String packName, String status, int mediaType, int curMedia) {
         Log.i(TAG, "switchMediaController: packName = " + packName + ", status= " + status);
         Log.i(TAG, "switchMediaController: mediaType = " + mediaType + ", curMedia= " + curMedia);
-        if (packName.contains("localmusic")) {//本地音乐
-            if ("start".equals(status)) {
+
+        if ("start".equals(status)) {
+            currentPlayingPackage = packName;
+            if (packName.contains("localmusic")) {
                 currentMedia = MUSIC;
-                currentPlayingPackage = packName;
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }
-        } else if (packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+            } else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
+                    && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
-                currentPlayingPackage = packName;
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-                setCurMusicState(false);
-
-            }
-        } else if (!TextUtils.isEmpty(packName)) {
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+            } else if (mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-                currentPlayingPackage = packName;
-                //setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
             }
+            setCurMusicState(true);
+            setImageIcon(currentMedia);
         }
-        setImageIcon(currentMedia);
+
+//        if (packName.contains("localmusic")) {//本地音乐
+//            if ("start".equals(status)) {
+//                currentMedia = MUSIC;
+//                currentPlayingPackage = packName;
+//                setCurMusicState(true);
+//            } else if ("stop".equals(status)) {
+//
+//            }
+//        } else if (packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
+//            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+//                currentMedia = BT;
+//                currentPlayingPackage = packName;
+//                setCurMusicState(true);
+//            } else if ("stop".equals(status)) {
+//                //setCurMusicState(false);
+//
+//            }
+//        } else if (!TextUtils.isEmpty(packName)) {
+//            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+//                currentMedia = OTHER_MUSIC;
+//                currentPlayingPackage = packName;
+//                //setCurMusicState(true);
+//            } else if ("stop".equals(status)) {
+//
+//            }
+//        }
     }
 
 
