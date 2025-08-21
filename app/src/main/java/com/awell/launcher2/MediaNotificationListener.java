@@ -16,6 +16,11 @@
 
 package com.awell.launcher2;
 
+import static android.media.MediaMetadata.METADATA_KEY_ALBUM_ART;
+import static android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI;
+import static android.media.MediaMetadata.METADATA_KEY_ART;
+import static android.media.MediaMetadata.METADATA_KEY_MEDIA_URI;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.media.MediaMetadata;
@@ -42,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -156,14 +162,20 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
     private void handleMetadataArtUri() {
         if (mMediaController.getMetadata() != null) {
-            String metaArtUri = mMediaController.getMetadata().
-                    getString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI);
+            String metaArtUri = mMediaController.getMetadata().getString(METADATA_KEY_ALBUM_ART_URI);
             Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
+            Log.i(TAG, "handleMetadataArtUri: huang metadata =>" + mMediaController.getMetadata().keySet());
+
             if (metaArtUri != null && metaArtUri.contains(mKwPlayImageUri_700) && !metaArtUri.equals(mLastUri)
                     //"default" 重新注册到media session里的元数据可能只包含300的图片
                     || ("default".equals(mLastUri) && metaArtUri != null)) {
                 mLastUri = metaArtUri;
                 notifyHostAlbumArtUpdate(metaArtUri);
+            } else if (metaArtUri == null && !Objects.equals(mLastUri, null)) {
+                //没有网络也需要调用，使用默认图片
+                //获取的METADATA_KEY_ALBUM_ART 一直在变化
+                mLastUri = null;
+                notifyHostAlbumArtUpdate(null);
             }
         }
     }
@@ -288,8 +300,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         // 获取当前正在播放的controller
         for (MediaController controller : mMediaSessionManager.getActiveSessions(null)) {
             PlaybackState state = controller.getPlaybackState();
-            //Log.i(TAG, "updateMediaController: huang control pkg=>" + controller.getPackageName());
-            //Log.i(TAG, "updateMediaController: huang getPlayingPackageName()=>" + getPlayingPackageName());
+            Log.i(TAG, "updateMediaController: huang control pkg=>" + controller.getPackageName());
+            Log.i(TAG, "updateMediaController: huang getPlayingPackageName()=>" + getPlayingPackageName());
 
             if (Objects.equals(controller.getPackageName(), getPlayingPackageName())) {
                 //setPlayingPackageName(controller.getPackageName());

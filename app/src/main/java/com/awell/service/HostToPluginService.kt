@@ -64,8 +64,13 @@ class HostToPluginService : Service() {
 
     /**
      * data数据显示
+     * 切换UI时需要重新通知到客户端
      */
-    var mMusicPlayInfo: MusicPlayInfo? = null
+    private var mTempAlbumBundle: Bundle? = null
+
+    private var mTempMusicPlayInfo: Bundle? = null
+
+    private var mTempMediaPlay: Bundle? = null
 
     /**
      * 客户端注册的监听
@@ -207,8 +212,18 @@ class HostToPluginService : Service() {
 
         override fun registerListener(listener: IDataChangeInterface) {
             listeners.register(listener)
-            mMusicPlayInfo?.let {
-                notifyClientDataChanged(musicPlayInfoToBundle(mMusicPlayInfo!!))
+            //todo use temp value to update client data like music info album ...
+
+            mTempMusicPlayInfo?.let {
+                notifyClientDataChanged(it)
+            }
+
+            mTempAlbumBundle?.let {
+                handleLocalMusicImageByScope(it)
+            }
+
+            mTempMediaPlay?.let {
+                notifyClientDataChanged(it)
             }
 
         }
@@ -228,11 +243,12 @@ class HostToPluginService : Service() {
         when (status) {
             AwellTool.MUSIC.PLAY_NAME -> {
                 //保存本地音乐播放的信息
-                mMusicPlayInfo = bundleToMusicPlayInfo(bundle)
+                mTempMusicPlayInfo = bundle.deepCopy()
             }
 
             MusicWidget.OTHER_MUSIC_PLAY_IMAGE,
             AwellTool.MUSIC.PLAY_IMAGE -> {
+                mTempAlbumBundle = bundle.deepCopy()
                 handleLocalMusicImageByScope(bundle)
             }
 
@@ -241,7 +257,6 @@ class HostToPluginService : Service() {
                 //只有在start播放的时候监听，其他命令移除监听
                 val pkg = bundle.getString(AwellTool.VALUE_M1, null)
                 val command = bundle.getString(AwellTool.VALUE_M2, null)
-
 
                 when {
                     //只在start的时候更新播放的包名
@@ -269,6 +284,7 @@ class HostToPluginService : Service() {
                         }
                     }
                 }
+                mTempMediaPlay = bundle.deepCopy()
             }
         }
     }

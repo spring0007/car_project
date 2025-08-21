@@ -24,6 +24,9 @@ import com.awell.service.GpsSimulationService;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
 
+import android.os.SystemProperties;
+import android.view.ViewGroup;
+
 import java.lang.reflect.Method;
 
 
@@ -35,16 +38,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private final String partKey1 = "plugin-app";
     private final String partKey2 = "plugin2-app";
+
+    private String plugin_pkg_key = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
+    private String plugin_clazz_key = "persist.sys.launcher.clazz"; //value : plugin app class name
     private Handler mHandler = new Handler();
     private boolean mStartPlugin = true;
+
+    private ViewGroup mViewGroup;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.select_launcher_layout);
+        setContentView(R.layout.select_launcher_layout);
 //        initView();
 //        startGpsService();
+
+//        mViewGroup = findViewById(R.id.container);
+
 
         if ("default".equals(getIntent().getStringExtra("launcher"))) {
             mStartPlugin = false;
@@ -62,6 +73,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     /**
      * 启动GPS位置模拟服务
+     * GPS模拟位置可用
+     * adb shell appops set com.awell.launcher android:mock_location allow
      */
     private void startGpsService() {
         Intent service = new Intent();
@@ -103,20 +116,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        findViewById(R.id.start_ui_activity).setOnClickListener(this);
-        findViewById(R.id.start_launcher).setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.start_launcher) {
-            Intent intent = new Intent(this, Launcher.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        } else if (v.getId() == R.id.start_ui_activity) {
-            startPlugin();
-        }
+
     }
 
 
@@ -125,15 +130,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
         PluginHelper.getInstance().singlePool.execute(new Runnable() {
             @Override
             public void run() {
+                String plugin_key = SystemProperties.get(plugin_pkg_key, partKey1);
+                String plugin_clazz = SystemProperties.get(plugin_clazz_key, CLAZZ_NAME_LAUNCHER_1);
+
                 ((LauncherApplication) getmAppContext()).loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
                 //bundle.putString(Constant.KEY_PLUGINS_APK_PATH, "/sdcard/launcher_plugin");
-//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey1);
-//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_1);
-                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
-                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
+                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, plugin_key);
+                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, plugin_clazz);
+//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
+//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
                 ((LauncherApplication) getmAppContext()).getPluginManager()
                         .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                             @Override
@@ -141,7 +149,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-//                                        mViewGroup.addView(view);
+                                        //mViewGroup.addView(view);
                                     }
                                 });
                             }

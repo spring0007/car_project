@@ -165,20 +165,10 @@ public class SamplePluginManager extends FastPluginManager {
                     }
                     Log.i(TAG, "run: huang context pluginIntent=>" + pluginIntent);
                     Intent intent = mPluginLoader.convertActivityIntent(pluginIntent);
-                    Log.i(TAG, "run: huang convertActivityIntent intent=> " + intent);
                     intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                     mPluginLoader.startActivityInPluginProcess(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "run: huang run time error:" + e);
-//                    Log.e(TAG, "run: huang start default home=>");
-//                    Intent intent = new Intent(Intent.ACTION_MAIN);
-//                    intent.addCategory(Intent.CATEGORY_HOME);
-//                    intent.putExtra("launcher", "default");
-//                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-//                    ComponentName cmp = new ComponentName("com.awell.launcher", "com.awell.launcher.MainActivity");
-//                    intent.setComponent(cmp);
-//                    context.startActivity(intent);
-//                    throw new RuntimeException(e);
                 }
                 if (callback != null) {
                     callback.onCloseLoadingView();

@@ -82,6 +82,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-core:2.6.1'
 
     implementation project(path: ':app')
+    implementation project(path: ':AwellLibrary')
     implementation project(':plugin:plugins:constant')
 
 
