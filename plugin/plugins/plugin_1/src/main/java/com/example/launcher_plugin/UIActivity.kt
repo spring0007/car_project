@@ -79,6 +79,8 @@ class UIActivity : Activity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Utils.setPluginWallpaper(resources, R.drawable.wallpaper_00)
+
         (LauncherApplication.getmAppContext() as LauncherApplication).getModel()
             .startLoader(true, -1)
 
@@ -102,6 +104,7 @@ class UIActivity : Activity(), View.OnClickListener {
         dayNightImages(if (value == 1) 1 else 0)
 
         initBroadcastReceiver()
+
 
     }
 

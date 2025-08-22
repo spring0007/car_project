@@ -2,18 +2,26 @@ package com.awell.utils;
 
 import static com.awell.launcher2.Launcher.INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION;
 import static com.awell.launcher2.LauncherApplication.getmAppContext;
+import static com.awell.launcher2.LauncherApplication.mAppContext;
 
 import android.app.ActivityOptions;
+import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Parcelable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -22,6 +30,7 @@ import com.awell.addapp.AppInfo;
 import com.awell.launcher.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -510,6 +519,32 @@ public class Utils {
         }
 
         return pluginResources;
+    }
+
+    public static void setPluginWallpaper(Resources resources, int resourceId) {
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(mAppContext);
+
+        Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
+        try {
+
+            // 获取屏幕分辨率宽度
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager wm = (WindowManager) mAppContext.getSystemService(Context.WINDOW_SERVICE);
+            wm.getDefaultDisplay().getRealMetrics(metrics);
+            int mScreenWidth = metrics.widthPixels;
+            int mScreenHeight = metrics.heightPixels;
+
+            //根据分辨率，设置壁纸大小
+            Bitmap tempBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(tempBitmap);
+            canvas.drawBitmap(tempBitmap, 88, 100, null);
+
+            wallpaperManager.suggestDesiredDimensions(mScreenWidth, mScreenHeight);
+            wallpaperManager.setBitmap(bitmap);
+
+        } catch (IOException e) {
+            Log.e(TAG, "setPluginWallpaper: filed=>" + e.getMessage());
+        }
     }
 
     public static void startWallpaper() {

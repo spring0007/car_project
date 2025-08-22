@@ -88,6 +88,10 @@ class UI2Activity : Activity() {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Utils.setPluginWallpaper(resources, R.drawable.wallpaper_00)
+
+
         Log.i(TAG, "onCreate: huang ui2 create this==>${this}")
         mViewBinding = Ui2ActivityBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
@@ -101,6 +105,7 @@ class UI2Activity : Activity() {
         initTouchAndSpeedListener()
 
         initBroadcastReceiver()
+
     }
 
     /**

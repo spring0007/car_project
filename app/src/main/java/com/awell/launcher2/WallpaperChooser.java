@@ -35,9 +35,6 @@ public class WallpaperChooser extends Activity {
         super.onCreate(icicle);
         setContentView(R.layout.wallpaper_chooser_base);
         Intent intent = getIntent();
-        Log.i(TAG, "onCreate: huang icicle=>" + icicle);
-        Log.i(TAG, "onCreate: huang intent=>" + intent);
-
 
         Fragment fragmentView =
                 getFragmentManager().findFragmentById(R.id.wallpaper_chooser_fragment);
@@ -45,7 +42,6 @@ public class WallpaperChooser extends Activity {
         if (intent != null && intent.hasExtra("pluginApkFilePath")) {
             if (fragmentView instanceof WallpaperChooserDialogFragment) {
                 Utils.setPluginApkFilePath(intent.getStringExtra("pluginApkFilePath"));
-                Log.i(TAG, "onCreate: huang after get plugin apk file path=>" + Utils.getPluginApkFilePath());
                 ((WallpaperChooserDialogFragment) fragmentView).loadPluginApkWallpaper();
             }
         }
