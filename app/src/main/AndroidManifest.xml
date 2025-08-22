@@ -139,6 +139,7 @@
                         </intent-filter>
             -->
         </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|fontScale" -->
+
         <activity
             android:name="com.awell.launcher2.WallpaperChooser"
             android:exported="true"
@@ -157,6 +158,7 @@
                 android:name="android.wallpaper.preview"
                 android:resource="@xml/wallpaper_picker_preview" />
         </activity> <!-- Intent received used to prepopulate the default workspace. -->
+
         <activity
             android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
             android:clearTaskOnLaunch="true"

@@ -6,18 +6,25 @@ import static com.awell.launcher2.LauncherApplication.getmAppContext;
 import android.app.ActivityOptions;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.awell.addapp.AppInfo;
 import com.awell.launcher.R;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -255,6 +262,11 @@ public class Utils {
     };
 
     /**
+     * 保存加载的插件文件路径
+     */
+    private static String pluginApkFilePath = null;
+
+    /**
      * 需要更换应用icon的资源文件
      */
     public static final int mHomeIcon[] = {
@@ -385,7 +397,6 @@ public class Utils {
             // private contract between launcher and may be ignored in the
             // future).
             boolean useLaunchAnimation = (v != null) && !intent.hasExtra(INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION);
-            Log.i(TAG, "startActivity: huang start app use context=>" + getmAppContext());
             if (useLaunchAnimation) {
                 ActivityOptions opts = ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
 
@@ -412,6 +423,95 @@ public class Utils {
         return success;
     }
 
+    public static String getPluginApkFilePath() {
+        return pluginApkFilePath;
+    }
+
+    public static boolean isHexStartWith7e(int value) {
+        String hex = Integer.toHexString(value);
+        return hex.startsWith("7e");
+    }
+
+    /**
+     * 保存加载的插件apk文件路径
+     * 在插件加载完成后保存 onCloseLoadingView
+     * host --> plugin --> wallpaper chooser
+     *
+     * @param path 插件文件路径
+     */
+    public static void setPluginApkFilePath(String path) {
+        pluginApkFilePath = path;
+    }
+
+    public static int getPluginWallPaperID(String path) {
+
+        int resourceID = 0;
+
+        File pluginApkFile = new File(path);
+        if (!pluginApkFile.exists()) {
+            return resourceID;
+        }
+        PackageInfo packageInfo = getPackageInfo(pluginApkFile);
+        if (packageInfo == null) {
+            return resourceID;
+        }
+        String pluginPackageName = packageInfo.packageName;
+
+        try {
+            // 3. 创建Resources对象
+            Resources pluginResources = getPluginResources(pluginApkFile);
+
+            if (pluginResources == null) {
+                return resourceID;
+            }
+            // 获取字符串资源ID (假设资源名为"app_name")
+            int arrayResId = pluginResources.getIdentifier("wallpapers", "array", pluginPackageName);
+            if (arrayResId != 0) {
+                String[] appName = pluginResources.getStringArray(arrayResId);
+                return arrayResId;
+            } else {
+                Log.e(TAG, "getPluginWallPaperID: can not find wallpapers array ==>");
+            }
+
+        } catch (Exception e) {
+            Log.e(TAG, "getPluginWallPaperID: failed=>" + e.getMessage());
+            return resourceID;
+        }
+        return resourceID;
+    }
+
+    @Nullable
+    public static PackageInfo getPackageInfo(File pluginApkFile) {
+        PackageManager packageManager = getmAppContext().getPackageManager();
+        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(pluginApkFile.getAbsolutePath(),
+                PackageManager.GET_ACTIVITIES | PackageManager.GET_META_DATA);
+        return packageInfo;
+    }
+
+    /**
+     * 通过文件获取文件apk的resources资源对象。
+     *
+     * @param pluginApkFile 插件apk文件
+     * @return 插件的资源文件
+     */
+    public static Resources getPluginResources(File pluginApkFile) {
+        Resources pluginResources = null;
+        try {
+            AssetManager assetManager = AssetManager.class.newInstance();
+            Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
+            addAssetPath.invoke(assetManager, pluginApkFile.getAbsolutePath());
+
+            Resources superResources = getmAppContext().getResources();
+            pluginResources = new Resources(assetManager, superResources.getDisplayMetrics(),
+                    superResources.getConfiguration());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return pluginResources;
+    }
+
     public static void startWallpaper() {
 //        showWorkspace(true);
         Intent pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
@@ -419,6 +519,7 @@ public class Utils {
         List<Intent> listIntent = new ArrayList<>();
         pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
         pickWallpaper.setPackage(getmAppContext().getPackageName());
+        pickWallpaper.putExtra("pluginApkFilePath", Utils.getPluginApkFilePath());
         listIntent.add(pickWallpaper);
         for (ResolveInfo info : lists) {
             String pkgName = info.activityInfo.packageName;

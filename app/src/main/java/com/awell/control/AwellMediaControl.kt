@@ -206,6 +206,10 @@ class AwellMediaControl() {
         return hostService?.currnetAlbumArtUri
     }
 
+    fun getLoadPluginApkFilePath(): String? {
+        return hostService?.pluginApkFilePath
+    }
+
     /**
      * 客户端绑定都到服务端
      * Host:Client

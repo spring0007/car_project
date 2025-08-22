@@ -15,6 +15,12 @@
  */
 package com.awell.launcher2;
 
+import static com.awell.utils.Utils.getPackageInfo;
+import static com.awell.utils.Utils.getPluginApkFilePath;
+import static com.awell.utils.Utils.getPluginWallPaperID;
+import static com.awell.utils.Utils.getPluginResources;
+import static com.awell.utils.Utils.isHexStartWith7e;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -48,8 +54,10 @@ import android.widget.SpinnerAdapter;
 
 import com.awell.launcher.R;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WallpaperChooserDialogFragment extends DialogFragment implements
         AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
@@ -66,6 +74,8 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
     private WallpaperLoader mLoader;
     private WallpaperDrawable mWallpaperDrawable = new WallpaperDrawable();
     private Bitmap tmpBitmap;
+
+    private ImageAdapter adapter = null;
 
     public static WallpaperChooserDialogFragment newInstance() {
         WallpaperChooserDialogFragment fragment = new WallpaperChooserDialogFragment();
@@ -155,7 +165,8 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             final Gallery gallery = (Gallery) view.findViewById(R.id.gallery);
             gallery.setCallbackDuringFling(false);
             gallery.setOnItemSelectedListener(this);
-            gallery.setAdapter(new ImageAdapter(getActivity()));
+            adapter = new ImageAdapter(getActivity());
+            gallery.setAdapter(adapter);
 
             View setButton = view.findViewById(R.id.set);
             setButton.setOnClickListener(new OnClickListener() {
@@ -190,8 +201,17 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             //根据分辨率，设置壁纸大小
             Bitmap bitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
-            Bitmap parper = BitmapFactory.decodeResource(getResources(),
-                    mImages.get(position));
+            Bitmap parper = null;
+            int resourcesId = mImages.get(position);
+            if (isHexStartWith7e(resourcesId)) {
+                //插件
+                parper = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), resourcesId);
+
+            } else {
+                parper = BitmapFactory.decodeResource(getResources(), resourcesId);
+            }
+
+
             canvas.drawBitmap(parper, 88, 100, null);
             wpm.suggestDesiredDimensions(mScreenWidth, mScreenHeight);
             wpm.setBitmap(mBitmap);
@@ -240,6 +260,24 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
 
         addWallpapers(resources, packageName, R.array.wallpapers);
         addWallpapers(resources, packageName, R.array.extra_wallpapers);
+
+
+    }
+
+    /**
+     * 加载插件中的壁纸
+     */
+    public void loadPluginApkWallpaper() {
+        if (getPluginApkFilePath() != null) {
+            File file = new File(getPluginApkFilePath());
+            if (file.exists() && getPackageInfo(file) != null) {
+                addWallpapers(Objects.requireNonNull(getPluginResources(file)),
+                        Objects.requireNonNull(getPackageInfo(file)).packageName,
+                        getPluginWallPaperID(getPluginApkFilePath()));
+
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void addWallpapers(Resources resources, String packageName, int list) {
@@ -249,7 +287,6 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             if (res != 0) {
                 final int thumbRes = resources.getIdentifier(extra + "_small",
                         "drawable", packageName);
-
                 if (thumbRes != 0) {
                     mThumbs.add(thumbRes);
                     mImages.add(res);
@@ -292,10 +329,17 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
 
             ImageView image = (ImageView) view
                     .findViewById(R.id.wallpaper_image);
-
+            Drawable thumbDrawable = null;
             int thumbRes = mThumbs.get(position);
-            image.setImageResource(thumbRes);
-            Drawable thumbDrawable = image.getDrawable();
+            if (isHexStartWith7e(thumbRes)) {
+                //插件
+                Bitmap paper = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), thumbRes);
+                image.setImageBitmap(paper);
+            } else {
+                image.setImageResource(thumbRes);
+            }
+            thumbDrawable = image.getDrawable();
+
             if (thumbDrawable != null) {
                 thumbDrawable.setDither(true);
             } else {
@@ -321,8 +365,17 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             if (isCancelled())
                 return null;
             try {
-                return BitmapFactory.decodeResource(getResources(),
-                        mImages.get(params[0]), mOptions);
+
+                Bitmap bitmap = null;
+                int resourcesId = mImages.get(params[0]);
+                if (isHexStartWith7e(resourcesId)) {
+                    //插件
+                    bitmap = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), resourcesId, mOptions);
+                } else {
+                    bitmap = BitmapFactory.decodeResource(getResources(), resourcesId, mOptions);
+                }
+
+                return bitmap;
             } catch (OutOfMemoryError e) {
                 return null;
             }

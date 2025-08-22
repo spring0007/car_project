@@ -31,6 +31,7 @@ import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
+import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
 import com.example.plugin_2.databinding.SpeedLayoutBinding
 import com.example.plugin_2.databinding.Ui2ActivityBinding
@@ -87,7 +88,7 @@ class UI2Activity : Activity() {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate: huang ui2 create==>")
+        Log.i(TAG, "onCreate: huang ui2 create this==>${this}")
         mViewBinding = Ui2ActivityBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
 
@@ -656,6 +657,7 @@ class UI2Activity : Activity() {
     }
 
     private fun handleLongPressAction() {
+        Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
     }
 

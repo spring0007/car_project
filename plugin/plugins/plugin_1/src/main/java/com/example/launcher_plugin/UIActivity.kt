@@ -35,6 +35,7 @@ import com.awell.launcher2.LauncherApplication
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
+import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
 import com.example.launcher_plugin.databinding.ActivityUiactivityBinding
 import com.example.launcher_plugin.databinding.SpeedLayoutBinding
@@ -642,6 +643,7 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun handleLongPressAction() {
+        Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
     }
 

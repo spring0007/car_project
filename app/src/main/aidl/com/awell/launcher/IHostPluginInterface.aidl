@@ -22,6 +22,8 @@ interface IHostPluginInterface {
     void setCurrentTrack(in TrackInfo trackInfo);
     Uri getCurrnetAlbumArtUri();
 
+    String getPluginApkFilePath();
+
 
     void nextSong();
     void preSong();

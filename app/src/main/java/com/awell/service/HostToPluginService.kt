@@ -23,6 +23,7 @@ import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellLibrary
 import com.awell.library.AwellTool
 import com.awell.model.AlbumArtProvider
+import com.awell.utils.Utils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -191,6 +192,10 @@ class HostToPluginService : Service() {
 
         override fun getCurrnetAlbumArtUri(): Uri? {
             return albumArtProvider.getCurrentArtUri()
+        }
+
+        override fun getPluginApkFilePath(): String? {
+            return Utils.getPluginApkFilePath()
         }
 
         override fun nextSong() {

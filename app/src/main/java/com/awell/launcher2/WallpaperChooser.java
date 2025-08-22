@@ -17,11 +17,14 @@
 package com.awell.launcher2;
 
 import com.awell.launcher.R;
+import com.awell.utils.Utils;
 
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class WallpaperChooser extends Activity {
     @SuppressWarnings("unused")
@@ -31,9 +34,22 @@ public class WallpaperChooser extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.wallpaper_chooser_base);
+        Intent intent = getIntent();
+        Log.i(TAG, "onCreate: huang icicle=>" + icicle);
+        Log.i(TAG, "onCreate: huang intent=>" + intent);
+
 
         Fragment fragmentView =
                 getFragmentManager().findFragmentById(R.id.wallpaper_chooser_fragment);
+
+        if (intent != null && intent.hasExtra("pluginApkFilePath")) {
+            if (fragmentView instanceof WallpaperChooserDialogFragment) {
+                Utils.setPluginApkFilePath(intent.getStringExtra("pluginApkFilePath"));
+                Log.i(TAG, "onCreate: huang after get plugin apk file path=>" + Utils.getPluginApkFilePath());
+                ((WallpaperChooserDialogFragment) fragmentView).loadPluginApkWallpaper();
+            }
+        }
+
         // TODO: The following code is currently not exercised. Leaving it here in case it
         // needs to be revived again.
         if (fragmentView == null) {

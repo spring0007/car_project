@@ -21,8 +21,10 @@ import com.awell.launcher2.LauncherApplication;
 import com.awell.plugin_shadow.PluginHelper;
 
 import com.awell.service.GpsSimulationService;
+import com.awell.utils.Utils;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
+import com.tencent.shadow.sample.host.lib.HostAppsHolder;
 
 import android.os.SystemProperties;
 import android.view.ViewGroup;
@@ -101,6 +103,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             startService(service);
         }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -155,7 +158,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             }
 
                             @Override
-                            public void onCloseLoadingView() {
+                            public void onCloseLoadingView(String pluginPath) {
+                                Log.i(TAG, "onCloseLoadingView: huang plugin Path=>" + pluginPath);
+                                Utils.setPluginApkFilePath(pluginPath);
                                 finish();
                             }
 

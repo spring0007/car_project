@@ -84,6 +84,7 @@ dependencies {
     implementation project(path: ':app')
     implementation project(path: ':AwellLibrary')
     implementation project(':plugin:plugins:constant')
+    implementation project(':plugin:plugins:host-lib')
 
 
 }

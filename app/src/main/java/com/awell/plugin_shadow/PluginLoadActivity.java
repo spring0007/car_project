@@ -81,8 +81,9 @@ public class PluginLoadActivity extends Activity {
                             }
 
                             @Override
-                            public void onCloseLoadingView() {
+                            public void onCloseLoadingView(String pluginPath) {
                                 Log.i(TAG, "onCloseLoadingView: huang finish plugin load activity==>");
+
                                 finish();
                             }
 

@@ -38,6 +38,8 @@ import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.loader.PluginLoader;
 import com.tencent.shadow.sample.constant.Constant;
 
+import java.io.File;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -121,11 +123,8 @@ public class SamplePluginManager extends FastPluginManager {
     private void onStartActivity(final Context context, Bundle bundle, final EnterCallback callback) {
         final String pluginZipPath = bundle.getString(Constant.KEY_PLUGIN_ZIP_PATH);
         final String pluginsDir = bundle.getString(Constant.KEY_PLUGINS_APK_PATH);
-        Log.i(TAG, "onStartActivity: huang pluginZipPath=>" + pluginZipPath);
-        Log.i(TAG, "onStartActivity: huang pluginsDir=>" + pluginsDir);
         final String partKey = bundle.getString(Constant.KEY_PLUGIN_PART_KEY);
         final String className = bundle.getString(Constant.KEY_ACTIVITY_CLASSNAME);
-        Log.i(TAG, "run: huang context className=>" + className);
         if (className == null) {
             throw new NullPointerException("className == null");
         }
@@ -139,9 +138,13 @@ public class SamplePluginManager extends FastPluginManager {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
+                long startTime = System.currentTimeMillis();
+                InstalledPlugin installedPlugin = null;
                 try {
-                    InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true, pluginsDir);
+                    installedPlugin = installPlugin(pluginZipPath, null, true, pluginsDir);
                     Log.i(TAG, "run: huang installedPlugin=>" + installedPlugin.plugins);
+                    Log.i(TAG, "run: huang partKey=>" + partKey);
+
 
 //                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
 //                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);
@@ -171,7 +174,15 @@ public class SamplePluginManager extends FastPluginManager {
                     Log.e(TAG, "run: huang run time error:" + e);
                 }
                 if (callback != null) {
-                    callback.onCloseLoadingView();
+                    long endTime = System.currentTimeMillis();
+                    Log.i(TAG, "run: huang spend time =" + (endTime - startTime));
+
+                    //todo Save apk file path for updating wallpaper and selecting images
+                    File pluginApkFile = installedPlugin.plugins.get(partKey).pluginFile;
+                    Log.i(TAG, "run: huang pluginApkFile exists=>" + pluginApkFile.exists());
+                    Log.i(TAG, "run: huang getAbsolutePath=>" + pluginApkFile.getAbsolutePath());
+                    callback.onCloseLoadingView(pluginApkFile.getAbsolutePath());
+
                 }
             }
         });

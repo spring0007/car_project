@@ -63,7 +63,6 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     public InstalledPlugin installPlugin(String zip, String hash, boolean odex, String pluginDir) throws IOException, JSONException, InterruptedException, ExecutionException {
         final PluginConfig pluginConfig = installPluginFromZip(new File(zip), hash, pluginDir);
         final String uuid = pluginConfig.UUID;
-        Log.i("TAG", "installPlugin: huang plugin pluginConfig.UUID =>" + pluginConfig.UUID);
         List<Future> futures = new LinkedList<>();
         List<Future<Pair<String, String>>> extractSoFutures = new LinkedList<>();
         if (pluginConfig.runTime != null && pluginConfig.pluginLoader != null) {
@@ -90,7 +89,6 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
         for (Map.Entry<String, PluginConfig.PluginFileInfo> plugin : pluginConfig.plugins.entrySet()) {
             final String partKey = plugin.getKey();
             final File apkFile = plugin.getValue().file;
-            Log.i(TAG, "installPlugin: huang apkFile=>" + apkFile);
             Future<Pair<String, String>> extractSo = mFixedPool.submit(() -> extractSo(uuid, partKey, apkFile));
             futures.add(extractSo);
             extractSoFutures.add(extractSo);
@@ -130,7 +128,6 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
 
     private void loadPluginLoaderAndRuntime(String uuid, String partKey) throws RemoteException, TimeoutException, FailedException {
         if (mPpsController == null) {
-            Log.i(TAG, "loadPluginLoaderAndRuntime: huang start bind plugin process service=>");
             bindPluginProcessService(getPluginProcessServiceName(partKey));
             waitServiceConnected(10, TimeUnit.SECONDS);
         }
@@ -142,9 +139,7 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
 
         loadPluginLoaderAndRuntime(uuid, partKey);
         Map map = mPluginLoader.getLoadedPlugin();
-        Log.i(TAG, "loadPlugin: huang finish load loader and runtime map=>" + map);
         if (!map.containsKey(partKey)) {
-            Log.i(TAG, "loadPlugin: huang mPluginLoader=>" + mPluginLoader + " partKey=>" + partKey);
             mPluginLoader.loadPlugin(partKey);
         }
     }
