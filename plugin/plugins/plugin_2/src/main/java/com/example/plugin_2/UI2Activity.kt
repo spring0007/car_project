@@ -89,8 +89,7 @@ class UI2Activity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Utils.setPluginWallpaper(resources, R.drawable.wallpaper_00)
-
+        //Utils.setPluginWallpaper(resources, R.drawable.wallpaper_00)
 
         Log.i(TAG, "onCreate: huang ui2 create this==>${this}")
         mViewBinding = Ui2ActivityBinding.inflate(layoutInflater)

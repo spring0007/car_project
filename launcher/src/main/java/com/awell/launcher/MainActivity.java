@@ -29,6 +29,7 @@ import com.tencent.shadow.sample.host.lib.HostAppsHolder;
 import android.os.SystemProperties;
 import android.view.ViewGroup;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 
@@ -43,6 +44,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private String plugin_pkg_key = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private String plugin_clazz_key = "persist.sys.launcher.clazz"; //value : plugin app class name
+
+    /**
+     * 外部保存的插件文件路径
+     */
+    private final String mExternalPluginPath = "/sdcard/launcher_plugin";
     private Handler mHandler = new Handler();
     private boolean mStartPlugin = true;
 
@@ -63,14 +69,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             mStartPlugin = false;
         }
         if (!mStartPlugin) {
-            Intent intent = new Intent(this, Launcher.class);
-//            Intent intent = new Intent(this, UIActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+            startInternalLauncher();
         } else {
             startPlugin();
         }
+    }
+
+    private void startInternalLauncher() {
+        Intent intent = new Intent(this, Launcher.class);
+//            Intent intent = new Intent(this, UIActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -108,11 +118,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (!mStartPlugin) {
-            Intent launcherIntent = new Intent(this, Launcher.class);
-//            Intent launcherIntent = new Intent(this, UIActivity.class);
-            launcherIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(launcherIntent);
-            finish();
+            startInternalLauncher();
         } else {
             startPlugin();
         }
@@ -140,7 +146,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                 Bundle bundle = new Bundle();
                 bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
-                //bundle.putString(Constant.KEY_PLUGINS_APK_PATH, "/sdcard/launcher_plugin");
+                if (new File(mExternalPluginPath).exists()) {
+                    bundle.putString(Constant.KEY_PLUGINS_APK_PATH, mExternalPluginPath);
+                }
                 bundle.putString(Constant.KEY_PLUGIN_PART_KEY, plugin_key);
                 bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, plugin_clazz);
 //                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
@@ -160,8 +168,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             @Override
                             public void onCloseLoadingView(String pluginPath) {
                                 Log.i(TAG, "onCloseLoadingView: huang plugin Path=>" + pluginPath);
-                                Utils.setPluginApkFilePath(pluginPath);
-                                finish();
+                                if (pluginPath != null) {
+                                    Utils.setPluginApkFilePath(pluginPath);
+                                    finish();
+                                } else {
+                                    startInternalLauncher();
+                                }
                             }
 
                             @Override

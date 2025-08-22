@@ -220,14 +220,13 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         Log.i(TAG, "startCallbacks: huang currentControlPkgIsChange()=>" + currentControlPkgIsChange() + " isRegisterCallback=>" + isRegisterCallback);
         if (!isRegisterCallback || currentControlPkgIsChange()) {
             updateMediaController();
-            isRegisterCallback = true;
         }
     }
 
     /**
      * 当前的媒体控制应用是否和当前播放的应用一致
      *
-     * @return true: current pkg == media control pkg
+     * @return true: current pkg != media control pkg
      */
     private boolean currentControlPkgIsChange() {
         return mMediaController != null && !mMediaController.getPackageName().equals(getPlayingPackageName());
@@ -324,6 +323,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         mMediaController = activeController;
 
         mMediaController.registerCallback(mMediaControllerCallback);
+        isRegisterCallback = true;
 
         handlePlaybackStateChange(mMediaController);
 

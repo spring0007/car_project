@@ -178,11 +178,15 @@ public class SamplePluginManager extends FastPluginManager {
                     Log.i(TAG, "run: huang spend time =" + (endTime - startTime));
 
                     //todo Save apk file path for updating wallpaper and selecting images
-                    File pluginApkFile = installedPlugin.plugins.get(partKey).pluginFile;
-                    Log.i(TAG, "run: huang pluginApkFile exists=>" + pluginApkFile.exists());
-                    Log.i(TAG, "run: huang getAbsolutePath=>" + pluginApkFile.getAbsolutePath());
-                    callback.onCloseLoadingView(pluginApkFile.getAbsolutePath());
-
+                    File pluginApkFile = null;
+                    if (installedPlugin != null && installedPlugin.plugins.get(partKey) != null) {
+                        pluginApkFile = Objects.requireNonNull(installedPlugin.plugins.get(partKey)).pluginFile;
+                        Log.i(TAG, "run: huang pluginApkFile exists=>" + pluginApkFile.exists());
+                        Log.i(TAG, "run: huang getAbsolutePath=>" + pluginApkFile.getAbsolutePath());
+                        callback.onCloseLoadingView(pluginApkFile.getAbsolutePath());
+                    } else {
+                        callback.onCloseLoadingView(null);
+                    }
                 }
             }
         });
