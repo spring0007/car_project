@@ -436,6 +436,12 @@ public class Utils {
         return pluginApkFilePath;
     }
 
+    /**
+     * 资源文件是否来源于插件apk
+     * @param value 资源ID
+     * @return  true:is Plugin apk resource ID.
+     *          false:host resource ID
+     */
     public static boolean isHexStartWith7e(int value) {
         String hex = Integer.toHexString(value);
         return hex.startsWith("7e");
@@ -522,29 +528,35 @@ public class Utils {
     }
 
     public static void setPluginWallpaper(Resources resources, int resourceId) {
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(mAppContext);
 
-        Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
-        try {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                WallpaperManager wallpaperManager = WallpaperManager.getInstance(mAppContext);
+                Bitmap bitmap = BitmapFactory.decodeResource(resources, resourceId);
+                try {
+                    // 获取屏幕分辨率宽度
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    WindowManager wm = (WindowManager) mAppContext.getSystemService(Context.WINDOW_SERVICE);
+                    wm.getDefaultDisplay().getRealMetrics(metrics);
+                    int mScreenWidth = metrics.widthPixels;
+                    int mScreenHeight = metrics.heightPixels;
 
-            // 获取屏幕分辨率宽度
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager wm = (WindowManager) mAppContext.getSystemService(Context.WINDOW_SERVICE);
-            wm.getDefaultDisplay().getRealMetrics(metrics);
-            int mScreenWidth = metrics.widthPixels;
-            int mScreenHeight = metrics.heightPixels;
+                    //根据分辨率，设置壁纸大小
+                    Bitmap tempBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.ARGB_8888);
+                    Canvas canvas = new Canvas(tempBitmap);
+                    canvas.drawBitmap(tempBitmap, 88, 100, null);
 
-            //根据分辨率，设置壁纸大小
-            Bitmap tempBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(tempBitmap);
-            canvas.drawBitmap(tempBitmap, 88, 100, null);
+                    wallpaperManager.suggestDesiredDimensions(mScreenWidth, mScreenHeight);
+                    wallpaperManager.setBitmap(bitmap);
 
-            wallpaperManager.suggestDesiredDimensions(mScreenWidth, mScreenHeight);
-            wallpaperManager.setBitmap(bitmap);
+                } catch (IOException e) {
+                    Log.e(TAG, "setPluginWallpaper: filed=>" + e.getMessage());
+                }
+            }
+        });
 
-        } catch (IOException e) {
-            Log.e(TAG, "setPluginWallpaper: filed=>" + e.getMessage());
-        }
+        thread.start();
     }
 
     public static void startWallpaper() {

@@ -83,6 +83,7 @@ android {
         }
     }
     // 将插件的资源ID分区改为和宿主0x7F不同的值
+    // 当前壁纸需要用到7e开头做判断
     aaptOptions {
         additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id",
                 "-I", "${project(':app').buildDir}/intermediates/compile_r_class_jar/debug/R.jar"
