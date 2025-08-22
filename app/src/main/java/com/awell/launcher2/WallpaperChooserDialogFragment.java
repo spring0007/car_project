@@ -142,7 +142,9 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
      */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        findWallpapers();
+        mThumbs = new ArrayList<Integer>(24);
+        mImages = new ArrayList<Integer>(24);
+        //findWallpapers();
 
         return null;
     }
@@ -150,7 +152,10 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        findWallpapers();
+
+        mThumbs = new ArrayList<Integer>(24);
+        mImages = new ArrayList<Integer>(24);
+        //findWallpapers();
 
         /*
          * If this fragment is embedded in the layout of this activity, then we
@@ -246,9 +251,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
-    private void findWallpapers() {
-        mThumbs = new ArrayList<Integer>(24);
-        mImages = new ArrayList<Integer>(24);
+    public void findWallpapers() {
 
         final Resources resources = getResources();
         // Context.getPackageName() may return the "original" package name,
@@ -274,8 +277,6 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
                 addWallpapers(Objects.requireNonNull(getPluginResources(file)),
                         Objects.requireNonNull(getPackageInfo(file)).packageName,
                         getPluginWallPaperID(getPluginApkFilePath()));
-
-                adapter.notifyDataSetChanged();
             }
         }
     }
@@ -295,6 +296,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
                 }
             }
         }
+        adapter.notifyDataSetChanged();
     }
 
     private class ImageAdapter extends BaseAdapter implements ListAdapter,

@@ -438,9 +438,10 @@ public class Utils {
 
     /**
      * 资源文件是否来源于插件apk
+     *
      * @param value 资源ID
-     * @return  true:is Plugin apk resource ID.
-     *          false:host resource ID
+     * @return true:is Plugin apk resource ID.
+     * false:host resource ID
      */
     public static boolean isHexStartWith7e(int value) {
         String hex = Integer.toHexString(value);
@@ -566,7 +567,11 @@ public class Utils {
         List<Intent> listIntent = new ArrayList<>();
         pickWallpaper = new Intent(Intent.ACTION_SET_WALLPAPER);
         pickWallpaper.setPackage(getmAppContext().getPackageName());
-        pickWallpaper.putExtra("pluginApkFilePath", Utils.getPluginApkFilePath());
+        if (Utils.getPluginApkFilePath() != null) {
+            pickWallpaper.putExtra("pluginApkFilePath", Utils.getPluginApkFilePath());
+        } else {
+            pickWallpaper.putExtra("default", "default");
+        }
         listIntent.add(pickWallpaper);
         for (ResolveInfo info : lists) {
             String pkgName = info.activityInfo.packageName;

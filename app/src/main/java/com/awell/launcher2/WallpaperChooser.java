@@ -44,6 +44,10 @@ public class WallpaperChooser extends Activity {
                 Utils.setPluginApkFilePath(intent.getStringExtra("pluginApkFilePath"));
                 ((WallpaperChooserDialogFragment) fragmentView).loadPluginApkWallpaper();
             }
+        } else if (intent != null && intent.hasExtra("default")) {
+            if (fragmentView instanceof WallpaperChooserDialogFragment) {
+                ((WallpaperChooserDialogFragment) fragmentView).findWallpapers();
+            }
         }
 
         // TODO: The following code is currently not exercised. Leaving it here in case it
