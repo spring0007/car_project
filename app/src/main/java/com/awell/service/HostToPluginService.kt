@@ -36,7 +36,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import java.io.File
-import kotlin.math.log
 
 
 class HostToPluginService : Service() {
@@ -219,6 +218,24 @@ class HostToPluginService : Service() {
             listeners.register(listener)
             //todo use temp value to update client data like music info album ...
 
+            mTempMediaPlay?.let {
+
+                //todo AwellTool.VALUE_M4 添加播放类型
+                //0 music  1 bt  4 other music
+
+                val pkg = it.getString(AwellTool.VALUE_M1, null)
+                val musicType = when {
+                    pkg.contains("com.awell.localmusic") -> 0
+                    pkg.contains("/system/bin/gocsdk") -> 1
+                    else -> 4
+                }
+                it.putInt(AwellTool.VALUE_M4, musicType)
+
+                Log.i(TAG, "registerListener: huang it=${it}")
+
+                notifyClientDataChanged(it)
+            }
+
             mTempMusicPlayInfo?.let {
                 notifyClientDataChanged(it)
             }
@@ -227,9 +244,6 @@ class HostToPluginService : Service() {
                 handleLocalMusicImageByScope(it)
             }
 
-            mTempMediaPlay?.let {
-                notifyClientDataChanged(it)
-            }
 
         }
 
@@ -246,9 +260,13 @@ class HostToPluginService : Service() {
     private fun saveTempValue(bundle: Bundle) {
         val status = bundle.getString(AwellTool.STATUS_ACCEPT, AwellTool.DEFAULT_S)
         when (status) {
+
+            MusicWidget.OTHER_MUSIC_PLAYNAME,
+            AwellTool.BT.PLAY_NAME,
             AwellTool.MUSIC.PLAY_NAME -> {
                 //保存本地音乐播放的信息
                 mTempMusicPlayInfo = bundle.deepCopy()
+                Log.i(TAG, "saveTempValue: huang mTempMusicPlayInfo=${mTempMusicPlayInfo}")
             }
 
             MusicWidget.OTHER_MUSIC_PLAY_IMAGE,

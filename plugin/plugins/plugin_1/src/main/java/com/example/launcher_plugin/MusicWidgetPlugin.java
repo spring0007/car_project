@@ -1,31 +1,14 @@
 package com.example.launcher_plugin;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
 import android.media.AudioManager;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
-import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -38,16 +21,7 @@ import android.widget.Toast;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.launcher2.Launcher;
-import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
-import com.awell.utils.SocketThread;
-import com.example.launcher_plugin.databinding.WidgetLayoutMusicPluginBinding;
-
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 /*import cn.kuwo.autosdk.api.KWAPI;
 import cn.kuwo.autosdk.api.OnGetSongImgUrlListener;
@@ -62,15 +36,11 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
     private Context mContext;
     private TextView mMusicNameTextView, mArtistNameTextView;
     private TextView mCurTimeTextView, mTotalTimeTextView;
-    private ImageView ivLoadnim, ivLoadnim_bar, icon_music_img;
+    private ImageView icon_music_img;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
     private SeekBar bar = null;
-    private ObjectAnimator objectAnimator;
-    //private KWAPI kwapi;
     private int dayNight = 0;
     private boolean musicState = false;
-    private int[] musicId = {R.drawable.icon_music_img, R.drawable.icon_bt_img,
-            R.drawable.icon_kwplay_img, R.drawable.icon_carplay_img,};
 
     public final static int MUSIC = 0;
     public final static int BT = 1;
@@ -87,7 +57,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
     private LinearLayout ll_control_layout_music, ll_name_layout_music;
     private RelativeLayout ll_time_layout_music;
 
-    private AwellLibrary mediaLibrary;
     private AwellMediaControl mediaControl;
 
     public MusicWidgetPlugin(Context context, AttributeSet attrs) {
@@ -122,14 +91,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
         mCurTimeTextView = (TextView) view.findViewById(R.id.music_widget_cur_time_textview);
         mTotalTimeTextView = (TextView) view.findViewById(R.id.music_widget_total_time_textview);
 
-        /*
-        icon_music_img = view.findViewById(R.id.icon_music_img);
-        ivLoadnim_bar = view.findViewById(R.id.music_artists_image_view_bar);
-        ivLoadnim = view.findViewById(R.id.music_artists_image_view);
-        objectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
-        objectAnimator.setInterpolator(new LinearInterpolator());
-        stopLoadAnim();*/
-
         mPlayStateImageView = (ImageView) view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
         musicPreIv = (ImageView) view.findViewById(R.id.music_widget_pre);
@@ -141,13 +102,9 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
         //getKwMusicApi();
 
         setImageIcon(currentMedia);
-        //setCurMusicState(mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
     }
-
-    //private SocketThread zlinkCarPlaySocketThread;
-    private int mCarPlayTotalTime;
 
     public void getCarPlayData(String zlinStatus, String phoneMode) {
         Log.e(TAG, "getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
@@ -179,97 +136,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
         }
     }
 
-    private Handler carPlayhandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Log.e(TAG, "handleMessage arg1:" + msg.arg1 + " obj:" + msg.obj);
-            switch (msg.arg1) {
-                case SocketThread.MESSAGE_ERROR:
-                    setCurMusicState(false, CARPLAY);
-                    break;
-                case SocketThread.MESSAGE_SUCCEED:
-                    break;
-                case SocketThread.MESSAGE_RECEIVE_SONGER:
-                    setArtistNameTextView((String) msg.obj, CARPLAY);
-                    break;
-                case SocketThread.MESSAGE_RECEIVE_TIME_STATUS:
-                    int status = (int) msg.obj;
-                    if (status == 0) {
-                        setCurMusicState(false, CARPLAY);
-                    } else {
-                        setCurMusicState(true, CARPLAY);
-                    }
-                    break;
-                case SocketThread.MESSAGE_RECEIVE_TIME_TOTAL:
-                    mCarPlayTotalTime = (int) msg.obj;
-                    break;
-                case SocketThread.MESSAGE_RECEIVE_WORE:
-                    setMusicNameTextView((String) msg.obj, CARPLAY);
-                    break;
-                case SocketThread.MESSAGE_RECEIVE_TIME:
-                    setMusicSeekBar((int) msg.obj, mCarPlayTotalTime, OTHER_MUSIC);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    /*
-        private void getKwMusicApi() {
-            kwapi = KWAPI.getKWAPI();
-            boolean kwFlag = kwapi.bindAutoSdkService(mContext);
-            Log.e(TAG, "kwFlag = " + kwFlag);
-            kwapi.registerPlayerStatusListener(mContext, (playerStatus, music) -> {
-                if (music == null) return;
-                Log.e(TAG, "image URL = " + music.imageURL);
-
-                Log.e(TAG, "playerStatus = " + playerStatus.name());
-                if (playerStatus.equals(PlayerStatus.PLAYING)) {
-                    setCurMusicState(true, KUMUSIC);
-                    if (mMusicNameTextView != null && music.name != null)
-                        setMusicNameTextView(music.name, KUMUSIC);
-
-                    if (mArtistNameTextView != null && music.artist != null)
-                        setArtistNameTextView(music.artist, KUMUSIC);
-                } else if (playerStatus.equals(PlayerStatus.PAUSE)) {
-                    setCurMusicState(false, KUMUSIC);
-                }
-
-                kwapi.getSongPicUrl(music, new OnGetSongImgUrlListener() {
-                    @Override
-                    public void onGetSongImgUrlSucessed(Music music, String s) {
-                        Log.i(TAG, "music = " + music.toString());
-                        Log.i(TAG, "music = " + s);
-    //                    setPlayImage(s);
-                    }
-
-                    @Override
-                    public void onGetSongImgUrlFailed(Music music, int i) {
-                        Log.i(TAG, "music = " + music.toString());
-                        Log.i(TAG, "music = " + i);
-                    }
-                });
-            });
-            //监听酷我退出
-            kwapi.registerExitListener(() -> {
-
-            });
-        }
-    */
-    public Bitmap drawCircleView(Bitmap bitmap) {
-        bitmap = Bitmap.createScaledBitmap(bitmap, 118, 118, true);
-        Bitmap bm = Bitmap.createBitmap(180, 186, Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        canvas.drawCircle(59, 59, 59, paint);
-        paint.reset();
-        paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        return bm;
-    }
-
-
     int[] textColorId = {Color.BLACK, Color.WHITE};
     int[] sf_music_nextId = {R.drawable.sf_music_next, R.drawable.sf_music_next_n};
     int[] sf_music_preId = {R.drawable.sf_music_pre, R.drawable.sf_music_pre_n};
@@ -295,54 +161,39 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
         int id = v.getId();
         if (id == R.id.music_widget_next) {
             if (currentMedia == MUSIC) {
-                //mediaLibrary.setDataEvent(AwellTool.MUSIC.NEXT);
                 mediaControl.sendStrToHost(AwellTool.MUSIC.NEXT);
             } else if (currentMedia == BT) {
-                //mediaLibrary.setDataEvent(AwellTool.BT.NEXT);
                 mediaControl.sendStrToHost(AwellTool.BT.NEXT);
             } else if (currentMedia == KUMUSIC) {
-                //kwapi.setPlayState(PlayState.STATE_NEXT);
-                //todo huang next music
-                //mediaControl.getMMediaListener().skipToNext();
-                Launcher.mMediaListener.skipToNext();
+                mediaControl.sendNextToHost();
             } else if (currentMedia == CARPLAY) {
-                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_NEXT);
-                Launcher.mMediaListener.skipToNext();
+                mediaControl.sendNextToHost();
             } else if (currentMedia == OTHER_MUSIC) {
-                Launcher.mMediaListener.skipToNext();
+                mediaControl.sendNextToHost();
             }
         } else if (id == R.id.music_widget_pre) {
             if (currentMedia == MUSIC) {
-                //mediaLibrary.setDataEvent(AwellTool.MUSIC.PREVIOUS);
                 mediaControl.sendStrToHost(AwellTool.MUSIC.PREVIOUS);
             } else if (currentMedia == BT) {
-                //mediaLibrary.setDataEvent(AwellTool.BT.PREVIOUS);
                 mediaControl.sendStrToHost(AwellTool.BT.PREVIOUS);
             } else if (currentMedia == KUMUSIC) {
-                //kwapi.setPlayState(PlayState.STATE_PRE);
-                Launcher.mMediaListener.skipToPrevious();
+                mediaControl.sendPreToHost();
             } else if (currentMedia == CARPLAY) {
-                //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PREVIOUS);
-                Launcher.mMediaListener.skipToPrevious();
+                mediaControl.sendPreToHost();
             } else if (currentMedia == OTHER_MUSIC) {
-                Launcher.mMediaListener.skipToPrevious();
+                mediaControl.sendPreToHost();
             }
         } else if (id == R.id.music_widget_play) {
             if (currentMedia == MUSIC) {
-                //if (Launcher.mediaLibrary.setDataEvent(AwellTool.MUSIC.GET_STATE).equals("true"))
                 if (musicState) {
-                    //mediaLibrary.setDataEvent(AwellTool.MUSIC.PAUSE);
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PAUSE);
                 } else {
-                    //mediaLibrary.setDataEvent(AwellTool.MUSIC.PLAY);
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PLAY);
                 }
             } else if (currentMedia == BT) {
                 if (mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
-                    //mediaLibrary.setDataEvent(AwellTool.BT.PAUSE);
                     mediaControl.sendStrToHost(AwellTool.BT.PAUSE);
                 } else {
-                    //mediaLibrary.setDataEvent(AwellTool.BT.PLAY);
                     mediaControl.sendStrToHost(AwellTool.BT.PLAY);
                 }
             } else if (currentMedia == KUMUSIC) {
@@ -378,32 +229,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
             } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
                 launchAppByPackageName(mContext, currentPlayingPackage);
             }
-        }
-    }
-
-    public void stopLoadAnim() {
-        if (ivLoadnim_bar != null) {
-            ivLoadnim_bar.setPivotX(0);
-            ivLoadnim_bar.setPivotY(0);
-            ivLoadnim_bar.setRotation(-10);
-        }
-        if (objectAnimator != null) {
-            objectAnimator.cancel();
-        }
-    }
-
-    public void startLoadAnim() {
-        if (ivLoadnim_bar != null) {
-            ivLoadnim_bar.setPivotX(0);
-            ivLoadnim_bar.setPivotY(0);
-            ivLoadnim_bar.setRotation(0);
-        }
-        if (objectAnimator != null) {
-            objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-            objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
-            objectAnimator.setStartDelay(1000);
-            objectAnimator.setDuration(4500);
-            objectAnimator.start();
         }
     }
 
@@ -448,25 +273,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
             } else {
                 mArtistNameTextView.setText(getResources().getString(R.string.music_artist));
             }
-        }
-    }
-
-    public void setPlayImage(long long1, long long2) {
-        Bitmap bitmap = getArtwork(mContext, long1, long2, true);
-        setPlayImage(bitmap);
-    }
-
-    public void setPlayImage(String imageUrl) {
-        Bitmap bitmap = BitmapFactory.decodeFile(imageUrl);
-        setPlayImage(bitmap);
-    }
-
-    public void setPlayImage(Bitmap bitmap) {
-        if (ivLoadnim == null) return;
-        if (bitmap != null) {
-            ivLoadnim.setImageBitmap(bitmap);
-        } else {
-            ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
         }
     }
 
@@ -530,24 +336,12 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
     }
 
     private void setImageIcon(int index) {
-        //if (icon_music_img != null)
-        //    icon_music_img.setImageResource(musicId[index]);
 
-        //if (/*index == BT || */index == KUMUSIC) {
-        //    ll_time_layout_music.setVisibility(INVISIBLE);
-        //} else {
         if (ll_time_layout_music != null)
             ll_time_layout_music.setVisibility(VISIBLE);
-        //}
 
-        //if (index == CARPLAY) {
-        //    ll_control_layout_music.setVisibility(INVISIBLE);
-        //    ll_name_layout_music.setVisibility(INVISIBLE);
-        //} else {
         ll_control_layout_music.setVisibility(VISIBLE);
         ll_name_layout_music.setVisibility(VISIBLE);
-        //}
-
 
     }
 
@@ -559,149 +353,22 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
      */
     public void switchMediaController(String packName, String status, int mediaType, int curMedia) {
         Log.e(TAG, "current mediaplay packName = " + packName + ",status = " + status);
-        if (packName.contains("localmusic")) {//本地音乐
-            if ("start".equals(status)) {
+
+        if ("start".equals(status)) {
+            currentPlayingPackage = packName;
+            if (packName.contains("localmusic")) {
                 currentMedia = MUSIC;
-                currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }
-        } else if (packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk")) {//蓝牙音乐
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+            } else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
+                    && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
-                currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }
-        /*} else if (packName.contains("kwmusiccar")) {//酷我音乐
-            if ("start".equals(status)) {
-                currentMedia = KUMUSIC;
-                currentPlayingPackage=packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }
-        } else if (packName.contains("com.zjinnova.zlink")) {//蓝牙音乐
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
-                currentMedia = CARPLAY;
-                currentPlayingPackage=packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
-            }*/
-        } else if (!TextUtils.isEmpty(packName) && curMedia > BT) {
-            if ("start".equals(status) && mediaType == AudioManager.STREAM_MUSIC) {
+            } else if (mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-                currentPlayingPackage = packName;
-                setImageIcon(currentMedia);
-                setCurMusicState(true);
-            } else if ("stop".equals(status)) {
-
             }
+            setCurMusicState(true);
+            setImageIcon(currentMedia);
         }
-    }
 
-    private final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart/");
-    private final BitmapFactory.Options sBitmapOptions = new BitmapFactory.Options();
 
-    public Bitmap getArtwork(Context context, long song_id, long album_id, boolean allowdefault) {
-        if (album_id < 0) {
-            // This is something that is not in the database, so get the album art directly
-            // from the file.
-            if (song_id >= 0) {
-                Bitmap bm = getArtworkFromFile(context, song_id, -1);
-                if (bm != null) {
-                    return bm;
-                }
-            }
-            if (allowdefault) {
-                return getDefaultArtwork(context);
-            }
-            return null;
-        }
-        ContentResolver res = context.getContentResolver();
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
-        if (uri != null) {
-            InputStream in = null;
-            try {
-                in = res.openInputStream(uri);
-                return BitmapFactory.decodeStream(in, null, sBitmapOptions);
-            } catch (FileNotFoundException ex) {
-                // The album art thumbnail does not actually exist. Maybe the user deleted it, or
-                // maybe it never existed to begin with.
-                Bitmap bm = getArtworkFromFile(context, song_id, album_id);
-
-                if (bm != null) {
-                    if (bm.getConfig() == null) {
-                        bm = bm.copy(Config.RGB_565, false);
-                        if (bm == null && allowdefault) {
-                            return getDefaultArtwork(context);
-                        }
-                    }
-                } else if (allowdefault) {
-                    bm = getDefaultArtwork(context);
-                }
-                return bm;
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                } catch (IOException ex) {
-                }
-            }
-        }
-        return null;
-    }
-
-    private Bitmap getArtworkFromFile(Context context, long songid, long albumid) {
-        Bitmap bm = null;
-        byte[] art = null;
-        String path = null;
-        if (albumid < 0 && songid < 0) {
-            throw new IllegalArgumentException("Must specify an album or a song id");
-        }
-        try {
-            Uri uri;
-            if (albumid < 0) {
-                uri = Uri.parse("content://media/external/audio/media/" + songid + "/albumart");
-            } else {
-                uri = ContentUris.withAppendedId(sArtworkUri, albumid);
-            }
-            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "r");
-            if (pfd != null) {
-                FileDescriptor fd = pfd.getFileDescriptor();
-                bm = BitmapFactory.decodeFileDescriptor(fd);
-            }
-        } catch (FileNotFoundException ex) {
-
-        }
-        return bm;
-    }
-
-    private static Bitmap getDefaultArtwork(Context context) {
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inPreferredConfig = Config.RGB_565;
-        /*return BitmapFactory.decodeStream(
-                context.getResources().openRawResource(R.mipmap.ic_launcher), null, opts);*/
-//        return drawableToBitmap(context.getResources().getDrawable(R.mipmap.ablum_default_bg));
-        return null;
-    }
-
-    private void keyDealToZlink(int keycode) {
-        Intent intent = new Intent();
-        intent.setAction("com.zjinnova.zlink");
-        intent.setPackage("com.zjinnova.zlink");
-
-        intent.putExtra("command", "REQ_SPEC_FUNC_CMD");
-        intent.putExtra("specFuncCode", keycode);
-        mContext.sendBroadcast(intent);
     }
 
     public static boolean launchAppByPackageName(Context context, String packageName) {
@@ -726,30 +393,6 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
         }
     }
 
-    public static boolean isMusicApp(Context context, String packageName) {
-        // 检查是否响应音频文件播放
-        PackageManager pm = context.getPackageManager();
-        Intent audioIntent = new Intent(Intent.ACTION_VIEW);
-        audioIntent.setDataAndType(Uri.parse("file:///test.mp3"), "audio/*");
-        List<ResolveInfo> handlers = pm.queryIntentActivities(audioIntent, 0);
-        for (ResolveInfo info : handlers) {
-            if (info.activityInfo.packageName.equals(packageName)) {
-                return true;
-            }
-        }
-
-        // 检查是否声明音乐类别
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN);
-        mainIntent.addCategory(Intent.CATEGORY_APP_MUSIC);
-        List<ResolveInfo> musicApps = pm.queryIntentActivities(mainIntent, 0);
-        for (ResolveInfo info : musicApps) {
-            if (info.activityInfo.packageName.equals(packageName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
 
 

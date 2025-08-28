@@ -110,6 +110,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     //该目录下可能无图片，当前播放的歌曲如果没有专辑图片，bug:会显示上一曲的专辑图片
     private String mKwPlayImageUri_300 = "/albumcover/300";
     private String mKwPlayImageUri_700 = "/albumcover/700";
+    private String mKwPicImageUri_700 = "/pic_music/700";
     private boolean isRegisterCallback = false;
 
     private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
@@ -164,12 +165,12 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         if (mMediaController.getMetadata() != null) {
             String metaArtUri = mMediaController.getMetadata().getString(METADATA_KEY_ALBUM_ART_URI);
             Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
-            Log.i(TAG, "handleMetadataArtUri: huang metadata =>" + mMediaController.getMetadata().keySet());
 
-            if (metaArtUri != null && metaArtUri.contains(mKwPlayImageUri_700) && !metaArtUri.equals(mLastUri)
+            if (metaArtUri != null && hasImage(metaArtUri) && !metaArtUri.equals(mLastUri)
                     //"default" 重新注册到media session里的元数据可能只包含300的图片
                     || ("default".equals(mLastUri) && metaArtUri != null)) {
                 mLastUri = metaArtUri;
+                Log.i(TAG, "handleMetadataArtUri: huang update uri =>" + mLastUri);
                 notifyHostAlbumArtUpdate(metaArtUri);
             } else if (metaArtUri == null && !Objects.equals(mLastUri, null)) {
                 //没有网络也需要调用，使用默认图片
@@ -178,6 +179,12 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                 notifyHostAlbumArtUpdate(null);
             }
         }
+    }
+
+    private boolean hasImage(String metaArtUri) {
+        return metaArtUri.contains(mKwPlayImageUri_700)
+                || metaArtUri.contains(mKwPicImageUri_700);
+                //|| metaArtUri.contains(mKwPlayImageUri_300);
     }
 
     public void initDependencies(Context context) {

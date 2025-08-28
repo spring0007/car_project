@@ -392,7 +392,10 @@ class UI2Activity : Activity() {
                 bundle: Bundle, songName: String, singerName: String, album: String, type: Int
             ) {
                 runOnUiThread {
-                    //Log.i(TAG, "updateViewPlayInfo: huang bundle=${bundle}")
+                    Log.i(TAG, "updateViewPlayInfo: huang songName=>${songName}")
+                    Log.i(TAG, "updateViewPlayInfo: huang album=>${album}")
+                    Log.i(TAG, "updateViewPlayInfo: huang singerName=>${singerName}")
+                    Log.i(TAG, "updateViewPlayInfo: huang type=>${type}")
                     llMusic.setMusicNameTextView(songName, type)
                     llMusic.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {

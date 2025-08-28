@@ -18,6 +18,7 @@
 
 package com.tencent.shadow.sample.manager;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_ANOTHER_APP;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_BASE;
@@ -143,8 +144,6 @@ public class SamplePluginManager extends FastPluginManager {
                 try {
                     installedPlugin = installPlugin(pluginZipPath, null, true, pluginsDir);
                     Log.i(TAG, "run: huang installedPlugin=>" + installedPlugin.plugins);
-                    Log.i(TAG, "run: huang partKey=>" + partKey);
-
 
 //                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
 //                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);
@@ -157,7 +156,7 @@ public class SamplePluginManager extends FastPluginManager {
 //                    callApplicationOnCreate("plugin_1-plugin-debug");
 
                     Intent pluginIntent = new Intent();
-
+                    pluginIntent.setFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
 
                     pluginIntent.setClassName(
                             context.getPackageName(),
@@ -166,9 +165,9 @@ public class SamplePluginManager extends FastPluginManager {
                     if (extras != null) {
                         pluginIntent.replaceExtras(extras);
                     }
-                    Log.i(TAG, "run: huang context pluginIntent=>" + pluginIntent);
                     Intent intent = mPluginLoader.convertActivityIntent(pluginIntent);
-                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                    intent.setFlags(FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK);
+                    Log.i(TAG, "run: huang start intent=>" + intent);
                     mPluginLoader.startActivityInPluginProcess(intent);
                 } catch (Exception e) {
                     Log.e(TAG, "run: huang run time error:" + e);
@@ -181,8 +180,6 @@ public class SamplePluginManager extends FastPluginManager {
                     File pluginApkFile = null;
                     if (installedPlugin != null && installedPlugin.plugins.get(partKey) != null) {
                         pluginApkFile = Objects.requireNonNull(installedPlugin.plugins.get(partKey)).pluginFile;
-                        Log.i(TAG, "run: huang pluginApkFile exists=>" + pluginApkFile.exists());
-                        Log.i(TAG, "run: huang getAbsolutePath=>" + pluginApkFile.getAbsolutePath());
                         callback.onCloseLoadingView(pluginApkFile.getAbsolutePath());
                     } else {
                         callback.onCloseLoadingView(null);

@@ -300,6 +300,7 @@ class AlbumArtProvider(private val context: Context) {
             FileOutputStream(tempFile).use { out ->
                 optimized.compress(Bitmap.CompressFormat.PNG, COMPRESS_QUALITY, out)
             }
+            Log.i(TAG, "saveAsTempFile: huang save image path=>" + tempFile.absoluteFile)
             // 生成安全URI
             FileProvider.getUriForFile(
                 context,
