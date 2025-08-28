@@ -91,7 +91,6 @@ class UI2Activity : Activity() {
 
         //Utils.setPluginWallpaper(resources, R.drawable.wallpaper_00)
 
-        Log.i(TAG, "onCreate: huang ui2 create this==>${this}")
         mViewBinding = Ui2ActivityBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
 
@@ -368,10 +367,6 @@ class UI2Activity : Activity() {
                 bundle: Bundle, status: Boolean, type: Int
             ) {
                 runOnUiThread {
-                    Log.i(
-                        TAG,
-                        "updateViewPlayStatus: huang update play status bundle=${bundle} status=${status} type=${type}"
-                    )
                     llMusic.setCurMusicState(status, type)
                 }
             }
@@ -392,10 +387,6 @@ class UI2Activity : Activity() {
                 bundle: Bundle, songName: String, singerName: String, album: String, type: Int
             ) {
                 runOnUiThread {
-                    Log.i(TAG, "updateViewPlayInfo: huang songName=>${songName}")
-                    Log.i(TAG, "updateViewPlayInfo: huang album=>${album}")
-                    Log.i(TAG, "updateViewPlayInfo: huang singerName=>${singerName}")
-                    Log.i(TAG, "updateViewPlayInfo: huang type=>${type}")
                     llMusic.setMusicNameTextView(songName, type)
                     llMusic.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {

@@ -73,7 +73,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private final CopyOnWriteArrayList<MediaController> mControllers = new CopyOnWriteArrayList<>();
     private final List<MediaController.Callback> mCallbacks = new ArrayList<>();
 
-    private int mActivePlaybackCount = 0;
     private long mCurrentPosition = 0;
     private long mDuration = 0;
     public String mPlayingPackageName;
@@ -128,6 +127,13 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                         lastUpdateTime = currentTime;
                         handlePlayingTime(mMediaController);
                         handleMetadataArtUri();
+
+                        if (mLastPlayState != state.getState()) {
+                            boolean isPlaying = state.getState() == PlaybackState.STATE_PLAYING;
+                            if (isPlaying) {
+                                sendMediaPlayInfoToWidget(mMediaController, true);
+                            }
+                        }
 
                         //减少状态更新频率
                         if (mLastPlayState != state.getState()
@@ -184,7 +190,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private boolean hasImage(String metaArtUri) {
         return metaArtUri.contains(mKwPlayImageUri_700)
                 || metaArtUri.contains(mKwPicImageUri_700);
-                //|| metaArtUri.contains(mKwPlayImageUri_300);
+        //|| metaArtUri.contains(mKwPlayImageUri_300);
     }
 
     public void initDependencies(Context context) {
@@ -312,7 +318,8 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             if (Objects.equals(controller.getPackageName(), getPlayingPackageName())) {
                 //setPlayingPackageName(controller.getPackageName());
                 activeController = controller;
-                //sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
+                if (state != null)
+                    sendMediaPlayInfoToWidget(controller, state.getState() == PlaybackState.STATE_PLAYING);
                 break;
             }
         }
@@ -519,19 +526,11 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private void sendMediaPlayInfoToWidget(MediaController controller, boolean isPlaying) {
         Bundle bundle = new Bundle();
         bundle.putString(AwellTool.STATUS_ACCEPT, AwellTool.MEDIA_PLAY);
-        /*if(controller==null){
-            Log.i(TAG, "sendMediaPlayInfoToWidget---MUSIC_MEDIA_PLAY : " + isPlaying);
-            bundle.putString(AwellTool.VALUE_M1, "com.awell.localmusic");
-            bundle.putString(AwellTool.VALUE_M2, isPlaying ? "start" : "stop");
-            bundle.putInt(AwellTool.VALUE_M3, 3);
-            bundle.putInt(AwellTool.VALUE_M4, MusicWidget.MUSIC);
-        }else {*/
         Log.i(TAG, "sendMediaPlayInfoToWidget---MUSIC_MEDIA_PLAY : " + isPlaying + "--controller.getPackageName()=" + controller.getPackageName());
         bundle.putString(AwellTool.VALUE_M1, controller.getPackageName());
         bundle.putString(AwellTool.VALUE_M2, isPlaying ? "start" : "stop");
         bundle.putInt(AwellTool.VALUE_M3, 3);
         bundle.putInt(AwellTool.VALUE_M4, MusicWidget.OTHER_MUSIC);
-        //}
         sendDataToAwellApi(bundle);
     }
 

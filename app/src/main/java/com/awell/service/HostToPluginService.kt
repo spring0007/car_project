@@ -154,27 +154,22 @@ class HostToPluginService : Service() {
     private val mBinder: IHostPluginInterface.Stub = object : IHostPluginInterface.Stub() {
 
         override fun getSongName(): String? {
-            Log.i(TAG, "getSongName: huang get song name =>${mSongName}")
             return mSongName ?: mNullStr
         }
 
         override fun notifyData(): Bundle? {
-            Log.i(TAG, "notifyData: huang notify plugin data change ==>")
             return null
         }
 
         override fun pluginToOtherAppWithBundle(bundle: Bundle?): String? {
-            Log.i(TAG, "pluginToOtherAppWithBundle: huang bundle=>${bundle}")
             return mediaLibrary.setDataEvent(bundle)
         }
 
         override fun pluginToOtherAppWithStr(status: String?): String? {
-            Log.i(TAG, "pluginToOtherAppWithStr: huang status=${status}")
             return mediaLibrary.setDataEvent(status)
         }
 
         override fun pluginToInternalImplWithBundle(bundle: Bundle?) {
-            Log.i(TAG, "pluginToInternalImplWithBundle: huang bundle=>${bundle}")
             mMediaListener.sendDataToAwellApi(bundle)
         }
 
@@ -220,9 +215,6 @@ class HostToPluginService : Service() {
 
             mTempMediaPlay?.let {
 
-                //todo AwellTool.VALUE_M4 添加播放类型
-                //0 music  1 bt  4 other music
-
                 val pkg = it.getString(AwellTool.VALUE_M1, null)
                 val musicType = when {
                     pkg.contains("com.awell.localmusic") -> 0
@@ -230,8 +222,6 @@ class HostToPluginService : Service() {
                     else -> 4
                 }
                 it.putInt(AwellTool.VALUE_M4, musicType)
-
-                Log.i(TAG, "registerListener: huang it=${it}")
 
                 notifyClientDataChanged(it)
             }
@@ -266,7 +256,6 @@ class HostToPluginService : Service() {
             AwellTool.MUSIC.PLAY_NAME -> {
                 //保存本地音乐播放的信息
                 mTempMusicPlayInfo = bundle.deepCopy()
-                Log.i(TAG, "saveTempValue: huang mTempMusicPlayInfo=${mTempMusicPlayInfo}")
             }
 
             MusicWidget.OTHER_MUSIC_PLAY_IMAGE,
