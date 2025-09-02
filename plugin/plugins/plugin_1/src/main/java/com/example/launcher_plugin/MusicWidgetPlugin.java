@@ -201,12 +201,15 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
                         kwapi.setPlayState(PlayState.STATE_PLAY);
                     else if (kwapi.getPlayerStatus().equals(PlayerStatus.PLAYING))
                         kwapi.setPlayState(PlayState.STATE_PAUSE);*/
-                Launcher.mMediaListener.togglePlayPause();
+                //Launcher.mMediaListener.togglePlayPause();
+                mediaControl.sendTogglePlayPause();
             } else if (currentMedia == CARPLAY) {
                 //keyDealToZlink(KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE);
-                Launcher.mMediaListener.togglePlayPause();
+                //Launcher.mMediaListener.togglePlayPause();
+                mediaControl.sendTogglePlayPause();
             } else if (currentMedia == OTHER_MUSIC) {
-                Launcher.mMediaListener.togglePlayPause();
+                //Launcher.mMediaListener.togglePlayPause();
+                mediaControl.sendTogglePlayPause();
             }
         } else if (id == R.id.ll_name_layout_music || id == R.id.music_widget_rl) {
             Log.i(TAG, "onClick MUSIC_MEDIA_PLAY -currentMedia=" + currentMedia);

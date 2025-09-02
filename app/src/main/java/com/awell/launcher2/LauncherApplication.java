@@ -96,6 +96,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     }
 
     public void PluginInit() {
+        Log.i(TAG, "PluginInit: huang init plugin ==>");
         HostAppsHolder.init(new HostApps());
         initLauncherModel();
 

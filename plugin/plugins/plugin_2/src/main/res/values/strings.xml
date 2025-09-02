@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">plugin_2</string>
 
+    <string name="ui_key">plugin2-app</string>
+    <string name="ui_clazz">com.example.plugin_2.UI2Activity</string>
+
     <string name="click_play_music">Click  To Play</string>
     <string name="music_artist">Artist</string>
 

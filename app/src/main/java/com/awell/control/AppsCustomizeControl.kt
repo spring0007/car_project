@@ -171,9 +171,9 @@ object AppsCustomizeControl {
     }
 
     fun hideApps() {
-
         if (!mAllIsShowing) {
-            //Log.i(TAG, "hideApps: huang already hide all apps==>")
+            if (DEBUG)
+                Log.i(TAG, "hideApps: huang already hide all apps==>")
             return
         }
 

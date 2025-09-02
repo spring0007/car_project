@@ -202,6 +202,7 @@ class UI2Activity : Activity() {
         mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
+        AppsCustomizeControl.hideApps()
     }
 
     /**

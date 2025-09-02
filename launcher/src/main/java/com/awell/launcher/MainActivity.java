@@ -16,6 +16,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
 import com.awell.plugin_shadow.PluginHelper;
@@ -24,6 +25,7 @@ import com.awell.service.GpsSimulationService;
 import com.awell.utils.Utils;
 import com.tencent.shadow.sample.constant.Constant;
 import com.tencent.shadow.dynamic.host.EnterCallback;
+import com.tencent.shadow.sample.host.lib.HostApps;
 import com.tencent.shadow.sample.host.lib.HostAppsHolder;
 
 import android.os.SystemProperties;

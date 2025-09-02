@@ -201,6 +201,7 @@ class UIActivity : Activity(), View.OnClickListener {
         mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
+        AppsCustomizeControl.hideApps()
     }
 
 
@@ -576,6 +577,7 @@ class UIActivity : Activity(), View.OnClickListener {
         super.onNewIntent(intent)
         AppsCustomizeControl.hideApps()
     }
+
 
     override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
         return super.dispatchKeyEvent(event)

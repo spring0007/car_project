@@ -23,8 +23,9 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_ANOTHER_APP;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_BASE;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_MAIN_APP;
+import static com.tencent.shadow.sample.constant.Constant.UI_CLAZZ;
+import static com.tencent.shadow.sample.constant.Constant.UI_LEY;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.tencent.shadow.dynamic.loader.PluginLoader;
 import com.tencent.shadow.sample.constant.Constant;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -50,7 +52,7 @@ public class SamplePluginManager extends FastPluginManager {
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     private Context mCurrentContext;
-    private final String TAG = SamplePluginManager.class.getSimpleName();
+    private static final String TAG = SamplePluginManager.class.getSimpleName();
 
     public SamplePluginManager(Context context) {
         super(context);
@@ -173,19 +175,50 @@ public class SamplePluginManager extends FastPluginManager {
                     Log.e(TAG, "run: huang run time error:" + e);
                 }
                 if (callback != null) {
-                    long endTime = System.currentTimeMillis();
-                    Log.i(TAG, "run: huang spend time =" + (endTime - startTime));
-
-                    //todo Save apk file path for updating wallpaper and selecting images
                     File pluginApkFile = null;
                     if (installedPlugin != null && installedPlugin.plugins.get(partKey) != null) {
                         pluginApkFile = Objects.requireNonNull(installedPlugin.plugins.get(partKey)).pluginFile;
                         callback.onCloseLoadingView(pluginApkFile.getAbsolutePath());
+
+                        savePropertyDefault(partKey, className);
+
                     } else {
                         callback.onCloseLoadingView(null);
                     }
+                    long endTime = System.currentTimeMillis();
+                    Log.i(TAG, "run: huang load spend time =" + (endTime - startTime));
                 }
             }
         });
     }
+
+    private static void savePropertyDefault(String partKey, String className) {
+        String uiKey = getSystemProperty(UI_LEY, null);
+        if (uiKey == null) {
+            setSystemProperty(UI_LEY, partKey);
+            setSystemProperty(UI_CLAZZ, className);
+        }
+    }
+
+    public static void setSystemProperty(String key, String value) {
+        try {
+            Class<?> systemProperties = Class.forName("android.os.SystemProperties");
+            Method setMethod = systemProperties.getMethod("set", String.class, String.class);
+            setMethod.invoke(null, key, value);
+        } catch (Exception e) {
+            Log.e(TAG, "setSystemProperty: huang error==>" + e.getMessage());
+        }
+    }
+
+    public static String getSystemProperty(String key, String defaultValue) {
+        try {
+            Class<?> systemProperties = Class.forName("android.os.SystemProperties");
+            Method getMethod = systemProperties.getMethod("get", String.class, String.class);
+            return (String) getMethod.invoke(null, key, defaultValue);
+        } catch (Exception e) {
+            Log.e(TAG, "getSystemProperty: huang error==>" + e.getMessage());
+            return defaultValue;
+        }
+    }
+
 }
