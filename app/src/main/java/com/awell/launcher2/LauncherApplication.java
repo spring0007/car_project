@@ -38,7 +38,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.awell.impl.HostApps;
+import com.awell.control.HostAppsHolder;
+import com.awell.impl.HostAppsImpl;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.BuildConfig;
 import com.awell.launcher.R;
@@ -47,8 +48,6 @@ import com.qihoo360.replugin.RePluginApplication;
 import com.qihoo360.replugin.RePluginCallbacks;
 import com.qihoo360.replugin.RePluginConfig;
 import com.qihoo360.replugin.RePluginEventCallbacks;
-import com.tencent.shadow.sample.host.lib.HostAppsHolder;
-import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
@@ -89,7 +88,7 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     }
 
     public void hostInit() {
-        HostAppsHolder.init(new HostApps());
+        HostAppsHolder.init(new HostAppsImpl());
         initLauncherModel();
 
     }
@@ -121,8 +120,6 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
                 Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
             }
         }
-
-        HostUiLayerProvider.init(this);
 
     }
 

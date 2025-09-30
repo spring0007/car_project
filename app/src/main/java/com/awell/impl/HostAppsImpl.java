@@ -2,15 +2,15 @@ package com.awell.impl;
 
 import static com.awell.launcher2.LauncherApplication.getmAppContext;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.awell.control.AppsCustomizeControl;
+import com.awell.control.HostApps;
 import com.awell.launcher2.LauncherApplication;
 
-public class HostApps implements com.tencent.shadow.sample.host.lib.HostApps {
-    private final String TAG = HostApps.class.getSimpleName();
+public class HostAppsImpl implements HostApps {
+    private final String TAG = HostAppsImpl.class.getSimpleName();
 
     @Override
     public void showAllApps(ViewGroup group) {

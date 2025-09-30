@@ -1,0 +1,22 @@
+
+
+
+
+
+使用RePlugin框架
+    LAUNCHER_KEY：app的名字
+    LAUNCHER_CLAZZ：显示UI的Activity
+    主题apk设置LAUNCHER_CLAZZ和LAUNCHER_KEY的值。
+
+ActivityRecord.java
+    setPluginToHome()设置UI Activity为home类型的Activity
+
+ActivityStartController.java
+    showPluginHome()读取ActivityRecord判断UI Activity是否在运行
+
+
+
+
+
+
+

@@ -14,7 +14,6 @@ import com.awell.ctrlview.MusicWidget
 import com.awell.launcher.IDataChangeInterface
 import com.awell.launcher.IHostPluginInterface
 import com.awell.library.AwellTool
-import com.tencent.shadow.sample.host.lib.MediaViewModel
 import java.lang.reflect.Method
 
 

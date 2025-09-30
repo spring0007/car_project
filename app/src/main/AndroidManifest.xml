@@ -124,7 +124,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="nosensor"
             android:stateNotNeeded="true"
-            android:process=":plugin"
             android:theme="@style/Theme_"
             android:windowSoftInputMode="adjustPan">
 

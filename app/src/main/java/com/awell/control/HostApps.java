@@ -1,7 +1,5 @@
-package com.tencent.shadow.sample.host.lib;
+package com.awell.control;
 
-import android.app.Activity;
-import android.app.Application;
 import android.view.ViewGroup;
 
 public interface HostApps {

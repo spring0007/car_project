@@ -1,6 +1,5 @@
-package com.tencent.shadow.sample.host.lib;
+package com.awell.control;
 
-import android.content.Context;
 import android.util.Log;
 
 public class HostAppsHolder {
