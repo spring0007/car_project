@@ -15,7 +15,7 @@
             android:name=".UI2Activity"
             android:enabled="true"
             android:exported="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTask">
 
         </activity>
     </application>

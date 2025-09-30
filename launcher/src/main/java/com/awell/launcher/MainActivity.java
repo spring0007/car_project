@@ -74,6 +74,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onDestroy();
         LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
         launcherApplication.setStartStatus(null);
+        Log.i(TAG, "onDestroy: huang launcher main activity destroy==>");
     }
 
     private void startInternalLauncher() {
@@ -136,8 +137,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             @Override
             public void run() {
 
-                String apkName = SystemProperties.get(LAUNCHER_KEY, null);
-                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, null);
+                String apkName = SystemProperties.get(LAUNCHER_KEY, "plugin1");
+                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
 
                 String testApk = apkName + ".apk";
                 String testApkPath = mExternalPluginPath + File.separator + testApk;
@@ -178,7 +179,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (info != null) {
             Intent intent = RePlugin.createIntent(info.getName(), clazz);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             RePlugin.startActivity(MainActivity.this, intent);
         } else {
             Toast.makeText(MainActivity.this, "install external plugin failed", Toast.LENGTH_SHORT).show();
@@ -224,55 +225,4 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
 
-//
-//    public void startPlugin() {
-//
-//        PluginHelper.getInstance().singlePool.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                String plugin_key = SystemProperties.get(plugin_pkg_key, partKey1);
-//                String plugin_clazz = SystemProperties.get(plugin_clazz_key, CLAZZ_NAME_LAUNCHER_1);
-//
-//                ((LauncherApplication) getmAppContext()).loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
-//
-//                Bundle bundle = new Bundle();
-//                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
-//                if (new File(mExternalPluginPath).exists()) {
-//                    bundle.putString(Constant.KEY_PLUGINS_APK_PATH, mExternalPluginPath);
-//                }
-//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, plugin_key);
-//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, plugin_clazz);
-////                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
-////                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
-//                ((LauncherApplication) getmAppContext()).getPluginManager()
-//                        .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
-//                            @Override
-//                            public void onShowLoadingView(final View view) {
-//                                mHandler.post(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        //mViewGroup.addView(view);
-//                                    }
-//                                });
-//                            }
-//
-//                            @Override
-//                            public void onCloseLoadingView(String pluginPath) {
-//                                Log.i(TAG, "onCloseLoadingView: huang plugin Path=>" + pluginPath);
-//                                if (pluginPath != null) {
-//                                    Utils.setPluginApkFilePath(pluginPath);
-//                                    finish();
-//                                } else {
-//                                    startInternalLauncher();
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onEnterComplete() {
-//
-//                            }
-//                        });
-//            }
-//        });
-//    }
 }

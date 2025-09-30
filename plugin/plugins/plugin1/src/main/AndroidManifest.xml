@@ -17,7 +17,7 @@
         <activity
             android:name=".UIActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/PluginTheme">
 
         </activity>

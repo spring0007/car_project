@@ -196,6 +196,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i(TAG, "onDestroy: huang plugin1 destroy==>")
         mMediaListener.cleanup()
         mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
@@ -574,6 +575,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        Log.i(TAG, "onNewIntent: huang ===>")
         AppsCustomizeControl.hideApps()
     }
 
