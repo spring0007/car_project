@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

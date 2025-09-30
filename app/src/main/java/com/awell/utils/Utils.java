@@ -27,7 +27,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.awell.addapp.AppInfo;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.io.File;
 import java.io.IOException;

@@ -48,7 +48,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LayoutAnimationController;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.FolderIcon.FolderRingAnimator;
 
 import java.util.ArrayList;

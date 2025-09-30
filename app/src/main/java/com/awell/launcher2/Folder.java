@@ -46,7 +46,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.FolderInfo.FolderListener;
 
 import java.util.ArrayList;

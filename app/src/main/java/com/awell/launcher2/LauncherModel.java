@@ -50,7 +50,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.awell.control.AppsCustomizeControl;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.InstallWidgetReceiver.WidgetMimeTypeHandlerData;
 
 import java.lang.ref.WeakReference;

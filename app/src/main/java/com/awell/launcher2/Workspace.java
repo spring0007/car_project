@@ -54,7 +54,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.FolderIcon.FolderRingAnimator;
 import com.awell.launcher2.LauncherSettings.Favorites;
 

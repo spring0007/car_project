@@ -39,7 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.launcher2.FolderInfo.FolderListener;
 

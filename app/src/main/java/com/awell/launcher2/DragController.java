@@ -36,7 +36,7 @@ import android.view.ViewConfiguration;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.util.ArrayList;
 

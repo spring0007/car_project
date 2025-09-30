@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 public class Shadow extends FrameLayout {
 

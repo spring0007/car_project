@@ -14,6 +14,8 @@ android {
 
     compileSdk 33
 
+    namespace 'com.awell.launcher.library'
+
     defaultConfig {
 //        applicationId "com.awell.launcher"
         minSdk 26

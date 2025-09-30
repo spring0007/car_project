@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 /**
  * {@inheritDoc}

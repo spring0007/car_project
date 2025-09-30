@@ -9,7 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.withSave
-import com.awell.launcher.R
+import com.awell.launcher.library.R
 
 /**
  * 全部app列表下方的页码指示器

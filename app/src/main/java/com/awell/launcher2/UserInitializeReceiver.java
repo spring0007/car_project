@@ -19,7 +19,7 @@ package com.awell.launcher2;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;

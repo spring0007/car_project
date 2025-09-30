@@ -14,7 +14,7 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 public class RoundAngleImageView extends ImageView {
     private Paint paint;

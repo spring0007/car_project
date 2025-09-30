@@ -37,7 +37,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.util.DisplayMetrics;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 
 /**

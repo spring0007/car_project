@@ -42,7 +42,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
 
 import java.util.ArrayList;

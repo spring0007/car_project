@@ -26,7 +26,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 /**
  * An icon on a PagedView, specifically for items in the launcher's paged view

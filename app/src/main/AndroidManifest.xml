@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.awell.launcher"
+
     android:sharedUserId="android.uid.system"
     android:versionCode="100"
     android:versionName="1.0.0">
-
-    <original-package android:name="com.awell.launcher2" />
+<!--    package="com.awell.launcher"-->
+    <!--<original-package android:name="com.awell.launcher2" />-->
     <!--
  sdk clear dory
     <uses-sdk

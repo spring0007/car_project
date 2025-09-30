@@ -61,7 +61,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.utils.Utils;

@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 /**
  * 绘制频谱

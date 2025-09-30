@@ -16,7 +16,7 @@
 
 package com.awell.launcher2;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.utils.Utils;
 
 import android.app.Activity;

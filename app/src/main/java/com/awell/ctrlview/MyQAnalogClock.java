@@ -16,7 +16,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.util.Calendar;
 

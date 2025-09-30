@@ -52,7 +52,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SpinnerAdapter;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.io.File;
 import java.io.IOException;

@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 public class InfoDropTarget extends ButtonDropTarget {
 

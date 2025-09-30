@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.ctrlview.SpetrumView;
 /**
  * @author xiayiye5

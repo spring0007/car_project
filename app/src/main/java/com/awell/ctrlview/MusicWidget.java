@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awell.control.AwellMediaControl;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.IconCache;
 import com.awell.launcher2.Launcher;
 import com.awell.library.AwellLibrary;
@@ -68,8 +68,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     //private KWAPI kwapi;
     private int dayNight = 0;
     private boolean musicState = false;
-    private int[] musicId = {R.drawable.icon_music_img, R.drawable.icon_bt_img,
-            R.drawable.icon_kwplay_img, R.drawable.icon_carplay_img,};
+//    private int[] musicId = {R.drawable.icon_music_img, R.drawable.icon_bt_img,
+//            R.drawable.icon_kwplay_img, R.drawable.icon_carplay_img,};
 
     public final static int MUSIC = 0;
     public final static int BT = 1;

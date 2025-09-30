@@ -17,7 +17,7 @@
 package com.awell.launcher2;
 
 import com.awell.control.AppsCustomizeControl;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import android.content.Context;
 import android.content.Intent;

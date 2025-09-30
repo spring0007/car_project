@@ -145,7 +145,7 @@ import com.awell.ctrlview.MyPageTransformer2;
 import com.awell.ctrlview.MyQAnalogClock;
 import com.awell.ctrlview.NewCalendar;
 import com.awell.ctrlview.VisualizerView;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
@@ -2039,7 +2039,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     int[] textColorId1 = {Color.WHITE, Color.BLACK};
     int[] sf_time_bg_mainID = {R.drawable.sf_time_bg_main, R.drawable.sf_time_bg_main_n};
     int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
-    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
+//    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
     int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
     int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
     int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};

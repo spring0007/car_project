@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 import java.util.List;
 

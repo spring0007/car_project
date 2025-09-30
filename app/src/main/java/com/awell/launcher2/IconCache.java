@@ -30,7 +30,7 @@ import android.graphics.drawable.Drawable;
 
 import java.util.HashMap;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 /**
  * Cache of application icons.  Icons can be made from any thread.

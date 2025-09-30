@@ -30,7 +30,7 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 public class DragView extends View {
     private static float sDragAlpha = 1f;

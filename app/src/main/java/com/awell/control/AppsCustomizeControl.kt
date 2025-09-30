@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.awell.launcher.R
+import com.awell.launcher.library.R
 import com.awell.launcher2.ApplicationInfo
 import com.awell.launcher2.AppsCustomizePagedView
 import com.awell.launcher2.AppsCustomizeTabHost

@@ -33,7 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 
 public class Cling extends FrameLayout {
 

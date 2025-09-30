@@ -39,7 +39,7 @@ import android.util.Log;
 
 import com.awell.aidl.awellface.IAwellApi;
 import com.awell.ctrlview.MusicWidget;
-import com.awell.launcher.R;
+import com.awell.launcher.library.R;
 import com.awell.library.AwellTool;
 
 import org.slf4j.Logger;
