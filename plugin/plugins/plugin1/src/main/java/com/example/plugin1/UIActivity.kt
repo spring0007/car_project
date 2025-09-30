@@ -649,7 +649,7 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun handleLongPressAction() {
-        Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
+        //Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
     }
 

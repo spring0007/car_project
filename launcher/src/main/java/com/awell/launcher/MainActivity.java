@@ -21,6 +21,7 @@ import com.awell.launcher.databinding.SelectLauncherLayoutBinding;
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
 
+import com.awell.utils.Utils;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.model.PluginInfo;
 import com.qihoo360.replugin.utils.FileUtils;
@@ -176,6 +177,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             info = RePlugin.install(pluginFilePath);
         }
         Log.i(TAG, "simulateInstallExternalPlugin: huang info=>" + info);
+        Log.i(TAG, "simulateInstallExternalPlugin: huang path=>" + path);
+
+        Utils.setPluginApkFilePath(path);
+
         if (info != null) {
             Intent intent = RePlugin.createIntent(info.getName(), clazz);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

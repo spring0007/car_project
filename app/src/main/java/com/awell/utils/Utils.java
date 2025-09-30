@@ -482,6 +482,7 @@ public class Utils {
             }
             // 获取字符串资源ID (假设资源名为"app_name")
             int arrayResId = pluginResources.getIdentifier("wallpapers", "array", pluginPackageName);
+            Log.i(TAG, "getPluginWallPaperID: huang res id=>" + resourceID);
             if (arrayResId != 0) {
                 String[] appName = pluginResources.getStringArray(arrayResId);
                 return arrayResId;

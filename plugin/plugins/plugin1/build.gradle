@@ -75,7 +75,9 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
-
+    aaptOptions {
+        additionalParameters '--allow-reserved-package-id', '--package-id', '0x7e'
+    }
 }
 
 

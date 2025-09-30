@@ -660,7 +660,7 @@ class UI2Activity : Activity() {
     }
 
     private fun handleLongPressAction() {
-        Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
+        //Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
     }
 
