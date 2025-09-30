@@ -218,7 +218,7 @@ class AwellMediaControl() {
     fun bindDataService(context: Context) {
         val intent = Intent().apply {
             component = ComponentName(
-                "com.awell.launcher",
+                context.packageName,
                 "com.awell.service.HostToPluginService"
             )
         }

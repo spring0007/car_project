@@ -1,0 +1,125 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.qihoo360.replugin",
+    "module": "replugin-plugin-gradle",
+    "version": "3.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "replugin-plugin-gradle-3.1.0.jar",
+          "url": "replugin-plugin-gradle-3.1.0.jar",
+          "size": 169983,
+          "sha512": "5f0cdb8fa018fc54bf546dfe0c9a66d594349dab4bd1f0fc70b3d8b38da0fc57ed5357a254ce90d4b64f5eb76dbe930ebb98ecac0921fe1be393b4398f4f8d9e",
+          "sha256": "c43ecf4b96f80fec3412de4f66534ddb2fdd919588afbd860d372b8a4191cc92",
+          "sha1": "45a45348212e43b215debf6c10d33925f5fe1a61",
+          "md5": "3db35ace2db3bd040394fc99b97a616b"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "7.4.2"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20160212"
+          }
+        },
+        {
+          "group": "org.codehaus.groovy",
+          "module": "groovy",
+          "version": {
+            "requires": "2.4.7"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "javapoet",
+          "version": {
+            "requires": "1.5.1"
+          }
+        },
+        {
+          "group": "com.android.tools.build",
+          "module": "transform-api",
+          "version": {
+            "requires": "1.5.0"
+          }
+        },
+        {
+          "group": "org.javassist",
+          "module": "javassist",
+          "version": {
+            "requires": "3.18.2-GA"
+          }
+        },
+        {
+          "group": "commons-io",
+          "module": "commons-io",
+          "version": {
+            "requires": "2.5"
+          }
+        },
+        {
+          "group": "com.google.guava",
+          "module": "guava",
+          "version": {
+            "requires": "30.1-jre"
+          }
+        },
+        {
+          "group": "commons-codec",
+          "module": "commons-codec",
+          "version": {
+            "requires": "1.11"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "replugin-plugin-gradle-3.1.0.jar",
+          "url": "replugin-plugin-gradle-3.1.0.jar",
+          "size": 169983,
+          "sha512": "5f0cdb8fa018fc54bf546dfe0c9a66d594349dab4bd1f0fc70b3d8b38da0fc57ed5357a254ce90d4b64f5eb76dbe930ebb98ecac0921fe1be393b4398f4f8d9e",
+          "sha256": "c43ecf4b96f80fec3412de4f66534ddb2fdd919588afbd860d372b8a4191cc92",
+          "sha1": "45a45348212e43b215debf6c10d33925f5fe1a61",
+          "md5": "3db35ace2db3bd040394fc99b97a616b"
+        }
+      ]
+    }
+  ]
+}

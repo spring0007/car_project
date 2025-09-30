@@ -3,30 +3,35 @@ package com.awell.launcher;
 import static com.awell.launcher2.LauncherApplication.getmAppContext;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.UserHandle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.awell.launcher.databinding.SelectLauncherLayoutBinding;
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
-import com.awell.plugin_shadow.PluginHelper;
 
-import com.awell.utils.Utils;
-import com.tencent.shadow.sample.constant.Constant;
-import com.tencent.shadow.dynamic.host.EnterCallback;
+import com.qihoo360.replugin.RePlugin;
+import com.qihoo360.replugin.model.PluginInfo;
+import com.qihoo360.replugin.utils.FileUtils;
 
 import android.os.SystemProperties;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 
@@ -39,37 +44,36 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final String partKey1 = "plugin-app";
     private final String partKey2 = "plugin2-app";
 
-    private String plugin_pkg_key = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
-    private String plugin_clazz_key = "persist.sys.launcher.clazz"; //value : plugin app class name
+    private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
+    private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
 
     /**
      * 外部保存的插件文件路径
      */
     private final String mExternalPluginPath = "/sdcard/launcher_plugin";
-    private Handler mHandler = new Handler();
-    private boolean mStartPlugin = true;
-
-    private ViewGroup mViewGroup;
+    private SelectLauncherLayoutBinding binding;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_launcher_layout);
-//        initView();
-//        startGpsService();
+        binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        Log.i(TAG, "onCreate: huang launcher main activity create==>");
+        initView();
+        startGpsService();
 
-//        mViewGroup = findViewById(R.id.container);
+        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
+        launcherApplication.setStartStatus(pluginStartStatus);
 
+        startPluginActivity();
+    }
 
-        if ("default".equals(getIntent().getStringExtra("launcher"))) {
-            mStartPlugin = false;
-        }
-        if (!mStartPlugin) {
-            startInternalLauncher();
-        } else {
-            startPlugin();
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
+        launcherApplication.setStartStatus(null);
     }
 
     private void startInternalLauncher() {
@@ -114,15 +118,34 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (!mStartPlugin) {
-            startInternalLauncher();
-        } else {
-            startPlugin();
-        }
     }
 
     private void initView() {
+        binding.startDemo1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPluginActivity();
+            }
+        });
+    }
 
+    private void startPluginActivity() {
+        Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
+        //final ProgressDialog pd = ProgressDialog.show(MainActivity.this, "Installing...", "Please wait...", true, true);
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                String apkName = SystemProperties.get(LAUNCHER_KEY, null);
+                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, null);
+
+                String testApk = apkName + ".apk";
+                String testApkPath = mExternalPluginPath + File.separator + testApk;
+
+                simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
+                //pd.dismiss();
+            }
+        }, 0);
     }
 
     @Override
@@ -131,54 +154,125 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 
-    public void startPlugin() {
+    /**
+     * 模拟安装或升级（覆盖安装）外置插件
+     * 注意：为方便演示，外置插件临时放置到Host的assets/external目录下，具体说明见README</p>
+     */
+    private void simulateInstallExternalPlugin(String path, String name, String clazz) {
 
-        PluginHelper.getInstance().singlePool.execute(new Runnable() {
-            @Override
-            public void run() {
-                String plugin_key = SystemProperties.get(plugin_pkg_key, partKey1);
-                String plugin_clazz = SystemProperties.get(plugin_clazz_key, CLAZZ_NAME_LAUNCHER_1);
+        // 文件是否已经存在？直接删除重来
+        String pluginFilePath = getFilesDir().getAbsolutePath() + File.separator + name;
+        File pluginFile = new File(pluginFilePath);
+        if (pluginFile.exists()) {
+            Log.i(TAG, "simulateInstallExternalPlugin: huang delete ==>");
+            FileUtils.deleteQuietly(pluginFile);
+        }
+        // 开始复制
+        copyAssetsFileToAppFiles(path, name);
 
-                ((LauncherApplication) getmAppContext()).loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
-
-                Bundle bundle = new Bundle();
-                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
-                if (new File(mExternalPluginPath).exists()) {
-                    bundle.putString(Constant.KEY_PLUGINS_APK_PATH, mExternalPluginPath);
-                }
-                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, plugin_key);
-                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, plugin_clazz);
-//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
-//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
-                ((LauncherApplication) getmAppContext()).getPluginManager()
-                        .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
-                            @Override
-                            public void onShowLoadingView(final View view) {
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //mViewGroup.addView(view);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCloseLoadingView(String pluginPath) {
-                                Log.i(TAG, "onCloseLoadingView: huang plugin Path=>" + pluginPath);
-                                if (pluginPath != null) {
-                                    Utils.setPluginApkFilePath(pluginPath);
-                                    finish();
-                                } else {
-                                    startInternalLauncher();
-                                }
-                            }
-
-                            @Override
-                            public void onEnterComplete() {
-
-                            }
-                        });
-            }
-        });
+        PluginInfo info = null;
+        if (pluginFile.exists()) {
+            info = RePlugin.install(pluginFilePath);
+        }
+        Log.i(TAG, "simulateInstallExternalPlugin: huang info=>" + info);
+        if (info != null) {
+            Intent intent = RePlugin.createIntent(info.getName(), clazz);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            RePlugin.startActivity(MainActivity.this, intent);
+        } else {
+            Toast.makeText(MainActivity.this, "install external plugin failed", Toast.LENGTH_SHORT).show();
+        }
     }
+
+    /**
+     * 从assets目录中复制某文件内容
+     *
+     * @param assetFileName assets目录下的Apk源文件路径
+     * @param newFileName   复制到/data/data/package_name/files/目录下文件名
+     */
+    private void copyAssetsFileToAppFiles(String assetFileName, String newFileName) {
+        int buffsize = 1024;
+
+        try (
+                InputStream is = new FileInputStream(assetFileName);
+                FileOutputStream fos = this.openFileOutput(newFileName, Context.MODE_PRIVATE)) {
+            //            is = this.getAssets().open(assetFileName);
+            int byteCount = 0;
+            byte[] buffer = new byte[buffsize];
+            while ((byteCount = is.read(buffer)) != -1) {
+                fos.write(buffer, 0, byteCount);
+            }
+            fos.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
+        @Override
+        public void startPitActivityResult(String plugin, String activity, boolean result) {
+            //result = false;
+            Log.i(TAG, "startPitActivityResult: huang start result=>" + result);
+            if (result) {
+                finish();
+            } else {
+                //startInternalLauncher();
+                //finish();
+            }
+        }
+    };
+
+//
+//    public void startPlugin() {
+//
+//        PluginHelper.getInstance().singlePool.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                String plugin_key = SystemProperties.get(plugin_pkg_key, partKey1);
+//                String plugin_clazz = SystemProperties.get(plugin_clazz_key, CLAZZ_NAME_LAUNCHER_1);
+//
+//                ((LauncherApplication) getmAppContext()).loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
+//                if (new File(mExternalPluginPath).exists()) {
+//                    bundle.putString(Constant.KEY_PLUGINS_APK_PATH, mExternalPluginPath);
+//                }
+//                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, plugin_key);
+//                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, plugin_clazz);
+////                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, partKey2);
+////                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, CLAZZ_NAME_LAUNCHER_2);
+//                ((LauncherApplication) getmAppContext()).getPluginManager()
+//                        .enter(getmAppContext(), Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
+//                            @Override
+//                            public void onShowLoadingView(final View view) {
+//                                mHandler.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        //mViewGroup.addView(view);
+//                                    }
+//                                });
+//                            }
+//
+//                            @Override
+//                            public void onCloseLoadingView(String pluginPath) {
+//                                Log.i(TAG, "onCloseLoadingView: huang plugin Path=>" + pluginPath);
+//                                if (pluginPath != null) {
+//                                    Utils.setPluginApkFilePath(pluginPath);
+//                                    finish();
+//                                } else {
+//                                    startInternalLauncher();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onEnterComplete() {
+//
+//                            }
+//                        });
+//            }
+//        });
+//    }
 }

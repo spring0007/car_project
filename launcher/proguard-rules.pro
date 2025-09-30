@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+# RePlugin 保持规则
+-keep class com.qihoo360.replugin.** { *; }
+-keep class com.qihoo360.plugin.** { *; }
+
+# 保持 ContentProvider 相关类
+-keep public class * extends android.content.ContentProvider
+
+
+

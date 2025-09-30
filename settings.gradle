@@ -21,12 +21,9 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Launcher2_awell"
-include ':plugin:plugins:constant'
 include ':plugin:plugins:host-lib'
 include ':app', ':AwellLibrary'
-include ':plugin:plugins:plugin_1'
-include ':plugin:plugins:manager'
-include ':plugin:plugins:loader'
-include ':plugin:plugins:runtime'
+include ':plugin:plugins:plugin1'
 include ':launcher'
-include ':plugin:plugins:plugin_2'
+include ':plugin:plugins:plugin2'
+include ':plugin:plugins:replugin_test'

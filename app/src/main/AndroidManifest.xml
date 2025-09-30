@@ -160,27 +160,27 @@
                 android:resource="@xml/wallpaper_picker_preview" />
         </activity> <!-- Intent received used to prepopulate the default workspace. -->
 
-        <activity
-            android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"
-            android:clearTaskOnLaunch="true"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
-            android:exported="true"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTask"
-            android:multiprocess="true"
-            android:screenOrientation="portrait">
+<!--        <activity-->
+<!--            android:name="com.tencent.shadow.sample.plugin.runtime.PluginDefaultProxyActivity"-->
+<!--            android:clearTaskOnLaunch="true"-->
+<!--            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"-->
+<!--            android:exported="true"-->
+<!--            android:hardwareAccelerated="true"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:multiprocess="true"-->
+<!--            android:screenOrientation="portrait">-->
 
-        </activity>
-        <activity
-            android:name="com.awell.plugin_shadow.PluginLoadActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent" />
+<!--        </activity>-->
+<!--        <activity-->
+<!--            android:name="com.awell.plugin_shadow.PluginLoadActivity"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:screenOrientation="portrait"-->
+<!--            android:theme="@style/Theme.Transparent" />-->
 
-        <service
-            android:name="com.awell.plugin_shadow.PluginProcessPPS"
-            android:persistent="false"
-            android:process=":plugin" />
+<!--        <service-->
+<!--            android:name="com.awell.plugin_shadow.PluginProcessPPS"-->
+<!--            android:persistent="false"-->
+<!--            android:process=":plugin" />-->
 
         <receiver
             android:name="com.awell.launcher2.PreloadReceiver"

@@ -20,7 +20,6 @@ import static android.os.Process.myPid;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Application;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -30,11 +29,10 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.os.UserHandle;
 import android.util.Log;
-import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
@@ -42,36 +40,33 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.awell.impl.HostApps;
 import com.awell.impl.ModelImpl;
+import com.awell.launcher.BuildConfig;
 import com.awell.launcher.R;
 import com.awell.control.AppsCustomizeControl;
-import com.awell.plugin_shadow.AndroidLogLoggerFactory;
-import com.awell.plugin_shadow.PluginHelper;
-import com.awell.plugin_shadow.manager.Shadow;
-import com.tencent.shadow.core.common.LoggerFactory;
-import com.tencent.shadow.dynamic.host.DynamicRuntime;
-import com.tencent.shadow.dynamic.host.PluginManager;
+import com.qihoo360.replugin.RePluginApplication;
+import com.qihoo360.replugin.RePluginCallbacks;
+import com.qihoo360.replugin.RePluginConfig;
+import com.qihoo360.replugin.RePluginEventCallbacks;
 import com.tencent.shadow.sample.host.lib.HostAppsHolder;
 import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 //import cn.kuwo.autosdk.api.KWAPI;
 
-public class LauncherApplication extends Application implements ViewModelStoreOwner {
+public class LauncherApplication extends RePluginApplication implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
     private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
     private static boolean sIsScreenLarge;
     private static float sScreenDensity;
-    private static int sLongPressTimeout = 300;
+    private static final int sLongPressTimeout = 300;
     private static final String sSharedPreferencesKey = "com.awell.launcher2.prefs";
     WeakReference<LauncherProvider> mLauncherProvider;
 
     private final ViewModelStore store = new ViewModelStore();
-    private PluginManager mPluginManager;
 
     public static Context mAppContext;
 
@@ -86,17 +81,14 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         sScreenDensity = getResources().getDisplayMetrics().density;
 
 
-        if (isProcess(this, ":plugin")) {
+        if (isProcess(this, ":GuardService")) {
             Log.i(TAG, "onCreate: huang plugin ==>");
-            PluginInit();
-            Log.i(TAG, "plugin onCreate: huang application create mAppContext==>" + mAppContext);
         }
 
-        initPluginModule();
+        initHostModule();
     }
 
-    public void PluginInit() {
-        Log.i(TAG, "PluginInit: huang init plugin ==>");
+    public void hostInit() {
         HostAppsHolder.init(new HostApps());
         initLauncherModel();
 
@@ -120,29 +112,17 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
     }
 
-    private void initPluginModule() {
-        detectNonSdkApiUsageOnAndroidP();
-        setWebViewDataDirectorySuffix();
-        LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());
-
-        if (isProcess(this, ":plugin")) {
-            //在全动态架构中，Activity组件没有打包在宿主而是位于被动态加载的runtime，
-            //为了防止插件crash后，系统自动恢复crash前的Activity组件，此时由于没有加载runtime而发生classNotFound异常，导致二次crash
-            //因此这里恢复加载上一次的runtime
-            DynamicRuntime.recoveryRuntime(this);
-        }
-
+    private void initHostModule() {
         if (isProcess(this, getPackageName())) {
             if (getPackageName().equals("com.awell.launcher")) {
                 //运行在宿主进程
-                PluginHelper.getInstance().init(this);
                 startHostService();
+                hostInit();
                 Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
             }
         }
 
         HostUiLayerProvider.init(this);
-
 
     }
 
@@ -172,32 +152,6 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         }
     }
 
-    private static void detectNonSdkApiUsageOnAndroidP() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return;
-        }
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        builder.detectNonSdkApiUsage();
-        StrictMode.setVmPolicy(builder.build());
-    }
-
-    private static void setWebViewDataDirectorySuffix() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-            return;
-        }
-        WebView.setDataDirectorySuffix(Application.getProcessName());
-    }
-
-    public void loadPluginManager(File apk) {
-        if (mPluginManager == null) {
-            mPluginManager = Shadow.getPluginManager(apk);
-        }
-    }
-
-    public PluginManager getPluginManager() {
-        return mPluginManager;
-    }
-
     private static boolean isProcess(Context context, String processName) {
         String currentProcName = "";
         ActivityManager manager =
@@ -205,6 +159,7 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
         for (ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
             if (processInfo.pid == myPid()) {
                 currentProcName = processInfo.processName;
+                Log.i(TAG, "isProcess: huang currentProcName=>" + currentProcName);
                 break;
             }
         }
@@ -311,4 +266,140 @@ public class LauncherApplication extends Application implements ViewModelStoreOw
     public ViewModelStore getViewModelStore() {
         return store;
     }
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        // FIXME 允许接收rpRunPlugin等Gradle Task，发布时请务必关掉，以免出现问题
+        //RePlugin.enableDebugger(base, BuildConfig.DEBUG);
+    }
+
+    // ----------
+    // 自定义行为
+    // ----------
+
+    /**
+     * RePlugin允许提供各种“自定义”的行为，让您“无需修改源代码”，即可实现相应的功能
+     */
+    @Override
+    protected RePluginConfig createConfig() {
+        RePluginConfig c = new RePluginConfig();
+
+        // 允许“插件使用宿主类”。默认为“关闭”
+        c.setUseHostClassIfNotFound(true);
+
+        // FIXME RePlugin默认会对安装的外置插件进行签名校验，这里先关掉，避免调试时出现签名错误
+        c.setVerifySign(!BuildConfig.DEBUG);
+
+        // 针对“安装失败”等情况来做进一步的事件处理
+        c.setEventCallbacks(new HostEventCallbacks(this));
+
+
+        // FIXME 若宿主为Release，则此处应加上您认为"合法"的插件的签名，例如，可以写上"宿主"自己的。
+        // RePlugin.addCertSignature("AAAAAAAAA");
+
+        // 在Art上，优化第一次loadDex的速度
+        // c.setOptimizeArtLoadDex(true);
+        return c;
+    }
+
+    @Override
+    protected RePluginCallbacks createCallbacks() {
+
+
+        return new HostCallbacks(this);
+    }
+
+
+    /**
+     * 宿主针对RePlugin的自定义行为
+     */
+    private static class HostCallbacks extends RePluginCallbacks {
+
+        private static final String TAG = "HostCallbacks";
+
+        private HostCallbacks(Context context) {
+            super(context);
+        }
+
+        @Override
+        public boolean onPluginNotExistsForActivity(Context context, String plugin, Intent intent, int process) {
+            // FIXME 当插件"没有安装"时触发此逻辑，可打开您的"下载对话框"并开始下载。
+            // FIXME 其中"intent"需传递到"对话框"内，这样可在下载完成后，打开这个插件的Activity
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "onPluginNotExistsForActivity: Start download... p=" + plugin + "; i=" + intent);
+            }
+            return super.onPluginNotExistsForActivity(context, plugin, intent, process);
+        }
+    }
+
+    private class HostEventCallbacks extends RePluginEventCallbacks {
+
+        private static final String TAG = "HostEventCallbacks";
+
+        public HostEventCallbacks(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onInstallPluginFailed(String path, InstallResult code) {
+            // FIXME 当插件安装失败时触发此逻辑。您可以在此处做“打点统计”，也可以针对安装失败情况做“特殊处理”
+            // 大部分可以通过RePlugin.install的返回值来判断是否成功
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "onInstallPluginFailed: Failed! path=" + path + "; r=" + code);
+            }
+            super.onInstallPluginFailed(path, code);
+        }
+
+        @Override
+        public void onStartActivityCompleted(String plugin, String activity, boolean result) {
+            // FIXME 当打开Activity成功时触发此逻辑，可在这里做一些APM、打点统计等相关工作
+            Log.i(TAG, "onStartActivityCompleted: huang plugin =>" + plugin);
+            Log.i(TAG, "onStartActivityCompleted: huang activity =>" + activity);
+            Log.i(TAG, "onStartActivityCompleted: huang result =>" + result);
+
+            if (startStatus != null) {
+                startStatus.startPitActivityResult(plugin, activity, result);
+            }
+            super.onStartActivityCompleted(plugin, activity, result);
+        }
+
+        @Override
+        public void onPrepareAllocPitActivity(Intent intent) {
+            Log.i(TAG, "onPrepareAllocPitActivity: huang intent=>" + intent);
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                for (String s : bundle.keySet()) {
+                    Log.i(TAG, "onPrepareAllocPitActivity: huang s=>" + s);
+                }
+            }
+            super.onPrepareAllocPitActivity(intent);
+        }
+
+        @Override
+        public void onPrepareStartPitActivity(Context context, Intent intent, Intent pittedIntent) {
+            Log.i(TAG, "onPrepareStartPitActivity: huang context=>" + context);
+            Log.i(TAG, "onPrepareStartPitActivity: huang intent=>" + intent);
+            // pittedIntent=>Intent { cat=[process:-2147483648,plugin:com.example.plugin_2,activity:com.example.plugin_2.UI2Activity,container:com.awell.launcher.loader.a.ActivityN1NRNTS5,counter:0]
+            // cmp=com.awell.launcher/.loader.a.ActivityN1NRNTS5 (has extras) }
+            // todo use pittedIntent to set home activity
+            Log.i(TAG, "onPrepareStartPitActivity: huang pittedIntent=>" + pittedIntent);
+
+            super.onPrepareStartPitActivity(context, intent, pittedIntent);
+        }
+    }
+
+    private PluginStartStatus startStatus;
+
+    public void setStartStatus(PluginStartStatus startStatus) {
+        this.startStatus = startStatus;
+    }
+
+    public interface PluginStartStatus {
+        void startPitActivityResult(String plugin, String activity, boolean result);
+    }
+
+
 }

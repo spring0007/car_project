@@ -13,23 +13,32 @@ buildscript {
         }
     }
     ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.awell.launcher'
-    ext.mavenRepoUrl = providers.gradleProperty('MAVEN_REPO_URL').orElse('./libs/maven').get()
 
     repositories {
         maven {
-            url = uri(mavenRepoUrl)
+            url = './libs/maven'   // 或者使用绝对路径，但相对路径更易于移植
         }
         mavenLocal()
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
+
     ext.kotlin_version = '1.9.24' // 统一使用这个版本
+    ext.coroutines_version = "1.7.3"
+
+
     dependencies {
+        classpath "com.android.tools.build:gradle:7.4.2"
+
         // 其他依赖...
-        classpath "com.tencent.shadow:aar-to-jar-plugin:1.0" // 替换成你发布的版本
+//        classpath "com.tencent.shadow:aar-to-jar-plugin:1.0" // 替换成你发布的版本
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.tencent.shadow.core:gradle-plugin:1.0'
+//        classpath 'com.tencent.shadow.core:gradle-plugin:1.0'
+
+        classpath libs.replugin.host.gradle
+        classpath libs.replugin.plugin.gradle
+
     }
 }
 

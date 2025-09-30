@@ -1,0 +1,104 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.qihoo360.replugin",
+    "module": "replugin-host-gradle",
+    "version": "3.1.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "7.5"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api"
+      },
+      "files": [
+        {
+          "name": "replugin-host-gradle-3.1.0.jar",
+          "url": "replugin-host-gradle-3.1.0.jar",
+          "size": 187556,
+          "sha512": "07b950483a8338e3ae671573ad61b117f5dc416efd7661f0f5a03553e9dfdcbbc82ce20c11b0cbdb16376838f26dbe04ff5d1ac5b1c23be018f3c5b69da6f8a2",
+          "sha256": "64e182a71df614a82ab9c84ad84b7a8059c2b2d532684fc188211fe3a5004d5f",
+          "sha1": "1e40aa09e4ecb5a53364f0ce4da1728679549733",
+          "md5": "ffd3b728339b60f95263aebcf4594b29"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.version": 11,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime"
+      },
+      "dependencies": [
+        {
+          "group": "com.android.tools.build",
+          "module": "gradle",
+          "version": {
+            "requires": "7.4.2"
+          }
+        },
+        {
+          "group": "org.json",
+          "module": "json",
+          "version": {
+            "requires": "20160212"
+          }
+        },
+        {
+          "group": "org.codehaus.groovy",
+          "module": "groovy",
+          "version": {
+            "requires": "2.4.7"
+          }
+        },
+        {
+          "group": "com.squareup",
+          "module": "javapoet",
+          "version": {
+            "requires": "1.5.1"
+          }
+        },
+        {
+          "group": "com.google.gradle",
+          "module": "osdetector-gradle-plugin",
+          "version": {
+            "requires": "1.2.1"
+          }
+        },
+        {
+          "group": "net.dongliu",
+          "module": "apk-parser",
+          "version": {
+            "requires": "2.2.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "replugin-host-gradle-3.1.0.jar",
+          "url": "replugin-host-gradle-3.1.0.jar",
+          "size": 187556,
+          "sha512": "07b950483a8338e3ae671573ad61b117f5dc416efd7661f0f5a03553e9dfdcbbc82ce20c11b0cbdb16376838f26dbe04ff5d1ac5b1c23be018f3c5b69da6f8a2",
+          "sha256": "64e182a71df614a82ab9c84ad84b7a8059c2b2d532684fc188211fe3a5004d5f",
+          "sha1": "1e40aa09e4ecb5a53364f0ce4da1728679549733",
+          "md5": "ffd3b728339b60f95263aebcf4594b29"
+        }
+      ]
+    }
+  ]
+}
