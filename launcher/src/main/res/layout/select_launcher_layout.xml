@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:text="start demo1"
         android:textAllCaps="false"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

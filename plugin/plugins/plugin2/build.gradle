@@ -27,13 +27,13 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('../keystore/platform.jks')
+            storeFile file('../../../keystore/platform.jks')
             keyAlias 'platform'
             keyPassword 'android'
             storePassword 'android'
         }
         release {
-            storeFile file('../keystore/platform.jks')
+            storeFile file('../../../keystore/platform.jks')
             keyAlias 'platform'
             keyPassword 'android'
             storePassword 'android'

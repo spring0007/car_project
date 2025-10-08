@@ -56,6 +56,7 @@ import java.lang.reflect.Method;
 
 public class LauncherApplication extends RePluginApplication implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
+    private static final Boolean D = false;
     private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
@@ -81,7 +82,9 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
 
 
         if (isProcess(this, ":GuardService")) {
-            Log.i(TAG, "onCreate: huang plugin ==>");
+            if (D) {
+                Log.i(TAG, "onCreate: huang plugin ==>");
+            }
         }
 
         initHostModule();
@@ -117,7 +120,9 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
                 //运行在宿主进程
                 startHostService();
                 hostInit();
-                Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
+                if (D) {
+                    Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
+                }
             }
         }
 
@@ -138,7 +143,9 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
                         UserHandle.class
                 );
                 method.invoke(this, service, userHandle);
-                Log.i(TAG, "startHostService: huang start service=>" + service);
+                if (D) {
+                    Log.i(TAG, "startHostService: huang start service=>" + service);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 // 降级方案
@@ -156,7 +163,9 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         for (ActivityManager.RunningAppProcessInfo processInfo : manager.getRunningAppProcesses()) {
             if (processInfo.pid == myPid()) {
                 currentProcName = processInfo.processName;
-                Log.i(TAG, "isProcess: huang currentProcName=>" + currentProcName);
+                if (D) {
+                    Log.i(TAG, "isProcess: huang currentProcName=>" + currentProcName);
+                }
                 break;
             }
         }
@@ -288,7 +297,8 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         c.setUseHostClassIfNotFound(true);
 
         // FIXME RePlugin默认会对安装的外置插件进行签名校验，这里先关掉，避免调试时出现签名错误
-        c.setVerifySign(!BuildConfig.DEBUG);
+        //c.setVerifySign(!BuildConfig.DEBUG);
+        c.setVerifySign(false);
 
         // 针对“安装失败”等情况来做进一步的事件处理
         c.setEventCallbacks(new HostEventCallbacks(this));
@@ -353,9 +363,12 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         @Override
         public void onStartActivityCompleted(String plugin, String activity, boolean result) {
             // FIXME 当打开Activity成功时触发此逻辑，可在这里做一些APM、打点统计等相关工作
-            Log.i(TAG, "onStartActivityCompleted: huang plugin =>" + plugin);
-            Log.i(TAG, "onStartActivityCompleted: huang activity =>" + activity);
-            Log.i(TAG, "onStartActivityCompleted: huang result =>" + result);
+            if (D) {
+
+                Log.i(TAG, "onStartActivityCompleted: huang plugin =>" + plugin);
+                Log.i(TAG, "onStartActivityCompleted: huang activity =>" + activity);
+                Log.i(TAG, "onStartActivityCompleted: huang result =>" + result);
+            }
 
             if (startStatus != null) {
                 startStatus.startPitActivityResult(plugin, activity, result);
@@ -365,24 +378,28 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
 
         @Override
         public void onPrepareAllocPitActivity(Intent intent) {
-            Log.i(TAG, "onPrepareAllocPitActivity: huang intent=>" + intent);
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                for (String s : bundle.keySet()) {
-                    Log.i(TAG, "onPrepareAllocPitActivity: huang s=>" + s);
+            if (D) {
+                Log.i(TAG, "onPrepareAllocPitActivity: huang intent=>" + intent);
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) {
+                    for (String s : bundle.keySet()) {
+                        Log.i(TAG, "onPrepareAllocPitActivity: huang s=>" + s);
+                    }
                 }
             }
+
             super.onPrepareAllocPitActivity(intent);
         }
 
         @Override
         public void onPrepareStartPitActivity(Context context, Intent intent, Intent pittedIntent) {
-            Log.i(TAG, "onPrepareStartPitActivity: huang context=>" + context);
-            Log.i(TAG, "onPrepareStartPitActivity: huang intent=>" + intent);
-            // pittedIntent=>Intent { cat=[process:-2147483648,plugin:com.example.plugin_2,activity:com.example.plugin_2.UI2Activity,container:com.awell.launcher.loader.a.ActivityN1NRNTS5,counter:0]
-            // cmp=com.awell.launcher/.loader.a.ActivityN1NRNTS5 (has extras) }
-            // todo use pittedIntent to set home activity
-            Log.i(TAG, "onPrepareStartPitActivity: huang pittedIntent=>" + pittedIntent);
+            if (D) {
+                Log.i(TAG, "onPrepareStartPitActivity: huang context=>" + context);
+                Log.i(TAG, "onPrepareStartPitActivity: huang intent=>" + intent);
+                // pittedIntent=>Intent { cat=[process:-2147483648,plugin:com.example.plugin_2,activity:com.example.plugin_2.UI2Activity,container:com.awell.launcher.loader.a.ActivityN1NRNTS5,counter:0]
+                // cmp=com.awell.launcher/.loader.a.ActivityN1NRNTS5 (has extras) }
+                Log.i(TAG, "onPrepareStartPitActivity: huang pittedIntent=>" + pittedIntent);
+            }
 
             super.onPrepareStartPitActivity(context, intent, pittedIntent);
         }

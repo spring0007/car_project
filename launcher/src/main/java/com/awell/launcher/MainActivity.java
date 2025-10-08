@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private final boolean D = true;
     private final String CLAZZ_NAME_LAUNCHER_1 = "com.example.launcher_plugin.UIActivity"; // plugin_1 apk
     private final String CLAZZ_NAME_LAUNCHER_2 = "com.example.plugin_2.UI2Activity"; // plugin_2 apk
 
@@ -58,11 +59,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (D) {
+            Log.i(TAG, "onCreate: huang launcher main activity create==>");
+        }
         binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Log.i(TAG, "onCreate: huang launcher main activity create==>");
         initView();
-        startGpsService();
+        //startGpsService();
 
         LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
         launcherApplication.setStartStatus(pluginStartStatus);
@@ -75,7 +78,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onDestroy();
         LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
         launcherApplication.setStartStatus(null);
-        Log.i(TAG, "onDestroy: huang launcher main activity destroy==>");
+        if (D) {
+            Log.i(TAG, "onDestroy: huang launcher main activity destroy==>");
+        }
     }
 
     private void startInternalLauncher() {
@@ -106,7 +111,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         UserHandle.class
                 );
                 method.invoke(this, service, userHandle);
-                Log.i(TAG, "startGpsService: huang start service=>" + service);
+                if (D) {
+                    Log.i(TAG, "startGpsService: huang start service=>" + service);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 // 降级方案
@@ -132,22 +139,33 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void startPluginActivity() {
-        Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
+        if (D) {
+            Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
+        }
+
+        String apkName = SystemProperties.get(LAUNCHER_KEY, "plugin1");
+        String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+
+        String testApk = apkName + ".apk";
+        String testApkPath = mExternalPluginPath + File.separator + testApk;
+
+        simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
+
         //final ProgressDialog pd = ProgressDialog.show(MainActivity.this, "Installing...", "Please wait...", true, true);
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                String apkName = SystemProperties.get(LAUNCHER_KEY, "plugin1");
-                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
-
-                String testApk = apkName + ".apk";
-                String testApkPath = mExternalPluginPath + File.separator + testApk;
-
-                simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
-                //pd.dismiss();
-            }
-        }, 0);
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                String apkName = SystemProperties.get(LAUNCHER_KEY, "plugin1");
+//                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+//
+//                String testApk = apkName + ".apk";
+//                String testApkPath = mExternalPluginPath + File.separator + testApk;
+//
+//                simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
+//                //pd.dismiss();
+//            }
+//        }, 0);
     }
 
     @Override
@@ -166,7 +184,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         String pluginFilePath = getFilesDir().getAbsolutePath() + File.separator + name;
         File pluginFile = new File(pluginFilePath);
         if (pluginFile.exists()) {
-            Log.i(TAG, "simulateInstallExternalPlugin: huang delete ==>");
+            if (D) {
+                Log.i(TAG, "simulateInstallExternalPlugin: huang delete ==>");
+            }
             FileUtils.deleteQuietly(pluginFile);
         }
         // 开始复制
@@ -174,10 +194,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         PluginInfo info = null;
         if (pluginFile.exists()) {
+            if (D) {
+                Log.i(TAG, "simulateInstallExternalPlugin: huang install plugin==>");
+            }
             info = RePlugin.install(pluginFilePath);
         }
-        Log.i(TAG, "simulateInstallExternalPlugin: huang info=>" + info);
-        Log.i(TAG, "simulateInstallExternalPlugin: huang path=>" + path);
+        if (D) {
+            Log.i(TAG, "simulateInstallExternalPlugin: huang info=>" + info);
+            Log.i(TAG, "simulateInstallExternalPlugin: huang path=>" + path + " exists=>" + (new File(path)).exists());
+        }
 
         Utils.setPluginApkFilePath(path);
 
@@ -220,7 +245,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         @Override
         public void startPitActivityResult(String plugin, String activity, boolean result) {
             //result = false;
-            Log.i(TAG, "startPitActivityResult: huang start result=>" + result);
+
+            if (D) {
+                Log.i(TAG, "startPitActivityResult: huang start result=>" + result);
+            }
+
             if (result) {
                 finish();
             } else {
