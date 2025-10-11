@@ -658,7 +658,7 @@ class UIActivity : Activity(), View.OnClickListener {
         var isBoot = true
         if (intent != null) {
             for (index in IconCache.WorkSpacePackageName.indices) {
-                Log.d(Launcher.TAG, "packName=$packName")
+                Log.d(TAG, "packName=$packName")
                 if (packName != IconCache.WorkSpacePackageName[index]) {
                     isBoot = false
                     break

@@ -1,61 +1,22 @@
-//plugins {
-//    id 'com.android.application'
-//    id 'org.jetbrains.kotlin.android'
-//}
-
-
-buildscript {
-
-    repositories {
-        if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
-            maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
-        } else {
-            google()
-            mavenCentral()
-        }
-
-        mavenLocal()
-    }
-    dependencies {
-        classpath 'com.tencent.shadow.core:runtime:1.0'
-        classpath 'com.tencent.shadow.core:activity-container:1.0'
-        classpath 'com.tencent.shadow.core:gradle-plugin:1.0'
-        classpath "org.javassist:javassist:$javassist_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-
+plugins {
+    alias(libs.plugins.android.application)
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
-
-
 android {
-    namespace 'com.example.plugin1'
+    namespace 'com.launcher.ui3'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.plugin1"
+        applicationId "com.launcher.ui3"
         minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
 
-    }
-    // 修改 APK 名称
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            output.outputFileName = "LauncherUI1.apk"
-        }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
         viewBinding true
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
     signingConfigs {
         debug {
@@ -71,15 +32,15 @@ android {
             storePassword 'android'
         }
     }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
-    kotlinOptions {
-        jvmTarget = '11'
     }
     aaptOptions {
         additionalParameters '--allow-reserved-package-id', '--package-id', '0x7e'
@@ -89,6 +50,7 @@ android {
 
 def isPlugin = true
 
+
 if (isPlugin) {
     apply plugin: 'replugin-plugin-gradle'
 } else {
@@ -97,7 +59,10 @@ if (isPlugin) {
 
 dependencies {
 
+    /** compileOnly or implementation */
+    //if (rootProject.ext.isPlugin) {
     if (isPlugin) {
+
         implementation(libs.replugin.plugin.lib)
 
         // 作为插件，compileOnly 方式引入
@@ -124,11 +89,11 @@ dependencies {
 
     } else {
 
-        // 作为单品，compile 进 APK
 
-        // 为每个可能引入协程的依赖添加排除规则
         implementation(project(':app')) {
         }
+
+        implementation(libs.appcompat)
 
         //app module has
         compileOnly libs.constraintlayout
@@ -148,10 +113,11 @@ dependencies {
     }
 }
 
+
 if (isPlugin) {
     repluginPluginConfig {
         //插件名
-        pluginName = "plugin1"
+        pluginName = "plugin3"
         //宿主app的包名
         hostApplicationId = "com.awell.launcher"
         //宿主app的启动activity
@@ -159,5 +125,3 @@ if (isPlugin) {
 //    ignoredInjectors = ['LoaderActivityInjector', 'ProviderInjector']
     }
 }
-
-

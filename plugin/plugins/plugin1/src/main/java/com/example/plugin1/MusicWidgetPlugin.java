@@ -354,7 +354,8 @@ public class MusicWidgetPlugin extends RelativeLayout implements OnClickListener
      * @param status
      */
     public void switchMediaController(String packName, String status, int mediaType, int curMedia) {
-        Log.e(TAG, "current mediaplay packName = " + packName + ",status = " + status);
+        Log.i(TAG, "switchMediaController : packName=>" + packName + ", status = " + status);
+        Log.i(TAG, "switchMediaController : mediaType=>" + mediaType + ", curMedia = " + curMedia);
 
         if ("start".equals(status)) {
             currentPlayingPackage = packName;

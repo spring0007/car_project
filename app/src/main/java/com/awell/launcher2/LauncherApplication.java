@@ -56,7 +56,7 @@ import java.lang.reflect.Method;
 
 public class LauncherApplication extends RePluginApplication implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
-    private static final Boolean D = false;
+    private static final Boolean D = true;
     private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
@@ -115,15 +115,16 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     }
 
     private void initHostModule() {
+        Log.i(TAG, "initHostModule: huang getPackageName()=>" + getPackageName());
         if (isProcess(this, getPackageName())) {
-            if (getPackageName().equals("com.awell.launcher")) {
+//            if (getPackageName().equals(BuildConfig.APPLICATION_ID)) {
                 //运行在宿主进程
                 startHostService();
                 hostInit();
                 if (D) {
                     Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
                 }
-            }
+//            }
         }
 
     }

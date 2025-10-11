@@ -20,6 +20,12 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    // 修改 APK 名称
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "LauncherHost.apk"
+        }
+    }
     buildFeatures {
         viewBinding true
     }

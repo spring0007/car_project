@@ -24,8 +24,8 @@
         <item>com.awell.service</item>
         <item>com.awell.navigation</item>
         <item>com.android.settings</item>
-        <item>com.android.dialer</item><!--Telephone-->
-        <item>com.android.mms</item><!--Messaging-->
-        <item>com.android.contacts</item><!--Contacts-->
+<!--        <item>com.android.dialer</item>&lt;!&ndash;Telephone&ndash;&gt;
+        <item>com.android.mms</item>&lt;!&ndash;Messaging&ndash;&gt;
+        <item>com.android.contacts</item>&lt;!&ndash;Contacts&ndash;&gt;-->
     </string-array>
 </resources>

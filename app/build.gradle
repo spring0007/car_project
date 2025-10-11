@@ -51,6 +51,8 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
 
+    implementation libs.material
+
     implementation(libs.constraintlayout) {
         exclude group: 'androidx.appcompat'
     }

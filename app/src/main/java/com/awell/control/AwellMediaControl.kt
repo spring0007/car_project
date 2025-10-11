@@ -38,6 +38,15 @@ class AwellMediaControl() {
     }
 
 
+    private val LOCAL_MEDIA_PKG = setOf(
+        "/system/bin/gocsdk",
+        "com.awell.bluetooth",
+        "com.awell.localmusic",
+        "com.awell.radio",
+        "cn.kuwo.kwmusiccar",
+        "com.zjinnova.zlink",
+    )
+
     /**
      * 实现服务端的回调
      * 第一次注册和服务端有数据更新时回调
@@ -268,9 +277,17 @@ class AwellMediaControl() {
             updateMusicView?.updateViewPlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
         }
 
-        mediaViewModel?.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
+        //todo back car 也会发送媒体数据过来，需要过滤
 
-        updateMusicView?.updateViewMusicPlay(bundle, pkg, command, mediaType, currentMedia)
+        if (isMediaPkg(pkg) /*|| (mediaType > MusicWidget.BT && mediaType == android.media.AudioManager.STREAM_MUSIC)*/) {
+            mediaViewModel?.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
+            updateMusicView?.updateViewMusicPlay(bundle, pkg, command, mediaType, currentMedia)
+        }
+
+    }
+
+    private fun isMediaPkg(pkg: String?): Boolean = LOCAL_MEDIA_PKG.any { keyword ->
+        pkg?.contains(keyword, ignoreCase = true) ?: false
     }
 
     private fun handleMusicPlayStatus(bundle: Bundle) {

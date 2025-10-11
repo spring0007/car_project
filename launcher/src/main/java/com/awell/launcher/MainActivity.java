@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /**
      * 外部保存的插件文件路径
      */
-    private final String mExternalPluginPath = "/sdcard/launcher_plugin";
+    private final String mExternalPluginPath = "/system/priv-app/";
     private SelectLauncherLayoutBinding binding;
 
     private Handler mainHandle;
@@ -188,11 +188,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
         }
 
-        String apkName = SystemProperties.get(LAUNCHER_KEY, "plugin1");
+        String apkName = SystemProperties.get(LAUNCHER_KEY, "LauncherUI1");
         String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
 
         String testApk = apkName + ".apk";
-        String testApkPath = mExternalPluginPath + File.separator + testApk;
+        String testApkPath = mExternalPluginPath + File.separator + apkName + File.separator + testApk;
 
         simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
 

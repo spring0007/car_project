@@ -11,12 +11,16 @@
 ActivityRecord.java
     setPluginToHome()设置UI Activity为home类型的Activity
 
-ActivityStartController.java
-    showPluginHome()读取ActivityRecord判断UI Activity是否在运行
+ActivityStarter.java
+    在启动app时替换Intent的Cmp
 
 
-
-
-
-
+新建一个UI流程：
+1.build.gradle添加isPlugin依赖和切换资源开头为0x7e
+2.string里的app_name、ui_key要和apk文件名一致；
+    ui_clazz和要显示的Activity一致，需要完整类名；
+    wallpapers为UI所带的壁纸；
+    ui_icon为主题显示的UI选择图标；
+3.显示的Activity要设置为singleTask；
+4.UI Activity要重写onBackPressed和onNewIntent以及长按弹出壁纸选择
 
