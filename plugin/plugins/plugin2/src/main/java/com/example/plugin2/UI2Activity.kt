@@ -361,9 +361,13 @@ class UI2Activity : Activity() {
                 bundle: Bundle, pkg: String, command: String, mediaType: Int, currentMedia: Int
             ) {
                 runOnUiThread {
-                    llMusic.switchMediaController(
-                        pkg, command, mediaType, currentMedia
-                    )
+
+                    if ("com.awell.radio" != pkg) {
+                        llMusic.switchMediaController(
+                            pkg, command, mediaType, currentMedia
+                        )
+                    }
+
                 }
             }
 

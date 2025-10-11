@@ -277,8 +277,7 @@ class AwellMediaControl() {
             updateMusicView?.updateViewPlayStatus(bundle, false, MusicWidget.OTHER_MUSIC)
         }
 
-        //todo back car 也会发送媒体数据过来，需要过滤
-
+        //back_car 也会发送媒体数据过来，需要过滤
         if (isMediaPkg(pkg) /*|| (mediaType > MusicWidget.BT && mediaType == android.media.AudioManager.STREAM_MUSIC)*/) {
             mediaViewModel?.updateMediaState(bundle, pkg, command, mediaType, currentMedia)
             updateMusicView?.updateViewMusicPlay(bundle, pkg, command, mediaType, currentMedia)
