@@ -205,7 +205,12 @@ class UI2Activity : Activity() {
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
         Log.i(TAG, "onDestroy: huang plugin2 destroy this=>${this}")
-        mediaControl.unBindDataService(this)
+        try {
+            mediaControl.unBindDataService(this)
+            Log.i(TAG, "onDestroy: huang unbind data service==>${this}")
+        } catch (e: Exception) {
+            Log.e(TAG, "onDestroy: unBindDataService error=>${e.message}")
+        }
     }
 
     /**

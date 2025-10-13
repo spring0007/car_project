@@ -381,12 +381,6 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         public void onPrepareAllocPitActivity(Intent intent) {
             if (D) {
                 Log.i(TAG, "onPrepareAllocPitActivity: huang intent=>" + intent);
-                Bundle bundle = intent.getExtras();
-                if (bundle != null) {
-                    for (String s : bundle.keySet()) {
-                        Log.i(TAG, "onPrepareAllocPitActivity: huang s=>" + s);
-                    }
-                }
             }
 
             super.onPrepareAllocPitActivity(intent);

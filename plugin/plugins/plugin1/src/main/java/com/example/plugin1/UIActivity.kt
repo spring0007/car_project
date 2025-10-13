@@ -201,8 +201,12 @@ class UIActivity : Activity(), View.OnClickListener {
         unregisterReceiver(receiver)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
-        Log.i(TAG, "onDestroy: huang plugin1 unbind data service=>${this}")
-        mediaControl.unBindDataService(this)
+        try {
+            mediaControl.unBindDataService(this)
+            Log.i(TAG, "onDestroy: huang plugin1 unbind data service=>${this}")
+        } catch (e: Exception) {
+            Log.e(TAG, "onDestroy: unBindDataService error=>${e.message}")
+        }
     }
 
 
@@ -577,6 +581,7 @@ class UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
+        Log.i(TAG, "onBackPressed: huang back press==>")
     }
 
     override fun onNewIntent(intent: Intent?) {

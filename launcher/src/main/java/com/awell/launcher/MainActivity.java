@@ -58,6 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Handler mainHandle;
 
     private boolean isFirstBoot = true;
+    private PluginInfo info;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.i(TAG, "onCreate: huang launcher main activity create==>");
         }
 
-        initThread();
 
         binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -92,17 +92,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.what == 0x01) {
-                    PluginInfo info = (PluginInfo) msg.obj;
-                    String clazz = Objects.requireNonNull(msg.getData().get("clazz")).toString();
-                    if (info != null) {
-                        Intent intent = RePlugin.createIntent(info.getName(), clazz);
-                        intent.putExtra("boot", isFirstBoot);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        RePlugin.startActivity(MainActivity.this, intent);
-                    } else {
-                        Log.e(TAG, "handleMessage: install external plugin failed");
-                    }
+                    realStartPlugin(msg);
                     return true;
                 }
                 return false;
@@ -110,6 +100,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
     }
+
+    private void realStartPlugin(@NonNull Message msg) {
+        info = (PluginInfo) msg.obj;
+        String clazz = Objects.requireNonNull(msg.getData().get("clazz")).toString();
+        if (info != null) {
+            Intent intent = RePlugin.createIntent(info.getName(), clazz);
+            intent.putExtra("boot", isFirstBoot);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            RePlugin.startActivity(MainActivity.this, intent);
+        } else {
+            Log.e(TAG, "handleMessage: install external plugin failed");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: huang resume start plugin==>");
+        if (!isFirstBoot) {
+            String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+            Message message = buildPluginMsg(apkClazz);
+            realStartPlugin(message);
+        } else {
+            initThread();
+        }
+    }
+
+    @NonNull
+    private Message buildPluginMsg(String apkClazz) {
+        Message message = mainHandle.obtainMessage();
+        Bundle bundle = new Bundle();
+        bundle.putString("clazz", apkClazz);
+        message.setData(bundle);
+        message.what = 0x01;
+        message.obj = info;
+        return message;
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -216,11 +245,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         // 开始复制
         copyAssetsFileToAppFiles(path, name);
 
-        PluginInfo info = null;
+        info = null;
         if (pluginFile.exists()) {
-            if (D) {
-                Log.i(TAG, "simulateInstallExternalPlugin: huang install plugin==>");
-            }
             info = RePlugin.install(pluginFilePath);
         }
         if (D) {
@@ -229,12 +255,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
 
         Utils.setPluginApkFilePath(path);
-        Message message = mainHandle.obtainMessage();
-        Bundle bundle = new Bundle();
-        bundle.putString("clazz", clazz);
-        message.setData(bundle);
-        message.what = 0x01;
-        message.obj = info;
+        Message message = buildPluginMsg(clazz);
         mainHandle.sendMessage(message);
 
     }
@@ -274,12 +295,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
 
             if (result) {
-                finish();
+                Log.i(TAG, "startPitActivityResult: huang not finish main activity=>");
+                //finish();
             } else {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
                 if ("com.awell.launcher.MainActivity".equals(topActivity)) {
-                    startPluginActivity();
+                    String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+                    Message message = buildPluginMsg(apkClazz);
+                    realStartPlugin(message);
                 }
                 //startInternalLauncher();
                 //finish();
