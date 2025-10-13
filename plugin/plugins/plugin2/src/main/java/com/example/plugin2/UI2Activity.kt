@@ -200,12 +200,12 @@ class UI2Activity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "onDestroy: huang plugin2 destroy this=>${this}")
 //        mMediaListener.cleanup()
-        mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
+        Log.i(TAG, "onDestroy: huang plugin2 destroy this=>${this}")
+        mediaControl.unBindDataService(this)
     }
 
     /**
@@ -217,6 +217,7 @@ class UI2Activity : Activity() {
 
 //        mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
+        Log.i(TAG, "initMediaMusic: huang UI2 bind data service=>${this}")
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
 

@@ -7,21 +7,42 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
 import com.awell.control.AppsCustomizeControl;
+import com.awell.control.AwellMediaControl;
 import com.launcher.ui3.databinding.ActivityMainUi3Binding;
+import com.launcher.ui3.databinding.MusicWidgetBinding;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MainActivityUI3 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI3.class.getSimpleName();
     private ActivityMainUi3Binding binding;
 
+    private MusicWidgetBinding musicWidgetBinding;
+    private MusicWidget musicWidget;
+    private AwellMediaControl mediaControl;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainUi3Binding.inflate(getLayoutInflater());
+
+
+        mediaControl = new AwellMediaControl();
+        mediaControl.bindDataService(this);
+        mediaControl.setUpdateMusicView(mediaImpl);
+
+        musicWidgetBinding = binding.layoutMusicWidget;
+        musicWidget = musicWidgetBinding.musicWidgetLayout;
+        musicWidget.setMediaLibrary(mediaControl);
+        musicWidget.setActivity(this, musicWidget);
+
         setContentView(binding.getRoot());
 
 
@@ -51,6 +72,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
     }
 
@@ -64,6 +86,66 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }
     }
+
+    private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
+        @Override
+        public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
+            if (!"com.awell.radio".equals(pkg)) {
+                musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
+            }
+        }
+
+        @Override
+        public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
+            musicWidget.setCurMusicState(status, type);
+
+        }
+
+        @Override
+        public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
+
+        }
+
+        @Override
+        public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
+            musicWidget.setMusicNameTextView(songName, type);
+            musicWidget.setArtistNameTextView(singerName, type);
+            if ("NO_MUSIC_LIST".equals(songName)
+                    && "NO_MUSIC_LIST".equals(singerName)
+                    && "NO_MUSIC_LIST".equals(album)) {
+                musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
+                musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
+            }
+
+            if (MusicWidget.OTHER_MUSIC == type) {
+                if (!TextUtils.isEmpty(songName)) {
+                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
+                } else {
+                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
+                }
+                if (!TextUtils.isEmpty(singerName)) {
+                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
+                } else {
+                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
+                }
+            }
+        }
+
+        @Override
+        public void updateViewPlayTime(@NotNull Bundle bundle, long currentTime, long totalTime, int type) {
+            musicWidget.setMusicSeekBar((int) currentTime, (int) totalTime, type);
+        }
+
+        @Override
+        public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
+
+        }
+
+        @Override
+        public void handleOriginBundle(@NotNull Bundle bundle) {
+
+        }
+    };
 
 
     private boolean isEventConsumedByChild = false;

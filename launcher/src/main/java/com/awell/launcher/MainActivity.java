@@ -45,12 +45,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private final boolean D = true;
-    private final String CLAZZ_NAME_LAUNCHER_1 = "com.example.launcher_plugin.UIActivity"; // plugin_1 apk
-    private final String CLAZZ_NAME_LAUNCHER_2 = "com.example.plugin_2.UI2Activity"; // plugin_2 apk
-
-    private final String partKey1 = "plugin-app";
-    private final String partKey2 = "plugin2-app";
-
 
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
@@ -120,8 +114,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
-        launcherApplication.setStartStatus(null);
+//        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
+//        launcherApplication.setStartStatus(null);
         if (D) {
             Log.i(TAG, "onDestroy: huang launcher main activity destroy==>");
         }
@@ -270,7 +264,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 
-    LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
+    private final LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
         @Override
         public void startPitActivityResult(String plugin, String activity, boolean result) {
             //result = false;
@@ -302,7 +296,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 ComponentName topActivity = runningTasks.get(0).topActivity;
                 String packageName = topActivity.getPackageName();
                 String className = topActivity.getClassName();
-                Log.d("TopActivity", "Package: " + packageName + ", Class: " + className);
+                Log.d(TAG, "getTopActivity: Package: " + packageName + ", Class: " + className);
                 return className;
             }
         } catch (Exception e) {

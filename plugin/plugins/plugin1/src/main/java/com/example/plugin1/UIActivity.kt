@@ -198,10 +198,11 @@ class UIActivity : Activity(), View.OnClickListener {
         super.onDestroy()
         Log.i(TAG, "onDestroy: huang plugin1 destroy==>")
         mMediaListener.cleanup()
-        mediaControl.unBindDataService(this)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
+        Log.i(TAG, "onDestroy: huang plugin1 unbind data service=>${this}")
+        mediaControl.unBindDataService(this)
     }
 
 
@@ -215,6 +216,7 @@ class UIActivity : Activity(), View.OnClickListener {
         mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
         mediaControl.bindDataService(this)
+        Log.i(TAG, "initMediaMusic: huang plugin1 bind data service this==>${this}")
         mediaControl.updateMusicView = mediaImpl
 
         llMusic = findViewById<MusicWidgetPlugin>(R.id.music_widget_layout)
