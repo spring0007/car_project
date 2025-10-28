@@ -10,6 +10,9 @@ recyclerview = "1.1.0"
 agp = "7.4.0"
 kotlin = "1.9.24"
 localbroadcastmanager = "1.0.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
 
 [libraries]
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
@@ -24,6 +27,9 @@ replugin-host-lib = { module = "com.qihoo360.replugin:replugin-host-lib", versio
 replugin-plugin-gradle = { module = "com.qihoo360.replugin:replugin-plugin-gradle", version.ref = "repluginPlugin" }
 replugin-plugin-lib = { module = "com.qihoo360.replugin:replugin-plugin-lib", version.ref = "repluginPlugin" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 
 
 [plugins]
