@@ -208,7 +208,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             Canvas canvas = new Canvas(bitmap);
             Bitmap parper = null;
             int resourcesId = mImages.get(position);
-            if (isHexStartWith7e(resourcesId)) {
+            if (isHexStartWith7e(resourcesId) && getPluginApkFilePath() != null) {
                 //插件
                 parper = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), resourcesId);
 
