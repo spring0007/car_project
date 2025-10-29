@@ -8,11 +8,11 @@ apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'replugin-host-gradle'
 
 android {
-    namespace 'com.awell.launcher'
+    namespace 'com.awell.launcher.host'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.awell.launcher"
+        applicationId "com.awell.launcher.host"
         minSdk 26
         targetSdk 34
         versionCode 1
@@ -48,6 +48,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
 

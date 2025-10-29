@@ -1,17 +1,15 @@
-package com.awell.launcher;
+package com.awell.launcher.host;
 
 import static com.awell.launcher2.LauncherApplication.getmAppContext;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
 import android.util.Log;
@@ -20,7 +18,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.awell.launcher.databinding.SelectLauncherLayoutBinding;
+import com.awell.launcher.host.databinding.SelectLauncherLayoutBinding;
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
 
@@ -30,7 +28,6 @@ import com.qihoo360.replugin.model.PluginInfo;
 import com.qihoo360.replugin.utils.FileUtils;
 
 import android.os.SystemProperties;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,21 +70,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         initView();
         //startGpsService();
 
-        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
-        launcherApplication.setStartStatus(pluginStartStatus);
-
-    }
-
-    private void initThread() {
-
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                startPluginActivity();
-            }
-        }).start();
-
         mainHandle = new Handler(getMainLooper(), new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
@@ -98,6 +80,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return false;
             }
         });
+
+        LauncherApplication launcherApplication = (LauncherApplication) getmAppContext();
+        launcherApplication.setStartStatus(pluginStartStatus);
+
+    }
+
+    private void initThread() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                startPluginActivity();
+            }
+        }).start();
 
     }
 
@@ -118,7 +114,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: huang resume start plugin==>");
+        Log.i(TAG, "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
         if (!isFirstBoot) {
             String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
             Message message = buildPluginMsg(apkClazz);
@@ -194,24 +190,30 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        startPluginActivity();
+        //startPluginActivity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Log.i(TAG, "onBackPressed: huang Intercept back==>");
     }
 
     private void initView() {
         binding.startDemo1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startPluginActivity();
+                //startPluginActivity();
             }
         });
     }
 
-    private void startPluginActivity() {
+    private synchronized void startPluginActivity() {
         if (D) {
             Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
         }
 
-        String apkName = SystemProperties.get(LAUNCHER_KEY, "LauncherUI1");
+        String apkName = SystemProperties.get(LAUNCHER_KEY, "LauncherUI3");
         String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
 
         String testApk = apkName + ".apk";
@@ -300,7 +302,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
-                if ("com.awell.launcher.MainActivity".equals(topActivity)) {
+                if ("com.awell.launcher.host.MainActivity".equals(topActivity)) {
                     String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
