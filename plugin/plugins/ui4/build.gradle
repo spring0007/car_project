@@ -126,7 +126,7 @@ dependencies {
 if (isPlugin) {
     repluginPluginConfig {
         //插件名
-        pluginName = "plugin3"
+        pluginName = "plugin4"
         //宿主app的包名
         hostApplicationId = "com.awell.launcher"
         //宿主app的启动activity

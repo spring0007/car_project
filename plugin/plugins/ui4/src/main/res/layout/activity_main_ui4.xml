@@ -5,8 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityUI4"
-    android:background="@color/black">
+    tools:context=".MainActivityUI4">
 
     <TextView
         android:layout_width="wrap_content"
@@ -78,52 +77,41 @@
         app:layout_constraintTop_toTopOf="@id/car_speed_tv"
         app:layout_constraintVertical_bias="0.8"/>
 
-    <ImageView
-        android:id="@+id/rv_bg_iv"
+    <LinearLayout
+        android:id="@+id/rv_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/sf_rv_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints"
         android:orientation="horizontal"
+        android:background="@drawable/sf_rv_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95" />
+        app:layout_constraintVertical_bias="0.95">
+        <ImageView
+            android:id="@+id/hotset_allapp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:src="@drawable/hotset_all_app"
+            android:layout_gravity="center"/>
 
-    <ImageView
-        android:id="@+id/hotset_allapp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:src="@drawable/hotset_all_app"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_bg_iv"
-        app:layout_constraintEnd_toEndOf="@+id/rv_bg_iv"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintStart_toStartOf="@+id/rv_bg_iv"
-        app:layout_constraintTop_toTopOf="@+id/rv_bg_iv"
-        android:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="600dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+    </LinearLayout>
 
     <include
         android:id="@+id/layout_radio_widget"
         layout="@layout/radio_widget"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="@+id/rv_bg_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_bg_iv"
-        app:layout_constraintStart_toEndOf="@+id/rv_bg_iv"
+        app:layout_constraintTop_toTopOf="@+id/rv_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/rv_layout"
+        app:layout_constraintStart_toEndOf="@+id/rv_layout"
         app:layout_constraintEnd_toEndOf="@+id/car_iv"
         app:layout_constraintVertical_bias="0.95"
         android:layout_marginStart="30dp" />

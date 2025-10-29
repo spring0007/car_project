@@ -3,7 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/sf_radio_bg"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:id="@+id/radio_layout">
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -22,8 +23,8 @@
             android:textSize="22sp"
             android:textColor="@color/half_white"
             android:gravity="center"/>
-        <TextView
-            android:id="@+id/freq_tv"
+        <com.awell.ctrlview.FrequencyTextView
+            android:id="@+id/tv_radio_freq"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -38,20 +39,25 @@
             android:orientation="horizontal"
             android:gravity="center">
             <ImageView
+                android:id="@+id/iv_radio_pre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/sf_radio_pre1"/>
+                android:background="@drawable/sf_radio_pre1"
+                android:padding="5dp"/>
             <ImageView
+                android:id="@+id/iv_radio_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/sf_radio_next1"
-                android:layout_marginStart="25dp"/>
+                android:layout_marginStart="25dp"
+                android:padding="5dp"/>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/grey_circle"
                 android:layout_marginStart="15dp">
                 <TextView
+                    android:id="@+id/tv_radio_am_fm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FM"
