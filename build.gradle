@@ -27,6 +27,11 @@ buildscript {
     ext.kotlin_version = '1.9.24' // 统一使用这个版本
     ext.coroutines_version = "1.7.3"
 
+    ext{
+        // 定义共享的宿主app包名和启动activity
+        hostApplicationId = "com.awell.launcher.host"
+        hostAppLauncherActivity = "com.awell.launcher.host.MainActivity"
+    }
 
     dependencies {
         classpath "com.android.tools.build:gradle:7.4.2"

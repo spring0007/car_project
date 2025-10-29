@@ -333,7 +333,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
                     .findViewById(R.id.wallpaper_image);
             Drawable thumbDrawable = null;
             int thumbRes = mThumbs.get(position);
-            if (isHexStartWith7e(thumbRes)) {
+            if (isHexStartWith7e(thumbRes) && getPluginApkFilePath() != null) {
                 //插件
                 Bitmap paper = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), thumbRes);
                 image.setImageBitmap(paper);
@@ -370,7 +370,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
 
                 Bitmap bitmap = null;
                 int resourcesId = mImages.get(params[0]);
-                if (isHexStartWith7e(resourcesId)) {
+                if (isHexStartWith7e(resourcesId) && getPluginApkFilePath() != null) {
                     //插件
                     bitmap = BitmapFactory.decodeResource(getPluginResources(new File(getPluginApkFilePath())), resourcesId, mOptions);
                 } else {
