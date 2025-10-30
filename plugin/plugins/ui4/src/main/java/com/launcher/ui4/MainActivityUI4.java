@@ -6,6 +6,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +18,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,16 +44,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
-import com.awell.addapp.AppInofAdapter;
-import com.awell.addapp.AppPopAdapter;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
-import com.awell.launcher2.Launcher;
-import com.awell.launcher2.LauncherApplication;
-import com.awell.launcher2.LauncherModel;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
@@ -59,6 +57,7 @@ import com.launcher.ui4.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -472,7 +471,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
      */
     private void showPopupAllapp() {
 
-        View view = LayoutInflater.from(this).inflate(com.awell.launcher.library.R.layout.layout_allapp, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null);
         popupWindow = new PopupWindow(view, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 
         popupWindow.setOutsideTouchable(true);
@@ -480,7 +479,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         allAppInfoList = getAllAppInfo(this, false);
 
-        RecyclerView rvPop = view.findViewById(com.awell.launcher.library.R.id.rv_pop_allapp);
+        RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         gridLayoutManager.setSpanCount(2);
         gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
