@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">UI3</string><!-- app 名称 -->
+    <string name="app_name">LauncherUI4</string><!-- app 名称 -->
 
-    <string name="ui_key">UI3</string>
-    <string name="ui_clazz">com.launcher.ui3.MainActivityUI3</string>
+    <string name="ui_key">LauncherUI4</string>
+    <string name="ui_clazz">com.launcher.ui.MainActivityUI4</string>
 
 
     <string name="click_play_music">Click To Play</string>
