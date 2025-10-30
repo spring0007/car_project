@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityUI5"
+    android:background="@drawable/ui5_bg">
+
+
+    <!-- radio layout -->
+
+    <include layout="@layout/radio_widget"
+        android:id="@+id/layout_radio_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/main"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="165dp"
+        android:layout_marginStart="84dp"
+        />
+
+    <!-- music layout -->
+    <include layout="@layout/music_widget"
+        android:id="@+id/layout_music_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="140dp"
+        android:layout_marginEnd="80dp"
+        />
+
+    <!-- car speed -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="140dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/car_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="120"
+            android:textColor="@color/grey_9494"
+            android:textSize="90sp"
+             />
+
+        <TextView
+            android:id="@+id/car_speed_unit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="km/h"
+            android:textColor="@color/grey_9494"
+            android:layout_marginStart="18dp"
+            android:textSize="36sp"
+             />
+    </LinearLayout>
+
+    <!-- bottom app -->
+    <LinearLayout
+        android:id="@+id/host_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ui5_line_bg"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/hotset_daohangapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="19dp"
+            android:src="@drawable/hotset_daohang_app" />
+
+        <ImageView
+            android:id="@+id/hotset_allapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:layout_marginBottom="19dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/hotset_all_app" />
+
+        <ImageView
+            android:id="@+id/hotset_btapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="19dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/hotset_bt_app" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
