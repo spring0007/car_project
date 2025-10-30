@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="142dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,8 +48,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="120"
+            android:fontFamily="@font/harmonyos_sans_sc_medium"
             android:textColor="@color/grey_9494"
-            android:textSize="90sp"
+            android:textSize="75sp"
              />
 
         <TextView
@@ -58,15 +59,16 @@
             android:layout_height="wrap_content"
             android:text="km/h"
             android:textColor="@color/grey_9494"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:layout_marginStart="18dp"
-            android:textSize="36sp"
+            android:textSize="30sp"
              />
     </LinearLayout>
 
     <!-- bottom app -->
     <LinearLayout
         android:id="@+id/host_linear"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ui5_line_bg"
         android:gravity="center_horizontal|bottom"
@@ -80,16 +82,16 @@
             android:id="@+id/hotset_daohangapp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/hotset_daohang_app" />
 
         <ImageView
             android:id="@+id/hotset_allapp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="26dp"
-            android:layout_marginRight="26dp"
-            android:layout_marginBottom="19dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="62dp"
+            android:layout_marginBottom="20dp"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_all_app" />
 
@@ -97,7 +99,7 @@
             android:id="@+id/hotset_btapp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="19dp"
+            android:layout_marginBottom="20dp"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_bt_app" />
     </LinearLayout>

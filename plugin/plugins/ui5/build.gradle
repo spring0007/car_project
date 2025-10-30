@@ -54,7 +54,7 @@ android {
 }
 
 
-def isPlugin = false
+def isPlugin = true
 
 
 if (isPlugin) {
@@ -127,10 +127,10 @@ if (isPlugin) {
     repluginPluginConfig {
         //插件名
         pluginName = "plugin5"
-        //宿主app的包名
-        hostApplicationId = "com.awell.launcher"
-        //宿主app的启动activity
-        hostAppLauncherActivity = "com.awell.launcher.MainActivity"
+        //使用根项目中定义的宿主app包名
+        hostApplicationId = rootProject.ext.hostApplicationId
+        //使用根项目中定义的宿主app启动activity
+        hostAppLauncherActivity = rootProject.ext.hostAppLauncherActivity
 //    ignoredInjectors = ['LoaderActivityInjector', 'ProviderInjector']
     }
 }

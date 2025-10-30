@@ -20,5 +20,6 @@
     <string name="music_artist">歌手</string>
     <string name="radio">收音机</string>
     <string name="click_play_music">歌曲名</string>
+    <string name="unknown">未知</string>
 
 </resources>

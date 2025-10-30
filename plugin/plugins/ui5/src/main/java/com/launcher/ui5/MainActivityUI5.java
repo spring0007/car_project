@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -26,8 +27,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
-import com.awell.launcher2.LauncherApplication;
-import com.awell.launcher2.LauncherModel;
+import com.awell.launcher2.IconCache;
 import com.awell.utils.CommonData;
 import com.launcher.ui5.databinding.ActivityMainUi5Binding;
 import com.launcher.ui5.databinding.MusicWidgetBinding;
@@ -60,7 +60,6 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
-
         setContentView(binding.getRoot());
 
         initLongTouch();
@@ -100,7 +99,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                             Log.e(TAG, "unit Data = " + unitData);
                             if (unitData == 0) {
                                 binding.carSpeedTv.setText(speed_km + "");
-                                binding.carSpeedUnitTv.setText("KM/h");
+                                binding.carSpeedUnitTv.setText("km/h");
                             } else if (unitData == 1) {
                                 binding.carSpeedTv.setText(speed_mile + "");
                                 binding.carSpeedUnitTv.setText("mph");
@@ -174,7 +173,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         Log.e(TAG, "unit Data = " + unitData);
         if (binding.carSpeedUnitTv != null) {
             if (unitData == 0) {
-                binding.carSpeedUnitTv.setText("KM/h");
+                binding.carSpeedUnitTv.setText("km/h");
             } else if (unitData == 1) {
                 binding.carSpeedUnitTv.setText("mph");
             }
@@ -279,13 +278,54 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
     private void clickApp() {
         binding.hotsetAllapp.setOnClickListener(this);
+        binding.hotsetBtapp.setOnClickListener(this);
+        binding.hotsetDaohangapp.setOnClickListener(this);
+        binding.layoutRadioWidget.ivRadioNext.setOnClickListener(this);
+        binding.layoutRadioWidget.ivRadioPre.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+        }else if (v.getId() == binding.hotsetBtapp.getId()) {
+            startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
+        }else if (v.getId() == binding.hotsetDaohangapp.getId()) {
+            startActivity("com.autonavi.amapauto", "com.autonavi.amapauto.MainMapActivity");
+        }else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
+            //收音机事件
+        }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
+            //收音机事件
         }
+    }
+
+    /**
+     * 跳转Activity
+     *
+     * @param packName
+     * @param className
+     */
+    private void startActivity(String packName, String className) {
+        Intent intent = getPackageManager().getLaunchIntentForPackage(packName);
+        boolean isboot = true;
+        if (intent != null) {
+            for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
+                Log.d(TAG, "packagename11=" + packName);
+                if (!packName.equals(IconCache.WorkSpacePackageName[index])) {
+                    isboot = false;
+                    break;
+                }
+            }
+            if (packName.contains("com.autonavi")) {
+                if (isboot)
+                    Settings.System.putString(getContentResolver(), "boot_apk1", packName);
+            } else {
+                if (isboot)
+                    Settings.System.putString(getContentResolver(), "boot_apk2", packName);
+            }
+            startActivity(intent);
+        }
+
     }
 
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {

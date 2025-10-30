@@ -16,6 +16,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,7 +47,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     private Context mContext;
     private EarqueeTextView mMusicNameTextView, mArtistNameTextView;
-    private ImageView ivLoadnim;
+    //private ImageView ivLoadnim;
+    private ImageView musicPointAnim;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
     private SeekBar mBar = null;
     //private KWAPI kwapi;
@@ -63,7 +66,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     private LinearLayout ll_control_layout_music, ll_name_layout_music;
 
     private AwellMediaControl mediaControl;
-    private ObjectAnimator mObjectAnimator = null;
+//    private ObjectAnimator mObjectAnimator = null;
+
+    private Animation rotateClockLeft ,rotateClockRight;
 
     private final RequestListener<Drawable> listener = new RequestListener<Drawable>() {
         @Override
@@ -123,12 +128,18 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
-        ivLoadnim = view.findViewById(R.id.img_song_art);
-        ivLoadnim.setOnClickListener(this);
-        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
-        mObjectAnimator.setInterpolator(new LinearInterpolator());
-        stopLoadAnim();
+//        ivLoadnim = view.findViewById(R.id.img_song_art);
+//        ivLoadnim.setOnClickListener(this);
+//        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, -20f);
+//        mObjectAnimator.setInterpolator(new LinearInterpolator());
+//        stopLoadAnim();
 
+        musicPointAnim = view.findViewById(R.id.img_song_point);
+        // 加载动画
+        rotateClockLeft = AnimationUtils.loadAnimation(mContext, R.anim.music_point_anim_left);
+        rotateClockRight = AnimationUtils.loadAnimation(mContext, R.anim.music_point_anim_right);
+        // 设置动画监听器
+        setAnimationListeners();
         setImageIcon(currentMedia);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
 
@@ -244,7 +255,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mediaControl.sendTogglePlayPause();
             }
         } else if (id == R.id.ll_name_layout_music
-                || id == R.id.img_song_art
+        //        || id == R.id.img_song_art
                 || id == R.id.img_song_art_bg
                 || id == R.id.music_widget_seekbars) {
             if (currentMedia == MUSIC) {
@@ -265,39 +276,43 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         }
     }
 
-    public void stopLoadAnim() {
-        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null) {
-            mObjectAnimator.cancel();
-        }
+    private void cancelCurrentAnimations() {
+        if (rotateClockLeft != null) rotateClockLeft.cancel();
+        if (rotateClockRight != null) rotateClockRight.cancel();
     }
-
-    public void pauseLoadAnim() {
-        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
-            mObjectAnimator.pause();
-        }
-    }
-
-    public void resumeLoadAnim() {
-
-        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
-            mObjectAnimator.resume();
-        }
-    }
-
-    public void startLoadAnim() {
-
-        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null) {
-            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
-            //objectAnimator.setStartDelay(500);
-            mObjectAnimator.setDuration(40000);
-            mObjectAnimator.start();
-        }
-    }
+//    public void stopLoadAnim() {
+//        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
+//        if (mObjectAnimator != null) {
+//            mObjectAnimator.cancel();
+//        }
+//    }
+//
+//    public void pauseLoadAnim() {
+//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+//        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
+//            mObjectAnimator.pause();
+//        }
+//    }
+//
+//    public void resumeLoadAnim() {
+//
+//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+//        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+//            mObjectAnimator.resume();
+//        }
+//    }
+//
+//    public void startLoadAnim() {
+//
+//        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
+//        if (mObjectAnimator != null) {
+//            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+//            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+//            //objectAnimator.setStartDelay(500);
+//            mObjectAnimator.setDuration(40000);
+//            mObjectAnimator.start();
+//        }
+//    }
 
     private void startActivity(String pkg, String className) {
         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(pkg);
@@ -343,6 +358,51 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         }
     }
 
+    private boolean animBoolLeft = false ;
+    /**
+     * 动画监听方法
+     */
+    private void setAnimationListeners() {
+        rotateClockLeft.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // 动画开始
+                animBoolLeft = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // 动画结束
+                animBoolLeft = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // 动画重复
+            }
+        });
+
+        rotateClockRight.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // 动画开始
+                animBoolLeft = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // 动画结束
+                animBoolLeft =false;
+               //cancelCurrentAnimations();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // 动画重复
+            }
+        });
+    }
+
     public void loadAlbumArtByUri(Uri uri) {
 
         if (uri == null) {
@@ -375,8 +435,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mBar.setProgress(curProgress);
             }
             if (curProgress > 0 && curProgress < 1000) {
-                stopLoadAnim();
-                startLoadAnim();
+                //stopLoadAnim();
+                //startLoadAnim();
             }
             //if (mTotalTimeTextView != null) {
             //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
@@ -404,18 +464,24 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         if (mPlayStateImageView == null) return;
         this.musicState = musicState;
         if (musicState) {
-            if (currentMedia <= BT && mObjectAnimator != null) {
-                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
-                if (!mObjectAnimator.isRunning()) {
-                    startLoadAnim();
-                } else {
-                    resumeLoadAnim();
-                }
-            }
+//            if (currentMedia <= BT && mObjectAnimator != null) {
+//                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
+//                if (!mObjectAnimator.isRunning()) {
+//                    startLoadAnim();
+//                } else {
+//                    resumeLoadAnim();
+//                }
+//            }
+
             mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
+            if(!animBoolLeft)
+                musicPointAnim.startAnimation(rotateClockLeft);
         } else {
-            pauseLoadAnim();
+//            pauseLoadAnim();
+
             mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
+            if(!animBoolLeft)
+             musicPointAnim.startAnimation(rotateClockRight);
         }
     }
 
