@@ -1,20 +1,16 @@
 <resources>
-    <string name="app_name">UI3</string><!-- app 名称 -->
+    <string name="app_name">LauncherUI3</string><!-- app 名称 -->
 
-    <string name="ui_key">UI3</string>
+    <string name="ui_key">LauncherUI3</string>
     <string name="ui_clazz">com.launcher.ui3.MainActivityUI3</string>
 
 
     <string name="click_play_music">Click To Play</string>
     <string name="music_artist">Artist</string>
+    <string name="add_app">Add</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
-        <item>wallpaper_01</item>
-        <item>wallpaper_02</item>
-        <item>wallpaper_03</item>
-        <item>wallpaper_04</item>
-        <item>wallpaper_05</item>
     </string-array>
 
 </resources>
