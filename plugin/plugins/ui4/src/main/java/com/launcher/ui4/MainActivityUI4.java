@@ -6,7 +6,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -18,12 +17,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -57,7 +54,6 @@ import com.launcher.ui4.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -109,9 +105,15 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         binding.layoutRadioWidget.radioLayout.setOnClickListener(this);
         binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioPre.setOnClickListener(v -> {
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
             mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
         });
         binding.layoutRadioWidget.ivRadioNext.setOnClickListener(v -> {
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
             mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
         });
 
