@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">UI5</string><!-- app 名称 -->
+    <string name="app_name">LauncherUI5</string><!-- app 名称 -->
 
-    <string name="ui_key">UI5</string>
+    <string name="ui_key">LauncherUI5</string>
     <string name="ui_clazz">com.launcher.ui5.MainActivityUI5</string>
 
 

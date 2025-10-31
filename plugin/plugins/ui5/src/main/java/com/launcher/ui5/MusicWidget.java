@@ -47,7 +47,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     private Context mContext;
     private EarqueeTextView mMusicNameTextView, mArtistNameTextView;
-    //private ImageView ivLoadnim;
+    private ImageView ivLoadnim;
     private ImageView musicPointAnim;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
     private SeekBar mBar = null;
@@ -66,7 +66,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     private LinearLayout ll_control_layout_music, ll_name_layout_music;
 
     private AwellMediaControl mediaControl;
-//    private ObjectAnimator mObjectAnimator = null;
+    private ObjectAnimator mObjectAnimator = null;
 
     private Animation rotateClockLeft ,rotateClockRight;
 
@@ -128,11 +128,11 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
-//        ivLoadnim = view.findViewById(R.id.img_song_art);
-//        ivLoadnim.setOnClickListener(this);
-//        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, -20f);
-//        mObjectAnimator.setInterpolator(new LinearInterpolator());
-//        stopLoadAnim();
+        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
+        ivLoadnim.setOnClickListener(this);
+        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
+        mObjectAnimator.setInterpolator(new LinearInterpolator());
+        stopLoadAnim();
 
         musicPointAnim = view.findViewById(R.id.img_song_point);
         // 加载动画
@@ -280,39 +280,40 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         if (rotateClockLeft != null) rotateClockLeft.cancel();
         if (rotateClockRight != null) rotateClockRight.cancel();
     }
-//    public void stopLoadAnim() {
-//        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
-//        if (mObjectAnimator != null) {
-//            mObjectAnimator.cancel();
-//        }
-//    }
-//
-//    public void pauseLoadAnim() {
-//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-//        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
-//            mObjectAnimator.pause();
-//        }
-//    }
-//
-//    public void resumeLoadAnim() {
-//
-//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-//        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
-//            mObjectAnimator.resume();
-//        }
-//    }
-//
-//    public void startLoadAnim() {
-//
-//        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
-//        if (mObjectAnimator != null) {
-//            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-//            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
-//            //objectAnimator.setStartDelay(500);
-//            mObjectAnimator.setDuration(40000);
-//            mObjectAnimator.start();
-//        }
-//    }
+    public void stopLoadAnim() {
+        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
+        if (mObjectAnimator != null) {
+            mObjectAnimator.cancel();
+        }
+    }
+
+    public void pauseLoadAnim() {
+        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
+            mObjectAnimator.pause();
+        }
+    }
+
+    public void resumeLoadAnim() {
+
+        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+            mObjectAnimator.resume();
+        }
+    }
+
+    public void startLoadAnim() {
+
+        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
+        if (mObjectAnimator != null) {
+            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+            //objectAnimator.setStartDelay(500);
+            mObjectAnimator.setDuration(40000);
+            mObjectAnimator.start();
+        }
+    }
+
 
     private void startActivity(String pkg, String className) {
         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(pkg);
@@ -409,23 +410,23 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             setDefaultImage();
             return;
         }
-//
-//        Glide.with(this)
-//                .load(uri)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .skipMemoryCache(true)
-//                .addListener(listener)
-//                .circleCrop()
-//                .placeholder(R.drawable.ablum_default_bg)
-//                .error(R.drawable.ablum_default_bg)
-//                .into(ivLoadnim);
+
+        Glide.with(this)
+                .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .addListener(listener)
+                .circleCrop()
+                .placeholder(R.drawable.ui5_music_bg)
+                .error(R.drawable.ui5_music_bg)
+                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-       // ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
+        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ui5_music_bg));
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
@@ -435,8 +436,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mBar.setProgress(curProgress);
             }
             if (curProgress > 0 && curProgress < 1000) {
-                //stopLoadAnim();
-                //startLoadAnim();
+                stopLoadAnim();
+                startLoadAnim();
             }
             //if (mTotalTimeTextView != null) {
             //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
@@ -464,21 +465,19 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         if (mPlayStateImageView == null) return;
         this.musicState = musicState;
         if (musicState) {
-//            if (currentMedia <= BT && mObjectAnimator != null) {
-//                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
-//                if (!mObjectAnimator.isRunning()) {
-//                    startLoadAnim();
-//                } else {
-//                    resumeLoadAnim();
-//                }
-//            }
-
+            if (currentMedia <= BT && mObjectAnimator != null) {
+                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
+                if (!mObjectAnimator.isRunning()) {
+                    startLoadAnim();
+                } else {
+                    resumeLoadAnim();
+                }
+            }
             mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
             if(!animBoolLeft)
                 musicPointAnim.startAnimation(rotateClockLeft);
         } else {
-//            pauseLoadAnim();
-
+            pauseLoadAnim();
             mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
             if(!animBoolLeft)
              musicPointAnim.startAnimation(rotateClockRight);

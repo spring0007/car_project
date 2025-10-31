@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -23,11 +24,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
+import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.launcher.ui5.databinding.ActivityMainUi5Binding;
 import com.launcher.ui5.databinding.MusicWidgetBinding;
@@ -44,6 +48,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     private final int MSG_CLEAR_SPEED = 2;
     private Handler mHandlerSpeed = null;
     private boolean accRecor;
+    private final int SPEEDHOME = 20;
 
 
     @Override
@@ -62,16 +67,45 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         musicWidget.setActivity(this, musicWidget);
         setContentView(binding.getRoot());
 
+        initReceiver();
         initLongTouch();
 
         clickApp();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+        }
 
         updateSpeedUnitText();
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0x10 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+        }
+    }
+
     private void initLongTouch() {
-        handler = new Handler(Looper.getMainLooper());
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                Log.i(TAG, "handlerNew msg.what = " + msg.what);
+                switch (msg.what) {
+                    case 100:
+                        break;
+                    case SPEEDHOME:
+                        speedhome();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         viewConfiguration = ViewConfiguration.get(this);
     }
 
@@ -180,6 +214,21 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         }
     }
 
+    private void initReceiver() {
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
+        filter.addAction(CommonData.ACTION_ACC_ON);
+        filter.addAction(CommonData.ACTION_ACC_OFF);
+        filter.addAction("com.zjinnova.zlink");
+        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
+        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
+        filter.addAction("top_session_package_change");
+        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
+//        updateTime();
+    }
+
     private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
         String SYSTEM_REASON = "reason";
         String SYSTEM_HOME_KEY = "homekey";
@@ -272,6 +321,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
     }
@@ -282,6 +332,8 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         binding.hotsetDaohangapp.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioNext.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioPre.setOnClickListener(this);
+		binding.layoutRadioWidget.radioProgress.setOnClickListener(this);
+        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
     }
 
     @Override
@@ -293,9 +345,13 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         }else if (v.getId() == binding.hotsetDaohangapp.getId()) {
             startActivity("com.autonavi.amapauto", "com.autonavi.amapauto.MainMapActivity");
         }else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
-            //收音机事件
+             mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
         }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
-            //收音机事件
+            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+        }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
+            mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
+        }else if (v.getId() == binding.layoutRadioWidget.radioProgress.getId()){
+            startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }
 
@@ -379,7 +435,10 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
-
+           runOnUiThread(() -> {
+                binding.layoutRadioWidget.tvRadioFreq.setText(freq);
+                binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
+             });
         }
 
         @Override
