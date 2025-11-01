@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI6</string><!-- app 名称 -->
+
+    <string name="ui_key">LauncherUI6</string>
+    <string name="ui_clazz">com.launcher.ui6.MainActivityUI6</string>
+
+
+    <string name="click_play_music">Song Title</string>
+    <string name="music">MUSIC</string>
+    <string name="music_artist">Artist</string>
+    <string name="unknown">unknown</string>
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+    </string-array>
+
+</resources>
