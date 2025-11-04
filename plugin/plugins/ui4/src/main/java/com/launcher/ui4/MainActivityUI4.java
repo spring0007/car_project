@@ -102,7 +102,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private void initClickEvent() {
         contentView = findViewById(android.R.id.content);
         binding.hotsetAllapp.setOnClickListener(this);
-        binding.layoutRadioWidget.radioLayout.setOnClickListener(this);
+        binding.layoutRadioWidget.radioIvLayout.setOnClickListener(this);
         binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioPre.setOnClickListener(v -> {
             if (ClickUtils.isFastClick()) {
@@ -567,7 +567,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
-        }else if (v.getId() == binding.layoutRadioWidget.radioLayout.getId()){
+        }else if (v.getId() == binding.layoutRadioWidget.radioIvLayout.getId()){
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }

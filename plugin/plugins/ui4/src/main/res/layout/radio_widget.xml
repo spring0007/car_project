@@ -43,14 +43,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/sf_radio_pre1"
-                android:padding="5dp"/>
+                android:padding="10dp"/>
             <ImageView
                 android:id="@+id/iv_radio_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/sf_radio_next1"
                 android:layout_marginStart="25dp"
-                android:padding="5dp"/>
+                android:padding="10dp"/>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,6 +74,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/radio_iv_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
