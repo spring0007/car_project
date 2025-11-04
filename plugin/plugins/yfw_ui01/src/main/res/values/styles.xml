@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="app_btn_text">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">#00FF0000</item>
+        <item name="android:drawablePadding">5dp</item>
+    </style>
+</resources>
+
