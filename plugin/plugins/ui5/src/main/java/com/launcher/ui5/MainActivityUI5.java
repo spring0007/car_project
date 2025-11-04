@@ -343,10 +343,16 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         }else if (v.getId() == binding.hotsetBtapp.getId()) {
             startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
         }else if (v.getId() == binding.hotsetDaohangapp.getId()) {
-            startActivity("com.autonavi.amapauto", "com.autonavi.amapauto.MainMapActivity");
+            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
         }else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
-             mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
+            if (ClickUtils.isFastClick()) {
+               return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
         }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
             mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
         }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
