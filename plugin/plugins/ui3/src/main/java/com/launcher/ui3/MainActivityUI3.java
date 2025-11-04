@@ -218,7 +218,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
      */
     private void showPopupAllapp() {
 
-        View view = LayoutInflater.from(this).inflate(com.awell.launcher.library.R.layout.layout_allapp, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null);
         popupWindow = new PopupWindow(view, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 
         popupWindow.setOutsideTouchable(true);
@@ -226,7 +226,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
         allAppInfoList = getAllAppInfo(this, false);
 
-        RecyclerView rvPop = view.findViewById(com.awell.launcher.library.R.id.rv_pop_allapp);
+        RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         gridLayoutManager.setSpanCount(2);
         gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
