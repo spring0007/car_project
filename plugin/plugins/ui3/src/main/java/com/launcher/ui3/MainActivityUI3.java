@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
-import com.awell.addapp.AppInofAdapter;
-import com.awell.addapp.AppPopAdapter;
+
+
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeControl;

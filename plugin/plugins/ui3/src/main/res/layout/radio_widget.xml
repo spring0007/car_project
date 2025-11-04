@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sf_radio_pre1"
-            android:padding="5dp"
+            android:padding="10dp"
             android:layout_gravity="center"/>
         <com.awell.ctrlview.FrequencyTextView
             android:id="@+id/tv_radio_freq"
@@ -32,6 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sf_radio_next1"
-            android:padding="5dp"
+            android:padding="10dp"
             android:layout_gravity="center"/>
 </LinearLayout>
