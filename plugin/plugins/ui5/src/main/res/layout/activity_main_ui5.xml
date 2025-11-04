@@ -80,15 +80,15 @@
 
         <ImageView
             android:id="@+id/hotset_daohangapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="20dp"
             android:src="@drawable/hotset_daohang_app" />
 
         <ImageView
             android:id="@+id/hotset_allapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="62dp"
             android:layout_marginRight="62dp"
             android:layout_marginBottom="20dp"
@@ -97,8 +97,8 @@
 
         <ImageView
             android:id="@+id/hotset_btapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginBottom="20dp"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_bt_app" />
