@@ -75,7 +75,6 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
         setContentView(binding.getRoot());
 
-
         initLongTouch();
 
         clickApp();
