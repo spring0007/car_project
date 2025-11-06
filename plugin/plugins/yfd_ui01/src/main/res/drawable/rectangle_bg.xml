@@ -4,7 +4,7 @@
     <!-- 圆角半径，这里统一设置四个角的圆角半径为 7dp -->
     <corners android:radius="7dp"/>
     <!-- 设置填充颜色为粉色 -->
-    <solid android:color="#272727"/>
+    <solid android:color="#99272727"/>
     <!-- 设置边框，宽度为 2dp，颜色为黄色 -->
     <stroke
         android:width="2dp"

@@ -48,11 +48,12 @@
         android:layout_marginBottom="32dp"
         android:layout_marginStart="65dp"
         >
-        <ImageView
+        <com.launcher.yfd_ui01.DashboardView
+            android:layout_width="274dp"
+            android:layout_height="274dp"
             android:id="@+id/car_speed_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ui7_car_speed_point"/>
+            android:layout_gravity="center"
+            />
     </LinearLayout>
 
 

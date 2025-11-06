@@ -40,6 +40,7 @@ import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.utils.CommonData;
 import com.launcher.yfd_ui01.app.AppGridActivity;
+import com.launcher.yfd_ui01.app.SpeedSimulator;
 import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding;
 import com.launcher.yfd_ui01.databinding.DialWidgetBinding;
 import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
@@ -58,12 +59,15 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     private MusicWidget musicWidget;
     private DialWidgetBinding dialWidgetBinding;
     private DialWidget dialWidget;
+    private DashboardView dashboardView;
     private AwellMediaControl mediaControl;
     private final int MSG_UPDATE_SPEED = 1;
     private final int MSG_CLEAR_SPEED = 2;
     private Handler mHandlerSpeed = null;
     private boolean accRecor;
     private final int SPEEDHOME = 20;
+
+//    private SpeedSimulator speedSimulator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        dashboardView = binding.carSpeedPoint;
         dialWidgetBinding = binding.layoutDialWidget;
         dialWidget = dialWidgetBinding.dialWidgetLayout;
         dialWidget.findViews(this,dialWidget);
@@ -96,20 +101,46 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
         updateSpeedUnitText();
 
+//        // 创建速度模拟器
+//        speedSimulator = new SpeedSimulator(new SpeedSimulator.SpeedChangeListener() {
+//            @Override
+//            public void onSpeedChanged(int speed) {
+//                // 在主线程中更新UI
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        // 您可以在这里处理其他与速度相关的逻辑
+//                        Log.i(TAG, "speed = " + speed);
+//                        dashboardView.udDataSpeed(speed);
+//                        binding.carSpeedTv.setText("" + speed);
+//
+//                    }
+//                });
+//            }
+//        });
+//
+//        // 开始模拟
+//        speedSimulator.startSimulation();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //setLauncherPackage(getApplicationContext());
-        dialWidget.startAnimation();
+        if(dialWidget!= null)
+            dialWidget.startAnimation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        dialWidget.stopAnimation();
+        if(dialWidget!= null)
+            dialWidget.stopAnimation();
+        if(dashboardView!= null)
+            dashboardView.closeAnimation();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -317,13 +348,15 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                     break;
 
                 case Intent.ACTION_TIME_CHANGED:
-                    dialWidget.updateTimeSysem();
+                    if(dialWidget!= null)
+                        dialWidget.updateTimeSysem();
                     // 用户手动更改了时间
                 case Intent.ACTION_TIMEZONE_CHANGED:
                     // 时区发生了变化
                 case Intent.ACTION_DATE_CHANGED:
                     // 日期发生了变化
-                    dialWidget.updateTimeSysem();
+                    if(dialWidget!= null)
+                        dialWidget.updateTimeSysem();
                     break;
 
             }
@@ -373,6 +406,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
+
+        // 停止速度模拟器
+//        if (speedSimulator != null) {
+//            speedSimulator.stopSimulation();
+//        }
     }
 
     private void clickApp() {
@@ -410,6 +448,10 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
      */
     private void startActivity(String packName, String className) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(packName);
+
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setAction(Intent.ACTION_MAIN);
         boolean isboot = true;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
@@ -618,98 +660,13 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         Bundle bundle = options.toBundle();
         startActivity(intent,bundle);
     }
-
-    private void setLauncherPackage( String packageName ,String className){
-
-        //获取屏幕高宽
-        DisplayMetrics metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        //int screenWidth = metric.widthPixels;
-        //int screenHeight = metric.heightPixels;
-
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName(packageName,className));
-        //com.autonavi.amapauto/com.autonavi.amapauto.MainMapActivity  "com.google.android.apps.maps"
-       // intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
-       // ActivityOptions activityOptions = makeLaunchOptions(this);
-        ActivityOptions activityOptions = ActivityOptions.makeBasic();
-        //设置为freeform模式
-        try {
-            Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
-            method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //freeform模式下自由窗口的大小
-        int freeformWidth = 515;
-        int freeformHeight = 352;
-        //居中显示
-        int left = 394;
-        int top = 60;
-        int right = left +freeformWidth;
-        int bottom = top + freeformHeight;
-
-        activityOptions.setLaunchBounds(new Rect(left,top,right,bottom));
-        Bundle bundle = activityOptions.toBundle();
-        startActivity(intent,bundle);
-    }
-
-    private int getTaskPageId(String packages){
-        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        // 限制获取的任务数量，避免获取过多无用数据
-        List<ActivityManager.RunningTaskInfo> taskList = activityManager.getRunningTasks(100);
-        for (ActivityManager.RunningTaskInfo taskInfo : taskList) {
-            // 添加空值检查，防止NullPointerException
-            if (taskInfo != null && taskInfo.baseActivity != null &&
-                    packages.equals(taskInfo.baseActivity.getPackageName())) {
-                return taskInfo.id;
-            }
-        }
-        return -1; // 明确返回默认值
-
-    }
-
-    //设置Options
-    private ActivityOptions makeLaunchOptions(Activity activity) {
-        ActivityOptions activityOptions = ActivityOptions.makeBasic();
-        //设置窗口模式
-        //activityOptions.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
-        //设置为freeform模式
-        try {
-            Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
-            method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Arbitrary bounds only because freeform is in dev mode right now
-        //主要设置需要启动为自由窗口的应用界面窗口相关的大小（以传递过来的activity为参照等比缩小）
-        //这里activity参数传递过的是桌面（QuickstepLauncher）
-        //其实就是以桌面的容器尺寸来等比创建一个Rect作为后续启动的自由窗口的尺寸
-        final View decorView = activity.getWindow().getDecorView();
-        final WindowInsets insets = decorView.getRootWindowInsets();
-
-        int freeformWidth = 525;
-        int freeformHeight = 352;
-        //居中显示
-        int left = 394;
-        int top = 60;
-        int right = left +freeformWidth;
-        int bottom = top + freeformHeight;
-        final Rect r = new Rect(left,top,right,bottom);
-        //final Rect r = new Rect(0, 0, decorView.getWidth() / 2, decorView.getHeight() / 2);
-//        r.offsetTo(insets.getSystemWindowInsetLeft() + 50,
-//                insets.getSystemWindowInsetTop() + 50);
-        activityOptions.setLaunchBounds(r);
-        return activityOptions;
-    }
-
     private void killApp(Context context, String packageName) {
         // 需要添加权限 <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
         if (isProcessRunning(context, packageName)) {
             Log.i(TAG,"lqq,isAppRunning");
             ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
             activityManager.killBackgroundProcesses(packageName);
+            //activityManager.forceStopPackage(packageName);
         }
 
     }
@@ -741,6 +698,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         Log.i(TAG,"lqq,onStop");
-        killApp(this.getApplicationContext(), free_packName);
+        //killApp(this.getApplicationContext(), free_packName);
     }
 }

@@ -100,7 +100,7 @@ public class AnalogClockView extends View {
         // 计算缩放因子，使时钟适应View大小
         int minSize = Math.min(w, h);
         float bgWidth = clockBackground.getWidth();
-        scaleFactor = (minSize * 0.8f) / bgWidth;
+        //scaleFactor = (minSize * 0.8f) / bgWidth;
         
         // 如果没有运行动画，则开始动画
         if (!isRunning) {

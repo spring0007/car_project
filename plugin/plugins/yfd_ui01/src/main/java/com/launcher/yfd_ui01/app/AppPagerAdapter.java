@@ -1,6 +1,7 @@
 package com.launcher.yfd_ui01.app;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -38,9 +39,13 @@ public class AppPagerAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         GridView gridView = new GridView(context);
         gridView.setNumColumns(6); // 每行6个
-        gridView.setVerticalSpacing(20);
-        gridView.setHorizontalSpacing(10);
-        gridView.setPadding(20, 20, 20, 20);
+        gridView.setColumnWidth(0);
+        gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+        gridView.setGravity(Gravity.CENTER);
+
+        gridView.setVerticalSpacing(40);
+       // gridView.setHorizontalSpacing(20);
+       // gridView.setPadding(20, 20, 20, 20);
         gridView.setAdapter(new AppGridAdapter(context, pages.get(position)));
         
         container.addView(gridView);
