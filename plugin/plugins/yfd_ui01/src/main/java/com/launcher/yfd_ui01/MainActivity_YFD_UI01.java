@@ -1,0 +1,746 @@
+package com.launcher.yfd_ui01;
+
+import static com.awell.utils.Utils.startWallpaper;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityOptions;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.provider.Settings;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.WindowInsets;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.awell.control.AppsCustomizeControl;
+import com.awell.control.AwellMediaControl;
+import com.awell.launcher2.IconCache;
+import com.awell.utils.CommonData;
+import com.launcher.yfd_ui01.app.AppGridActivity;
+import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding;
+import com.launcher.yfd_ui01.databinding.DialWidgetBinding;
+import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Objects;
+
+
+public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListener {
+    private final String TAG = MainActivity_YFD_UI01.class.getSimpleName();
+    private ActivityMainUi01Binding binding;
+    private MusicWidgetBinding musicWidgetBinding;
+    private MusicWidget musicWidget;
+    private DialWidgetBinding dialWidgetBinding;
+    private DialWidget dialWidget;
+    private AwellMediaControl mediaControl;
+    private final int MSG_UPDATE_SPEED = 1;
+    private final int MSG_CLEAR_SPEED = 2;
+    private Handler mHandlerSpeed = null;
+    private boolean accRecor;
+    private final int SPEEDHOME = 20;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
+
+
+
+        mediaControl = new AwellMediaControl();
+        mediaControl.bindDataService(this);
+        mediaControl.setUpdateMusicView(mediaImpl);
+
+        musicWidgetBinding = binding.layoutMusicWidget;
+        musicWidget = musicWidgetBinding.musicWidgetLayout;
+        musicWidget.setMediaLibrary(mediaControl);
+        musicWidget.setActivity(this, musicWidget);
+        dialWidgetBinding = binding.layoutDialWidget;
+        dialWidget = dialWidgetBinding.dialWidgetLayout;
+        dialWidget.findViews(this,dialWidget);
+         //setLauncherPackage(this.getApplicationContext());
+        setContentView(binding.getRoot());
+        initReceiver();
+        initLongTouch();
+
+        clickApp();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+        }
+
+        updateSpeedUnitText();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //setLauncherPackage(getApplicationContext());
+        dialWidget.startAnimation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        dialWidget.stopAnimation();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0x10 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+        }
+    }
+
+    private void initLongTouch() {
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                Log.i(TAG, "handlerNew msg.what = " + msg.what);
+                switch (msg.what) {
+                    case 100:
+                        break;
+                    case SPEEDHOME:
+                        speedhome();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        viewConfiguration = ViewConfiguration.get(this);
+    }
+
+
+
+
+
+    @SuppressLint("HandlerLeak")
+    private void speedhome() {
+        Log.i(TAG, "speed come in");
+        mHandlerSpeed = new Handler() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MSG_UPDATE_SPEED:
+                        int speed = msg.arg1;
+                        binding.carSpeedTv.setText("" + speed);
+                        /**
+                         * gps车速
+                         */
+                        int speed_km = msg.arg1;
+                        int speed_mile = msg.arg2;
+                        Log.i(TAG, "accRecor = " + accRecor);
+                        if (!accRecor) {
+                            byte[] unit = new byte[1];
+                            CommonData.readDataToMeta(unit, 0x84);
+                            int unitData = unit[0];
+                            Log.e(TAG, "unit Data = " + unitData);
+                            if (unitData == 0) {
+                                binding.carSpeedTv.setText(speed_km + "");
+                                binding.carSpeedUnitTv.setText("km/h");
+                            } else if (unitData == 1) {
+                                binding.carSpeedTv.setText(speed_mile + "");
+                                binding.carSpeedUnitTv.setText("mph");
+                            }
+//                            if (animationDrawableTwo != null) {
+//                                if (speed_km > 0 || speed_mile > 0) {
+//                                    animationDrawableTwo.start();
+//                                } else {
+//                                    animationDrawableTwo.stop();
+//                                }
+//                            }
+                        }
+                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
+                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
+                        break;
+                    case MSG_CLEAR_SPEED:
+                        binding.carSpeedTv.setText("" + 0);
+//                        if (animationDrawableTwo != null) {
+//                            animationDrawableTwo.stop();
+//                        }
+                        break;
+                }
+            }
+        };
+        LocationManager mlocationManager = null;
+        if (null == mlocationManager)
+            mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Log.i(TAG, "mlocationManager==" + mlocationManager);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+                if (location != null && location.hasSpeed()) {
+
+                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
+                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+
+
+                    Message msg = mHandlerSpeed.obtainMessage();
+                    msg.what = MSG_UPDATE_SPEED;
+                    msg.arg1 = speed;
+                    msg.arg2 = speedMile;
+                    mHandlerSpeed.sendMessage(msg);
+                }
+            }
+        }, mHandlerSpeed.getLooper());
+    }
+
+    private void updateSpeedUnitText() {
+        byte[] unit = new byte[1];
+        CommonData.readDataToMeta(unit, 0x84);
+        int unitData = unit[0];
+        Log.e(TAG, "unit Data = " + unitData);
+        if (binding.carSpeedUnitTv != null) {
+            if (unitData == 0) {
+                binding.carSpeedUnitTv.setText("km/h");
+            } else if (unitData == 1) {
+                binding.carSpeedUnitTv.setText("mph");
+            }
+        }
+    }
+
+    private void initReceiver() {
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
+        filter.addAction(CommonData.ACTION_ACC_ON);
+        filter.addAction(CommonData.ACTION_ACC_OFF);
+        filter.addAction("com.zjinnova.zlink");
+        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
+        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
+        filter.addAction("top_session_package_change");
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
+//        updateTime();
+    }
+
+    private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
+        String SYSTEM_REASON = "reason";
+        String SYSTEM_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.i(TAG, "mainReceiver:" + action);
+            switch (action) {
+                case CommonData.BROADCAST_LAMP_SWITCH:
+//                    if (intent.getIntExtra("lamplet_state", 0) == 1)
+//                        ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.open);
+//                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
+                    break;
+                case CommonData.ACTION_ACC_ON:
+//                    if (ivLampSwitchBg != null)
+//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    break;
+                case CommonData.ACTION_ACC_OFF:
+                    accRecor = true;
+                    break;
+                case CommonData.BROADCAST_MEDIA_EXIT:
+                    String packge = intent.getStringExtra("package");
+                    if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
+
+                    }
+                    break;
+                case "com.zjinnova.zlink":
+                    String zlinStatus = intent.getStringExtra("status");
+                    String phoneMode = intent.getStringExtra("phoneMode");
+                    Log.d(TAG, "zlinStatus:" + zlinStatus);
+                    if (zlinStatus == null) {
+                        return;
+                    }
+                    musicWidget.getCarPlayData(zlinStatus, phoneMode);
+                    break;
+                case "android.launcher.show.allApp":
+                    Log.d(TAG, "mainReceiver:" + intent.getAction());
+                    AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    break;
+                case "CANBUS_CHANGE_SPEED_Unit":
+                    updateSpeedUnitText();
+                    break;
+                case "top_session_package_change":
+                    String sessionTopPkg = intent.getStringExtra("top_package");
+                    handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
+                    Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    break;
+
+                case Intent.ACTION_TIME_CHANGED:
+                    dialWidget.updateTimeSysem();
+                    // 用户手动更改了时间
+                case Intent.ACTION_TIMEZONE_CHANGED:
+                    // 时区发生了变化
+                case Intent.ACTION_DATE_CHANGED:
+                    // 日期发生了变化
+                    dialWidget.updateTimeSysem();
+                    break;
+
+            }
+
+        }
+    };
+
+    public void handleMediaPlaybackResult(String value1, String value2, int value3, int value4) {
+        String oldPlayingPackage = mediaControl.getCurrentPkgName();
+        boolean isStartCommand = "start".equals(value2);
+        boolean isStopCommand = "stop".equals(value2);
+        boolean isValidPackage = !TextUtils.isEmpty(value1);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
+
+
+        // 处理停止播放的情况
+        //if (isValidPackage && isStopCommand) {
+        //    mMediaListener.setCurrentPlayingPackage(null);
+        //    return;
+        //}
+
+        // 处理开始播放的情况
+        if (isValidPackage && isStartCommand) {
+            // 当前没有播放或切换到新包时，更新并启动回调
+            if (oldPlayingPackage != null && !oldPlayingPackage.equals(value1)) {
+            }
+            //Log.i(TAG, "0000----Switched to new package: " + value1);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        AppsCustomizeControl.INSTANCE.hideApps();
+        //super.onBackPressed();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        AppsCustomizeControl.INSTANCE.hideApps();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mainReceiver);
+        mediaControl.unBindDataService(this);
+        AppsCustomizeControl.INSTANCE.hideApps();
+    }
+
+    private void clickApp() {
+        binding.hotsetAllApp.setOnClickListener(this);
+        binding.hotsetBtApp.setOnClickListener(this);
+        binding.hotsetDspApp.setOnClickListener(this);
+        binding.hotsetWindowApp.setOnClickListener(this);
+    }
+
+
+    private final String  free_packName = "com.awell.carsetting";
+    private final String  free_className = "com.awell.carsetting.MainActivity";
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == binding.hotsetAllApp.getId()) {
+            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+        }else if (v.getId() == binding.hotsetBtApp.getId()) {
+            startFreeFormActivity(free_packName,free_className);
+            //setLauncherPackage(this,"com.awell.bluetooth");
+            //startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
+        }else if (v.getId() == binding.hotsetDspApp.getId()) {
+            startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
+        }else if (v.getId() == binding.hotsetWindowApp.getId()){
+           // startActivity("com.launcher.yfd_ui01", "com.launcher.yfd_ui01.app.AppGridActivity");
+            Intent intent = new Intent(this, AppGridActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * 跳转Activity
+     *
+     * @param packName
+     * @param className
+     */
+    private void startActivity(String packName, String className) {
+        Intent intent = getPackageManager().getLaunchIntentForPackage(packName);
+        boolean isboot = true;
+        if (intent != null) {
+            for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
+                Log.d(TAG, "packagename11=" + packName);
+                if (!packName.equals(IconCache.WorkSpacePackageName[index])) {
+                    isboot = false;
+                    break;
+                }
+            }
+            if (packName.contains("com.autonavi")) {
+                if (isboot)
+                    Settings.System.putString(getContentResolver(), "boot_apk1", packName);
+            } else {
+                if (isboot)
+                    Settings.System.putString(getContentResolver(), "boot_apk2", packName);
+            }
+            Log.i(TAG, "packagename=" + packName);
+            startActivity(intent);
+        }
+
+    }
+
+    private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
+        @Override
+        public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
+            if (!"com.awell.radio".equals(pkg)) {
+                musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
+            }
+        }
+
+        @Override
+        public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
+            musicWidget.setCurMusicState(status, type);
+
+        }
+
+        @Override
+        public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
+
+        }
+
+        @Override
+        public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
+            musicWidget.setMusicNameTextView(songName, type);
+            musicWidget.setArtistNameTextView(singerName, type);
+            if ("NO_MUSIC_LIST".equals(songName)
+                    && "NO_MUSIC_LIST".equals(singerName)
+                    && "NO_MUSIC_LIST".equals(album)) {
+                musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
+                musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
+            }
+
+            if (MusicWidget.OTHER_MUSIC == type) {
+                if (!TextUtils.isEmpty(songName)) {
+                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
+                } else {
+                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
+                }
+                if (!TextUtils.isEmpty(singerName)) {
+                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
+                } else {
+                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
+                }
+            }
+        }
+
+        @Override
+        public void updateViewPlayTime(@NotNull Bundle bundle, long currentTime, long totalTime, int type) {
+            musicWidget.setMusicSeekBar((int) currentTime, (int) totalTime, type);
+        }
+
+        @Override
+        public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
+//           runOnUiThread(() -> {
+//                binding.layoutRadioWidget.tvRadioFreq.setText(freq);
+//                binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
+//             });
+        }
+
+        @Override
+        public void handleOriginBundle(@NotNull Bundle bundle) {
+
+        }
+    };
+
+
+    private boolean isEventConsumedByChild = false;
+    private boolean isLongPressPossible = false;
+    private float startX = 0f;
+    private float startY = 0f;
+    private ViewConfiguration viewConfiguration;
+    private Handler handler;
+
+    /**
+     * 重写只为长按弹出壁纸选择
+     */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        // 先让子 View 处理事件
+        boolean consumed = super.dispatchTouchEvent(ev);
+
+        switch (ev.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                // 重置状态
+                isEventConsumedByChild = false;
+                isLongPressPossible = true;
+
+                // 记录触摸起始位置
+                startX = ev.getRawX();
+                startY = ev.getRawY();
+
+                // 启动长按检测
+                startLongPressDetection();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                // 检查是否移动超过阈值
+                float dx = Math.abs(ev.getRawX() - startX);
+                float dy = Math.abs(ev.getRawY() - startY);
+                float touchSlop = 0f;
+                if (viewConfiguration != null) {
+                    touchSlop = viewConfiguration.getScaledTouchSlop();
+                }
+
+                if (dx > touchSlop || dy > touchSlop) {
+                    cancelLongPressDetection();
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                cancelLongPressDetection();
+                break;
+        }
+
+        // 记录事件是否被子 View 消费
+        if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            isEventConsumedByChild = consumed;
+        }
+
+        return consumed;
+    }
+
+    private Runnable longPressRunnable = null;
+
+    private void startLongPressDetection() {
+        cancelLongPressDetection();
+
+        longPressRunnable = () -> {
+            // 只有事件没有被消费且长按可能时才触发
+            if (!isEventConsumedByChild && isLongPressPossible) {
+                handleLongPressAction();
+            }
+        };
+
+        if (handler != null) {
+            handler.postDelayed(
+                    longPressRunnable,
+                    ViewConfiguration.getLongPressTimeout()
+            );
+        }
+    }
+
+    private void cancelLongPressDetection() {
+        if (longPressRunnable != null) {
+            if (handler != null) {
+                handler.removeCallbacks(longPressRunnable);
+            }
+            longPressRunnable = null;
+        }
+    }
+
+    private void handleLongPressAction() {
+        startWallpaper();
+    }
+
+    //freeform模式
+    private static final int WINDOWING_MODE_FREEFORM = 5;
+
+    public void startFreeFormActivity(String packageName,String  className) {
+
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(packageName,className));
+        ActivityOptions options = ActivityOptions.makeBasic();
+//        options.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
+        Method method = null;
+        try {
+//            method = ActivityOptions.class.getMethod("setTaskAlwaysOnTop", boolean.class);
+//            method.invoke(options,true);
+            method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
+            method.invoke(options,WINDOWING_MODE_FREEFORM);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+//        startActivity(intent, options.toBundle());
+        int freeformWidth = 515;
+        int freeformHeight = 352;
+        //居中显示
+        int left = 394;
+        int top = 60;
+        options.setLaunchBounds(new Rect(left,top,freeformWidth + left,freeformHeight + top));
+        Bundle bundle = options.toBundle();
+        startActivity(intent,bundle);
+    }
+
+    private void setLauncherPackage( String packageName ,String className){
+
+        //获取屏幕高宽
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        //int screenWidth = metric.widthPixels;
+        //int screenHeight = metric.heightPixels;
+
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(packageName,className));
+        //com.autonavi.amapauto/com.autonavi.amapauto.MainMapActivity  "com.google.android.apps.maps"
+       // intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
+       // ActivityOptions activityOptions = makeLaunchOptions(this);
+        ActivityOptions activityOptions = ActivityOptions.makeBasic();
+        //设置为freeform模式
+        try {
+            Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
+            method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //freeform模式下自由窗口的大小
+        int freeformWidth = 515;
+        int freeformHeight = 352;
+        //居中显示
+        int left = 394;
+        int top = 60;
+        int right = left +freeformWidth;
+        int bottom = top + freeformHeight;
+
+        activityOptions.setLaunchBounds(new Rect(left,top,right,bottom));
+        Bundle bundle = activityOptions.toBundle();
+        startActivity(intent,bundle);
+    }
+
+    private int getTaskPageId(String packages){
+        ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        // 限制获取的任务数量，避免获取过多无用数据
+        List<ActivityManager.RunningTaskInfo> taskList = activityManager.getRunningTasks(100);
+        for (ActivityManager.RunningTaskInfo taskInfo : taskList) {
+            // 添加空值检查，防止NullPointerException
+            if (taskInfo != null && taskInfo.baseActivity != null &&
+                    packages.equals(taskInfo.baseActivity.getPackageName())) {
+                return taskInfo.id;
+            }
+        }
+        return -1; // 明确返回默认值
+
+    }
+
+    //设置Options
+    private ActivityOptions makeLaunchOptions(Activity activity) {
+        ActivityOptions activityOptions = ActivityOptions.makeBasic();
+        //设置窗口模式
+        //activityOptions.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
+        //设置为freeform模式
+        try {
+            Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
+            method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Arbitrary bounds only because freeform is in dev mode right now
+        //主要设置需要启动为自由窗口的应用界面窗口相关的大小（以传递过来的activity为参照等比缩小）
+        //这里activity参数传递过的是桌面（QuickstepLauncher）
+        //其实就是以桌面的容器尺寸来等比创建一个Rect作为后续启动的自由窗口的尺寸
+        final View decorView = activity.getWindow().getDecorView();
+        final WindowInsets insets = decorView.getRootWindowInsets();
+
+        int freeformWidth = 525;
+        int freeformHeight = 352;
+        //居中显示
+        int left = 394;
+        int top = 60;
+        int right = left +freeformWidth;
+        int bottom = top + freeformHeight;
+        final Rect r = new Rect(left,top,right,bottom);
+        //final Rect r = new Rect(0, 0, decorView.getWidth() / 2, decorView.getHeight() / 2);
+//        r.offsetTo(insets.getSystemWindowInsetLeft() + 50,
+//                insets.getSystemWindowInsetTop() + 50);
+        activityOptions.setLaunchBounds(r);
+        return activityOptions;
+    }
+
+    private void killApp(Context context, String packageName) {
+        // 需要添加权限 <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+        if (isProcessRunning(context, packageName)) {
+            Log.i(TAG,"lqq,isAppRunning");
+            ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            activityManager.killBackgroundProcesses(packageName);
+        }
+
+    }
+
+    private boolean isAppRunning(Context context, String packageName) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
+        for (ActivityManager.RunningTaskInfo info : list) {
+            assert info.topActivity != null;
+            if (info.topActivity.getPackageName().equals(packageName) ||
+                    Objects.requireNonNull(info.baseActivity).getPackageName().equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isProcessRunning(Context context, String packageName) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> list = am.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo info : list) {
+            if (info.processName.equals(packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG,"lqq,onStop");
+        killApp(this.getApplicationContext(), free_packName);
+    }
+}

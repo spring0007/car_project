@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.launcher.yfd_ui01.DialWidget xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dial_widget_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <com.launcher.yfd_ui01.AnalogClockView
+        android:id="@+id/analogClockView"
+        android:layout_width="219dp"
+        android:layout_height="219dp"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dial_am_pm"
+        android:text="PM"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_gravity="right"
+        android:layout_marginEnd="19dp"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dial_date"
+            android:text="11-03"
+            android:textSize="21sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dial_week"
+            android:text="@string/monday"
+            android:textSize="21sp"
+            android:textColor="@color/white"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
+
+
+</com.launcher.yfd_ui01.DialWidget>
