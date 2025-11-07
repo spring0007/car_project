@@ -115,18 +115,23 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackState state) {
-
+            Log.d(TAG, "onPlaybackStateChanged: state=>" + state);
             mExecutor.execute(() -> {
                 if (state != null) {
 
                     //Log.i(TAG, "onPlaybackStateChanged: huang state=>" + state);
-
+                    Log.d(TAG, "onPlaybackStateChanged: execute");
                     long currentTime = System.currentTimeMillis();
                     // 检查是否达到时间间隔,到达指定间隔发送数据
                     if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
                         lastUpdateTime = currentTime;
                         handlePlayingTime(mMediaController);
                         handleMetadataArtUri();
+                        Log.d(TAG, "onPlaybackStateChanged: metadata=>" + mMediaController.getMetadata());
+                        if (mMediaController.getMetadata() != null) {
+                            Log.d(TAG, "onPlaybackStateChanged: metadata=>" + mMediaController.getMetadata());
+                            handleMetadataChange(mMediaController, mMediaController.getMetadata());
+                        }
 
                         if (mLastPlayState != state.getState()) {
                             boolean isPlaying = state.getState() == PlaybackState.STATE_PLAYING;
@@ -223,6 +228,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
     public void removeCallbacks() {
         if (mMediaController != null && isRegisterCallback) {
+            Log.d(TAG, "removeCallbacks: destroy==");
             mMediaController.unregisterCallback(mMediaControllerCallback);
             mLastUri = "default";
             isRegisterCallback = false;
@@ -331,6 +337,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
         // 取消之前的回调
         if (mMediaController != null) {
+            Log.d(TAG, "updateMediaController: huang removeCallbacks");
             mMediaController.unregisterCallback(mMediaControllerCallback);
         }
 
