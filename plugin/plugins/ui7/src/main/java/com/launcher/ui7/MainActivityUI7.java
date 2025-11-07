@@ -101,13 +101,15 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         } else if (v.getId() == R.id.navi_iv) {
             startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-        }else if (v.getId() == R.id.all_iv || v.getId() == R.id.all2_iv) {
+        }else if (v.getId() == R.id.all_iv) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == R.id.radio_iv) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }else if (v.getId() == R.id.phone_iv) {
             startActivity("com.android.dialer", "com.android.dialer.MainActivity");
-        }else if (v.getId() == R.id.browser_iv) {
+        }else if (v.getId() == R.id.bt_iv) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        } else if (v.getId() == R.id.browser_iv) {
             startActivity("com.android.chrome", "com.google.android.apps.chrome.Main");
         }else if (v.getId() == R.id.setting_iv) {
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");

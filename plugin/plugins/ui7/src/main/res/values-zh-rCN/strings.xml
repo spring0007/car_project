@@ -27,5 +27,6 @@
     <string name="setting">设置</string>
     <string name="equalizer">均衡器</string>
     <string name="video">视频</string>
+    <string name="bluetooth">蓝牙</string>
 
 </resources>

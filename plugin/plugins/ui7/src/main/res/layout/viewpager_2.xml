@@ -4,25 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
-        android:id="@+id/browser_iv"
+        android:id="@+id/bt_iv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/sf_browser"
+        android:src="@drawable/sf_bt_music"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/video_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1" />
+
+    <TextView
+        android:id="@+id/bt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth"
+        android:textSize="33sp"
+        android:textColor="@color/yellow_fdb4"
+        app:layout_constraintStart_toStartOf="@+id/bt_iv"
+        app:layout_constraintEnd_toEndOf="@+id/bt_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1" />
+
+    <ImageView
+        android:id="@+id/video_iv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_video"
+        app:layout_constraintStart_toEndOf="@+id/bt_iv"
         app:layout_constraintEnd_toStartOf="@+id/setting_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
 
     <TextView
-        android:id="@+id/browser_tv"
+        android:id="@+id/video_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/browser"
+        android:text="@string/video"
         android:textSize="33sp"
         android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/browser_iv"
-        app:layout_constraintEnd_toEndOf="@+id/browser_iv"
+        app:layout_constraintStart_toStartOf="@+id/video_iv"
+        app:layout_constraintEnd_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
@@ -32,8 +56,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/sf_setting"
-        app:layout_constraintStart_toEndOf="@+id/browser_iv"
-        app:layout_constraintEnd_toStartOf="@+id/all2_iv"
+        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        app:layout_constraintEnd_toStartOf="@+id/browser_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
@@ -52,10 +76,10 @@
         app:layout_constraintHorizontal_weight="1" />
 
     <ImageView
-        android:id="@+id/all2_iv"
+        android:id="@+id/browser_iv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/sf_all"
+        android:src="@drawable/sf_browser"
         app:layout_constraintStart_toEndOf="@+id/setting_iv"
         app:layout_constraintEnd_toStartOf="@+id/dsp_iv"
         app:layout_constraintTop_toTopOf="parent"
@@ -63,14 +87,14 @@
         app:layout_constraintHorizontal_weight="1" />
 
     <TextView
-        android:id="@+id/all2_tv"
+        android:id="@+id/browser_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/App"
+        android:text="@string/browser"
         android:textSize="33sp"
         android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/all2_iv"
-        app:layout_constraintEnd_toEndOf="@+id/all2_iv"
+        app:layout_constraintStart_toStartOf="@+id/browser_iv"
+        app:layout_constraintEnd_toEndOf="@+id/browser_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
@@ -80,8 +104,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:src="@drawable/sf_dsp"
-        app:layout_constraintStart_toEndOf="@+id/all2_iv"
-        app:layout_constraintEnd_toStartOf="@+id/video_iv"
+        app:layout_constraintStart_toEndOf="@+id/browser_iv"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
@@ -95,30 +119,6 @@
         android:textColor="@color/yellow_fdb4"
         app:layout_constraintStart_toStartOf="@+id/dsp_iv"
         app:layout_constraintEnd_toEndOf="@+id/dsp_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
-
-    <ImageView
-        android:id="@+id/video_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_video"
-        app:layout_constraintStart_toEndOf="@+id/dsp_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
-
-    <TextView
-        android:id="@+id/video_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/video"
-        android:textSize="33sp"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/video_iv"
-        app:layout_constraintEnd_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_weight="1" />
