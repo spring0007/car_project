@@ -44,7 +44,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             // 第二页的控件
             setListener(holder.itemView, R.id.browser_iv);
             setListener(holder.itemView, R.id.setting_iv);
-            setListener(holder.itemView, R.id.bt_iv);
+            setListener(holder.itemView, R.id.aux_iv);
             setListener(holder.itemView, R.id.dsp_iv);
             setListener(holder.itemView, R.id.video_iv);
         }

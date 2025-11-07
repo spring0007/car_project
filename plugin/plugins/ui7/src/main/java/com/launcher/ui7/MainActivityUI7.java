@@ -40,6 +40,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         setUpViewPager();
 
+        binding.timeLayout.dateLayout.setOnClickListener(this);
     }
 
     private void setUpViewPager() {
@@ -106,9 +107,9 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
         }else if (v.getId() == R.id.radio_iv) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }else if (v.getId() == R.id.phone_iv) {
-            startActivity("com.android.dialer", "com.android.dialer.MainActivity");
-        }else if (v.getId() == R.id.bt_iv) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        }else if (v.getId() == R.id.aux_iv) {
+            startActivity("com.awell.backcar", "com.awell.backcar.MainActivity");
         } else if (v.getId() == R.id.browser_iv) {
             startActivity("com.android.chrome", "com.google.android.apps.chrome.Main");
         }else if (v.getId() == R.id.setting_iv) {
@@ -117,6 +118,10 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
         }else if (v.getId() == R.id.video_iv) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
+        }else if (v.getId() == R.id.time_layout || v.getId() == R.id.date_layout) {
+                Log.d(TAG, "onClick: " + v.getId());
+            Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
+            startActivity(intent);
         }
     }
 

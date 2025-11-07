@@ -17,7 +17,7 @@
     <string name="setting">Settings</string>
     <string name="equalizer">Dsp</string>
     <string name="video">Video</string>
-    <string name="bluetooth">Bluetooth</string>
+    <string name="aux">Aux</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
