@@ -22,9 +22,7 @@
             android:name=".MainActivity_YFD_UI01"
             android:enabled="true"
             android:exported="true"
-
             android:launchMode="singleTask"/>
-        <activity android:name=".app.AppGridActivity"/>
     </application>
 
 </manifest>

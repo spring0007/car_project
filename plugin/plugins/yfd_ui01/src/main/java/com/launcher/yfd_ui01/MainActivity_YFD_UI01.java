@@ -5,7 +5,6 @@ import static com.awell.utils.Utils.startWallpaper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -17,19 +16,17 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.WindowInsets;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -39,8 +36,8 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.utils.CommonData;
-import com.launcher.yfd_ui01.app.AppGridActivity;
-import com.launcher.yfd_ui01.app.SpeedSimulator;
+import com.launcher.yfd_ui01.app.GlobalViewManager;
+import com.launcher.yfd_ui01.app.IconManager;
 import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding;
 import com.launcher.yfd_ui01.databinding.DialWidgetBinding;
 import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
@@ -48,8 +45,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
 
 
 public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListener {
@@ -72,6 +67,8 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IconManager.init(getApplicationContext());
         binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
 
 
@@ -90,6 +87,12 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         dialWidget.findViews(this,dialWidget);
          //setLauncherPackage(this.getApplicationContext());
         setContentView(binding.getRoot());
+        // 提前预热全局应用视图，后台开始加载应用数据以减少首次打开延迟
+        try {
+            GlobalViewManager.getInstance(this).preload(this);
+        } catch (Exception e) {
+            Log.w(TAG, "preload GlobalViewManager failed", e);
+        }
         initReceiver();
         initLongTouch();
 
@@ -217,6 +220,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                         break;
                     case MSG_CLEAR_SPEED:
                         binding.carSpeedTv.setText("" + 0);
+                        dashboardView.udDataSpeed(0);
 //                        if (animationDrawableTwo != null) {
 //                            animationDrawableTwo.stop();
 //                        }
@@ -255,7 +259,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                     Log.i(TAG, "onLocationChanged: float speed = " + speed);
                     Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
 
-
+                    dashboardView.udDataSpeed(speed);
                     Message msg = mHandlerSpeed.obtainMessage();
                     msg.what = MSG_UPDATE_SPEED;
                     msg.arg1 = speed;
@@ -294,6 +298,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_DATE_CHANGED);
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
     }
@@ -346,15 +351,14 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
                     Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
                     break;
-
                 case Intent.ACTION_TIME_CHANGED:
-                    if(dialWidget!= null)
-                        dialWidget.updateTimeSysem();
                     // 用户手动更改了时间
                 case Intent.ACTION_TIMEZONE_CHANGED:
                     // 时区发生了变化
                 case Intent.ACTION_DATE_CHANGED:
                     // 日期发生了变化
+                case Intent.ACTION_TIME_TICK:
+                    //系统时间变化
                     if(dialWidget!= null)
                         dialWidget.updateTimeSysem();
                     break;
@@ -391,6 +395,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         AppsCustomizeControl.INSTANCE.hideApps();
+        try {
+            GlobalViewManager.getInstance(this).hideApps();
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+        }
         //super.onBackPressed();
     }
 
@@ -398,6 +407,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         AppsCustomizeControl.INSTANCE.hideApps();
+        try {
+            GlobalViewManager.getInstance(this).hideApps();
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+        }
     }
 
     @Override
@@ -406,6 +420,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
+        try {
+            GlobalViewManager.getInstance(this).hideApps();
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+        }
 
         // 停止速度模拟器
 //        if (speedSimulator != null) {
@@ -421,8 +440,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     }
 
 
-    private final String  free_packName = "com.awell.carsetting";
-    private final String  free_className = "com.awell.carsetting.MainActivity";
+    //private final String  free_packName = "com.awell.carsetting";
+    //private final String  free_className = "com.awell.carsetting.MainActivity";
+
+    private final String  free_packName = "com.google.android.apps.maps";
+    private final String  free_className = "com.google.android.maps.MapsActivity";
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllApp.getId()) {
@@ -433,10 +455,13 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
             //startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
         }else if (v.getId() == binding.hotsetDspApp.getId()) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
-        }else if (v.getId() == binding.hotsetWindowApp.getId()){
-           // startActivity("com.launcher.yfd_ui01", "com.launcher.yfd_ui01.app.AppGridActivity");
-            Intent intent = new Intent(this, AppGridActivity.class);
-            startActivity(intent);
+        } else if (v.getId() == binding.hotsetWindowApp.getId()){
+            View root = findViewById(android.R.id.content);
+            try {
+                GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
+            } catch (Exception e) {
+                Log.w(TAG, "GlobalViewManager.showApps failed, fallback to AppsCustomizeControl", e);
+            }
         }
     }
 
@@ -448,10 +473,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
      */
     private void startActivity(String packName, String className) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(packName);
-
-//        intent.addCategory(Intent.CATEGORY_HOME);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.setAction(Intent.ACTION_MAIN);
         boolean isboot = true;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
@@ -468,7 +489,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                 if (isboot)
                     Settings.System.putString(getContentResolver(), "boot_apk2", packName);
             }
-            Log.i(TAG, "packagename=" + packName);
             startActivity(intent);
         }
 
@@ -650,7 +670,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
-//        startActivity(intent, options.toBundle());
         int freeformWidth = 515;
         int freeformHeight = 352;
         //居中显示
@@ -660,44 +679,5 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         Bundle bundle = options.toBundle();
         startActivity(intent,bundle);
     }
-    private void killApp(Context context, String packageName) {
-        // 需要添加权限 <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-        if (isProcessRunning(context, packageName)) {
-            Log.i(TAG,"lqq,isAppRunning");
-            ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            activityManager.killBackgroundProcesses(packageName);
-            //activityManager.forceStopPackage(packageName);
-        }
 
-    }
-
-    private boolean isAppRunning(Context context, String packageName) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
-        for (ActivityManager.RunningTaskInfo info : list) {
-            assert info.topActivity != null;
-            if (info.topActivity.getPackageName().equals(packageName) ||
-                    Objects.requireNonNull(info.baseActivity).getPackageName().equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean isProcessRunning(Context context, String packageName) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> list = am.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo info : list) {
-            if (info.processName.equals(packageName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i(TAG,"lqq,onStop");
-        //killApp(this.getApplicationContext(), free_packName);
-    }
 }

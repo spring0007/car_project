@@ -1,18 +1,89 @@
 package com.launcher.yfd_ui01.app;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import androidx.core.content.ContextCompat;
 import com.launcher.yfd_ui01.R;
+
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class IconManager {
-    //private Context context;
+    private final Context appContext;
     private static Map<String, Integer> customIcons;
-    
-    public IconManager() {
+    private static volatile IconManager sInstance;
+    // 缓存已解析的 Drawable，避免重复加载
+    private final Map<String, Drawable> drawableCache = new HashMap<>();
+
+    private IconManager(Context context) {
+        this.appContext = context != null ? context.getApplicationContext() : null;
         customIcons = new HashMap<>();
         loadCustomIcons();
+        // 如果有 application context，则校验并预缓存有效资源
+        if (this.appContext != null) {
+            validateAndCacheResources();
+        }
     }
-    
+
+    /**
+     * 初始化单例（建议在 Application 或主 Activity onCreate 时调用一次）
+     */
+    public static void init(Context context) {
+        if (sInstance == null) {
+            synchronized (IconManager.class) {
+                if (sInstance == null) {
+                    sInstance = new IconManager(context);
+                }
+            }
+        }
+    }
+
+    /**
+     * 获取单例，如果未初始化则返回一个临时实例（不建议）
+     */
+    public static IconManager getInstance(Context contextIfNeeded) {
+        if (sInstance == null) {
+            // 尝试初始化一次以保证后续调用安全
+            init(contextIfNeeded != null ? contextIfNeeded.getApplicationContext() : null);
+        }
+        return sInstance;
+    }
+
+    /**
+     * 获取已经初始化的单例（可能为 null，如果未调用 init）
+     */
+    public static IconManager getInstance() {
+        return sInstance;
+    }
+
+    // 定义包名顺序列表
+    public static final List<String> packageOrderList = Arrays.asList(
+            "com.awell.localvideo",
+            "com.awell.localmusic",
+            "com.awell.radio",
+            "com.awell.bluetooth",
+            "com.awell.themesetting"
+            // ... 其他预定义包名
+    );
+
+    /**
+     * 需要显示的应用
+     */
+    public static List<String> needToShowPackageName = Arrays.asList(
+            "com.awell.carsetting", "com.android.browser",
+            "com.android.dialer", "com.android.calculator2",
+            "com.android.deskclock", "com.mediatek.filemanager",
+            "com.android.documentsui", "com.autonavi.amapauto",
+            "com.awell.radio", "com.awell.localmusic", "com.awell.localvideo",
+            "com.awell.backcar", "cn.kuwo.kwmusiccar", "com.awell.bluetooth",
+//            "com.android.chrome","com.google.android.youtube","com.google.android.apps.maps","com.android.vending",
+            "com.awell.canbus", "com.tima.carnet.vt", "com.android.mms", "com.zjinnova.zlink",
+            "com.awell.eqselect", "com.awell.awellmanual","com.awell.themesetting"
+    );
+
+
     /**
      * 加载自定义图标资源
      */
@@ -25,6 +96,7 @@ public class IconManager {
             customIcons.put("com.awell.localmusic", R.drawable.yfd_ui1_music);
             customIcons.put("com.awell.radio", R.drawable.yfd_ui1_radio);
             customIcons.put("com.awell.bluetooth", R.drawable.yfd_ui1_bluetooth);
+            customIcons.put("com.awell.themesetting", R.drawable.yfd_ui1_theme);
 ////          customIcons.put( "com.awell.navigation", R.drawable.yfd_ui1_navi);
 //            customIcons.put("com.android.dialer", R.drawable.yfd_ui1_iphone);
 //            customIcons.put("com.android.calculator2", R.drawable.yfd_ui1_jisuanqi);
@@ -51,9 +123,10 @@ public class IconManager {
             customIcons.put("com.awell.awellmanual", R.drawable.yfd_ui1_dev_tools); //说明书
             customIcons.put("com.google.android.apps.maps", R.drawable.yfd_ui1_maps);
             customIcons.put("com.google.android.youtube", R.drawable.yfd_ui1_youtube);
-//            customIcons.put("com.android.vending", R.drawable.yfd_ui1_playstore);
+            customIcons.put("com.android.vending", R.drawable.yfd_ui1_play_store);
             customIcons.put("com.android.chrome", R.drawable.yfd_ui1_chrome);
             customIcons.put("org.chromium.chrome", R.drawable.yfd_ui1_chrome);
+            customIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
 //            customIcons.put("com.tinyapp.smartcar", R.drawable.yfd_ui1_ggvoice);
 //            customIcons.put("com.awell.update", R.drawable.yfd_ui1_store);
 //            customIcons.put("com.google.android.googlequicksearchbox", R.drawable.yfd_ui1_gg);
@@ -67,6 +140,30 @@ public class IconManager {
         }
     }
 
+    /**
+     * 校验 customIcons 中的资源 id 是否在当前上下文可用，若可用则缓存其 Drawable，否则移除该映射。
+     */
+    private void validateAndCacheResources() {
+        java.util.Iterator<Map.Entry<String, Integer>> it = customIcons.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Integer> entry = it.next();
+            String pkg = entry.getKey();
+            Integer resId = entry.getValue();
+            try {
+                Drawable d = ContextCompat.getDrawable(appContext, resId);
+                if (d != null) {
+                    drawableCache.put(pkg, d);
+                } else {
+                    // resource missing or cannot be loaded, 移除映射
+                    it.remove();
+                }
+            } catch (Exception e) {
+                // 任何异常都视为资源无效并移除
+                it.remove();
+            }
+        }
+    }
+
     public static int getCustomIconsCount() {
         if (customIcons != null) {
             return customIcons.size();
@@ -74,18 +171,34 @@ public class IconManager {
         return 0;
     }
 
-
     /**
-     * 获取应用图标，优先使用自定义图标
+     * 获取应用图标，优先使用自定义图标（返回 Drawable，若无自定义图标则返回 null）
      * @param packageName 应用包名
-     * @return Drawable 图标
+     * @return Drawable 图标或 null
      */
-    public Integer getIcon(String packageName ) {
-        // 检查是否有自定义图标
-        if (customIcons.containsKey(packageName)) {
-            return customIcons.get(packageName);
+    public Drawable getIcon(String packageName) {
+        if (packageName == null) return null;
+
+        // 先返回缓存的 Drawable（若存在）
+        if (drawableCache.containsKey(packageName)) {
+            return drawableCache.get(packageName);
         }
-        // 使用默认图标
-        return 0;
+
+        // 再尝试通过 resource id 加载
+        if (customIcons != null && customIcons.containsKey(packageName) && appContext != null) {
+            Integer resId = customIcons.get(packageName);
+            try {
+                Drawable d = ContextCompat.getDrawable(appContext, resId);
+                if (d != null) {
+                    drawableCache.put(packageName, d);
+                    return d;
+                }
+            } catch (Exception e) {
+                // 记录并回退为 null
+                android.util.Log.w("IconManager", "Failed to load icon resource for " + packageName + ": " + resId, e);
+            }
+        }
+
+        return null;
     }
 }

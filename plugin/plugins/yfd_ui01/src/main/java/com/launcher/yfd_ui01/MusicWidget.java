@@ -361,7 +361,11 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ui7_music_icon));
+        try {
+            android.graphics.drawable.Drawable d = androidx.core.content.ContextCompat.getDrawable(mContext, R.drawable.ui7_music_icon);
+            if (d != null) ivLoadnim.setImageDrawable(d);
+        } catch (Exception ignored) {
+        }
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
