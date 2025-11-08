@@ -54,7 +54,7 @@ android {
 }
 
 
-def isPlugin = false
+def isPlugin = true
 
 
 if (isPlugin) {

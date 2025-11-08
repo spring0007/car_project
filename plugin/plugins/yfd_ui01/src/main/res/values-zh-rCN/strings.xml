@@ -34,4 +34,9 @@
     <string name="friday">周五</string>
     <string name="saturday">周六</string>
     <string name="sunday">周日</string>
+    <string name="unable_launch_application">无法启动应用</string>
+    <string name="error_launching_application">启动应用时出错</string>
+    <string name="unable_uninstall_system_applications">无法卸载系统应用</string>
+    <string name="unable_uninstall_current_desktop_application">无法卸载当前桌面应用</string>
+    <string name="error_uninstalling_application">卸载应用时出错</string>
 </resources>

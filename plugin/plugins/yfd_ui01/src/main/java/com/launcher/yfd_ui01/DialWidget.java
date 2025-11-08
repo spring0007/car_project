@@ -58,13 +58,13 @@ public class DialWidget extends LinearLayout {
         }else{
             tv_am_pm.setText(R.string.pm);
         }
-        tv_date.setText(String.format("%d-%d", month, day));
+        tv_date.setText(String.format("%02d-%02d", month, day));
         String[] formats=getResources().getStringArray(R.array.week_str);
         tv_week.setText(formats[week]);
 
     }
 
-    public void setupDigitalTimeUpdater() {
+    private void setupDigitalTimeUpdater() {
         timeHandler = new Handler();
         timeRunnable = new Runnable() {
             @Override
@@ -91,9 +91,9 @@ public class DialWidget extends LinearLayout {
 
     public void stopAnimation(){
         if (isAnimationRunning) {
-            analogClockView.startAnimation();
+            analogClockView.stopAnimation();
         }
-        timeHandler.post(timeRunnable);
+        timeHandler.removeCallbacks(timeRunnable);
 
     }
 }

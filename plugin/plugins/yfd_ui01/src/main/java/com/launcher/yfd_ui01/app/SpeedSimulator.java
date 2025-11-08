@@ -90,8 +90,8 @@ public class SpeedSimulator {
         return currentSpeed;
     }
 
-    //如下实例化及关闭动画
-//    // 创建速度模拟器
+    //oncreate如下实例化及关闭动画
+//    //1. 创建速度模拟器
 //    speedSimulator = new SpeedSimulator(new SpeedSimulator.SpeedChangeListener() {
 //        @Override
 //        public void onSpeedChanged(int speed) {
@@ -111,6 +111,7 @@ public class SpeedSimulator {
 //        speedSimulator.startSimulation();
 //
 
+    //2. 在onPause()方法中关闭动画
 //    @Override
 //    protected void onPause() {
 //        super.onPause();

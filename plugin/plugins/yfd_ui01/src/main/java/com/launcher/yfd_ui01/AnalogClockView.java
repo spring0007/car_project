@@ -70,7 +70,7 @@ public class AnalogClockView extends View {
         secondAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                secondRotation = (float) animation.getAnimatedValue();
+               // secondRotation = (float) animation.getAnimatedValue();//有问题,已解决,屏蔽此处
                 updateTimeFromSystem();
                 invalidate();
             }
@@ -82,12 +82,15 @@ public class AnalogClockView extends View {
         int hours = calendar.get(Calendar.HOUR);
         int minutes = calendar.get(Calendar.MINUTE);
         int seconds = calendar.get(Calendar.SECOND);
+        int mill_seconds = calendar.get(Calendar.MILLISECOND);
 
         // 计算时针角度（考虑分钟的影响）
         hourRotation = (hours * 30) + (minutes * 0.5f);
 
         // 计算分针角度（考虑秒针的影响）
         minuteRotation = (minutes * 6) + (seconds * 0.1f);
+
+        secondRotation = (seconds * 6) + (mill_seconds * 0.006f);
     }
 
     @Override
@@ -99,7 +102,7 @@ public class AnalogClockView extends View {
 
         // 计算缩放因子，使时钟适应View大小
         int minSize = Math.min(w, h);
-        float bgWidth = clockBackground.getWidth();
+        //float bgWidth = clockBackground.getWidth();
         //scaleFactor = (minSize * 0.8f) / bgWidth;
         
         // 如果没有运行动画，则开始动画

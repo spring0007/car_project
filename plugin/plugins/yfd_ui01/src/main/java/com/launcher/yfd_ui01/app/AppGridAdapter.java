@@ -2,6 +2,9 @@ package com.launcher.yfd_ui01.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +69,50 @@ public class AppGridAdapter extends BaseAdapter {
                         context.startActivity(intent);
                     } else {
                         // 如果无法启动应用，可以提示用户或进行其他处理
-                        Toast.makeText(context, "无法启动应用", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.unable_launch_application, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(context, "启动应用时出错", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.error_launching_application, Toast.LENGTH_SHORT).show();
                 }
             }
         });
+        // 在 AppGridAdapter.java 的 getView 方法中找到 setOnLongClickListener 部分
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                try {
+                    // 获取当前应用信息
+                    AppInfo appInfo = (AppInfo) getItem(position);
+                    if (appInfo == null) {
+                        return false;
+                    }
+
+                    String packageName = appInfo.getPackage_name();
+
+                    // 检查是否为系统应用或不能卸载的应用
+                    if (isSystemApp(packageName)) {
+                        // 提示用户不能卸载系统应用
+                        Toast.makeText(context, R.string.unable_uninstall_system_applications, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
+                    // 检查是否为当前Launcher应用
+                    if (isCurrentLauncherApp(packageName)) {
+                        Toast.makeText(context, R.string.unable_uninstall_current_desktop_application, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+
+                    // 执行卸载操作
+                    uninstallApp(packageName);
+
+                } catch (Exception e) {
+                    Toast.makeText(context, R.string.error_uninstalling_application, Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+
 
 
         AppInfo appInfo = appList.get(position);
@@ -87,4 +126,33 @@ public class AppGridAdapter extends BaseAdapter {
         ImageView icon;
         TextView name;
     }
+
+    // 检查是否为系统应用
+    private boolean isSystemApp(String packageName) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
+            return (appInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    // 检查是否为当前Launcher应用
+    private boolean isCurrentLauncherApp(String packageName) {
+        return context.getPackageName().equals(packageName);
+    }
+
+    // 执行卸载操作
+    private void uninstallApp(String packageName) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_DELETE);
+            intent.setData(Uri.parse("package:" + packageName));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "无法启动卸载程序", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

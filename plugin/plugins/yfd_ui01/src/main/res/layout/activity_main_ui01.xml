@@ -26,15 +26,16 @@
         android:background="@drawable/ui7_car_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
+        android:gravity="center|bottom"
         android:layout_marginTop="206dp"
         android:layout_marginStart="45dp"
         >
-        <ImageButton
+        <ImageView
             android:id="@+id/car_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ui7_dail_hour"/>
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/yfd_ui1_car_icon"/>
     </LinearLayout>
     <!--car speed -->
 

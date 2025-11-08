@@ -1,0 +1,30 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="music">Music</string>
+    <string name="music_artist">singer</string>
+    <string name="click_play_music">Song title</string>
+    <string name="unknown">Unknown</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">All applications</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Desktop app</string>
+    <string name="am">Morning</string>
+    <string name="pm">Afternoon</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="unable_launch_application">Unable to launch the app</string>
+    <string name="error_launching_application">Error launching the app</string>
+    <string name="unable_uninstall_system_applications">System apps cannot be uninstalled</string>
+    <string name="unable_uninstall_current_desktop_application">The current desktop app cannot be uninstalled</string>
+    <string name="error_uninstalling_application">Error uninstalling the app</string>
+</resources>
