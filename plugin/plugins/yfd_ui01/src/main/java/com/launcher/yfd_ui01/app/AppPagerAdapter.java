@@ -3,10 +3,12 @@ package com.launcher.yfd_ui01.app;
 import static com.launcher.yfd_ui01.app.AppGridView.ITEMS_PER_PAGE;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -17,12 +19,26 @@ import com.awell.addapp.AppInfo;
 import java.util.List;
 
 /**
- * PagerAdapter that creates a RecyclerView (GridLayout) per page. Each page is a RecyclerView
- * with a GridLayoutManager and uses AppGridRecyclerAdapter for items.
+ * 优化的PagerAdapter，为每个页面创建RecyclerView（网格布局）
  */
 public class AppPagerAdapter extends PagerAdapter {
-    private Context context;
-    private List<List<AppInfo>> pages;
+    private final Context context;
+    private final List<List<AppInfo>> pages;
+    
+    // 预创建的共享对象，避免重复创建
+    private final GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
+        @Override
+        public int getSpanSize(int position) {
+            return 1;
+        }
+    };
+    
+    // 共享的ItemAnimator，禁用变化动画
+    private final DefaultItemAnimator sharedAnimator = createSharedItemAnimator();
+    
+    // 共享的ItemDecoration
+    private final RecyclerView.ItemDecoration sharedItemDecoration = 
+        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 28, 30, true);
 
     public AppPagerAdapter(Context context, List<List<AppInfo>> pages, int itemsPerPage) {
         this.context = context;
@@ -42,39 +58,90 @@ public class AppPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        Context ctx = container.getContext();
-
-        RecyclerView recyclerView = new RecyclerView(ctx);
-        // Grid with 6 columns to mimic previous GridView (6 columns x 3 rows)
-        GridLayoutManager glm = new GridLayoutManager(ctx, 6, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(glm);
-        recyclerView.setHasFixedSize(true);
-        // Cache enough child views for one or two pages to reduce rebinds while paging
-        try {
-            recyclerView.setItemViewCacheSize(ITEMS_PER_PAGE * 2);
-        } catch (Exception ignored) {}
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-
-        AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(ctx, pages.get(position));
-        recyclerView.setAdapter(adapter);
-
-        // Improve animations and avoid change animations which can be heavy during updates
-        try {
-            androidx.recyclerview.widget.DefaultItemAnimator animator = new androidx.recyclerview.widget.DefaultItemAnimator();
-            animator.setSupportsChangeAnimations(false);
-            recyclerView.addItemDecoration(AppGridRecyclerAdapter.getGridItemDecoration(ctx, 6, 25, true)); //false 去掉首行top
-        } catch (Exception ignored) {
-        }
-
-        // Some spacing can be added via ItemDecoration if desired (omitted for brevity)
-
-        container.addView(recyclerView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        RecyclerView recyclerView = createRecyclerView(container.getContext());
+        setupRecyclerView(recyclerView, position);
+        container.addView(recyclerView);
+        Log.i("AppPagerAdapter", "lqq,instantiateItem: " + position);
         return recyclerView;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
+        if (object instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) object;
+            // 清理资源
+            recyclerView.setAdapter(null);
+            recyclerView.setLayoutManager(null);
+            container.removeView(recyclerView);
+        }
+    }
+
+    /**
+     * 创建并配置RecyclerView
+     */
+    private RecyclerView createRecyclerView(Context ctx) {
+        RecyclerView recyclerView = new RecyclerView(ctx);
+        
+        // 使用预创建的GridLayoutManager
+        GridLayoutManager glm = new GridLayoutManager(ctx, 6, RecyclerView.VERTICAL, false);
+        glm.setSpanSizeLookup(spanSizeLookup);
+        recyclerView.setLayoutManager(glm);
+        
+        // 性能优化配置
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        
+        // 设置缓存大小
+        recyclerView.setItemViewCacheSize(ITEMS_PER_PAGE);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        
+        return recyclerView;
+    }
+
+    /**
+     * 配置RecyclerView
+     */
+    private void setupRecyclerView(RecyclerView recyclerView, int position) {
+        if (pages == null || position < 0 || position >= pages.size()) return;
+        
+        // 设置适配器
+        AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(context, pages.get(position));
+        recyclerView.setAdapter(adapter);
+        
+        // 使用共享的ItemDecoration和ItemAnimator
+        recyclerView.addItemDecoration(sharedItemDecoration);
+        recyclerView.setItemAnimator(sharedAnimator);
+    }
+
+    /**
+     * 创建共享的ItemAnimator
+     */
+    private DefaultItemAnimator createSharedItemAnimator() {
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setSupportsChangeAnimations(false);
+        animator.setAddDuration(100);    // 减少动画时间
+        animator.setRemoveDuration(100);
+        animator.setMoveDuration(100);
+        animator.setChangeDuration(0);   // 禁用变化动画
+        return animator;
+    }
+
+    /**
+     * 数据更新方法
+     */
+    public void updateData(List<List<AppInfo>> newPages) {
+        this.pages.clear();
+        if (newPages != null) {
+            this.pages.addAll(newPages);
+        }
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        // 强制刷新所有页面，确保数据一致性
+        return POSITION_NONE;
     }
 }

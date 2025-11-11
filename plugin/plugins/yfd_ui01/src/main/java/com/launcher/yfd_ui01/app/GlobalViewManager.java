@@ -4,14 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.Nullable;
-
-import com.awell.launcher2.LauncherModel;
-import com.launcher.yfd_ui01.app.AppGridView;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -97,7 +90,7 @@ public class GlobalViewManager {
                         ViewGroup.LayoutParams.MATCH_PARENT
                 );
                 if (DEBUG) {
-                    Log.i(TAG, "showApps: huang show all apps=>");
+                    Log.i(TAG, "showApps: show all apps=>");
                 }
                 if (gridView != null) gridView.requestFocus();
                 mAllIsShowing = true;

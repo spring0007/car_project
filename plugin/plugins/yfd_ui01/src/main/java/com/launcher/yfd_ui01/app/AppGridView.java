@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.content.res.Resources;
@@ -63,19 +65,19 @@ public class AppGridView extends RelativeLayout {
     }
     private void init(Context context) {
     // View 中的布局加载 — 使用 view 的上下文以确保插件/宿主资源能被正确解析
-    LayoutInflater.from(getContext()).inflate(R.layout.app_grid_view, this, true);
+    LayoutInflater.from(context).inflate(R.layout.app_grid_view, this, true);
         
-        initViews();
+        initViews(context);
         loadApps(context);
         setupViewPagerListener();
         // 注册应用安装/卸载监听器
         registerPackageReceiver(context);
     }
 
-    private void initViews() {
+    private void initViews(Context context) {
         viewPager = findViewById(R.id.viewPager);
         pageIndicator = findViewById(R.id.pageIndicator);
-        iconManager = IconManager.getInstance(getContext());
+        iconManager = IconManager.getInstance(context);
     }
 
     private void loadApps(Context context) {
@@ -96,39 +98,39 @@ public class AppGridView extends RelativeLayout {
                     int end = Math.min(i + ITEMS_PER_PAGE, allApps.size());
                     pages.add(new ArrayList<>(allApps.subList(i, end)));
                 }
-
+                Log.i(TAG, " lqq,pages:SUCCESS " );
                 // Preload icons for the first couple of pages to warm Glide cache and
                 // reduce the perceived delay when the user opens the app grid.
-                try {
-                    int preloadCount = Math.min(allApps.size(), ITEMS_PER_PAGE * 2);
-                    java.util.List<Object> preloadModels = new java.util.ArrayList<>();
-                    for (int i = 0; i < preloadCount; i++) {
-                        AppInfo a = allApps.get(i);
-                        if (a != null) {
-                            if (a.getIcon() != null) {
-                                preloadModels.add(a.getIcon());
-                            } else if (a.getPackage_name() != null) {
-                                // try to get custom icon from IconManager
-                                try {
-                                    com.launcher.yfd_ui01.app.IconManager im = com.launcher.yfd_ui01.app.IconManager.getInstance(getContext());
-                                    if (im != null) {
-                                        android.graphics.drawable.Drawable d = im.getIcon(a.getPackage_name());
-                                        if (d != null) preloadModels.add(d);
-                                    }
-                                } catch (Exception ignored) {}
-                            }
-                        }
-                    }
-                    if (!preloadModels.isEmpty()) {
-                        com.launcher.yfd_ui01.app.IconLoader.preloadIcons(context, preloadModels);
-                    }
-                } catch (Exception ignored) {
-                }
+//                try {
+//                    int preloadCount = Math.min(allApps.size(), ITEMS_PER_PAGE * 2);
+//                    java.util.List<Object> preloadModels = new java.util.ArrayList<>();
+//                    for (int i = 0; i < preloadCount; i++) {
+//                        AppInfo a = allApps.get(i);
+//                        if (a != null) {
+//                            if (a.getIcon() != null) {
+//                                preloadModels.add(a.getIcon());
+//                            } else if (a.getPackage_name() != null) {
+//                                // try to get custom icon from IconManager
+//                                try {
+//                                    if (iconManager != null) {
+//                                        Drawable d = iconManager.getIcon(a.getPackage_name());
+//                                        if (d != null) preloadModels.add(d);
+//                                    }
+//                                } catch (Exception ignored) {}
+//                            }
+//                        }
+//                    }
+//                    if (!preloadModels.isEmpty()) {
+//                        com.launcher.yfd_ui01.app.IconLoader.preloadIcons(context, preloadModels);
+//                    }
+//                } catch (Exception ignored) {
+//                }
 
                 // Post adapter setup back to UI thread
                 post(() -> {
                     try {
                         AppPagerAdapter pagerAdapter = new AppPagerAdapter(context, pages, ITEMS_PER_PAGE);
+                        Log.i(TAG, " lqq,pagerAdapter:init " );
                         viewPager.setAdapter(pagerAdapter);
                         setupPageIndicator(context);
                     } catch (Exception e) {
@@ -138,6 +140,7 @@ public class AppGridView extends RelativeLayout {
                         // clear reference to background thread when done
                         loadThread = null;
                     }
+                    Log.i(TAG, " lqq,setAdapter:SUCCESS " );
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error loading apps in background", e);
@@ -156,30 +159,36 @@ public class AppGridView extends RelativeLayout {
     private ArrayList<AppInfo> getAllAppInfo(Context ctx, boolean isFilterSystem) {
         ArrayList<AppInfo> appBeanList = new ArrayList<>();
         AppInfo bean = null;
+        ApplicationInfo appInfo = null;
         PackageManager packageManager = ctx.getPackageManager();
-        List<PackageInfo> list = packageManager.getInstalledPackages(0);
+        List<PackageInfo> list = packageManager.getInstalledPackages(PackageManager.GET_META_DATA);
+
+        final int FLAG_SYSTEM = android.content.pm.ApplicationInfo.FLAG_SYSTEM;
         for (PackageInfo p : list) {
-            bean = new AppInfo();
-            //int randome = new Random().nextInt(5);
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager));
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
-            String pckaName = p.applicationInfo.packageName;
-            bean.setPackage_name(pckaName);
-            int flags = p.applicationInfo.flags;
-            bean.setFlags(flags);
-            Log.i(TAG, "bean: " + bean.getPackage_name() +",flags="+(flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM));
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && IconManager.needToShowPackageName.contains(pckaName)) {
-                appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(pckaName)) {
-                appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(pckaName)) {
+            appInfo = p.applicationInfo;
+            String pckaName = appInfo.packageName;
+            int flags = appInfo.flags;
+
+            // 检查是否需要过滤掉该应用
+            boolean isSystemApp = (flags & FLAG_SYSTEM) != 0;
+            if (!isSystemApp && Utils.filterAppPackageName.contains(pckaName)) {
+                continue;
+            }
+            // 检查是否需要显示该应用
+            if (!isSystemApp || IconManager.needToShowPackageName.contains(pckaName)) {
+                bean = new AppInfo();
+                bean.setIcon(appInfo.loadIcon(packageManager));
+                bean.setLabel(packageManager.getApplicationLabel(appInfo).toString());
+                bean.setPackage_name(pckaName);
+                bean.setFlags(flags);
                 appBeanList.add(bean);
             }
         }
 
+        Log.i(TAG, " bean:2 ");
         for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            android.graphics.drawable.Drawable icon = null;
+            Drawable icon = null;
             if (iconManager != null) {
                 icon = iconManager.getIcon(str);
             }
@@ -205,7 +214,6 @@ public class AppGridView extends RelativeLayout {
                 remainingApps.add(app);
             }
         }
-
         // 按 packageOrderList 的顺序排序 orderedApps
         Collections.sort(orderedApps, new Comparator<AppInfo>() {
             @Override
@@ -228,7 +236,7 @@ public class AppGridView extends RelativeLayout {
         appBeanList.clear();
         appBeanList.addAll(orderedApps);
         appBeanList.addAll(remainingApps);
-
+        Log.i(TAG, " lqq,appBeanList:SUCCESS " );
         return appBeanList;
     }
 
@@ -468,6 +476,8 @@ public class AppGridView extends RelativeLayout {
                 }
                 pageChangeListener = null;
             }
+            if(iconManager!=null)
+                iconManager.clearCache();
 
         } catch (Exception e) {
             Log.w(TAG, "closeView encountered exception", e);

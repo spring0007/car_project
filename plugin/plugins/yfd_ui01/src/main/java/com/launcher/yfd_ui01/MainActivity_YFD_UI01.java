@@ -451,7 +451,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == binding.hotsetBtApp.getId()) {
             startFreeFormActivity(free_packName,free_className);
-            //setLauncherPackage(this,"com.awell.bluetooth");
             //startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
         }else if (v.getId() == binding.hotsetDspApp.getId()) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");

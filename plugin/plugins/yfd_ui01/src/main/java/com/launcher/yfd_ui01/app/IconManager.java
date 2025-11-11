@@ -1,5 +1,6 @@
 package com.launcher.yfd_ui01.app;
 
+import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
@@ -7,15 +8,24 @@ import com.launcher.yfd_ui01.R;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class IconManager {
     private final Context appContext;
     private static Map<String, Integer> customIcons;
     private static volatile IconManager sInstance;
-    // 缓存已解析的 Drawable，避免重复加载
-    private final Map<String, Drawable> drawableCache = new HashMap<>();
+
+    private static final int MAX_CACHE_SIZE = 50; // 最大缓存图标数量
+    // 使用LRU缓存策略
+    private final Map<String, Drawable> drawableCache = new LinkedHashMap<String, Drawable>(16, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, Drawable> eldest) {
+            return size() > MAX_CACHE_SIZE;
+        }
+    };
 
     private IconManager(Context context) {
         this.appContext = context != null ? context.getApplicationContext() : null;
@@ -23,7 +33,7 @@ public class IconManager {
         loadCustomIcons();
         // 如果有 application context，则校验并预缓存有效资源
         if (this.appContext != null) {
-            validateAndCacheResources();
+           // validateAndCacheResources();
         }
     }
 
@@ -60,10 +70,14 @@ public class IconManager {
 
     // 定义包名顺序列表
     public static final List<String> packageOrderList = Arrays.asList(
-            "com.awell.localvideo",
             "com.awell.localmusic",
             "com.awell.radio",
+            "com.awell.localvideo",
             "com.awell.bluetooth",
+            "com.awell.dspeffect",
+            "com.google.android.apps.maps",
+            "com.google.android.youtube",
+            "com.android.chrome",
             "com.awell.themesetting"
             // ... 其他预定义包名
     );
@@ -72,15 +86,15 @@ public class IconManager {
      * 需要显示的应用
      */
     public static List<String> needToShowPackageName = Arrays.asList(
-            "com.awell.carsetting", "com.android.browser",
-            "com.android.dialer", "com.android.calculator2",
-            "com.android.deskclock", "com.mediatek.filemanager",
+            "com.android.browser", "com.android.dialer", "com.android.mms","com.android.calculator2","com.android.deskclock", "com.mediatek.filemanager",
             "com.android.documentsui", "com.autonavi.amapauto",
             "com.awell.radio", "com.awell.localmusic", "com.awell.localvideo",
             "com.awell.backcar", "cn.kuwo.kwmusiccar", "com.awell.bluetooth",
 //            "com.android.chrome","com.google.android.youtube","com.google.android.apps.maps","com.android.vending",
-            "com.awell.canbus", "com.tima.carnet.vt", "com.android.mms", "com.zjinnova.zlink",
-            "com.awell.eqselect", "com.awell.awellmanual","com.awell.themesetting"
+            "com.awell.canbus", "com.tima.carnet.vt",  "com.zjinnova.zlink",
+            "com.awell.eqselect", "com.awell.awellmanual","com.awell.themesetting", "com.awell.carsetting",
+            "com.android.chrome", "com.google.android.youtube",
+            "com.google.android.apps.maps", "com.android.vending","org.chromium.chrome"
     );
 
 
@@ -200,5 +214,42 @@ public class IconManager {
         }
 
         return null;
+    }
+    
+    /**
+     * 清理缓存
+     */
+    public synchronized void clearCache() {
+        drawableCache.clear();
+    }
+    
+    /**
+     * 根据内存压力调整缓存大小
+     */
+    public void onTrimMemory(int level) {
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+            synchronized (this) {
+                if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
+                    // 内存严重不足，清理大部分缓存
+                    trimCacheToSize(MAX_CACHE_SIZE / 4);
+                } else if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
+                    // 内存中度不足，清理一半缓存
+                    trimCacheToSize(MAX_CACHE_SIZE / 2);
+                }
+            }
+        }
+    }
+    
+    /**
+     * 将缓存裁剪到指定大小
+     */
+    private synchronized void trimCacheToSize(int targetSize) {
+        if (drawableCache.size() <= targetSize) return;
+        
+        Iterator<Map.Entry<String, Drawable>> iterator = drawableCache.entrySet().iterator();
+        while (iterator.hasNext() && drawableCache.size() > targetSize) {
+            iterator.next();
+            iterator.remove();
+        }
     }
 }

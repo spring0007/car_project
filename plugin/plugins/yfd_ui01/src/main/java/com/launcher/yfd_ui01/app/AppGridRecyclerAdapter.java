@@ -20,8 +20,6 @@ import com.awell.addapp.AppInfo;
 import com.launcher.yfd_ui01.R;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * RecyclerView adapter for a single page (grid) of apps.
@@ -29,69 +27,59 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecyclerAdapter.Holder> {
     private final Context context;
     private List<AppInfo> appList;
-    // Use centralized IconLoader for Glide RequestOptions and loading
-
-    // Cache of ItemDecoration instances keyed by spanCount_spacingDp_includeEdge
-    private static final Map<String, RecyclerView.ItemDecoration> decorationCache = new ConcurrentHashMap<>();
 
     public AppGridRecyclerAdapter(Context context, List<AppInfo> appList) {
         this.context = context;
         this.appList = appList;
-        // Enable stable ids to help RecyclerView keep view holders and reduce rebinds
-        try {
-            setHasStableIds(true);
-        } catch (Exception ignored) {
-        }
+        // 启用稳定ID以提高性能
+        setHasStableIds(true);
     }
 
     /**
-     * Create a grid spacing decoration that avoids double spacing at edges.
-     * Uses the common formula to distribute spacing across columns so outer edges aren't doubled.
-     * @param ctx context for converting dp to px
-     * @param spanCount number of columns
-     * @param spacingDp desired spacing in dp
+     * 创建网格间距装饰器
      */
-    private static RecyclerView.ItemDecoration createGridSpacingItemDecoration(final Context ctx, final int spanCount, final int spacingDp, final boolean includeEdge) {
-        final int spacing = (int) (ctx.getResources().getDisplayMetrics().density * spacingDp + 0.5f);
+    public static RecyclerView.ItemDecoration createGridSpacingItemDecoration(final int spanCount, 
+                                                                              final int leftSpacing, 
+                                                                              final int topSpacing, 
+                                                                              final boolean includeEdge) {
         return new RecyclerView.ItemDecoration() {
             @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                int position = parent.getChildAdapterPosition(view); // item position
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, 
+                                     @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
                 if (position == RecyclerView.NO_POSITION) return;
-                int column = position % spanCount; // item column
-
-                int total = 0;
-                if (parent.getAdapter() != null) total = parent.getAdapter().getItemCount();
-                int rows = (int) Math.ceil((double) total / spanCount);
-                int currentRow = position / spanCount;
-
+                
+                int column = position % spanCount;
+                
                 if (includeEdge) {
                     // left and right spacing: distribute so that edges get spacing and inter-item gaps are spacing
-                    outRect.left = spacing - column * spacing / spanCount;
-                    outRect.right = (column + 1) * spacing / spanCount;
+                    float leftPercent = (float)(spanCount - column) / spanCount;
+                    float rightPercent = (float)(column + 1) / spanCount;
 
-                    // top spacing only for rows after the first
-                    outRect.top = currentRow == 0 ? spacing : spacing;
-                    // bottom: avoid extra bottom for last row if you want tighter fit
-                    outRect.bottom = (currentRow == rows - 1) ? spacing : spacing;
+                    outRect.left = (int)(leftSpacing * leftPercent);
+                    outRect.right = (int)(leftSpacing * rightPercent);
+
+                    /// 上下间距
+                    if (position < spanCount) { // top edge
+                        outRect.top = topSpacing;
+                    }
+                    outRect.bottom = topSpacing; // item bottom
                 } else {
                     // no edge spacing: full spacing only between items
-                    outRect.left = column * spacing / spanCount;
-                    outRect.right = spacing - (column + 1) * spacing / spanCount;
+                    float leftPercent = (float)(spanCount - column - 1) / spanCount;
+                    float rightPercent = (float)column / spanCount;
 
-                    outRect.top = currentRow == 0 ? 0 : spacing;
-                    outRect.bottom = (currentRow == rows - 1) ? 0 : 0;
+                    outRect.left = (int)(leftSpacing * leftPercent);
+                    outRect.right = (int)(leftSpacing * rightPercent);
+
+                    if (position >= spanCount) {
+                        outRect.top = topSpacing; // item top
+                    }
+                    outRect.bottom =0;
+
                 }
             }
         };
-    }
-
-    /**
-     * Get a cached ItemDecoration for the given parameters. The decoration is created once and reused.
-     */
-    public static RecyclerView.ItemDecoration getGridItemDecoration(final Context ctx, final int spanCount, final int spacingDp, final boolean includeEdge) {
-        String key = spanCount + "_" + spacingDp + "_" + (includeEdge ? "1" : "0");
-        return decorationCache.computeIfAbsent(key, k -> createGridSpacingItemDecoration(ctx, spanCount, spacingDp, includeEdge));
     }
 
     public void setAppList(List<AppInfo> list) {
@@ -109,20 +97,26 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         if (appList == null || position < 0 || position >= appList.size()) return;
+        
         AppInfo appInfo = appList.get(position);
         holder.name.setText(appInfo.getLabel());
 
-        // Use centralized IconLoader to load icons with shared RequestOptions and caching
-        try {
-            IconLoader.loadIcon(holder.icon.getContext(), appInfo.getIcon(), holder.icon);
-        } catch (Exception e) {
-            try {
-                holder.icon.setImageDrawable(appInfo.getIcon());
-            } catch (Exception ignored) {
-            }
-        }
+        // 优化图片加载：直接设置图片，避免异常处理的开销
+        holder.icon.setImageDrawable(appInfo.getIcon());
+        
+        // 预加载点击事件所需的资源
+        holder.itemView.setTag(appInfo);
+        holder.itemView.setOnClickListener(clickListener);
+        holder.itemView.setOnLongClickListener(longClickListener);
+    }
 
-        holder.itemView.setOnClickListener(v -> {
+    // 使用预定义的监听器避免重复创建
+    private final View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AppInfo appInfo = (AppInfo) v.getTag();
+            if (appInfo == null) return;
+            
             try {
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(appInfo.getPackage_name());
                 if (intent != null) {
@@ -133,9 +127,15 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
             } catch (Exception e) {
                 Toast.makeText(context, R.string.error_launching_application, Toast.LENGTH_SHORT).show();
             }
-        });
+        }
+    };
 
-        holder.itemView.setOnLongClickListener(v -> {
+    private final View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            AppInfo appInfo = (AppInfo) v.getTag();
+            if (appInfo == null) return true;
+            
             try {
                 if (isSystemApp(appInfo.getPackage_name())) {
                     Toast.makeText(context, R.string.unable_uninstall_system_applications, Toast.LENGTH_SHORT).show();
@@ -150,8 +150,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
                 Toast.makeText(context, R.string.error_uninstalling_application, Toast.LENGTH_SHORT).show();
             }
             return true;
-        });
-    }
+        }
+    };
 
     @Override
     public int getItemCount() {
@@ -160,12 +160,14 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
 
     @Override
     public long getItemId(int position) {
-        if (appList == null || position < 0 || position >= appList.size()) return RecyclerView.NO_ID;
+        if (appList == null || position < 0 || position >= appList.size()) 
+            return RecyclerView.NO_ID;
+        
         AppInfo info = appList.get(position);
         if (info == null) return position;
+        
         String pkg = info.getPackage_name();
-        if (pkg != null) return pkg.hashCode();
-        return position;
+        return pkg != null ? pkg.hashCode() : position;
     }
 
     static class Holder extends RecyclerView.ViewHolder {

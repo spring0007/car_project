@@ -7,7 +7,6 @@
         tools:ignore="QueryAllPackagesPermission" />
     <!-- 或者针对特定版本 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <application
         android:allowBackup="true"
