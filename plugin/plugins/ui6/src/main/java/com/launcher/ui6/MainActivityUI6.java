@@ -5,32 +5,24 @@ import static com.awell.utils.Utils.startWallpaper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -39,14 +31,13 @@ import androidx.core.content.ContextCompat;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
-import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.launcher.ui6.databinding.ActivityMainUi6Binding;
+import com.launcher.ui6.databinding.DialWidgetBinding;
 import com.launcher.ui6.databinding.MusicWidgetBinding;
-
+import com.launcher.ui6.view.DialWidget;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Method;
 
 
 public class MainActivityUI6 extends Activity implements View.OnClickListener {
@@ -54,6 +45,8 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
     private ActivityMainUi6Binding binding;
     private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
+    private DialWidgetBinding dialWidgetBinding;
+    private DialWidget dialWidget;
     private AwellMediaControl mediaControl;
     private final int MSG_UPDATE_SPEED = 1;
     private final int MSG_CLEAR_SPEED = 2;
@@ -76,7 +69,9 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
-        setLauncherPackage(this.getApplicationContext());
+        dialWidgetBinding = binding.layoutDialWidget;
+        dialWidget = dialWidgetBinding.dialWidgetLayout;
+        dialWidget.findViews(this,dialWidget);
         setContentView(binding.getRoot());
 
         initReceiver();
@@ -90,6 +85,19 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
 
         updateSpeedUnitText();
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(dialWidget!= null)
+            dialWidget.startAnimation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(dialWidget!= null)
+            dialWidget.stopAnimation();
     }
 
     @Override
@@ -237,6 +245,10 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
         filter.addAction("CANBUS_CHANGE_SPEED_Unit");
         filter.addAction("top_session_package_change");
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_DATE_CHANGED);
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
     }
@@ -289,6 +301,18 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
                     Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
                     break;
+                case Intent.ACTION_TIME_CHANGED:
+                    // 用户手动更改了时间
+                case Intent.ACTION_TIMEZONE_CHANGED:
+                    // 时区发生了变化
+                case Intent.ACTION_DATE_CHANGED:
+                    // 日期发生了变化
+                case Intent.ACTION_TIME_TICK:
+                    //系统时间变化
+                    if(dialWidget!= null)
+                        dialWidget.updateTimeSysem();
+                    break;
+
             }
 
         }
@@ -548,45 +572,5 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         startWallpaper();
     }
 
-    //freeform模式
-    private static final int WINDOWING_MODE_FREEFORM = 5;
-    private void setLauncherPackage(Context mContext){
-
-
-
-        //获取屏幕高宽
-        DisplayMetrics metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int screenWidth = metric.widthPixels;
-        int screenHeight = metric.heightPixels;
-
-        //Intent intent = new Intent(this, FreeformActivity.class);
-        PackageManager packageManager = mContext.getPackageManager();
-        Intent intent = packageManager.getLaunchIntentForPackage("com.autonavi.amapauto");//"com.android.settings"
-        //com.autonavi.amapauto/com.autonavi.amapauto.MainMapActivity
-        intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ActivityOptions activityOptions = ActivityOptions.makeBasic();
-        //设置为freeform模式
-        try {
-            Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
-            method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //freeform模式下自由窗口的大小
-        int freeformWidth = 400;
-        int freeformHeight = 400;
-        //居中显示
-        int left = screenWidth / 2 - freeformWidth / 2;
-        int top = screenHeight / 2 - freeformHeight / 2;
-        int right = screenWidth / 2 + freeformWidth / 2;
-        int bottom = screenHeight / 2 + freeformHeight / 2;
-
-        activityOptions.setLaunchBounds(new Rect(left,top,right,bottom));
-        Bundle bundle = activityOptions.toBundle();
-        startActivity(intent,bundle);
-
-
-    }
 
 }

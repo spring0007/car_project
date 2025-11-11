@@ -10,9 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Plugin6_Theme"
-        android:resizeableActivity="true"
-        >
+        android:theme="@style/Plugin6_Theme">
         <activity
             android:name=".MainActivityUI6"
             android:enabled="true"
