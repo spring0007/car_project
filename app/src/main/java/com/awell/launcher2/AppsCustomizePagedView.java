@@ -2016,8 +2016,14 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             app.setLevel(5);
         } else if (Utils.mAppLevel_6.contains(app.componentName.getPackageName())) {
             app.setLevel(6);
-        } else {
+        } else if (Utils.mAppLevel_7.contains(app.componentName.getPackageName())){
             app.setLevel(7);
+        } else if (Utils.mAppLevel_8.contains(app.componentName.getPackageName())){
+            app.setLevel(8);
+        } else if (Utils.mAppLevel_9.contains(app.componentName.getPackageName())){
+            app.setLevel(9);
+        } else {
+            app.setLevel(10);
         }
     }
 

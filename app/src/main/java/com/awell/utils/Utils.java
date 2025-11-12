@@ -363,32 +363,67 @@ public class Utils {
     };
 
     public static final Set<String> mAppLevel_1 = Set.of(
-            "com.awell.localmusic",
-            "com.awell.bluetooth"
+            "com.awell.localmusic"
     );
     public static final Set<String> mAppLevel_2 = Set.of(
-            "com.awell.radio",
-            "com.awell.localvideo"
+            "com.awell.radio"
     );
 
     public static final Set<String> mAppLevel_3 = Set.of(
-            "com.mediatek.filemanager",
-            "com.awell.canbus",
-            "com.zjinnova.zlink"
+            "com.awell.localvideo"
     );
 
     public static final Set<String> mAppLevel_4 = Set.of(
-            "com.awell.eqselect"
+            "com.awell.bluetooth"
     );
 
     public static final Set<String> mAppLevel_5 = Set.of(
+            "com.awell.soundeffect",
+            "com.awell.eqselect",
+            "com.google.android.apps.maps",
+            "com.autonavi.amapauto",
+            "com.awell.navigation",
+            "com.android.chrome",
+            "com.android.browser",
+            "com.google.android.youtube",
             "com.awell.carsetting"
     );
 
     public static final Set<String> mAppLevel_6 = Set.of(
-            "com.google.android.youtube",
-            "com.google.android.apps.maps",
+            "cn.kuwo.kwmusiccar"
+    );
+
+    public static final Set<String> mAppLevel_7 = Set.of(
+            "com.pve.onekeysos",
+            "com.pve.naviguide",
+            "com.autochips.HDMI",
+            "com.awell.soundeffect",
+            "com.awell.eqselect",
+            "com.android.chrome",
+            "com.android.browser",
+            "com.mediatek.filemanager",
+            "com.awell.navigation",
+            "com.autonavi.amapauto",
+            "com.autonavi.minimap",
+            "com.google.android.apps.maps"
+    );
+
+    public static final Set<String> mAppLevel_8 = Set.of(
+            "com.tima.carnet.vt",
+            "net.easyconn",
+            "com.zjinnova.zlink",
+            "com.awell.backcar",
             "com.android.vending"
+    );
+
+    public static final Set<String> mAppLevel_9 = Set.of(
+            "com.android.documentsui",
+            "com.android.dialer",
+            "com.android.mms",
+            "com.awell.canbus",
+            "com.android.calculator2",
+            "com.android.soundrecorder"
+
     );
 
 
