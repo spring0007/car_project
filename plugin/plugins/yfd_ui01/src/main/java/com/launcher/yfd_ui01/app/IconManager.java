@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import com.launcher.yfd_ui01.R;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,12 +15,69 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class IconManager {
+    private static final String TAG = "IconManager";
+    private static final int MAX_CACHE_SIZE = 50;
+    
     private final Context appContext;
-    private static Map<String, Integer> customIcons;
     private static volatile IconManager sInstance;
 
-    private static final int MAX_CACHE_SIZE = 50; // 最大缓存图标数量
-    // 使用LRU缓存策略
+    // 使用不可变集合提高性能
+    private static final Map<String, Integer> CUSTOM_ICONS;
+    public static final List<String> PACKAGE_ORDER_LIST;
+    public static final List<String> NEED_TO_SHOW_PACKAGE_NAMES;
+
+    // 静态初始化块，避免重复创建
+    static {
+        // 包名顺序列表
+        PACKAGE_ORDER_LIST = Collections.unmodifiableList(Arrays.asList(
+            "com.awell.localmusic", "com.awell.radio", "com.awell.localvideo",
+            "com.awell.bluetooth", "com.awell.dspeffect", "com.google.android.apps.maps",
+            "com.google.android.youtube", "com.android.chrome", "com.awell.themesetting"
+        ));
+
+        // 需要显示的应用
+        NEED_TO_SHOW_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
+            "com.android.browser", "com.android.dialer", "com.android.mms",
+            "com.android.calculator2", "com.android.deskclock", "com.mediatek.filemanager",
+            "com.android.documentsui", "com.autonavi.amapauto", "com.awell.radio",
+            "com.awell.localmusic", "com.awell.localvideo", "com.awell.backcar",
+            "cn.kuwo.kwmusiccar", "com.awell.bluetooth", "com.awell.canbus",
+            "com.tima.carnet.vt", "com.zjinnova.zlink", "com.awell.eqselect",
+            "com.awell.awellmanual", "com.awell.themesetting", "com.awell.carsetting",
+            "com.android.chrome", "com.google.android.youtube", "com.google.android.apps.maps",
+            "com.android.vending", "org.chromium.chrome"
+        ));
+
+        // 自定义图标映射
+        Map<String, Integer> tempIcons = new HashMap<>();
+        try {
+            tempIcons.put("com.awell.localvideo", R.drawable.yfd_ui1_video);
+            tempIcons.put("com.awell.localmusic", R.drawable.yfd_ui1_music);
+            tempIcons.put("com.awell.radio", R.drawable.yfd_ui1_radio);
+            tempIcons.put("com.awell.bluetooth", R.drawable.yfd_ui1_bluetooth);
+            tempIcons.put("com.awell.themesetting", R.drawable.yfd_ui1_theme);
+            tempIcons.put("com.mediatek.filemanager", R.drawable.yfd_ui1_file_manager);
+            tempIcons.put("com.awell.carsetting", R.drawable.yfd_ui1_settings);
+            tempIcons.put("com.awell.backcar", R.drawable.yfd_ui1_aux);
+            tempIcons.put("com.awell.eqselect", R.drawable.yfd_ui1_dsp);
+            tempIcons.put("com.awell.canbus", R.drawable.yfd_ui1_streering_wheel);
+            tempIcons.put("com.tima.carnet.vt", R.drawable.yfd_ui1_tlink5);
+            tempIcons.put("net.easyconn", R.drawable.yfd_ui1_tlink5);
+            tempIcons.put("com.zjinnova.zlink", R.drawable.yfd_ui1_tlink5);
+            tempIcons.put("com.awell.awellmanual", R.drawable.yfd_ui1_dev_tools);
+            tempIcons.put("com.google.android.apps.maps", R.drawable.yfd_ui1_maps);
+            tempIcons.put("com.google.android.youtube", R.drawable.yfd_ui1_youtube);
+            tempIcons.put("com.android.vending", R.drawable.yfd_ui1_play_store);
+            tempIcons.put("com.android.chrome", R.drawable.yfd_ui1_chrome);
+            tempIcons.put("org.chromium.chrome", R.drawable.yfd_ui1_chrome);
+            tempIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
+        } catch (Exception e) {
+            // 静默处理初始化异常
+        }
+        CUSTOM_ICONS = Collections.unmodifiableMap(tempIcons);
+    }
+
+    // LRU缓存
     private final Map<String, Drawable> drawableCache = new LinkedHashMap<String, Drawable>(16, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Drawable> eldest) {
@@ -29,16 +87,10 @@ public class IconManager {
 
     private IconManager(Context context) {
         this.appContext = context != null ? context.getApplicationContext() : null;
-        customIcons = new HashMap<>();
-        loadCustomIcons();
-        // 如果有 application context，则校验并预缓存有效资源
-        if (this.appContext != null) {
-           // validateAndCacheResources();
-        }
     }
 
     /**
-     * 初始化单例（建议在 Application 或主 Activity onCreate 时调用一次）
+     * 初始化单例
      */
     public static void init(Context context) {
         if (sInstance == null) {
@@ -51,165 +103,54 @@ public class IconManager {
     }
 
     /**
-     * 获取单例，如果未初始化则返回一个临时实例（不建议）
+     * 获取单例
      */
     public static IconManager getInstance(Context contextIfNeeded) {
         if (sInstance == null) {
-            // 尝试初始化一次以保证后续调用安全
             init(contextIfNeeded != null ? contextIfNeeded.getApplicationContext() : null);
         }
         return sInstance;
     }
 
-    /**
-     * 获取已经初始化的单例（可能为 null，如果未调用 init）
-     */
     public static IconManager getInstance() {
         return sInstance;
     }
 
-    // 定义包名顺序列表
-    public static final List<String> packageOrderList = Arrays.asList(
-            "com.awell.localmusic",
-            "com.awell.radio",
-            "com.awell.localvideo",
-            "com.awell.bluetooth",
-            "com.awell.dspeffect",
-            "com.google.android.apps.maps",
-            "com.google.android.youtube",
-            "com.android.chrome",
-            "com.awell.themesetting"
-            // ... 其他预定义包名
-    );
-
     /**
-     * 需要显示的应用
+     * 获取自定义图标数量
      */
-    public static List<String> needToShowPackageName = Arrays.asList(
-            "com.android.browser", "com.android.dialer", "com.android.mms","com.android.calculator2","com.android.deskclock", "com.mediatek.filemanager",
-            "com.android.documentsui", "com.autonavi.amapauto",
-            "com.awell.radio", "com.awell.localmusic", "com.awell.localvideo",
-            "com.awell.backcar", "cn.kuwo.kwmusiccar", "com.awell.bluetooth",
-//            "com.android.chrome","com.google.android.youtube","com.google.android.apps.maps","com.android.vending",
-            "com.awell.canbus", "com.tima.carnet.vt",  "com.zjinnova.zlink",
-            "com.awell.eqselect", "com.awell.awellmanual","com.awell.themesetting", "com.awell.carsetting",
-            "com.android.chrome", "com.google.android.youtube",
-            "com.google.android.apps.maps", "com.android.vending","org.chromium.chrome"
-    );
-
-
-    /**
-     * 加载自定义图标资源
-     */
-    private void loadCustomIcons() {
-        // 这里可以加载预定义的自定义图标
-        // 例如从assets目录或特定资源文件夹加载
-        try {
-
-            customIcons.put("com.awell.localvideo", R.drawable.yfd_ui1_video);
-            customIcons.put("com.awell.localmusic", R.drawable.yfd_ui1_music);
-            customIcons.put("com.awell.radio", R.drawable.yfd_ui1_radio);
-            customIcons.put("com.awell.bluetooth", R.drawable.yfd_ui1_bluetooth);
-            customIcons.put("com.awell.themesetting", R.drawable.yfd_ui1_theme);
-////          customIcons.put( "com.awell.navigation", R.drawable.yfd_ui1_navi);
-//            customIcons.put("com.android.dialer", R.drawable.yfd_ui1_iphone);
-//            customIcons.put("com.android.calculator2", R.drawable.yfd_ui1_jisuanqi);
-//            customIcons.put("com.android.browser", R.drawable.yfd_ui1_liulanqi);
-//            //customIcons.put( "com.android.calendar"            , R.drawable.yfd_ui1_rili);
-//            //customIcons.put( "com.android.soundrecorder"            , R.drawable.yfd_ui1_luyinji);
-//            //customIcons.put( "com.android.deskclock"           , R.drawable.yfd_ui1_shizhong);
-////  customIcons.put(  "com.android.gallery3d"//            , R.drawable.yfd_ui1_tuku );
-            customIcons.put("com.mediatek.filemanager", R.drawable.yfd_ui1_file_manager);
-//            customIcons.put("com.android.documentsui", R.drawable.yfd_ui1_download);
-            customIcons.put("com.awell.carsetting", R.drawable.yfd_ui1_settings);
-            customIcons.put("com.awell.backcar", R.drawable.yfd_ui1_aux);
-//            customIcons.put("cn.kuwo.kwmusiccar", R.drawable.kuwoyinyue);
-////		customIcons.put( "com.awell.soundeffect" , R.drawable.yfd_ui1_jhq);
-            customIcons.put("com.awell.eqselect", R.drawable.yfd_ui1_dsp);
-            customIcons.put("com.awell.canbus", R.drawable.yfd_ui1_streering_wheel);
-//            customIcons.put("com.awell.canbus2", R.drawable.yfd_ui1_message);
-//            customIcons.put("com.android.mms", R.drawable.yfd_ui1_navi);
-//            customIcons.put("com.autonavi.amapauto", R.drawable.yfd_ui1_maps);
-//            customIcons.put("com.txznet.txzsetting", R.drawable.yfd_ui1_ggvoice);
-            customIcons.put("com.tima.carnet.vt", R.drawable.yfd_ui1_tlink5);
-            customIcons.put("net.easyconn", R.drawable.yfd_ui1_tlink5);
-            customIcons.put("com.zjinnova.zlink", R.drawable.yfd_ui1_tlink5);
-            customIcons.put("com.awell.awellmanual", R.drawable.yfd_ui1_dev_tools); //说明书
-            customIcons.put("com.google.android.apps.maps", R.drawable.yfd_ui1_maps);
-            customIcons.put("com.google.android.youtube", R.drawable.yfd_ui1_youtube);
-            customIcons.put("com.android.vending", R.drawable.yfd_ui1_play_store);
-            customIcons.put("com.android.chrome", R.drawable.yfd_ui1_chrome);
-            customIcons.put("org.chromium.chrome", R.drawable.yfd_ui1_chrome);
-            customIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
-//            customIcons.put("com.tinyapp.smartcar", R.drawable.yfd_ui1_ggvoice);
-//            customIcons.put("com.awell.update", R.drawable.yfd_ui1_store);
-//            customIcons.put("com.google.android.googlequicksearchbox", R.drawable.yfd_ui1_gg);
-//            customIcons.put("com.kugou.android.auto", R.drawable.yfd_ui1_kugou);
-//            customIcons.put("com.qiyi.video.pad", R.drawable.yfd_ui1_aiqitv);
-//            customIcons.put("com.tencent.qqmusic", R.drawable.yfd_ui1_qqyinyue);
-//            customIcons.put("com.tencent.qqlive.audiobox", R.drawable.yfd_ui1_tenxuntv);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 校验 customIcons 中的资源 id 是否在当前上下文可用，若可用则缓存其 Drawable，否则移除该映射。
-     */
-    private void validateAndCacheResources() {
-        java.util.Iterator<Map.Entry<String, Integer>> it = customIcons.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Integer> entry = it.next();
-            String pkg = entry.getKey();
-            Integer resId = entry.getValue();
-            try {
-                Drawable d = ContextCompat.getDrawable(appContext, resId);
-                if (d != null) {
-                    drawableCache.put(pkg, d);
-                } else {
-                    // resource missing or cannot be loaded, 移除映射
-                    it.remove();
-                }
-            } catch (Exception e) {
-                // 任何异常都视为资源无效并移除
-                it.remove();
-            }
-        }
-    }
-
     public static int getCustomIconsCount() {
-        if (customIcons != null) {
-            return customIcons.size();
-        }
-        return 0;
+        return CUSTOM_ICONS.size();
     }
 
     /**
-     * 获取应用图标，优先使用自定义图标（返回 Drawable，若无自定义图标则返回 null）
-     * @param packageName 应用包名
-     * @return Drawable 图标或 null
+     * 获取应用图标，优先使用自定义图标
      */
     public Drawable getIcon(String packageName) {
         if (packageName == null) return null;
 
-        // 先返回缓存的 Drawable（若存在）
-        if (drawableCache.containsKey(packageName)) {
-            return drawableCache.get(packageName);
+        // 先检查缓存
+        Drawable cached;
+        synchronized (drawableCache) {
+            cached = drawableCache.get(packageName);
+            if (cached != null) {
+                return cached;
+            }
         }
 
-        // 再尝试通过 resource id 加载
-        if (customIcons != null && customIcons.containsKey(packageName) && appContext != null) {
-            Integer resId = customIcons.get(packageName);
+        // 检查自定义图标
+        Integer resId = CUSTOM_ICONS.get(packageName);
+        if (resId != null && appContext != null) {
             try {
-                Drawable d = ContextCompat.getDrawable(appContext, resId);
-                if (d != null) {
-                    drawableCache.put(packageName, d);
-                    return d;
+                Drawable drawable = ContextCompat.getDrawable(appContext, resId);
+                if (drawable != null) {
+                    synchronized (drawableCache) {
+                        drawableCache.put(packageName, drawable);
+                    }
+                    return drawable;
                 }
             } catch (Exception e) {
-                // 记录并回退为 null
-                android.util.Log.w("IconManager", "Failed to load icon resource for " + packageName + ": " + resId, e);
+                // 静默处理资源加载异常
             }
         }
 
@@ -217,39 +158,61 @@ public class IconManager {
     }
     
     /**
-     * 清理缓存
+     * 批量预加载常用图标
      */
-    public synchronized void clearCache() {
-        drawableCache.clear();
+    public void preloadCommonIcons() {
+        if (appContext == null) return;
+        
+        // 在后台线程预加载
+        new Thread(() -> {
+            for (String packageName : PACKAGE_ORDER_LIST) {
+                synchronized (drawableCache) {
+                    if (drawableCache.containsKey(packageName)) continue;
+                }
+                
+                Integer resId = CUSTOM_ICONS.get(packageName);
+                if (resId != null) {
+                    try {
+                        Drawable drawable = ContextCompat.getDrawable(appContext, resId);
+                        if (drawable != null) {
+                            synchronized (drawableCache) {
+                                drawableCache.put(packageName, drawable);
+                            }
+                        }
+                    } catch (Exception e) {
+                        // 静默处理单个图标加载失败
+                    }
+                }
+            }
+        }).start();
     }
     
     /**
-     * 根据内存压力调整缓存大小
+     * 裁剪缓存到指定大小
      */
-    public void onTrimMemory(int level) {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
-            synchronized (this) {
-                if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL) {
-                    // 内存严重不足，清理大部分缓存
-                    trimCacheToSize(MAX_CACHE_SIZE / 4);
-                } else if (level >= ComponentCallbacks2.TRIM_MEMORY_MODERATE) {
-                    // 内存中度不足，清理一半缓存
-                    trimCacheToSize(MAX_CACHE_SIZE / 2);
-                }
-            }
+    private void trimCacheToSize(int targetSize) {
+        if (drawableCache.size() <= targetSize) return;
+        
+        Iterator<Map.Entry<String, Drawable>> iterator = drawableCache.entrySet().iterator();
+        while (iterator.hasNext()) {
+            drawableCache.size();
+            iterator.next();
+            iterator.remove();
         }
     }
     
     /**
-     * 将缓存裁剪到指定大小
+     * 获取缓存统计信息
      */
-    private synchronized void trimCacheToSize(int targetSize) {
-        if (drawableCache.size() <= targetSize) return;
-        
-        Iterator<Map.Entry<String, Drawable>> iterator = drawableCache.entrySet().iterator();
-        while (iterator.hasNext() && drawableCache.size() > targetSize) {
-            iterator.next();
-            iterator.remove();
+    public String getCacheStats() {
+        synchronized (drawableCache) {
+            return "Cache size: " + drawableCache.size() + "/" + MAX_CACHE_SIZE;
+        }
+    }
+
+    public void clearCache() {
+        synchronized (drawableCache) {
+            drawableCache.clear();
         }
     }
 }

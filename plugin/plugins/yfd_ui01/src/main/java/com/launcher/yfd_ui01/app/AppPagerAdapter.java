@@ -37,8 +37,8 @@ public class AppPagerAdapter extends PagerAdapter {
     private final DefaultItemAnimator sharedAnimator = createSharedItemAnimator();
     
     // 共享的ItemDecoration
-    private final RecyclerView.ItemDecoration sharedItemDecoration = 
-        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 28, 30, true);
+    private final RecyclerView.ItemDecoration sharedItemDecoration =
+        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 56, 30, true);
 
     public AppPagerAdapter(Context context, List<List<AppInfo>> pages, int itemsPerPage) {
         this.context = context;
@@ -61,7 +61,6 @@ public class AppPagerAdapter extends PagerAdapter {
         RecyclerView recyclerView = createRecyclerView(container.getContext());
         setupRecyclerView(recyclerView, position);
         container.addView(recyclerView);
-        Log.i("AppPagerAdapter", "lqq,instantiateItem: " + position);
         return recyclerView;
     }
 
@@ -86,6 +85,7 @@ public class AppPagerAdapter extends PagerAdapter {
         GridLayoutManager glm = new GridLayoutManager(ctx, 6, RecyclerView.VERTICAL, false);
         glm.setSpanSizeLookup(spanSizeLookup);
         recyclerView.setLayoutManager(glm);
+        recyclerView.setPadding(0,0,0,0);
         
         // 性能优化配置
         recyclerView.setHasFixedSize(true);

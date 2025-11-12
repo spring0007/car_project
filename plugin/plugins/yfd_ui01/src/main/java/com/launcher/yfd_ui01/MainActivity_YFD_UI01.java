@@ -87,12 +87,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         dialWidget.findViews(this,dialWidget);
          //setLauncherPackage(this.getApplicationContext());
         setContentView(binding.getRoot());
-        // 提前预热全局应用视图，后台开始加载应用数据以减少首次打开延迟
-        try {
-            GlobalViewManager.getInstance(this).preload(this);
-        } catch (Exception e) {
-            Log.w(TAG, "preload GlobalViewManager failed", e);
-        }
         initReceiver();
         initLongTouch();
 
@@ -421,9 +415,9 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
         try {
-            GlobalViewManager.getInstance(this).hideApps();
+            GlobalViewManager.getInstance(this).destroy();
         } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+            Log.w(TAG, "GlobalViewManager.destroy failed", e);
         }
 
         // 停止速度模拟器
@@ -458,6 +452,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
             View root = findViewById(android.R.id.content);
             try {
                 GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
+                Log.i(TAG, "GlobalViewManager.showApps to AppsCustomizeControl");
             } catch (Exception e) {
                 Log.w(TAG, "GlobalViewManager.showApps failed, fallback to AppsCustomizeControl", e);
             }
