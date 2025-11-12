@@ -41,6 +41,7 @@
             android:textColor="@color/white"
             android:layout_marginEnd="70dp"
             android:layout_gravity="center_vertical|left"
+            android:visibility="gone"
             />
 
         <TextView
@@ -51,6 +52,29 @@
             android:textSize="30sp"
             android:textColor="@color/white"
             android:layout_gravity="center_vertical|right"
+            android:visibility="gone"
             />
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="MM/dd"
+            android:format24Hour="MM/dd"
+            android:text="5月18日"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            android:layout_marginEnd="70dp"
+            android:layout_gravity="center_vertical|left"/>
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="EEEE"
+            android:format24Hour="EEEE"
+            android:text="星期五"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:layout_gravity="center_vertical|left"/>
+
     </LinearLayout>
 </com.launcher.ui6.view.DialWidget>

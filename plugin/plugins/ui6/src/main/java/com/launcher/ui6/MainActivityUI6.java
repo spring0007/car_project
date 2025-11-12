@@ -369,6 +369,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         binding.hotsetSettingsApp.setOnClickListener(this);
         binding.hotsetRadioApp.setOnClickListener(this);
 		binding.hotsetVideoApp.setOnClickListener(this);
+        binding.layoutDialWidget.analogClockView.setOnClickListener(this);
 //        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
     }
 
@@ -379,13 +380,16 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         }else if (v.getId() == binding.hotsetBtapp.getId()) {
             startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
         }else if (v.getId() == binding.hotsetNavApp.getId()) {
-            startActivity("com.autonavi.amapauto", "com.autonavi.amapauto.MainMapActivity");
+            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
         }else if (v.getId() == binding.hotsetSettingsApp.getId()){
-            startActivity("com.android.settings", "com.android.settings.Settings");
+            startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
         }else if(v.getId() == binding.hotsetRadioApp.getId()){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
         }else if(v.getId() == binding.hotsetVideoApp.getId()){
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
+        }else if(v.getId() == binding.layoutDialWidget.analogClockView.getId()){
+            Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
+            startActivity(intent);
         }
     }
 
