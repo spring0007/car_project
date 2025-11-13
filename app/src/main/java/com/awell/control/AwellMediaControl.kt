@@ -46,6 +46,58 @@ class AwellMediaControl() {
         "cn.kuwo.kwmusiccar",
         "com.zjinnova.zlink",
     )
+	
+	  /**
+     * 安全地从 Bundle 获取 Int 值
+     */
+    private fun Bundle.getSafeInt(key: String, defaultValue: Int): Int {
+        return try {
+            when (val value = get(key)) {
+                is Int -> value
+                is String -> value.toIntOrNull() ?: defaultValue
+                is Number -> value.toInt()
+                else -> defaultValue
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to get Int for key: $key, using default: $defaultValue", e)
+            defaultValue
+        }
+    }
+    /**
+     * 安全地从 Bundle 获取 Long 值
+     */
+    private fun Bundle.getSafeLong(key: String, defaultValue: Long): Long {
+        return try {
+            when (val value = get(key)) {
+                is Long -> value
+                is Int -> value.toLong()
+                is String -> value.toLongOrNull() ?: defaultValue
+                is Number -> value.toLong()
+                else -> defaultValue
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to get Long for key: $key, using default: $defaultValue", e)
+            defaultValue
+        }
+    }
+
+    /**
+     * 安全地从 Bundle 获取 Boolean 值
+     */
+    private fun Bundle.getSafeBoolean(key: String, defaultValue: Boolean): Boolean {
+        return try {
+            when (val value = get(key)) {
+                is Boolean -> value
+                is String -> value.toBoolean()
+                is Int -> value != 0
+                else -> defaultValue
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to get Boolean for key: $key, using default: $defaultValue", e)
+            defaultValue
+        }
+    }
+	
 
     /**
      * 实现服务端的回调
@@ -263,8 +315,8 @@ class AwellMediaControl() {
         Log.i(TAG, "handleMediaPlay: huang bundle=${bundle}")
         val pkg = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val command = bundle.getString(AwellTool.VALUE_M2, mNullStr)
-        val mediaType = bundle.getInt(AwellTool.VALUE_M3, 3)
-        val currentMedia = bundle.getInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
+        val mediaType = bundle.getSafeInt(AwellTool.VALUE_M3, 3)
+        val currentMedia = bundle.getSafeInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
         val isStartCommand = "start" == command
         val isLocalMusicPackage = (pkg.contains("localmusic")
                 || pkg.contains("com.awell.bluetooth")
@@ -290,7 +342,7 @@ class AwellMediaControl() {
     }
 
     private fun handleMusicPlayStatus(bundle: Bundle) {
-        val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
+		val musicStatus = bundle.getSafeBoolean(AwellTool.VALUE_M1, false)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
         updateMusicView?.updateViewPlayStatus(bundle, musicStatus, MusicWidget.MUSIC)
     }
@@ -317,14 +369,14 @@ class AwellMediaControl() {
     }
 
     private fun handleMusicPlayTime(bundle: Bundle) {
-        val currentTime = bundle.getLong(AwellTool.VALUE_M1)
-        val totalTime = bundle.getLong(AwellTool.VALUE_M2)
+		val currentTime = bundle.getSafeLong(AwellTool.VALUE_M1, 0L)
+        val totalTime = bundle.getSafeLong(AwellTool.VALUE_M2, 0L)
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
         updateMusicView?.updateViewPlayTime(bundle, currentTime, totalTime, MusicWidget.MUSIC)
     }
 
     private fun handleBTPlayStatus(bundle: Bundle) {
-        val status = bundle.getBoolean(AwellTool.VALUE_M1)
+		val status = bundle.getSafeBoolean(AwellTool.VALUE_M1, false)
         mediaViewModel?.updatePlayStatus(bundle, status, MusicWidget.BT)
         updateMusicView?.updateViewPlayStatus(bundle, status, MusicWidget.BT)
 
@@ -341,8 +393,10 @@ class AwellMediaControl() {
     }
 
     private fun handleBTPlayTime(bundle: Bundle) {
-        val currentTime = (bundle.getInt(AwellTool.VALUE_M1) * 1000).toLong()
-        val totalTime = (bundle.getInt(AwellTool.VALUE_M2) * 1000).toLong()
+		val currentTimeValue = bundle.getSafeInt(AwellTool.VALUE_M1, 0)
+        val totalTimeValue = bundle.getSafeInt(AwellTool.VALUE_M2, 0)
+        val currentTime = (currentTimeValue * 1000).toLong()
+        val totalTime = (totalTimeValue * 1000).toLong()
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
         updateMusicView?.updateViewPlayTime(bundle, currentTime, totalTime, MusicWidget.BT)
     }
@@ -370,7 +424,7 @@ class AwellMediaControl() {
     }
 
     private fun handleOtherMusicStatus(bundle: Bundle) {
-        val musicStatus = bundle.getBoolean(AwellTool.VALUE_M1)
+val musicStatus = bundle.getSafeBoolean(AwellTool.VALUE_M1, false)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewPlayStatus(
             bundle,
@@ -380,8 +434,8 @@ class AwellMediaControl() {
     }
 
     private fun handleOtherMusicTime(bundle: Bundle) {
-        val currentTime = bundle.getLong(AwellTool.VALUE_M1)
-        val totalTime = bundle.getLong(AwellTool.VALUE_M2)
+        val currentTime = bundle.getSafeLong(AwellTool.VALUE_M1, 0L)
+        val totalTime = bundle.getSafeLong(AwellTool.VALUE_M2, 0L)
         mediaViewModel?.updatePlayTime(bundle, currentTime, totalTime, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewPlayTime(
             bundle,
