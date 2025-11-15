@@ -19,12 +19,18 @@ package com.awell.launcher2;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.awell.launcher.library.R;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An abstraction of the original CellLayout which supports laying out items
@@ -33,6 +39,7 @@ import com.awell.launcher.library.R;
  */
 public class PagedViewCellLayout extends ViewGroup implements Page {
     static final String TAG = "PagedViewCellLayout";
+    private static final Logger log = LoggerFactory.getLogger(PagedViewCellLayout.class);
 
     private int mCellCountX;
     private int mCellCountY;
@@ -66,6 +73,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
         mOriginalCellHeight = mCellHeight =
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
+        Log.d(TAG, "PagedViewCellLayout: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
         mCellCountX = LauncherModel.getCellCountX();
         mCellCountY = LauncherModel.getCellCountY();
         mOriginalWidthGap = mOriginalHeightGap = mWidthGap = mHeightGap = -1;
@@ -362,6 +370,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     }
 
     public void calculateCellCount(int width, int height, int maxCellCountX, int maxCellCountY) {
+        Log.d(TAG, "calculateCellCount: width = " + width + ", height = " + height + ", maxCellCountX = " + maxCellCountX + ", maxCellCountY = " + maxCellCountY);
         mCellCountX = Math.min(maxCellCountX, estimateCellHSpan(width));
         mCellCountY = Math.min(maxCellCountY, estimateCellVSpan(height));
 //        mCellCountY = 3;

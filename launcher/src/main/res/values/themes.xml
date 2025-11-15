@@ -3,8 +3,11 @@
 
     <style name="LauncherHostTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 </resources>

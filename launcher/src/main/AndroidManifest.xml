@@ -20,14 +20,14 @@
         android:icon="@drawable/ic_launcher_home"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Light.NoTitleBar">
-
+        android:theme="@style/Theme.NoTitleBar">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/LauncherHostTheme">
+            android:theme="@style/LauncherHostTheme"
+            android:fitsSystemWindows="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.SHOW_WORK_APPS" />

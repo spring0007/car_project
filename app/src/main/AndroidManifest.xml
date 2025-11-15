@@ -100,7 +100,8 @@
         android:name="com.awell.launcher2.LauncherApplication"
         android:hardwareAccelerated="true"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.NoTitleBar">
 
         <service
             android:name="com.awell.service.HostToPluginService"
