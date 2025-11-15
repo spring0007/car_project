@@ -192,7 +192,7 @@ final class Utilities {
             //增加图标背景图片 OWL
             if (true) {
                 Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(),
-                        sfOtherBG[(new Random()).nextInt(5)]);
+                        R.drawable.sf_other_app3);//sfOtherBG[(new Random()).nextInt(5)]
                 int backWidth = backBitmap.getWidth();
                 int backHeight = backBitmap.getHeight();
                 if (backWidth != sIconWidth || backHeight != sIconHeight) {

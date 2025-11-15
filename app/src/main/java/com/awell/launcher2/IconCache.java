@@ -146,6 +146,12 @@ public class IconCache {
             , "com.android.stk"
 
             , "com.android.settings"
+            , "com.awell.electricfan"
+            , "com.awell.frontvideo"
+            , "com.awell.keylight"
+            , "com.awell.keystudy"
+            , "com.awell.themesetting"
+            , "com.ms.ms2160"
     };
 
     public final int mHomePackageIcon_116_lehang_2[] = {
@@ -195,6 +201,12 @@ public class IconCache {
             , R.drawable.sf_simtools
 
             , R.drawable.sf_system_setting
+            , R.drawable.sf_fan
+            , R.drawable.sf_front_video
+            , R.drawable.sf_color_light
+            , R.drawable.sf_training
+            , R.drawable.sf_theme
+            , R.drawable.sf_usb_video_output
     };
 
     private final Bitmap mDefaultIcon;
