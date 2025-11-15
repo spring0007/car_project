@@ -7,31 +7,46 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 
 import java.util.Calendar;
 
 public class AnalogClockView extends View {
+    private static final String TAG = "AnalogClockView";
+    // 位图资源
     private Bitmap clockBackground;
     private Bitmap hourHand;
     private Bitmap minuteHand;
     private Bitmap secondHand;
     private Bitmap centerDot;
 
+    // 绘图工具
     private Paint paint;
     private Matrix matrix;
 
+    // 视图尺寸
     private int centerX, centerY;
     private float scaleFactor = 1.0f;
 
-    private ValueAnimator secondAnimator;
+    // 时间相关
     private float secondRotation = 0;
     private float minuteRotation = 0;
     private float hourRotation = 0;
 
+    // 动画控制
+    private ValueAnimator secondAnimator;
+    private Handler timeHandler;
+    private Runnable timeUpdater;
     private boolean isRunning = false;
+
+    // 性能优化：缓存计算值
+    private float hourHandCenterX, hourHandCenterY;
+    private float minuteHandCenterX, minuteHandCenterY;
+    private float secondHandCenterX, secondHandCenterY;
+
     public AnalogClockView(Context context) {
         super(context);
         init();
@@ -48,33 +63,68 @@ public class AnalogClockView extends View {
     }
 
     private void init() {
-        // 加载图片资源
-        clockBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_bg);
-        hourHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_hour);
-        minuteHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_minute);
-        secondHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_second);
-        centerDot = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dial_dot);
-
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // 初始化绘图工具
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         matrix = new Matrix();
-
-        // 设置秒针动画
-        setupSecondAnimation();
+        
+        // 加载位图资源（优化内存使用）
+        loadBitmaps();
+        
+        // 初始化时间处理器
+        timeHandler = new Handler(Looper.getMainLooper());
+        
+        // 设置时间更新器
+        setupTimeUpdater();
+        
+        // 预计算中心点偏移量
+        preCalculateHandCenters();
     }
 
-    private void setupSecondAnimation() {
-        secondAnimator = ValueAnimator.ofFloat(0, 360);
-        secondAnimator.setDuration(60000); // 60秒完成一圈
-        secondAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        secondAnimator.setInterpolator(new LinearInterpolator());
-        secondAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    private void loadBitmaps() {
+        try {
+            // 使用 BitmapFactory.Options 优化位图加载
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = false;
+            options.inPreferredConfig = Bitmap.Config.RGB_565; // 减少内存占用
+            
+            clockBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_bg, options);
+            hourHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_hour, options);
+            minuteHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_minute, options);
+            secondHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dail_second, options);
+            centerDot = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_dial_dot, options);
+            
+        } catch (Exception e) {
+            // 处理资源加载异常
+            e.printStackTrace();
+        }
+    }
+
+    private void preCalculateHandCenters() {
+        if (hourHand != null) {
+            hourHandCenterX = -hourHand.getWidth() / 2.0f;
+            hourHandCenterY = -hourHand.getHeight();
+        }
+        if (minuteHand != null) {
+            minuteHandCenterX = -minuteHand.getWidth() / 2.0f;
+            minuteHandCenterY = -minuteHand.getHeight();
+        }
+        if (secondHand != null) {
+            secondHandCenterX = -secondHand.getWidth() / 2.0f;
+            secondHandCenterY = -secondHand.getHeight() + 15;
+        }
+    }
+
+    private void setupTimeUpdater() {
+        timeUpdater = new Runnable() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-               // secondRotation = (float) animation.getAnimatedValue();//有问题,已解决,屏蔽此处
-                updateTimeFromSystem();
-                invalidate();
+            public void run() {
+                if (isRunning) {
+                    updateTimeFromSystem();
+                    invalidate(); // 请求重绘
+                    timeHandler.postDelayed(this, 16); // 约60FPS
+                }
             }
-        });
+        };
     }
 
     private void updateTimeFromSystem() {
@@ -82,15 +132,16 @@ public class AnalogClockView extends View {
         int hours = calendar.get(Calendar.HOUR);
         int minutes = calendar.get(Calendar.MINUTE);
         int seconds = calendar.get(Calendar.SECOND);
-        int mill_seconds = calendar.get(Calendar.MILLISECOND);
+        int milliseconds = calendar.get(Calendar.MILLISECOND);
 
-        // 计算时针角度（考虑分钟的影响）
-        hourRotation = (hours * 30) + (minutes * 0.5f);
+        // 计算时针角度（考虑分钟的影响，更精确）
+        hourRotation = (hours * 30.0f) + (minutes * 0.5f) + (seconds * 0.00833f);
 
-        // 计算分针角度（考虑秒针的影响）
-        minuteRotation = (minutes * 6) + (seconds * 0.1f);
+        // 计算分针角度（考虑秒针的影响，更精确）
+        minuteRotation = (minutes * 6.0f) + (seconds * 0.1f) + (milliseconds * 0.0001667f);
 
-        secondRotation = (seconds * 6) + (mill_seconds * 0.006f);
+        // 计算秒针角度（包含毫秒，实现平滑移动）
+        secondRotation = (seconds * 6.0f) + (milliseconds * 0.006f);
     }
 
     @Override
@@ -100,12 +151,14 @@ public class AnalogClockView extends View {
         centerX = w / 2;
         centerY = h / 2;
 
-        // 计算缩放因子，使时钟适应View大小
-        int minSize = Math.min(w, h);
-        //float bgWidth = clockBackground.getWidth();
-        //scaleFactor = (minSize * 0.8f) / bgWidth;
-        
-        // 如果没有运行动画，则开始动画
+        // 计算合适的缩放因子
+        if (clockBackground != null) {
+            int minSize = Math.min(w, h);
+            float bgSize = Math.min(clockBackground.getWidth(), clockBackground.getHeight());
+            //scaleFactor = (minSize * 0.9f) / bgSize; // 留10%边距
+        }
+
+        // 如果没有运行，则重置到当前时间
         if (!isRunning) {
             resetToCurrentTime();
         }
@@ -114,40 +167,50 @@ public class AnalogClockView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        
+        // 检查位图是否加载成功
+        if (clockBackground == null || hourHand == null || 
+            minuteHand == null || secondHand == null || centerDot == null) {
+            return;
+        }
 
         // 保存画布状态
         canvas.save();
 
-        // 移动到中心点
+        // 移动到中心点并缩放
         canvas.translate(centerX, centerY);
         canvas.scale(scaleFactor, scaleFactor);
 
-        // 绘制表盘背景
-        drawBitmapCentered(canvas, clockBackground, 0, 0, 0);
+        try {
+            // 绘制表盘背景
+            drawBitmapCentered(canvas, clockBackground, 0, 0, 0);
 
-        // 绘制时针
-        drawBitmapCenteredPoint(canvas, hourHand, 0, 0, (float) -hourHand.getWidth() / 2,  (float)-hourHand.getHeight(), hourRotation);
+            // 绘制时针
+            drawBitmapCenteredPoint(canvas, hourHand, 0, 0, hourHandCenterX, hourHandCenterY, hourRotation);
 
-        // 绘制分针
-        drawBitmapCenteredPoint(canvas, minuteHand, 0, 0, (float) -minuteHand.getWidth() / 2,  (float)-minuteHand.getHeight(), minuteRotation);
+            // 绘制分针
+            drawBitmapCenteredPoint(canvas, minuteHand, 0, 0, minuteHandCenterX, minuteHandCenterY, minuteRotation);
 
-        // 绘制秒针
-        drawBitmapCenteredPoint(canvas, secondHand, 0, 0, (float) -secondHand.getWidth() / 2,  (float)-secondHand.getHeight()+15,secondRotation);
+            // 绘制秒针
+            drawBitmapCenteredPoint(canvas, secondHand, 0, 0, secondHandCenterX, secondHandCenterY, secondRotation);
 
-        // 绘制中心原点
-        drawBitmapCentered(canvas, centerDot, 0, 0, 0);
+            // 绘制中心原点
+            drawBitmapCentered(canvas, centerDot, 0, 0, 0);
+            
+        } catch (Exception e) {
+            // 捕获绘制过程中的异常，避免应用崩溃
+            e.printStackTrace();
+        }
 
         // 恢复画布状态
         canvas.restore();
     }
 
     private void drawBitmapCentered(Canvas canvas, Bitmap bitmap, float x, float y, float rotation) {
+        if (bitmap == null || bitmap.isRecycled()) return;
+        
         matrix.reset();
-
-        // 移动到中心点
-        matrix.postTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
-
-        // 应用旋转
+        matrix.postTranslate(-bitmap.getWidth() / 2.0f, -bitmap.getHeight() / 2.0f);
         matrix.postRotate(rotation);
 
         // 移动到指定位置
@@ -157,14 +220,16 @@ public class AnalogClockView extends View {
         canvas.drawBitmap(bitmap, matrix, paint);
     }
 
-    private void drawBitmapCenteredPoint(Canvas canvas, Bitmap bitmap, float x, float y,float dx, float dy, float rotation) {
+    private void drawBitmapCenteredPoint(Canvas canvas, Bitmap bitmap, float x, float y, float dx, float dy, float rotation) {
+        if (bitmap == null || bitmap.isRecycled()) return;
+        
         matrix.reset();
 
         // 移动到中心点
         matrix.postTranslate(dx, dy);
 
         // 应用旋转
-        matrix.postRotate(rotation);
+        matrix.postRotate(rotation); // 围绕指定点旋转
 
         // 移动到指定位置
         matrix.postTranslate(x, y);
@@ -177,49 +242,64 @@ public class AnalogClockView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (!isRunning) {
-            startAnimation();
-        }
+        startAnimation();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopAnimation();
+        recycleBitmaps(); // 释放位图资源
+    }
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == View.VISIBLE) {
+            if (!isRunning) {
+                startAnimation();
+            }
+        } else {
+            stopAnimation();
+        }
     }
 
     public void startAnimation() {
-        if (secondAnimator != null && !secondAnimator.isStarted()) {
-            secondAnimator.start();
+        if (!isRunning) {
             isRunning = true;
+            resetToCurrentTime();
+            timeHandler.post(timeUpdater);
         }
     }
 
     public void stopAnimation() {
-        if (secondAnimator != null) {
-            secondAnimator.cancel();
+        if (isRunning) {
             isRunning = false;
+            timeHandler.removeCallbacks(timeUpdater);
         }
     }
     
-    // 重置到当前系统时间
     public void resetToCurrentTime() {
-        if (secondAnimator != null) {
-            secondAnimator.cancel();
-        }
-        // 更新时间为当前系统时间
         updateTimeFromSystem();
-        Calendar calendar = Calendar.getInstance();
-        int seconds = calendar.get(Calendar.SECOND);
-        int milliseconds = calendar.get(Calendar.MILLISECOND);
-        secondRotation = seconds * 6 + milliseconds * 0.006f;
-        
-        if (isRunning) {
-            secondAnimator.start();
-        }
         invalidate();
     }
+
     public boolean isRunning() {
         return isRunning;
+    }
+
+    private void recycleBitmaps() {
+        // 回收位图资源
+        recycleBitmap(clockBackground);
+        recycleBitmap(hourHand);
+        recycleBitmap(minuteHand);
+        recycleBitmap(secondHand);
+        recycleBitmap(centerDot);
+    }
+
+    private void recycleBitmap(Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
+        }
     }
 }

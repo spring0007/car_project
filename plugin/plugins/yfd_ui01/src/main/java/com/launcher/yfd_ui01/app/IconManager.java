@@ -71,6 +71,7 @@ public class IconManager {
             tempIcons.put("com.android.chrome", R.drawable.yfd_ui1_chrome);
             tempIcons.put("org.chromium.chrome", R.drawable.yfd_ui1_chrome);
             tempIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
+            tempIcons.put("com.awell.electricfan",R.drawable.yfd_ui1_fan);
         } catch (Exception e) {
             // 静默处理初始化异常
         }

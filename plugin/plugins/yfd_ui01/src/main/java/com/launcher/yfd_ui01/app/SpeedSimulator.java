@@ -67,7 +67,7 @@ public class SpeedSimulator {
      * 更新车速
      */
     private void updateSpeed() {
-        int number = random.nextInt(100); // 生成随机整数
+        int number = random.nextInt(10 ); // 生成随机整数
         if (isAccelerating) {
             currentSpeed += number; // 加速 5 km/h
             if (currentSpeed >= MAX_SPEED) {
