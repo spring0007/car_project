@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_btn_padding">28dp</dimen>
+    <dimen name="main_app_margin_start">115dp</dimen>
+    <dimen name="main_app_margin_end">92dp</dimen>
+</resources>

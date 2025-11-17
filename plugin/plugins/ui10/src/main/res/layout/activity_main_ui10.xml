@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityUI10">
+
+    <ImageView
+        android:id="@+id/time_bg_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_time_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.3"/>
+
+    <ImageView
+        android:id="@+id/time_bg_left_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/time_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.31"/>
+
+    <ImageView
+        android:id="@+id/time_bg_right_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/time_bg"
+        app:layout_constraintStart_toEndOf="@+id/time_bg_left_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.31"/>
+
+    <TextClock
+        android:id="@+id/time_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="h"
+        android:format24Hour="HH"
+        android:text="00:00"
+        android:textColor="@android:color/black"
+        android:textSize="100sp"
+        app:layout_constraintStart_toStartOf="@+id/time_bg_left_iv"
+        app:layout_constraintEnd_toEndOf="@+id/time_bg_left_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_left_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_left_iv" />
+
+    <TextClock
+        android:id="@+id/time_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="mm"
+        android:format24Hour="mm"
+        android:text="00:00"
+        android:textColor="@android:color/black"
+        android:textSize="100sp"
+        app:layout_constraintStart_toStartOf="@+id/time_bg_right_iv"
+        app:layout_constraintEnd_toEndOf="@+id/time_bg_right_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_right_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_right_iv"/>
+
+    <TextClock
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="yyyy/MM/dd"
+        android:format24Hour="yyyy/MM/dd"
+        android:text="2020年5月18日"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/time_bg_left_iv"
+        app:layout_constraintEnd_toEndOf="@+id/time_bg_left_iv"
+        app:layout_constraintTop_toBottomOf="@+id/time_bg_left_iv"/>
+
+    <TextClock
+        android:id="@+id/weekday"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="EEEE"
+        android:format24Hour="EEEE"
+        android:text="星期五"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/time_bg_right_iv"
+        app:layout_constraintEnd_toEndOf="@+id/time_bg_right_iv"
+        app:layout_constraintTop_toBottomOf="@+id/time_bg_right_iv" />
+
+    <!-- music layout -->
+    <include layout="@layout/music_widget"
+        android:id="@+id/layout_music_widget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/time_bg_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
+        android:layout_marginStart="20dp"/>
+
+    <ImageView
+        android:id="@+id/hotset_nav_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_navi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/hotset_radio_app"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.7"/>
+
+    <TextView
+        android:id="@+id/hotset_navi_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/navi"
+        app:layout_constraintStart_toStartOf="@+id/hotset_nav_app"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_nav_app"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_nav_app"
+        android:textSize="24sp"/>
+
+    <ImageView
+        android:id="@+id/hotset_radio_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_radio"
+        app:layout_constraintStart_toEndOf="@+id/hotset_nav_app"
+        app:layout_constraintTop_toTopOf="@+id/hotset_nav_app"
+        app:layout_constraintBottom_toBottomOf="@+id/hotset_nav_app"
+        app:layout_constraintEnd_toStartOf="@+id/hotset_music_app" />
+
+    <TextView
+        android:id="@+id/hotset_radio_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        app:layout_constraintStart_toStartOf="@+id/hotset_radio_app"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_radio_app"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_radio_app"
+        android:textSize="24sp"/>
+
+    <ImageView
+        android:id="@+id/hotset_music_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_music"
+        app:layout_constraintTop_toTopOf="@+id/hotset_nav_app"
+        app:layout_constraintBottom_toBottomOf="@+id/hotset_nav_app"
+        app:layout_constraintStart_toEndOf="@+id/hotset_radio_app"
+        app:layout_constraintEnd_toStartOf="@+id/hotset_video_app" />
+
+    <TextView
+        android:id="@+id/hotset_music_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/music"
+        app:layout_constraintStart_toStartOf="@+id/hotset_music_app"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_music_app"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_music_app"
+        android:textSize="24sp"/>
+
+    <ImageView
+        android:id="@+id/hotset_video_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_video"
+        app:layout_constraintTop_toTopOf="@+id/hotset_nav_app"
+        app:layout_constraintBottom_toBottomOf="@+id/hotset_nav_app"
+        app:layout_constraintStart_toEndOf="@+id/hotset_music_app"
+        app:layout_constraintEnd_toStartOf="@+id/hotset_btapp" />
+
+    <TextView
+        android:id="@+id/hotset_video_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/video"
+        app:layout_constraintStart_toStartOf="@+id/hotset_video_app"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_video_app"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_video_app"
+        android:textSize="24sp"/>
+
+    <ImageView
+        android:id="@+id/hotset_btapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_bt"
+        app:layout_constraintTop_toTopOf="@+id/hotset_nav_app"
+        app:layout_constraintBottom_toBottomOf="@+id/hotset_nav_app"
+        app:layout_constraintStart_toEndOf="@+id/hotset_video_app"
+        app:layout_constraintEnd_toStartOf="@+id/hotset_allapp" />
+
+    <TextView
+        android:id="@+id/hotset_bt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phone"
+        app:layout_constraintStart_toStartOf="@+id/hotset_btapp"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_btapp"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_btapp"
+        android:textSize="24sp"/>
+
+    <ImageView
+        android:id="@+id/hotset_allapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_all"
+        app:layout_constraintStart_toEndOf="@+id/hotset_btapp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/hotset_nav_app"
+        app:layout_constraintBottom_toBottomOf="@+id/hotset_nav_app" />
+
+      <TextView
+        android:id="@+id/hotset_all_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_app"
+        app:layout_constraintStart_toStartOf="@+id/hotset_allapp"
+        app:layout_constraintEnd_toEndOf="@+id/hotset_allapp"
+        app:layout_constraintTop_toBottomOf="@+id/hotset_allapp"
+        android:textSize="24sp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
