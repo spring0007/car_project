@@ -26,7 +26,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -34,6 +33,7 @@ import androidx.core.content.ContextCompat;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
+import com.launcher.yfd_ui01.utils.SystemUIClient;
 import com.awell.launcher2.IconCache;
 import com.awell.utils.CommonData;
 import com.launcher.yfd_ui01.app.GlobalViewManager;
@@ -41,11 +41,11 @@ import com.launcher.yfd_ui01.app.IconManager;
 import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding;
 import com.launcher.yfd_ui01.databinding.DialWidgetBinding;
 import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 
 public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivity_YFD_UI01.class.getSimpleName();
@@ -61,6 +61,13 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     private Handler mHandlerSpeed = null;
     private boolean accRecor;
     private final int SPEEDHOME = 20;
+    private SystemUIClient mServiceClient;
+
+    public static final int WINDOWING_MODE_FULLSCREEN = 1;
+    public static final int WINDOWING_MODE_FREEFORM = 5;
+    private static final int HIDE_FREEFORM = 0x10;
+    private static final int OPEN_APP_TO_FREEFORM = 0x11;
+
 
 //    private SpeedSimulator speedSimulator;
 
@@ -70,7 +77,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
         IconManager.init(getApplicationContext());
         binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
-
 
 
         mediaControl = new AwellMediaControl();
@@ -84,8 +90,8 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         dashboardView = binding.carSpeedPoint;
         dialWidgetBinding = binding.layoutDialWidget;
         dialWidget = dialWidgetBinding.dialWidgetLayout;
-        dialWidget.findViews(this,dialWidget);
-         //setLauncherPackage(this.getApplicationContext());
+        dialWidget.findViews(this, dialWidget);
+        //setLauncherPackage(this.getApplicationContext());
         setContentView(binding.getRoot());
         initReceiver();
         initLongTouch();
@@ -97,6 +103,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         }
 
         updateSpeedUnitText();
+        bindSystemUIService();
 
 //        // 创建速度模拟器
 //        speedSimulator = new SpeedSimulator(new SpeedSimulator.SpeedChangeListener() {
@@ -121,20 +128,26 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
     }
 
+    private void bindSystemUIService() {
+        mServiceClient = new SystemUIClient();
+        mServiceClient.bindToSystemUIService(this);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
         //setLauncherPackage(getApplicationContext());
-        if(dialWidget!= null)
+        if (dialWidget != null)
             dialWidget.startAnimation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(dialWidget!= null)
+        if (dialWidget != null)
             dialWidget.stopAnimation();
-        if(dashboardView!= null)
+        if (dashboardView != null)
             dashboardView.closeAnimation();
     }
 
@@ -167,9 +180,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         };
         viewConfiguration = ViewConfiguration.get(this);
     }
-
-
-
 
 
     @SuppressLint("HandlerLeak")
@@ -353,7 +363,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                     // 日期发生了变化
                 case Intent.ACTION_TIME_TICK:
                     //系统时间变化
-                    if(dialWidget!= null)
+                    if (dialWidget != null)
                         dialWidget.updateTimeSysem();
                     break;
 
@@ -395,6 +405,9 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
             Log.w(TAG, "GlobalViewManager.hideApps failed", e);
         }
         //super.onBackPressed();
+        //startFreeFormActivity(free_packName, free_className);
+//        notifyFrameworkKeepMapAppVisible(true);
+        mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, OPEN_APP_TO_FREEFORM);
     }
 
     @Override
@@ -419,7 +432,9 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         } catch (Exception e) {
             Log.w(TAG, "GlobalViewManager.destroy failed", e);
         }
-
+        if (mServiceClient != null) {
+            mServiceClient.unbindService(this);
+        }
         // 停止速度模拟器
 //        if (speedSimulator != null) {
 //            speedSimulator.stopSimulation();
@@ -434,30 +449,69 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     }
 
 
-    //private final String  free_packName = "com.awell.carsetting";
-    //private final String  free_className = "com.awell.carsetting.MainActivity";
+    private final String free_packName = "com.autonavi.amapauto";
+    private final String FREE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
 
-    private final String  free_packName = "com.google.android.apps.maps";
-    private final String  free_className = "com.google.android.maps.MapsActivity";
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllApp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.hotsetBtApp.getId()) {
-            startFreeFormActivity(free_packName,free_className);
-            //startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
-        }else if (v.getId() == binding.hotsetDspApp.getId()) {
+//            notifyFrameworkKeepMapAppVisible(false);
+            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, HIDE_FREEFORM);
+
+            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, WINDOWING_MODE_FULLSCREEN);
+
+            //mServiceClient.setFreeformType(HIDE_FREEFORM);
+            Log.i(TAG, "onClick: huang freeform to hide==>");
+
+        } else if (v.getId() == binding.hotsetBtApp.getId()) {
+
+            Settings.System.putString(getContentResolver(), "freeform_app_package_name", free_packName);
+//            notifyFrameworkKeepMapAppVisible(true);
+            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, OPEN_APP_TO_FREEFORM);
+            //startFreeFormActivity(free_packName, free_className);
+
+        } else if (v.getId() == binding.hotsetDspApp.getId()) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
-        } else if (v.getId() == binding.hotsetWindowApp.getId()){
-            View root = findViewById(android.R.id.content);
-            try {
-                GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
-                Log.i(TAG, "GlobalViewManager.showApps to AppsCustomizeControl");
-            } catch (Exception e) {
-                Log.w(TAG, "GlobalViewManager.showApps failed, fallback to AppsCustomizeControl", e);
-            }
+
+        } else if (v.getId() == binding.hotsetWindowApp.getId()) {
+//            notifyFrameworkKeepMapAppVisible(false);
+            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, WINDOWING_MODE_FULLSCREEN);
+
+            //mServiceClient.setFreeformType(WINDOWING_MODE_FULLSCREEN); //full screen
+
+//            View root = findViewById(android.R.id.content);
+//            try {
+//                GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
+//                Log.i(TAG, "GlobalViewManager.showApps to AppsCustomizeControl");
+//            } catch (Exception e) {
+//                Log.w(TAG, "GlobalViewManager.showApps failed, fallback to AppsCustomizeControl", e);
+//            }
+
         }
     }
+
+    /**
+     * 通知Framework层地图应用是否需要保持显示
+     * @param keepVisible true表示需要保持显示，false表示清除
+     */
+    private void notifyFrameworkKeepMapAppVisible(boolean keepVisible) {
+        try {
+            if (keepVisible) {
+                Settings.System.putString(getContentResolver(), "freeform_app_keep_visible", "true");
+                Settings.System.putString(getContentResolver(), "freeform_app_package_name", free_packName);
+                Log.i(TAG, "notifyFrameworkKeepMapAppVisible: Set keep visible=" + Settings.System.getString(getContentResolver(), "freeform_app_keep_visible") + " for "
+                        + Settings.System.getString(getContentResolver(), "freeform_app_package_name"));
+            } else {
+                Settings.System.putString(getContentResolver(), "freeform_app_keep_visible", "false");
+                //Settings.System.putString(getContentResolver(), "freeform_app_package_name", "");
+                Log.i(TAG, "notifyFrameworkKeepMapAppVisible: Clear keep visible");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "notifyFrameworkKeepMapAppVisible: Error writing settings", e);
+        }
+    }
+
 
     /**
      * 跳转Activity
@@ -642,13 +696,10 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         startWallpaper();
     }
 
-    //freeform模式
-    private static final int WINDOWING_MODE_FREEFORM = 5;
-
-    public void startFreeFormActivity(String packageName,String  className) {
+    public void startFreeFormActivity(String packageName, String className) {
 
         Intent intent = new Intent();
-        intent.setComponent(new ComponentName(packageName,className));
+        intent.setComponent(new ComponentName(packageName, className));
         ActivityOptions options = ActivityOptions.makeBasic();
 //        options.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
         Method method = null;
@@ -656,7 +707,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 //            method = ActivityOptions.class.getMethod("setTaskAlwaysOnTop", boolean.class);
 //            method.invoke(options,true);
             method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
-            method.invoke(options,WINDOWING_MODE_FREEFORM);
+            method.invoke(options, WINDOWING_MODE_FREEFORM);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
@@ -664,14 +715,15 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+//        startActivity(intent, options.toBundle());
         int freeformWidth = 515;
         int freeformHeight = 352;
         //居中显示
         int left = 394;
         int top = 60;
-        options.setLaunchBounds(new Rect(left,top,freeformWidth + left,freeformHeight + top));
+        options.setLaunchBounds(new Rect(left, top, freeformWidth + left, freeformHeight + top));
         Bundle bundle = options.toBundle();
-        startActivity(intent,bundle);
+        startActivity(intent, bundle);
     }
 
 }
