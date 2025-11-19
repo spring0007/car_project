@@ -522,6 +522,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private void updatePlaybackPosition(boolean playing, long position, long duration) {
         if (playing && position <= mDuration) {
             Bundle bundle = createPlaybackDataBundle(position, duration);
+            bundle.putString(AwellTool.VALUE_M6,"from updatePlaybackPosition");
             sendDataToAwellApi(bundle);
             //Log.d(TAG, "Updating playback position: " + position);
         }
@@ -535,6 +536,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         bundle.putString(AwellTool.VALUE_M2, isPlaying ? "start" : "stop");
         bundle.putInt(AwellTool.VALUE_M3, 3);
         bundle.putInt(AwellTool.VALUE_M4, MusicWidget.OTHER_MUSIC);
+        bundle.putString(AwellTool.VALUE_M6,"from sendMediaPlayInfoToWidget");
         sendDataToAwellApi(bundle);
     }
 
@@ -570,6 +572,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             //}
             Log.d(TAG, "sendMusicInfoToWidget title: " + metadata.getString(MediaMetadata.METADATA_KEY_TITLE));
         }
+        bundle.putString(AwellTool.VALUE_M6,"from sendMusicInfoToWidget");
         sendDataToAwellApi(bundle);
     }
 
@@ -577,6 +580,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         Bundle bundle = new Bundle();
         bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE);
         bundle.putString(AwellTool.VALUE_M3, uri);
+        bundle.putString(AwellTool.VALUE_M6,"from notifyHostAlbumArtUpdate");
         sendDataToAwellApi(bundle);
     }
 
@@ -584,6 +588,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         Bundle bundle = new Bundle();
         bundle.putString(AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAYSTATUS);
         bundle.putBoolean(AwellTool.VALUE_M1, isPlaying);
+        bundle.putString(AwellTool.VALUE_M6,"from sendPlayStateToWidget");
         sendDataToAwellApi(bundle);
     }
 

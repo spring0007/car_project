@@ -222,15 +222,17 @@ class HostToPluginService : Service() {
                     else -> 4
                 }
                 it.putInt(AwellTool.VALUE_M4, musicType)
-
+                it.putString(AwellTool.VALUE_M6, "from mTempMediaPlay")
                 notifyClientDataChanged(it)
             }
 
             mTempMusicPlayInfo?.let {
+                it.putString(AwellTool.VALUE_M6, "from mTempMusicPlayInfo")
                 notifyClientDataChanged(it)
             }
 
             mTempAlbumBundle?.let {
+                it.putString(AwellTool.VALUE_M6, "from mTempAlbumBundle")
                 handleLocalMusicImageByScope(it)
             }
 
@@ -261,6 +263,7 @@ class HostToPluginService : Service() {
             MusicWidget.OTHER_MUSIC_PLAY_IMAGE,
             AwellTool.MUSIC.PLAY_IMAGE -> {
                 mTempAlbumBundle = bundle.deepCopy()
+                bundle.putString(AwellTool.VALUE_M6,"from saveTempValue mTempAlbumBundle")
                 handleLocalMusicImageByScope(bundle)
             }
 
@@ -348,6 +351,7 @@ class HostToPluginService : Service() {
             val tempBundle = bundle.deepCopy()
             tempBundle.putString(AwellTool.VALUE_M1, null)
             tempBundle.putString(AwellTool.VALUE_M3, null)
+            tempBundle.putString(AwellTool.VALUE_M6, "from tempBundle")
             handleLocalMusicImageByScope(tempBundle)
         }
     }
@@ -368,6 +372,7 @@ class HostToPluginService : Service() {
                 AwellTool.STATUS_ACCEPT, MusicWidget.OTHER_MUSIC_PLAY_IMAGE
             )
             bundle.putString(AwellTool.VALUE_M4, imageFile.absoluteFile.toString())
+            bundle.putString(AwellTool.VALUE_M6, "from updateCarplayImageAlbum")
             handleLocalMusicImageByScope(bundle)
         }
     }
