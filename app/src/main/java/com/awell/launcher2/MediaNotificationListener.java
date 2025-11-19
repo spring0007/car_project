@@ -59,7 +59,8 @@ import java.util.concurrent.Executors;
  * 处理注册到media session服务中的媒体
  */
 public class MediaNotificationListener/* extends ServiceNotificationListenerService*/ {
-    private static final String TAG = "MediaNotificationListenerLog";
+    //private static final String TAG = "MediaNotificationListenerLog";
+    private static final String TAG = MediaNotificationListener.class.getSimpleName();
     // 常量定义
     private static final long UPDATE_INTERVAL_MS = 500;
     private static final Logger log = LoggerFactory.getLogger(MediaNotificationListener.class);
@@ -115,12 +116,12 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private final MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackState state) {
-            Log.d(TAG, "onPlaybackStateChanged: state=>" + state);
+            //Log.d(TAG, "onPlaybackStateChanged: state=>" + state);
             mExecutor.execute(() -> {
                 if (state != null) {
 
                     //Log.i(TAG, "onPlaybackStateChanged: huang state=>" + state);
-                    Log.d(TAG, "onPlaybackStateChanged: execute");
+                    //Log.d(TAG, "onPlaybackStateChanged: execute");
                     long currentTime = System.currentTimeMillis();
                     // 检查是否达到时间间隔,到达指定间隔发送数据
                     if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
@@ -129,7 +130,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                         handleMetadataArtUri();
                         Log.d(TAG, "onPlaybackStateChanged: metadata=>" + mMediaController.getMetadata());
                         if (mMediaController.getMetadata() != null) {
-                            Log.d(TAG, "onPlaybackStateChanged: metadata=>" + mMediaController.getMetadata());
                             handleMetadataChange(mMediaController, mMediaController.getMetadata());
                         }
 
@@ -175,7 +175,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     private void handleMetadataArtUri() {
         if (mMediaController.getMetadata() != null) {
             String metaArtUri = mMediaController.getMetadata().getString(METADATA_KEY_ALBUM_ART_URI);
-            Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
+            //Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
 
             if (metaArtUri != null && hasImage(metaArtUri) && !metaArtUri.equals(mLastUri)
                     //"default" 重新注册到media session里的元数据可能只包含300的图片
@@ -221,7 +221,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             List<MediaController> controllers = mMediaSessionManager.getActiveSessions(
                     new ComponentName(mContext, NotificationListenerService.class));
             mMediaSessionManager.addOnActiveSessionsChangedListener(mSessionsListener, componentName);
-            Log.d(TAG, "initDependencies--mControllers:" + mControllers.size());
         }
 
     }
@@ -318,8 +317,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         // 获取当前正在播放的controller
         for (MediaController controller : mMediaSessionManager.getActiveSessions(null)) {
             PlaybackState state = controller.getPlaybackState();
-            Log.i(TAG, "updateMediaController: huang control pkg=>" + controller.getPackageName());
-            Log.i(TAG, "updateMediaController: huang getPlayingPackageName()=>" + getPlayingPackageName());
 
             if (Objects.equals(controller.getPackageName(), getPlayingPackageName())) {
                 //setPlayingPackageName(controller.getPackageName());

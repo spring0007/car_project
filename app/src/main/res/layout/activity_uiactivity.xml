@@ -138,6 +138,17 @@
                     android:gravity="center"
                     android:visibility="gone">
 
+
+                    <TextView
+                        android:id="@+id/appLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="555"
+                        android:textSize="24sp"
+                        android:layout_marginTop="6dp"
+                        android:visibility="visible" />
+
                     <LinearLayout
                         android:id="@+id/time_ll_one"
                         android:layout_width="match_parent"

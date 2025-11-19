@@ -270,13 +270,20 @@ class HostToPluginService : Service() {
                 val pkg = bundle.getString(AwellTool.VALUE_M1, null)
                 val command = bundle.getString(AwellTool.VALUE_M2, null)
 
-                when {
+                when (command) {
                     //只在start的时候更新播放的包名
-                    command == "start" -> {
+                    "start" -> {
                         pkg?.let {
                             mMediaListener.playingPackageName = pkg
                             Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
-                            if (isMediaSessionPkg(pkg, command)) {
+                            if (isLocalMediaStart(pkg, command)) {
+                                //只有未注册到media session服务里的媒体开始播放的时候
+                                //才将注册到media session服务里的媒体断开回调
+                                mMediaListener.removeCallbacks()
+
+                                //蓝牙音乐没有专辑图片，设置默认图片
+                                setDefaultBtArt(pkg, bundle)
+                            } else {
                                 //只有三方注册到media session服务里的媒体开始播放的时候才注册监听
                                 mMediaListener.startCallbacks()
 
@@ -284,14 +291,15 @@ class HostToPluginService : Service() {
                                 if (pkg.contains("com.zjinnova.zlink")) {
                                     updateCarplayImageAlbum()
                                 }
+                            }
+                        }
+                    }
 
-                            } else if (isLocalMediaStart(pkg, command)) {
-                                //只有未注册到media session服务里的媒体开始播放的时候
-                                //才将注册到media session服务里的媒体断开回调
+                    "stop" -> {
+                        pkg?.let {
+                            //z-link切换carplay和hi-car时会发送stop过来，需要删除监听再重新注册三方的media session的监听
+                            if (it == "/system/bin/gocsdk") {
                                 mMediaListener.removeCallbacks()
-
-                                //蓝牙音乐没有专辑图片，设置默认图片
-                                setDefaultBtArt(pkg, bundle)
                             }
                         }
                     }
