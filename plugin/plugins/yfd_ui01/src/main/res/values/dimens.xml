@@ -4,5 +4,8 @@
     <dimen name="main_app_margin_start">30dp</dimen>
     <dimen name="main_app_margin_end">92dp</dimen>
     <dimen name="app_margin_start">30dp</dimen>
-    <dimen name="app_margin_end">31dp</dimen>
+    <dimen name="app_margin_end">21dp</dimen>
+    <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
+    <dimen name="navigation_bar_width">@*android:dimen/navigation_bar_width</dimen>
+    <!--@*android:dimen/navigation_bar_height-->
 </resources>

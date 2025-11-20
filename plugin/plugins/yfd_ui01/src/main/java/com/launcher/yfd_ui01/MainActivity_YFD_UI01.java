@@ -5,14 +5,11 @@ import static com.awell.utils.Utils.startWallpaper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -44,9 +41,6 @@ import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivity_YFD_UI01.class.getSimpleName();
     private ActivityMainUi01Binding binding;
@@ -74,7 +68,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i(TAG,"lqq,onCreate");
         IconManager.init(getApplicationContext());
         binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
 
@@ -135,9 +129,24 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG,"lqq,onRestart");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.i(TAG,"lqq,onResume");
         //setLauncherPackage(getApplicationContext());
+        Log.i(TAG, "lqq,dialWidget ,isActivated="+dialWidget.getVisibility());
+        if(dialWidget.getVisibility() == View.VISIBLE) {
+            if (mServiceClient != null) {
+                Log.i(TAG, "musicWidget  visible");
+                mServiceClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM);
+            }
+
+        }
         if (dialWidget != null)
             dialWidget.startAnimation();
     }
@@ -145,6 +154,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i(TAG,"lqq,onPause");
         if (dialWidget != null)
             dialWidget.stopAnimation();
         if (dashboardView != null)
@@ -346,6 +356,11 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                 case "android.launcher.show.allApp":
                     Log.d(TAG, "mainReceiver:" + intent.getAction());
                     AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    if(mServiceClient!= null) {
+                        mServiceClient.startOrSetFreeformType(context, HIDE_FREEFORM);
+                        mServiceClient.startOrSetFreeformType(context, WINDOWING_MODE_FULLSCREEN);
+                        Log.i(TAG, "onClick: huang freeform to hide222==>");
+                    }
                     break;
                 case "CANBUS_CHANGE_SPEED_Unit":
                     updateSpeedUnitText();
@@ -353,7 +368,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                 case "top_session_package_change":
                     String sessionTopPkg = intent.getStringExtra("top_package");
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
-                    Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    //Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
                     break;
                 case Intent.ACTION_TIME_CHANGED:
                     // 用户手动更改了时间
@@ -377,8 +392,8 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         boolean isStartCommand = "start".equals(value2);
         boolean isStopCommand = "stop".equals(value2);
         boolean isValidPackage = !TextUtils.isEmpty(value1);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
+        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
 
 
         // 处理停止播放的情况
@@ -398,40 +413,43 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        AppsCustomizeControl.INSTANCE.hideApps();
-        try {
-            GlobalViewManager.getInstance(this).hideApps();
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
-        }
         //super.onBackPressed();
-        //startFreeFormActivity(free_packName, free_className);
-//        notifyFrameworkKeepMapAppVisible(true);
-        mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, OPEN_APP_TO_FREEFORM);
+        Log.i(TAG,"lqq,onBackPressed");
+        AppsCustomizeControl.INSTANCE.hideApps();
+        Log.i(TAG, "lqq, onBackPressed,dialWidget ,isActivated="+dialWidget.getVisibility());
+//        try {
+//            GlobalViewManager.getInstance(this).hideApps();
+//        } catch (Exception e) {
+//            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+//        }
+		 if (mServiceClient != null)
+        	mServiceClient.startOrSetFreeformType(this,OPEN_APP_TO_FREEFORM);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         AppsCustomizeControl.INSTANCE.hideApps();
-        try {
-            GlobalViewManager.getInstance(this).hideApps();
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
-        }
+        Log.i(TAG,"lqq,onNewIntent");
+//        try {
+//            GlobalViewManager.getInstance(this).hideApps();
+//        } catch (Exception e) {
+//            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.i(TAG,"lqq,onDestroy");
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
-        try {
-            GlobalViewManager.getInstance(this).destroy();
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.destroy failed", e);
-        }
+//        try {
+//            GlobalViewManager.getInstance(this).destroy();
+//        } catch (Exception e) {
+//            Log.w(TAG, "GlobalViewManager.destroy failed", e);
+//        }
         if (mServiceClient != null) {
             mServiceClient.unbindService(this);
         }
@@ -449,37 +467,26 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     }
 
 
-    private final String free_packName = "com.autonavi.amapauto";
-    private final String FREE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
-
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllApp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-//            notifyFrameworkKeepMapAppVisible(false);
-            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, HIDE_FREEFORM);
-
-            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, WINDOWING_MODE_FULLSCREEN);
-
-            //mServiceClient.setFreeformType(HIDE_FREEFORM);
-            Log.i(TAG, "onClick: huang freeform to hide==>");
-
+            if(mServiceClient!= null) {
+                mServiceClient.startOrSetFreeformType(this, HIDE_FREEFORM);
+                mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
+                Log.i(TAG, "onClick: huang freeform to hide==>");
+            }
         } else if (v.getId() == binding.hotsetBtApp.getId()) {
-
-            Settings.System.putString(getContentResolver(), "freeform_app_package_name", free_packName);
-//            notifyFrameworkKeepMapAppVisible(true);
-            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, OPEN_APP_TO_FREEFORM);
-            //startFreeFormActivity(free_packName, free_className);
+            startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
 
         } else if (v.getId() == binding.hotsetDspApp.getId()) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
 
         } else if (v.getId() == binding.hotsetWindowApp.getId()) {
-//            notifyFrameworkKeepMapAppVisible(false);
-            mServiceClient.startOrSetFreeformType(this, free_packName,FREE_CLAZZ, WINDOWING_MODE_FULLSCREEN);
+            if(mServiceClient!=null)
+                mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
 
             //mServiceClient.setFreeformType(WINDOWING_MODE_FULLSCREEN); //full screen
-
 //            View root = findViewById(android.R.id.content);
 //            try {
 //                GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
@@ -490,28 +497,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
 
         }
     }
-
-    /**
-     * 通知Framework层地图应用是否需要保持显示
-     * @param keepVisible true表示需要保持显示，false表示清除
-     */
-    private void notifyFrameworkKeepMapAppVisible(boolean keepVisible) {
-        try {
-            if (keepVisible) {
-                Settings.System.putString(getContentResolver(), "freeform_app_keep_visible", "true");
-                Settings.System.putString(getContentResolver(), "freeform_app_package_name", free_packName);
-                Log.i(TAG, "notifyFrameworkKeepMapAppVisible: Set keep visible=" + Settings.System.getString(getContentResolver(), "freeform_app_keep_visible") + " for "
-                        + Settings.System.getString(getContentResolver(), "freeform_app_package_name"));
-            } else {
-                Settings.System.putString(getContentResolver(), "freeform_app_keep_visible", "false");
-                //Settings.System.putString(getContentResolver(), "freeform_app_package_name", "");
-                Log.i(TAG, "notifyFrameworkKeepMapAppVisible: Clear keep visible");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "notifyFrameworkKeepMapAppVisible: Error writing settings", e);
-        }
-    }
-
 
     /**
      * 跳转Activity
@@ -695,35 +680,81 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     private void handleLongPressAction() {
         startWallpaper();
     }
+//    public void startFreeFormActivity(String packageName, String className) {
+//
+//        Intent intent = new Intent();
+//        intent.setComponent(new ComponentName(packageName, className));
+//        ActivityOptions options = ActivityOptions.makeBasic();
+////        options.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
+//        Method method = null;
+//        try {
+////            method = ActivityOptions.class.getMethod("setTaskAlwaysOnTop", boolean.class);
+////            method.invoke(options,true);
+//            method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
+//            method.invoke(options, WINDOWING_MODE_FREEFORM);
+//        } catch (NoSuchMethodException e) {
+//            throw new RuntimeException(e);
+//        } catch (InvocationTargetException e) {
+//            throw new RuntimeException(e);
+//        } catch (IllegalAccessException e) {
+//            throw new RuntimeException(e);
+//        }
+////        startActivity(intent, options.toBundle());
+//        int freeformWidth = 515;
+//        int freeformHeight = 352;
+//        //居中显示
+//        int left = 394;
+//        int top = 60;
+//        options.setLaunchBounds(getNav(new Rect(left,top,freeformWidth + left,freeformHeight + top)));
+//        Bundle bundle = options.toBundle();
+//        startActivity(intent, bundle);
+//    }
 
-    public void startFreeFormActivity(String packageName, String className) {
 
-        Intent intent = new Intent();
-        intent.setComponent(new ComponentName(packageName, className));
-        ActivityOptions options = ActivityOptions.makeBasic();
-//        options.setLaunchWindowingMode(WINDOWING_MODE_FREEFORM);
-        Method method = null;
-        try {
-//            method = ActivityOptions.class.getMethod("setTaskAlwaysOnTop", boolean.class);
-//            method.invoke(options,true);
-            method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
-            method.invoke(options, WINDOWING_MODE_FREEFORM);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-//        startActivity(intent, options.toBundle());
-        int freeformWidth = 515;
-        int freeformHeight = 352;
-        //居中显示
-        int left = 394;
-        int top = 60;
-        options.setLaunchBounds(new Rect(left, top, freeformWidth + left, freeformHeight + top));
-        Bundle bundle = options.toBundle();
-        startActivity(intent, bundle);
-    }
+//    public void  getLaunchIntentForPackage(Context context) {
+//        // First see if the package has an INFO activity; the existence of
+//        // such an activity is implied to be the desired front-door for the
+//        // overall package (such as if it has multiple launcher entries).
+//
+//        //获取PackageManager
+//        PackageManager packageManager = context.getPackageManager();
+//        //获取所有已安装程序的包信息
+//        List<PackageInfo> packageInfos = packageManager.getInstalledPackages(0);
+//        //从pinfo中将包名字逐一取出，压入pName list中
+//        for (int i = 0; i < packageInfos.size(); i++) {
+//            String packName = packageInfos.get(i).packageName;
+//            String activity = packageInfos.get(i).activities[0].targetActivity;
+//            Log.e(TAG, "allPackage: " + packName + ",activity=" + activity);
+//        }
+
+
+//
+//        Intent intentToResolve = new Intent(Intent.ACTION_MAIN);
+//        intentToResolve.addCategory(Intent.CATEGORY_INFO);
+//        intentToResolve.setPackage(packageName);
+//        PackageManager packageManager =getPackageManager();
+//        Method method = PackageManager.class.getMethod("queryIntentActivities", ResolveInfo.class,int.class);
+//        List<ResolveInfo> ris = (List<ResolveInfo>) method.invoke(packageManager, intentToResolve , 0);
+//        //List<ResolveInfo> ris = packageName.queryIntentActivities(intentToResolve, 0);
+//
+//        // Otherwise, try to find a main launcher activity.
+//        if (ris == null || ris.size() <= 0) {
+//            // reuse the intent instance
+//            intentToResolve.removeCategory(Intent.CATEGORY_INFO);
+//            intentToResolve.addCategory(Intent.CATEGORY_LAUNCHER);
+//            intentToResolve.setPackage(packageName);
+//            method = PackageManager.class.getMethod("queryIntentActivities", ResolveInfo.class,int.class);
+//            ris = (List<ResolveInfo>) method.invoke(packageManager, intentToResolve , 0);
+//            //ris = packageName.queryIntentActivities(intentToResolve, 0);
+//        }
+//        if (ris == null || ris.size() <= 0) {
+//            return null;
+//        }
+//        Intent intent = new Intent(intentToResolve);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.setClassName(ris.get(0).activityInfo.packageName,
+//                ris.get(0).activityInfo.name);
+//        return intent;
+//    }
 
 }
