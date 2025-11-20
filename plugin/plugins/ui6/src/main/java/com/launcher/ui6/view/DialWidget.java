@@ -50,7 +50,11 @@ public class DialWidget extends LinearLayout {
         int month = calendar.get(Calendar.MONTH) + 1; // 月份从0开始，需要加1
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         // 获取系统时间
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+       // int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int hour = calendar.get(Calendar.HOUR);
+        if (hour == 0) {
+            hour = 12;
+        }
         int minute = calendar.get(Calendar.MINUTE);
         //int second = calendar.get(Calendar.SECOND);
         int week = calendar.get(Calendar.DAY_OF_WEEK);
@@ -60,8 +64,8 @@ public class DialWidget extends LinearLayout {
 //        }else{
 //            //tv_time.setText(R.string.pm);
 //        }
-        tv_time.setText(String.format(getDefault(), "%02d:%02d", hour, minute));
-        tv_date.setText(String.format(getDefault(), "%02d-%02d", month, day));
+        tv_time.setText(String.format(getDefault(), "%2d:%02d", hour, minute));
+        tv_date.setText(String.format(getDefault(), "%2d-%02d", month, day));
         if (tv_week != null) {
             String[] formats = null;
             try {
