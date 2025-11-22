@@ -84,6 +84,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         }
 
         updateSpeedUnitText();
+        AppsCustomizeControl.INSTANCE.setActivity(this);
 
     }
     @Override
@@ -357,6 +358,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();

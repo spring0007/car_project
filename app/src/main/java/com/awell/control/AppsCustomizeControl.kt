@@ -46,6 +46,7 @@ object AppsCustomizeControl {
     private lateinit var mAppContext: Context
     private lateinit var mModel: LauncherModel
 
+
     var mAllIsShowing = false
 
 
@@ -58,6 +59,10 @@ object AppsCustomizeControl {
         mModel = model
         mIsInitialized = true
 
+    }
+
+    fun setActivity(context: Context?) {
+        mAppsCustomizeContent?.setActivity(context)
     }
 
     /**

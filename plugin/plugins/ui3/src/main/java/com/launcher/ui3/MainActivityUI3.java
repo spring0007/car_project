@@ -81,6 +81,8 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
         initAddappView();
 
+        AppsCustomizeControl.INSTANCE.setActivity(this);
+
     }
 
     private void initLongTouch() {
@@ -298,8 +300,9 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaControl.unBindDataService(this);
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        mediaControl.unBindDataService(this);
     }
 
     private void clickApp() {

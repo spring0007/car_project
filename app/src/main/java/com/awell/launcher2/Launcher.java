@@ -2039,7 +2039,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     int[] textColorId1 = {Color.WHITE, Color.BLACK};
     int[] sf_time_bg_mainID = {R.drawable.sf_time_bg_main, R.drawable.sf_time_bg_main_n};
     int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
-//    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
+    //    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
     int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
     int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
     int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
@@ -3220,7 +3220,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             v.getLocationOnScreen(pos);
             intent.setSourceBounds(new Rect(pos[0], pos[1], pos[0] + v.getWidth(), pos[1] + v.getHeight()));
 
-            boolean success = startActivitySafely(v, intent, tag);
+            boolean success = startActivitySafely(v, this, intent, tag);
 
             if (success && v instanceof BubbleTextView) {
                 mWaitingForResume = (BubbleTextView) v;
@@ -3285,11 +3285,11 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             if (activityName != null) {
                 intent.setPackage(activityName.getPackageName());
             }
-            Utils.startActivity(null, intent, "onClickVoiceButton");
+            Utils.startActivity(null, this, intent, "onClickVoiceButton");
         } catch (ActivityNotFoundException e) {
             Intent intent = new Intent(RecognizerIntent.ACTION_WEB_SEARCH);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivitySafely(null, intent, "onClickVoiceButton");
+            startActivitySafely(null, this, intent, "onClickVoiceButton");
         }
     }
 
@@ -3335,7 +3335,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     public void onClickAppMarketButton(View v) {
         if (mAppMarketIntent != null) {
-            startActivitySafely(v, mAppMarketIntent, "app market");
+            startActivitySafely(v, this, mAppMarketIntent, "app market");
         } else {
             Log.e(TAG, "Invalid app market intent.");
         }
@@ -3345,7 +3345,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         String packageName = componentName.getPackageName();
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        startActivitySafely(null, intent, "startApplicationDetailsActivity");
+        startActivitySafely(null, this, intent, "startApplicationDetailsActivity");
     }
 
     void startApplicationUninstallActivity(ApplicationInfo appInfo) {

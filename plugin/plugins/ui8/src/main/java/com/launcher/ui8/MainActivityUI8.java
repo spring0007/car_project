@@ -68,6 +68,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
 
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
+        AppsCustomizeControl.INSTANCE.setActivity(this);
     }
 
     private void initReceiver() {
@@ -153,6 +154,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
     }

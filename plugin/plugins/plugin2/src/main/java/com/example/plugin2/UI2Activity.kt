@@ -106,6 +106,8 @@ class UI2Activity : Activity() {
 
         initBroadcastReceiver()
 
+        AppsCustomizeControl.setActivity(this)
+
     }
 
     /**
@@ -202,6 +204,7 @@ class UI2Activity : Activity() {
         super.onDestroy()
 //        mMediaListener.cleanup()
         unregisterReceiver(receiver)
+        AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
         Log.i(TAG, "onDestroy: huang plugin2 destroy this=>${this}")

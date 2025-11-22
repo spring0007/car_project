@@ -51,6 +51,7 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
 
         binding.timeBgIv.setOnClickListener(this);
+        AppsCustomizeControl.INSTANCE.setActivity(this);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {
@@ -114,6 +115,7 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
     }
 

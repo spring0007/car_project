@@ -41,6 +41,8 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
         setUpViewPager();
 
         binding.timeLayout.dateLayout.setOnClickListener(this);
+        AppsCustomizeControl.INSTANCE.setActivity(this);
+
     }
 
     private void setUpViewPager() {
@@ -92,6 +94,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
     }
 

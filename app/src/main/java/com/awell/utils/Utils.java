@@ -432,9 +432,9 @@ public class Utils {
      */
 //    public static int[] iconBg = {R.drawable.sf_a_bg,R.drawable.sf_b_bg,R.drawable.sf_c_bg,
 //            R.drawable.sf_d_bg,R.drawable.sf_e_bg};
-    public static boolean startActivity(View v, Intent intent, Object tag) {
+    public static boolean startActivity(View v, Context context, Intent intent, Object tag) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
+        intent.setFlags(intent.getFlags() & ~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
         try {
             // Only launch using the new animation if the shortcut has not opted
             // out (this is a
@@ -443,10 +443,17 @@ public class Utils {
             boolean useLaunchAnimation = (v != null) && !intent.hasExtra(INTENT_EXTRA_IGNORE_LAUNCH_ANIMATION);
             if (useLaunchAnimation) {
                 ActivityOptions opts = ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-
-                getmAppContext().startActivity(intent, opts.toBundle());
+                if (context != null) {
+                    context.startActivity(intent, opts.toBundle());
+                } else {
+                    getmAppContext().startActivity(intent, opts.toBundle());
+                }
             } else {
-                getmAppContext().startActivity(intent);
+                if (context != null) {
+                    context.startActivity(intent);
+                } else {
+                    getmAppContext().startActivity(intent);
+                }
             }
             return true;
         } catch (SecurityException e) {
@@ -456,10 +463,10 @@ public class Utils {
         return false;
     }
 
-    public static boolean startActivitySafely(View v, Intent intent, Object tag) {
+    public static boolean startActivitySafely(View v, Context context, Intent intent, Object tag) {
         boolean success = false;
         try {
-            success = startActivity(v, intent, tag);
+            success = startActivity(v, context, intent, tag);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(getmAppContext(), R.string.activity_not_found, Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Unable to launch. tag=" + tag + " intent=" + intent, e);
@@ -628,7 +635,7 @@ public class Utils {
         // li.setClassName(wi.getPackageName(), wi.getSettingsActivity());
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, listIntent.toArray(new Parcelable[]{}));
         // }
-        startActivity(null, chooser, "startWallpaper");
+        startActivity(null, getmAppContext(), chooser, "startWallpaper");
         //startActivityForResult(chooser, REQUEST_PICK_WALLPAPER);
 
     }

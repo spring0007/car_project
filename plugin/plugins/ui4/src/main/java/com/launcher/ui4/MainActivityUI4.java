@@ -97,6 +97,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
         updateSpeedUnitText();
+
+        AppsCustomizeControl.INSTANCE.setActivity(this);
+
     }
 
     private void initClickEvent() {
@@ -359,7 +362,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         placehodlerInfo = new AppInfo();
         placehodlerInfo.setIcon(getDrawable(R.drawable.sf_app_add_icon));
-       // placehodlerInfo.setIcon_bg(getDrawable(R.drawable.sf_bg_e));
+        // placehodlerInfo.setIcon_bg(getDrawable(R.drawable.sf_bg_e));
         placehodlerInfo.setLabel(getString(R.string.add_app));
 
         // 获取已保存需要显示的app包名，如果没有，则显示默认
@@ -375,9 +378,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 // 删除记录
                 sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
             }
-            for (String packageName : stroageAppList){
+            for (String packageName : stroageAppList) {
                 AppInfo app = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
-                if(app != null){
+                if (app != null) {
                     showAppInfoLis.add(Utils.getAppInfoFromPackage(packageName, allAppInfoList));
                 }
             }
@@ -385,10 +388,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
 
         // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoLis.size() == 0){
-            for (String packName : Utils.defaultShowApp){
+        if (showAppInfoLis.size() == 0) {
+            for (String packName : Utils.defaultShowApp) {
                 AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-                if(appInfo != null){
+                if (appInfo != null) {
                     showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
                 }
             }
@@ -540,7 +543,6 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onBackPressed() {
         AppsCustomizeControl.INSTANCE.hideApps();
@@ -557,17 +559,18 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mainReceiver);
-        mediaControl.unBindDataService(this);
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        mediaControl.unBindDataService(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()) {
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
-        }else if (v.getId() == binding.layoutRadioWidget.radioIvLayout.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.radioIvLayout.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }
@@ -652,10 +655,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
-           runOnUiThread(() -> {
+            runOnUiThread(() -> {
                 binding.layoutRadioWidget.tvRadioFreq.setText(freq);
                 binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
-             });
+            });
         }
 
         @Override

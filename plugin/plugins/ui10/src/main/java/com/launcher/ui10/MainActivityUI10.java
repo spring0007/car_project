@@ -74,9 +74,10 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
             handler.removeMessages(SPEEDHOME);
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
-
+        AppsCustomizeControl.INSTANCE.setActivity(this);
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -232,6 +233,7 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AppsCustomizeControl.INSTANCE.setActivity(null);
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
@@ -243,7 +245,7 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
         binding.hotsetNavApp.setOnClickListener(this);
         binding.hotsetMusicApp.setOnClickListener(this);
         binding.hotsetRadioApp.setOnClickListener(this);
-		binding.hotsetVideoApp.setOnClickListener(this);
+        binding.hotsetVideoApp.setOnClickListener(this);
         binding.hotsetAllTv.setOnClickListener(this);
         binding.hotsetBtTv.setOnClickListener(this);
         binding.hotsetVideoTv.setOnClickListener(this);
@@ -254,7 +256,7 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
         binding.timeBgRightIv.setOnClickListener(this);
         binding.timeHour.setOnClickListener(this);
         binding.timeMinute.setOnClickListener(this);
-  //      binding.layoutDialWidget.analogClockView.setOnClickListener(this);
+        //      binding.layoutDialWidget.analogClockView.setOnClickListener(this);
 //        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
     }
 
@@ -262,18 +264,18 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId() || v.getId() == binding.hotsetAllTv.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.hotsetBtapp.getId() || v.getId() == binding.hotsetBtTv.getId()) {
-            startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
-        }else if (v.getId() == binding.hotsetNavApp.getId() || v.getId() == binding.hotsetNaviTv.getId()) {
+        } else if (v.getId() == binding.hotsetBtapp.getId() || v.getId() == binding.hotsetBtTv.getId()) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        } else if (v.getId() == binding.hotsetNavApp.getId() || v.getId() == binding.hotsetNaviTv.getId()) {
             startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-        }else if (v.getId() == binding.hotsetMusicApp.getId() || v.getId() == binding.hotsetMusicTv.getId()){
+        } else if (v.getId() == binding.hotsetMusicApp.getId() || v.getId() == binding.hotsetMusicTv.getId()) {
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        }else if(v.getId() == binding.hotsetRadioApp.getId() || v.getId() == binding.hotsetRadioTv.getId()){
+        } else if (v.getId() == binding.hotsetRadioApp.getId() || v.getId() == binding.hotsetRadioTv.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-        }else if(v.getId() == binding.hotsetVideoApp.getId() || v.getId() == binding.hotsetVideoTv.getId()){
+        } else if (v.getId() == binding.hotsetVideoApp.getId() || v.getId() == binding.hotsetVideoTv.getId()) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        }else if(v.getId() == binding.timeBgIv.getId() || v.getId() == binding.timeBgLeftIv.getId() || v.getId() == binding.timeBgRightIv.getId()
-        || v.getId() == binding.timeHour.getId() || v.getId() == binding.timeMinute.getId()){
+        } else if (v.getId() == binding.timeBgIv.getId() || v.getId() == binding.timeBgLeftIv.getId() || v.getId() == binding.timeBgRightIv.getId()
+                || v.getId() == binding.timeHour.getId() || v.getId() == binding.timeMinute.getId()) {
             Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
             startActivity(intent);
         }

@@ -16,6 +16,7 @@
 
 package com.awell.launcher2;
 
+import static com.awell.launcher2.LauncherApplication.getmAppContext;
 import static com.awell.utils.Utils.startActivitySafely;
 
 import android.animation.AnimatorSet;
@@ -48,6 +49,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
+import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -319,6 +321,21 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private ArrayList<Runnable> mDeferredPrepareLoadWidgetPreviewsTasks = new ArrayList<Runnable>();
 
     private Rect mTmpRect = new Rect();
+
+    private static final String LAUNCHER_PLUGIN_CLAZZ = "persist.sys.launcher.clazz";
+
+    public void setActivity(Context context) {
+        mActivity = new WeakReference<>(context);
+    }
+
+    public Context getUiActivity() {
+        if (mActivity != null) {
+            return mActivity.get();
+        }
+        return null;
+    }
+
+    private WeakReference<Context> mActivity = null;
 
     // Used for drawing shortcut previews
     BitmapCache mCachedShortcutPreviewBitmap = new BitmapCache();
@@ -601,8 +618,16 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             // re-disable it as necessary
             // when Launcher resumes and we are still in AllApps.
             //mLauncher.updateWallpaperVisibility(true);
-            startActivitySafely(v, appInfo.intent, appInfo);
-            Log.i(TAG, "appinfo packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
+            String currentPluginUi = SystemProperties.get(LAUNCHER_PLUGIN_CLAZZ, "com.example.plugin1.UIActivity");
+            Context context = getmAppContext();
+            if (getUiActivity() != null && currentPluginUi != null &&
+                    getUiActivity().toString().contains(currentPluginUi)) {
+                //使用Plugin的Activity上下文
+                context = getUiActivity();
+            }
+
+            startActivitySafely(v, context, appInfo.intent, appInfo);
+            Log.i(TAG, "appinfo huang packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
         } else if (v instanceof PagedViewWidget) {
             // Let the user know that they have to long press to add a widget
             if (mWidgetInstructionToast != null) {
@@ -2016,11 +2041,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             app.setLevel(5);
         } else if (Utils.mAppLevel_6.contains(app.componentName.getPackageName())) {
             app.setLevel(6);
-        } else if (Utils.mAppLevel_7.contains(app.componentName.getPackageName())){
+        } else if (Utils.mAppLevel_7.contains(app.componentName.getPackageName())) {
             app.setLevel(7);
-        } else if (Utils.mAppLevel_8.contains(app.componentName.getPackageName())){
+        } else if (Utils.mAppLevel_8.contains(app.componentName.getPackageName())) {
             app.setLevel(8);
-        } else if (Utils.mAppLevel_9.contains(app.componentName.getPackageName())){
+        } else if (Utils.mAppLevel_9.contains(app.componentName.getPackageName())) {
             app.setLevel(9);
         } else {
             app.setLevel(10);

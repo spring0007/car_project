@@ -103,6 +103,7 @@ class UIActivity : Activity(), View.OnClickListener {
         dayNightImages(if (value == 1) 1 else 0)
 
         initBroadcastReceiver()
+        AppsCustomizeControl.setActivity(this)
 
 
     }
@@ -198,6 +199,7 @@ class UIActivity : Activity(), View.OnClickListener {
         super.onDestroy()
         Log.i(TAG, "onDestroy: huang plugin1 destroy==>")
         mMediaListener.cleanup()
+        AppsCustomizeControl.setActivity(null)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
