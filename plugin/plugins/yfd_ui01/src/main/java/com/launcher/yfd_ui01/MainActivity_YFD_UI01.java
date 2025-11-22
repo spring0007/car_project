@@ -1,6 +1,9 @@
 package com.launcher.yfd_ui01;
 
 import static com.awell.utils.Utils.startWallpaper;
+import static com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM;
+import static com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM;
+import static com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -57,18 +61,13 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     private final int SPEEDHOME = 20;
     private SystemUIClient mServiceClient;
 
-    public static final int WINDOWING_MODE_FULLSCREEN = 1;
-    public static final int WINDOWING_MODE_FREEFORM = 5;
-    private static final int HIDE_FREEFORM = 0x10;
-    private static final int OPEN_APP_TO_FREEFORM = 0x11;
-
-
 //    private SpeedSimulator speedSimulator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG,"lqq,onCreate");
+        bindSystemUIService();
         IconManager.init(getApplicationContext());
         binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
 
@@ -97,8 +96,6 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         }
 
         updateSpeedUnitText();
-        bindSystemUIService();
-
 //        // 创建速度模拟器
 //        speedSimulator = new SpeedSimulator(new SpeedSimulator.SpeedChangeListener() {
 //            @Override
@@ -137,18 +134,16 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG,"lqq,onResume");
-        //setLauncherPackage(getApplicationContext());
-        Log.i(TAG, "lqq,dialWidget ,isActivated="+dialWidget.getVisibility());
-        if(dialWidget.getVisibility() == View.VISIBLE) {
+        Log.i(TAG,"lqq,onResume,isAllShowing="+isAppsShow());
+        if(!isAppsShow()) {
             if (mServiceClient != null) {
-                Log.i(TAG, "musicWidget  visible");
                 mServiceClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM);
             }
+            if (dialWidget != null)
+                dialWidget.startAnimation();
 
         }
-        if (dialWidget != null)
-            dialWidget.startAnimation();
+
     }
 
     @Override
@@ -355,7 +350,8 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
                     break;
                 case "android.launcher.show.allApp":
                     Log.d(TAG, "mainReceiver:" + intent.getAction());
-                    AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    showAllApps(context);
+
                     if(mServiceClient!= null) {
                         mServiceClient.startOrSetFreeformType(context, HIDE_FREEFORM);
                         mServiceClient.startOrSetFreeformType(context, WINDOWING_MODE_FULLSCREEN);
@@ -414,28 +410,21 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        Log.i(TAG,"lqq,onBackPressed");
-        AppsCustomizeControl.INSTANCE.hideApps();
-        Log.i(TAG, "lqq, onBackPressed,dialWidget ,isActivated="+dialWidget.getVisibility());
-//        try {
-//            GlobalViewManager.getInstance(this).hideApps();
-//        } catch (Exception e) {
-//            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
-//        }
-		 if (mServiceClient != null)
-        	mServiceClient.startOrSetFreeformType(this,OPEN_APP_TO_FREEFORM);
+        Log.i(TAG,"lqq,onBackPressed isAllShowing="+isAppsShow());
+        hideAllApps(this);
+        if(!isAppsShow()) {
+            if (mServiceClient != null)
+                mServiceClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM);
+            if (dialWidget != null)
+                dialWidget.startAnimation();
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        AppsCustomizeControl.INSTANCE.hideApps();
         Log.i(TAG,"lqq,onNewIntent");
-//        try {
-//            GlobalViewManager.getInstance(this).hideApps();
-//        } catch (Exception e) {
-//            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
-//        }
+        hideAllApps(this);
     }
 
     @Override
@@ -444,12 +433,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         Log.i(TAG,"lqq,onDestroy");
         unregisterReceiver(mainReceiver);
         mediaControl.unBindDataService(this);
-        AppsCustomizeControl.INSTANCE.hideApps();
-//        try {
-//            GlobalViewManager.getInstance(this).destroy();
-//        } catch (Exception e) {
-//            Log.w(TAG, "GlobalViewManager.destroy failed", e);
-//        }
+        distoryAllApps(this);
         if (mServiceClient != null) {
             mServiceClient.unbindService(this);
         }
@@ -470,7 +454,7 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllApp.getId()) {
-            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+            showAllApps(this);
             if(mServiceClient!= null) {
                 mServiceClient.startOrSetFreeformType(this, HIDE_FREEFORM);
                 mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
@@ -485,18 +469,42 @@ public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListe
         } else if (v.getId() == binding.hotsetWindowApp.getId()) {
             if(mServiceClient!=null)
                 mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
-
-            //mServiceClient.setFreeformType(WINDOWING_MODE_FULLSCREEN); //full screen
-//            View root = findViewById(android.R.id.content);
-//            try {
-//                GlobalViewManager.getInstance(this).showApps((ViewGroup) root, 0);
-//                Log.i(TAG, "GlobalViewManager.showApps to AppsCustomizeControl");
-//            } catch (Exception e) {
-//                Log.w(TAG, "GlobalViewManager.showApps failed, fallback to AppsCustomizeControl", e);
-//            }
-
         }
     }
+
+    private  void showAllApps(Context context){
+        //AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+        View root = findViewById(android.R.id.content);
+        try {
+            GlobalViewManager.getInstance(context).showApps((ViewGroup) root, 0);
+            Log.i(TAG, "GlobalViewManager.showApps ");
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.showApps failed", e);
+        }
+    }
+    private void hideAllApps(Context context){
+        //AppsCustomizeControl.INSTANCE.hideApps();
+        try {
+            GlobalViewManager.getInstance(context).hideApps();
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
+        }
+    }
+    private void distoryAllApps(Context context){
+        //AppsCustomizeControl.INSTANCE.hideApps();
+        try {
+            GlobalViewManager.getInstance(context).destroy();
+        } catch (Exception e) {
+            Log.w(TAG, "GlobalViewManager.destroy failed", e);
+        }
+
+    }
+    private boolean isAppsShow(){
+        //return AppsCustomizeControl.INSTANCE.getMAllIsShowing();
+        return GlobalViewManager.getInstance(this).isAllShowing();
+
+    }
+
 
     /**
      * 跳转Activity
