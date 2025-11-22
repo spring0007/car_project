@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name" translatable="false">LauncherUI_YFD_UI01</string><!-- app 名称 -->
+    <string name="app_name" >LauncherUI_YFD_UI01</string><!-- app 名称 -->
 
-    <string name="ui_key" translatable="false">LauncherUI_YFD_UI01</string>
-    <string name="ui_clazz" translatable="false">com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
+    <string name="ui_key" >LauncherUI_YFD_UI01</string>
+    <string name="ui_clazz" >com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
 
 
     <string name="click_play_music">Song Title</string>
