@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
 import android.os.IBinder;
+import android.os.SystemProperties;
 import android.util.Log;
 
 import com.android.systemui.awell.services.ISystemUIService;
@@ -22,10 +23,10 @@ public class SystemUIClient {
     public static final int OPEN_APP_TO_FREEFORM = 0x11;
     
     // Freeform window dimensions
-    private static final int DEFAULT_LEFT = 374; // 394 - 20
-    private static final int DEFAULT_TOP = 60;
-    private static final int DEFAULT_WIDTH = 525;
-    private static final int DEFAULT_HEIGHT = 352;
+    public static final int DEFAULT_LEFT = 374; // 394 - 20
+    public static final int DEFAULT_TOP = 60;
+    public static final int DEFAULT_WIDTH = 529;
+    public static final int DEFAULT_HEIGHT = 352;
     
     private ISystemUIService mService;
     private boolean mIsBound = false;
@@ -38,7 +39,8 @@ public class SystemUIClient {
             mService = ISystemUIService.Stub.asInterface(service);
             mIsBound = true;
             Log.i(TAG, "Service connected successfully");
-            
+            SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH+","+DEFAULT_HEIGHT);
+            SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT+","+DEFAULT_TOP);
             if (mCallback != null) {
                 mCallback.startFreeform();
             }
@@ -49,6 +51,8 @@ public class SystemUIClient {
             mService = null;
             mIsBound = false;
             mCallback = null;
+            SystemProperties.set("persist.sys.lz.default_freeform_size", "0,0");
+            SystemProperties.set("persist.sys.lz.default_freeform_position", "-1,-1");
             Log.i(TAG, "Service disconnected");
 
         }
@@ -149,27 +153,40 @@ public class SystemUIClient {
         int adjustedSize = navigationBarSize / 2;
         
         switch (position) {
-            case 1: // Left
+            case 1: { // Left
+                int left = DEFAULT_LEFT + adjustedSize ;
+                SystemProperties.set("persist.sys.lz.default_freeform_position", left + "," + DEFAULT_TOP);
+                SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + DEFAULT_HEIGHT);
                 return new Rect(
-                    baseRect.left + adjustedSize - 10,
-                    baseRect.top,
-                    baseRect.right + adjustedSize - 10,
-                    baseRect.bottom
+                        baseRect.left + adjustedSize,
+                        baseRect.top,
+                        baseRect.right + adjustedSize,
+                        baseRect.bottom
                 );
-            case 2: // Right
+            }
+            case 2: {// Right
+                int left = DEFAULT_LEFT - adjustedSize ;
+                SystemProperties.set("persist.sys.lz.default_freeform_position", left + "," + DEFAULT_TOP);
+                SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + DEFAULT_HEIGHT);
                 return new Rect(
-                    baseRect.left - adjustedSize + 10,
-                    baseRect.top,
-                    baseRect.right - adjustedSize + 10,
-                    baseRect.bottom
+                        baseRect.left - adjustedSize ,
+                        baseRect.top,
+                        baseRect.right - adjustedSize,
+                        baseRect.bottom
                 );
-            case 3: // Bottom
+            }
+            case 3: { // Bottom
+                int heights = DEFAULT_HEIGHT - navigationBarSize;
+                SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT + "," + DEFAULT_TOP);
+                SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + heights);
                 return new Rect(
-                    baseRect.left,
-                    baseRect.top,
-                    baseRect.right,
-                    baseRect.bottom - adjustedSize
+                        baseRect.left,
+                        baseRect.top,
+                        baseRect.right,
+                        baseRect.bottom - navigationBarSize
                 );
+
+            }
             default:
                 return baseRect;
         }
@@ -178,13 +195,19 @@ public class SystemUIClient {
     /**
      * Get navigation bar size based on position
      */
-    private int getNavigationBarSize(Context context, int position) {
+    public static int getNavigationBarSize(Context context, int position) {
         try {
-            if (position == 1 || position == 2) {
-                return context.getResources().getDimensionPixelSize(R.dimen.navigation_bar_width);
-            } else if (position == 3) {
-                return context.getResources().getDimensionPixelSize(R.dimen.navigation_bar_height);
-            }
+            //float density = context.getResources().getDisplayMetrics().density;
+            //int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
+            float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+
+            //Log.i(TAG,"density="+density+",densityDpi="+densityDpi +",scaledDensity="+scaledDensity);
+            //注意:当导航栏在底部时，获取高度与实际高度不一致
+           // if (position == 1 || position == 2) {
+                return (int) (context.getResources().getDimensionPixelSize(R.dimen.navigation_bar_width)/scaledDensity);
+            //} else if (position == 3) {
+            //    return context.getResources().getDimensionPixelSize(R.dimen.navigation_bar_height);
+            //}
         } catch (Exception e) {
             Log.e(TAG, "Error getting navigation bar size: " + e.getMessage());
         }
