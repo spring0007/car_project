@@ -46,6 +46,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
 
+    private final String DEFAULT_KEY = "LauncherUI8";
+    private final String DEFAULT_CLAZZ = "com.launcher.ui8.MainActivityUI8";
+
     /**
      * 外部保存的插件文件路径
      */
@@ -116,7 +119,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onResume();
         Log.i(TAG, "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
         if (!isFirstBoot) {
-            String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+            String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
             Message message = buildPluginMsg(apkClazz);
             realStartPlugin(message);
         } else {
@@ -213,8 +216,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.i(TAG, "startPluginActivity: huang start plugin activity==>");
         }
 
-        String apkName = SystemProperties.get(LAUNCHER_KEY, "LauncherUI3");
-        String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+        String apkName = SystemProperties.get(LAUNCHER_KEY, DEFAULT_KEY);
+        String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
 
         String testApk = apkName + ".apk";
         String testApkPath = mExternalPluginPath + File.separator + apkName + File.separator + testApk;
@@ -303,7 +306,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
                 if ("com.awell.launcher.host.MainActivity".equals(topActivity)) {
-                    String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "com.example.plugin1.UIActivity");
+                    String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
                 }

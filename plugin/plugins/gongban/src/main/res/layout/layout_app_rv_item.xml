@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_item"
+    android:layout_width="@dimen/app_icon_bg_size"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:ignore="MissingDefaultResource">
+
+    <ImageView
+        android:id="@+id/iv_app_icon_bg"
+        android:layout_width="@dimen/app_icon_bg_size"
+        android:layout_height="@dimen/app_icon_bg_size"
+        android:visibility="gone" />
+
+    <com.awell.ctrlview.CustomRelativeLayout
+        android:id="@+id/app_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_width="@dimen/recycle_app_icon_size"
+            android:layout_height="@dimen/recycle_app_icon_size"
+            android:layout_centerHorizontal="true" />
+    </com.awell.ctrlview.CustomRelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text="app_name"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:visibility="gone" />
+</LinearLayout>

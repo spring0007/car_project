@@ -57,3 +57,64 @@ plugins {
     id 'com.android.library' version '7.4.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.9.24' apply false
 }
+
+
+def getTargetDirName(String moduleName) {
+    def nameMap = [
+            'launcher': 'LauncherHost',
+            'plugin1' : 'LauncherUI1',
+            'plugin2' : 'LauncherUI2',
+            'ui3'     : 'LauncherUI3',
+            'ui4'     : 'LauncherUI4',
+            'ui5'     : 'LauncherUI5',
+            'ui6'     : 'LauncherUI6',
+            'ui7'     : 'LauncherUI7',
+            'ui8'     : 'LauncherUI8',
+            'ui9'     : 'LauncherUI9',
+            'ui10'    : 'LauncherUI10',
+            'yfd_ui01': 'LauncherYFD01',
+            'gongban' : 'LauncherGongban'
+            // 其他模块可以继续添加映射
+    ]
+    return nameMap.get(moduleName, moduleName)
+}
+
+
+// 创建复制所有模块APK到统一目录的任务
+task copyAllReleaseApks(type: Copy) {
+    // 清空目标目录
+    delete rootProject.projectDir.path + '/release'
+
+    // 为每个模块创建复制规则
+    subprojects { subproject ->
+        def targetDirName = getTargetDirName(subproject.name)
+        from(subproject.projectDir.path + '/build/outputs/apk/release') {
+            include '*.apk'
+            into targetDirName
+        }
+    }
+    into rootProject.projectDir.path + '/release'
+}
+
+def releaseTasks = []
+
+// 监听所有任务的添加
+subprojects { subproject ->
+    subproject.tasks.whenTaskAdded { task ->
+        if (task.name == 'assembleRelease') {
+            println ">>> Task added: ${subproject.name}:${task.name}"
+            releaseTasks.add(task)
+        }
+    }
+}
+
+
+task assembleAllRelease {
+    // 依赖关系在 whenTaskAdded 中动态添加
+}
+
+
+afterEvaluate {
+    assembleAllRelease.dependsOn(releaseTasks)
+    assembleAllRelease.finalizedBy copyAllReleaseApks
+}

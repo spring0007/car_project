@@ -134,3 +134,16 @@ if (isPlugin) {
 //    ignoredInjectors = ['LoaderActivityInjector', 'ProviderInjector']
     }
 }
+
+task copyReleaseApk(type: Copy) {
+    from 'build/outputs/apk/release'
+    into './release'
+    include '*.apk'
+}
+
+// 让 assembleRelease 任务完成后执行复制任务
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease') {
+        task.finalizedBy copyReleaseApk
+    }
+}

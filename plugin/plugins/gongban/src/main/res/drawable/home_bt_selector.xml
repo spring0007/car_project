@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <bitmap android:src="@drawable/link_icon_bt" android:tint="#A0FFFFFF" />
+    </item>
+    <item android:drawable="@drawable/link_icon_bt" />
+</selector>

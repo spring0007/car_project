@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.plugin2'
+    namespace 'com.example.gongban'
     compileSdk 34
 
     defaultConfig {
