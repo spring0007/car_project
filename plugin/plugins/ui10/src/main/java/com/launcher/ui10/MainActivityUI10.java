@@ -75,6 +75,7 @@ public class MainActivityUI10 extends Activity implements View.OnClickListener {
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
 
     }
 
