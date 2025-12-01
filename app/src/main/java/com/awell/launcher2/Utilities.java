@@ -36,6 +36,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.awell.launcher.library.R;
 
@@ -43,7 +44,7 @@ import com.awell.launcher.library.R;
 /**
  * Various utilities shared amongst the Launcher's classes.
  */
-final class Utilities {
+public final class Utilities {
     @SuppressWarnings("unused")
     static Boolean FLAG = true;
     private static final String TAG = "Launcher.Utilities";
@@ -59,6 +60,8 @@ final class Utilities {
     private static final Paint sDisabledPaint = new Paint();
     private static final Rect sOldBounds = new Rect();
     private static final Canvas sCanvas = new Canvas();
+
+    private static int sThemeMode = 0;
 
     private static int[] sfOtherBG = {
             R.drawable.sf_other_app1
@@ -101,6 +104,37 @@ final class Utilities {
             final Resources resources = context.getResources();
             return createIconBitmap(new BitmapDrawable(resources, icon), context, packageName);
         }
+    }
+
+    public static void setPluginThemeMode(int themeMode,Context context) {
+        if (sThemeMode != themeMode) {
+            sThemeMode = themeMode;
+            Log.d(TAG, "setPluginThemeMode: themeMode changed to " + sThemeMode);
+
+            // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
+            if (context instanceof LauncherApplication) {
+                LauncherApplication app = (LauncherApplication) context;
+                LauncherModel model = app.getModel();
+                if (model != null) {
+                    // 强制重置加载状态，确保重新加载所有应用
+                    model.resetLoadedState(true, false);
+                    // 触发重新加载所有应用图标
+                    model.startLoader(true, -1);
+                }
+            }
+        }
+
+    }
+
+    private static int getIconResource(int sThemeMode) {
+        if (sThemeMode == 0){
+            return R.drawable.sf_other_app3_dark;
+        } else if (sThemeMode == 1){
+            return R.drawable.sf_other_app3;
+        } else if (sThemeMode == 2){
+            return R.drawable.sf_other_app3_yellow;
+        }
+        return R.drawable.sf_other_app3;
     }
 
     /**
@@ -192,7 +226,7 @@ final class Utilities {
             //增加图标背景图片 OWL
             if (true) {
                 Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(),
-                        R.drawable.sf_other_app3);//sfOtherBG[(new Random()).nextInt(5)]
+                        getIconResource(sThemeMode));//sfOtherBG[(new Random()).nextInt(5)]
                 int backWidth = backBitmap.getWidth();
                 int backHeight = backBitmap.getHeight();
                 if (backWidth != sIconWidth || backHeight != sIconHeight) {

@@ -27,10 +27,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import java.util.HashMap;
 
+import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.library.R;
+import com.awell.utils.Utils;
 
 /**
  * Cache of application icons.  Icons can be made from any thread.
@@ -122,7 +125,7 @@ public class IconCache {
 
             , "com.android.mms"
             , "com.autonavi.amapauto"
-            , "com.txznet.txzsetting"
+         //   , "com.txznet.txzsetting"
             , "com.tima.carnet.vt"
 
             , "net.easyconn"
@@ -177,7 +180,7 @@ public class IconCache {
 
             , R.drawable.sf_message
             , R.drawable.sf_gaode
-            , R.drawable.sf_ggvoice
+         //   , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink
 
             , R.drawable.sf_zlink
@@ -209,12 +212,123 @@ public class IconCache {
             , R.drawable.sf_usb_video_output
     };
 
+    public final int mHomePackageIcon_116_lehang_2_dark[] = {
+            R.drawable.sf_video_dark
+            , R.drawable.sf_music_dark
+            , R.drawable.sf_radio_dark
+            , R.drawable.sf_bt_dark
+
+            , R.drawable.sf_navi_dark
+            , R.drawable.sf_iphone
+            , R.drawable.sf_jisuanqi
+            , R.drawable.sf_liulanqi_dark
+
+            , R.drawable.sf_wjgl_dark
+            , R.drawable.sf_wjgl_dark
+            , R.drawable.sf_shezhi_dark
+            , R.drawable.sf_wjsr_dark
+
+            , R.drawable.kuwoyinyue_dark
+            , R.drawable.sf_jhq_dark
+            , R.drawable.sf_yuanche_dark
+            , R.drawable.sf_yuanche_dark
+
+            , R.drawable.sf_message
+            , R.drawable.sf_gaode_dark
+          //  , R.drawable.sf_ggvoice
+            , R.drawable.sf_zlink_dark
+
+            , R.drawable.sf_zlink_dark
+            , R.drawable.sf_zlink_dark
+            , R.drawable.sf_manual_dark
+            , R.drawable.sf_googlemap_dark
+
+            , R.drawable.sf_youtube_dark
+            , R.drawable.sf_playstore_dark
+            , R.drawable.sf_safri_dark
+            , R.drawable.sf_soundrecorder
+
+            , R.drawable.sf_calender
+            , R.drawable.sf_clock
+            , R.drawable.sf_contact
+            , R.drawable.sf_gallery_dark
+
+            , R.drawable.sf_camera
+            , R.drawable.sf_chrome_dark
+            , R.drawable.sf_search
+            , R.drawable.sf_simtools
+
+            , R.drawable.sf_system_setting
+            , R.drawable.sf_fan_dark
+            , R.drawable.sf_front_video_dark
+            , R.drawable.sf_color_light_dark
+            , R.drawable.sf_training_dark
+            , R.drawable.sf_theme_dark
+            , R.drawable.sf_usb_video_output_dark
+    };
+
+    public final int mHomePackageIcon_116_lehang_2_yellow[] = {
+            R.drawable.sf_video_yellow
+            , R.drawable.sf_music_yellow
+            , R.drawable.sf_radio_yellow
+            , R.drawable.sf_bt_yellow
+
+            , R.drawable.sf_navi_yellow
+            , R.drawable.sf_iphone
+            , R.drawable.sf_jisuanqi
+            , R.drawable.sf_liulanqi_yellow
+
+            , R.drawable.sf_wjgl_yellow
+            , R.drawable.sf_wjgl_yellow
+            , R.drawable.sf_shezhi_yellow
+            , R.drawable.sf_wjsr_yellow
+
+            , R.drawable.kuwoyinyue_yellow
+            , R.drawable.sf_jhq_yellow
+            , R.drawable.sf_yuanche_yellow
+            , R.drawable.sf_yuanche_yellow
+
+            , R.drawable.sf_message
+            , R.drawable.sf_gaode_yellow
+       //     , R.drawable.sf_ggvoice
+            , R.drawable.sf_zlink_yellow
+
+            , R.drawable.sf_zlink_yellow
+            , R.drawable.sf_zlink_yellow
+            , R.drawable.sf_manual_yellow
+            , R.drawable.sf_googlemap_yellow
+
+            , R.drawable.sf_youtube_yellow
+            , R.drawable.sf_playstore_yellow
+            , R.drawable.sf_safri_yellow
+            , R.drawable.sf_soundrecorder
+
+            , R.drawable.sf_calender
+            , R.drawable.sf_clock
+            , R.drawable.sf_contact
+            , R.drawable.sf_gallery_yellow
+
+            , R.drawable.sf_camera
+            , R.drawable.sf_chrome_yellow
+            , R.drawable.sf_search
+            , R.drawable.sf_simtools
+
+            , R.drawable.sf_system_setting
+            , R.drawable.sf_fan_yellow
+            , R.drawable.sf_front_video_yellow
+            , R.drawable.sf_color_light_yellow
+            , R.drawable.sf_training_yellow
+            , R.drawable.sf_theme_yellow
+            , R.drawable.sf_usb_video_output_yellow
+    };
+
     private final Bitmap mDefaultIcon;
     private final Context mContext;
     private final PackageManager mPackageManager;
     private final HashMap<ComponentName, CacheEntry> mCache =
             new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
     private int mIconDpi;
+    private int themeMode = 0;
 
     public IconCache(Context context) {
         ActivityManager activityManager =
@@ -227,6 +341,42 @@ public class IconCache {
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
     }
+
+    public void setPluginThemeMode(int themeMode) {
+        // 当themeMode发生变化时
+        if (this.themeMode != themeMode) {
+            this.themeMode = themeMode;
+            Log.d(TAG, "setPluginThemeMode: themeMode changed to " + themeMode);
+
+            // 清除缓存，这样下次获取图标时会重新加载
+            flush();
+
+            // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
+            if (mContext instanceof LauncherApplication) {
+                LauncherApplication app = (LauncherApplication) mContext;
+                LauncherModel model = app.getModel();
+                if (model != null) {
+                    // 强制重置加载状态，确保重新加载所有应用
+                    model.resetLoadedState(true, false);
+                    // 触发重新加载所有应用图标
+                    model.startLoader(true, -1);
+                }
+            }
+        }
+    }
+
+    private int getIconResource(int index) {
+       // return themeMode == 0 ? mHomePackageIcon_116_lehang_2_dark[index] : mHomePackageIcon_116_lehang_2[index];
+        if (themeMode == 0){
+            return mHomePackageIcon_116_lehang_2_dark[index];
+        } else if (themeMode == 1){
+            return mHomePackageIcon_116_lehang_2[index];
+        }else if (themeMode == 2){
+            return mHomePackageIcon_116_lehang_2_yellow[index];
+        }
+        return mHomePackageIcon_116_lehang_2[index];
+    }
+
 
     public Drawable getFullResDefaultActivityIcon() {
         return getFullResIcon(Resources.getSystem(),
@@ -320,17 +470,22 @@ public class IconCache {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;
             application.title = entry.title;
+            boolean customIconSet = false;
             for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
                 Utilities.FLAG = false;
                 if (packageName.contains(mHomePackageName_lehang[i])) {
-                    bmp = getFullResIcon(mContext.getResources(),
-                            mHomePackageIcon_116_lehang_2[i]);
-                    application.iconBitmap = Utilities.createIconBitmap(bmp,
-                            mContext, packageName);
+                    bmp = getFullResIcon(mContext.getResources(), getIconResource(i));
+                    application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
                     entry.icon = application.iconBitmap;
-                } else {
-                    application.iconBitmap = entry.icon;
+                    customIconSet = true;
+                    break;
                 }
+//                else {
+//                    application.iconBitmap = entry.icon;
+//                }
+            }
+            if (!customIconSet) {
+                application.iconBitmap = entry.icon;
             }
         }
     }
@@ -350,8 +505,7 @@ public class IconCache {
                 int nIndex = Utilities.isContains(packageName, mHomePackageName_lehang);
 
                 if (-1 != nIndex) {
-                    Drawable bmp = getFullResIcon(mContext.getResources(),
-                            mHomePackageIcon_116_lehang_2[nIndex]);
+                    Drawable bmp = getFullResIcon(mContext.getResources(), getIconResource(nIndex));
                     entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
                 }
             }
@@ -372,8 +526,9 @@ public class IconCache {
             for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
                 if (packageName.contains(mHomePackageName_lehang[i])) {
                     bmp = getFullResIcon(mContext.getResources(),
-                            mHomePackageIcon_116_lehang_2[i]);
+                            getIconResource(i));
                     entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
+                break;
                 }
             }
             return entry.icon;

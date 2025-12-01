@@ -52,6 +52,7 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
 
         binding.timeBgIv.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {

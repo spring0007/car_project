@@ -78,6 +78,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
         updateSpeedUnitText();
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
 
     }
 

@@ -82,7 +82,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         initAddappView();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
-
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
     }
 
     private void initLongTouch() {

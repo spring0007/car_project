@@ -42,6 +42,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         binding.timeLayout.dateLayout.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
 
     }
 

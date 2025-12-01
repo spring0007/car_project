@@ -69,6 +69,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
     }
 
     private void initReceiver() {

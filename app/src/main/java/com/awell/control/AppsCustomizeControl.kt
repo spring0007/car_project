@@ -14,6 +14,7 @@ import com.awell.launcher2.AppsCustomizePagedView
 import com.awell.launcher2.AppsCustomizeTabHost
 import com.awell.launcher2.IconCache
 import com.awell.launcher2.LauncherModel
+import com.awell.launcher2.Utilities
 import com.awell.ui.AppsCustomizeIndicatorPanel
 import java.lang.ref.WeakReference
 
@@ -45,6 +46,7 @@ object AppsCustomizeControl {
 
     private lateinit var mAppContext: Context
     private lateinit var mModel: LauncherModel
+    private lateinit var mIconCache: IconCache
 
 
     var mAllIsShowing = false
@@ -58,8 +60,16 @@ object AppsCustomizeControl {
         initView(context)
         mModel = model
         mIsInitialized = true
+        mIconCache = iconCache
 
     }
+
+    fun setPluginThemeMode(themeMode: Int) {
+        mIconCache.setPluginThemeMode(themeMode)
+        Utilities.setPluginThemeMode(themeMode,mAppContext)
+
+    }
+
 
     fun setActivity(context: Context?) {
         mAppsCustomizeContent?.setActivity(context)

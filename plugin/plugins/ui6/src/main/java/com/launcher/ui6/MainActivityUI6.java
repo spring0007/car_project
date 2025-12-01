@@ -31,7 +31,9 @@ import androidx.core.content.ContextCompat;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
+import com.awell.launcher2.LauncherApplication;
 import com.awell.utils.CommonData;
+import com.awell.utils.Utils;
 import com.launcher.ui6.databinding.ActivityMainUi6Binding;
 import com.launcher.ui6.databinding.DialWidgetBinding;
 import com.launcher.ui6.databinding.MusicWidgetBinding;
@@ -60,7 +62,6 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         binding = ActivityMainUi6Binding.inflate(getLayoutInflater());
 
-
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
@@ -85,6 +86,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
 
         updateSpeedUnitText();
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
 
     }
     @Override
