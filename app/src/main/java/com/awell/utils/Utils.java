@@ -263,7 +263,7 @@ public class Utils {
             , "com.android.chrome"
             , "com.tinyapp.smartcar"
             , "com.awell.update"
-            , "com.google.android.googlequicksearchbox"
+//            , "com.google.android.googlequicksearchbox"
             , "com.kugou.android.auto"
             , "com.qiyi.video.pad"
             , "com.tencent.qqmusic"
@@ -310,7 +310,7 @@ public class Utils {
             , R.drawable.sf_youtube
             , R.drawable.sf_playstore
             , R.drawable.sf_safri
-            , R.drawable.sf_ggvoice
+//            , R.drawable.sf_ggvoice
             , R.drawable.sf_store
             , R.drawable.sf_gg
             , R.drawable.sf_kugou

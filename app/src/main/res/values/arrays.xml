@@ -26,6 +26,7 @@
         <item>com.android.settings</item>
         <item>com.awell.launcher.host</item>
         <item>com.awell.launcher_ui2</item>
+        <item>com.google.android.googlequicksearchbox</item>
 <!--        <item>com.android.dialer</item>&lt;!&ndash;Telephone&ndash;&gt;
         <item>com.android.mms</item>&lt;!&ndash;Messaging&ndash;&gt;
         <item>com.android.contacts</item>&lt;!&ndash;Contacts&ndash;&gt;-->
