@@ -137,6 +137,7 @@ public class IconCache {
             , "com.android.vending"
             , "com.android.chrome"
             , "com.android.soundrecorder"
+            , "com.google.android.googlequicksearchbox"
 
             , "com.android.calendar"
             , "com.android.deskclock"
@@ -192,6 +193,7 @@ public class IconCache {
             , R.drawable.sf_playstore
             , R.drawable.sf_safri
             , R.drawable.sf_soundrecorder
+            , R.drawable.sf_gg
 
             , R.drawable.sf_calender
             , R.drawable.sf_clock
@@ -247,6 +249,7 @@ public class IconCache {
             , R.drawable.sf_playstore_dark
             , R.drawable.sf_safri_dark
             , R.drawable.sf_soundrecorder
+            , R.drawable.sf_gg_dark
 
             , R.drawable.sf_calender
             , R.drawable.sf_clock
@@ -302,6 +305,7 @@ public class IconCache {
             , R.drawable.sf_playstore_yellow
             , R.drawable.sf_safri_yellow
             , R.drawable.sf_soundrecorder
+            , R.drawable.sf_gg_yellow
 
             , R.drawable.sf_calender
             , R.drawable.sf_clock
