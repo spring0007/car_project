@@ -178,8 +178,8 @@ public class Utils {
      * 需要显示的应用
      */
     public static List<String> needToShowPackageName = Arrays.asList(
-            "com.awell.carsetting", "com.android.browser", "com.android.calendar",
-            "com.android.dialer", "com.android.calculator2",
+            "com.awell.carsetting", "com.android.browser",
+//            "com.android.dialer", "com.android.calculator2","com.android.calendar",
             "com.android.deskclock", "com.mediatek.filemanager",
             "com.android.documentsui", "com.autonavi.amapauto",
             "com.awell.radio", "com.awell.localmusic", "com.awell.localvideo",
@@ -234,8 +234,8 @@ public class Utils {
             , "com.awell.radio"
             , "com.awell.bluetooth"
 //            , "com.awell.navigation"
-            , "com.android.dialer"
-            , "com.android.calculator2"
+//            , "com.android.dialer"
+//            , "com.android.calculator2"
             , "com.android.browser"
             //           , "com.android.calendar"
             //           , "com.android.soundrecorder"
@@ -284,8 +284,8 @@ public class Utils {
             , R.drawable.sf_radio
             , R.drawable.sf_bt
 //            , R.drawable.sf_navi
-            , R.drawable.sf_iphone
-            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_iphone
+//            , R.drawable.sf_jisuanqi
             , R.drawable.sf_liulanqi
 //            , R.drawable.sf_rili       //
 //            , R.drawable.sf_luyinji     //
