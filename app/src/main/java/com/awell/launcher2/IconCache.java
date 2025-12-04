@@ -156,6 +156,7 @@ public class IconCache {
             , "com.awell.keystudy"
             , "com.awell.themesetting"
             , "com.ms.ms2160"
+            , "com.awell.weather"
     };
 
     public final int mHomePackageIcon_116_lehang_2[] = {
@@ -212,6 +213,7 @@ public class IconCache {
             , R.drawable.sf_training
             , R.drawable.sf_theme
             , R.drawable.sf_usb_video_output
+            , R.drawable.sf_weather
     };
 
     public final int mHomePackageIcon_116_lehang_2_dark[] = {
@@ -268,6 +270,7 @@ public class IconCache {
             , R.drawable.sf_training_dark
             , R.drawable.sf_theme_dark
             , R.drawable.sf_usb_video_output_dark
+            , R.drawable.sf_weather_dark
     };
 
     public final int mHomePackageIcon_116_lehang_2_yellow[] = {
@@ -324,6 +327,7 @@ public class IconCache {
             , R.drawable.sf_training_yellow
             , R.drawable.sf_theme_yellow
             , R.drawable.sf_usb_video_output_yellow
+            , R.drawable.sf_weather_yellow
     };
 
     private final Bitmap mDefaultIcon;
