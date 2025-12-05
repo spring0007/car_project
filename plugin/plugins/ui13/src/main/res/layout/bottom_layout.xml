@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/navi_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_navi1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/video_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/navi_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/navi"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/navi_iv"
+        app:layout_constraintEnd_toEndOf="@+id/navi_iv"
+        app:layout_constraintTop_toTopOf="@+id/navi_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/navi_iv"
+        app:layout_constraintVertical_bias="0.7"/>
+
+    <ImageView
+        android:id="@+id/video_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_video1"
+        app:layout_constraintStart_toEndOf="@+id/navi_iv"
+        app:layout_constraintEnd_toStartOf="@+id/all_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/video_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/video"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/video_iv"
+        app:layout_constraintEnd_toEndOf="@+id/video_iv"
+        app:layout_constraintTop_toTopOf="@+id/video_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/video_iv"
+        app:layout_constraintVertical_bias="0.7"/>
+
+    <ImageView
+        android:id="@+id/all_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_all1"
+        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        app:layout_constraintEnd_toStartOf="@+id/radio_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/all_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_app"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/all_iv"
+        app:layout_constraintEnd_toEndOf="@+id/all_iv"
+        app:layout_constraintTop_toTopOf="@+id/all_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/all_iv"
+        app:layout_constraintVertical_bias="0.75"/>
+
+    <ImageView
+        android:id="@+id/radio_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_radio1"
+        app:layout_constraintStart_toEndOf="@+id/all_iv"
+        app:layout_constraintEnd_toStartOf="@+id/bt_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/radio_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/radio_iv"
+        app:layout_constraintEnd_toEndOf="@+id/radio_iv"
+        app:layout_constraintTop_toTopOf="@+id/radio_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/radio_iv"
+        app:layout_constraintVertical_bias="0.7"/>
+
+    <ImageView
+        android:id="@+id/bt_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sf_phone1"
+        app:layout_constraintStart_toEndOf="@+id/radio_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/bt_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phone"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/bt_iv"
+        app:layout_constraintEnd_toEndOf="@+id/bt_iv"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.7"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
