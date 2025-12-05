@@ -221,6 +221,11 @@ class AlbumArtProvider(private val context: Context) {
 
     // 通过歌曲ID获取
     private fun getFromMediaStoreBySongId(songId: Long): Bitmap? {
+        // 添加ID有效性检查
+        if (songId <= 0) {
+            Log.w(TAG, "Invalid songId: $songId")
+            return null
+        }
         val uri = "content://media/external/audio/media/$songId/albumart".toUri()
         return try {
             context.contentResolver.openInputStream(uri)?.use { stream ->
@@ -234,6 +239,11 @@ class AlbumArtProvider(private val context: Context) {
 
     // 通过专辑ID获取
     private fun getFromMediaStoreByAlbumId(albumId: Long): Bitmap? {
+        // 添加ID有效性检查
+        if (albumId <= 0) {
+            Log.w(TAG, "Invalid albumId: $albumId")
+            return null
+        }
         val uri = "content://media/external/audio/albumart/$albumId".toUri()
         return try {
             context.contentResolver.openInputStream(uri)?.use { stream ->
