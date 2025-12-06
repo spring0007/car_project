@@ -244,6 +244,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     public void stopLoadAnim() {
         Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
         if (mObjectAnimator != null) {
+            Log.d(TAG, "stopLoadAnim");
             mObjectAnimator.cancel();
         }
     }
@@ -251,16 +252,22 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     public void pauseLoadAnim() {
         Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
         if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
-            mObjectAnimator.pause();
+            Log.d(TAG, "pauseLoadAnim");
+           // mObjectAnimator.pause();
+            mObjectAnimator.cancel();
         }
     }
 
     public void resumeLoadAnim() {
-
-        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+        Log.d(TAG, "resumeLoadAnim--objectAnimator = " + mObjectAnimator);
+       // if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+            Log.d(TAG, "resumeLoadAnim");
+        if (mObjectAnimator.isPaused()) {
             mObjectAnimator.resume();
+        } else {
+            startLoadAnim();
         }
+
     }
 
     public void startLoadAnim() {
@@ -350,7 +357,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mBar.setMax(totalProgress);
                 mBar.setProgress(curProgress);
             }
-            if (curProgress > 0 && curProgress < 1000) {
+            if (musicState && curProgress > 0 && curProgress < 1000) {
                 stopLoadAnim();
                 startLoadAnim();
             }
@@ -390,7 +397,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             }
             mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
-            pauseLoadAnim();
+           pauseLoadAnim();
             mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
