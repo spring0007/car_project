@@ -104,11 +104,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         info = (PluginInfo) msg.obj;
         String clazz = Objects.requireNonNull(msg.getData().get("clazz")).toString();
         if (info != null) {
+            long startTime = System.currentTimeMillis();
             Intent intent = RePlugin.createIntent(info.getName(), clazz);
             intent.putExtra("boot", isFirstBoot);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             RePlugin.startActivity(MainActivity.this, intent);
+            long endTime = System.currentTimeMillis();
+            Log.i(TAG, "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
         } else {
             Log.e(TAG, "handleMessage: install external plugin failed");
         }

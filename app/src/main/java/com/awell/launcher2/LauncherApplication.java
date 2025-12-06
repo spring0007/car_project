@@ -56,7 +56,7 @@ import java.lang.reflect.Method;
 
 public class LauncherApplication extends RePluginApplication implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
-    private static final Boolean D = false;
+    private static final Boolean D = true;
     private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
