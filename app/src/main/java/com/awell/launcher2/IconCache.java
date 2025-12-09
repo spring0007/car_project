@@ -109,8 +109,8 @@ public class IconCache {
             , "com.awell.bluetooth"
 
             , "com.awell.navigation"
-            , "com.android.dialer"
-            , "com.android.calculator2"
+//            , "com.android.dialer"
+//            , "com.android.calculator2"
             , "com.android.browser"
 
             , "com.mediatek.filemanager"
@@ -123,7 +123,7 @@ public class IconCache {
             , "com.awell.canbus"
             , "com.awell.canbus2"
 
-            , "com.android.mms"
+ //           , "com.android.mms"
             , "com.autonavi.amapauto"
          //   , "com.txznet.txzsetting"
             , "com.tima.carnet.vt"
@@ -136,20 +136,20 @@ public class IconCache {
             , "com.google.android.youtube"
             , "com.android.vending"
             , "com.android.chrome"
-            , "com.android.soundrecorder"
+//            , "com.android.soundrecorder"
             , "com.google.android.googlequicksearchbox"
 
-            , "com.android.calendar"
-            , "com.android.deskclock"
-            , "com.android.contacts"
+//            , "com.android.calendar"
+//            , "com.android.deskclock"
+//            , "com.android.contacts"
             , "com.android.gallery3d"
 
-            , "com.mediatek.camera"
+ //           , "com.mediatek.camera"
             , "org.chromium.chrome"
-            , "com.android.quicksearchbox"
-            , "com.android.stk"
+ //           , "com.android.quicksearchbox"
+ //           , "com.android.stk"
 
-            , "com.android.settings"
+//            , "com.android.settings"
             , "com.awell.electricfan"
             , "com.awell.frontvideo"
             , "com.awell.keylight"
@@ -166,8 +166,8 @@ public class IconCache {
             , R.drawable.sf_bt
 
             , R.drawable.sf_navi
-            , R.drawable.sf_iphone
-            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_iphone
+//            , R.drawable.sf_jisuanqi
             , R.drawable.sf_liulanqi
 
             , R.drawable.sf_wjgl
@@ -180,7 +180,7 @@ public class IconCache {
             , R.drawable.sf_yuanche
             , R.drawable.sf_yuanche
 
-            , R.drawable.sf_message
+//            , R.drawable.sf_message
             , R.drawable.sf_gaode
          //   , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink
@@ -193,20 +193,20 @@ public class IconCache {
             , R.drawable.sf_youtube
             , R.drawable.sf_playstore
             , R.drawable.sf_safri
-            , R.drawable.sf_soundrecorder
+//            , R.drawable.sf_soundrecorder
             , R.drawable.sf_gg
 
-            , R.drawable.sf_calender
-            , R.drawable.sf_clock
-            , R.drawable.sf_contact
+//            , R.drawable.sf_calender
+//            , R.drawable.sf_clock
+//            , R.drawable.sf_contact
             , R.drawable.sf_gallery
 
-            , R.drawable.sf_camera
+//            , R.drawable.sf_camera
             , R.drawable.sf_chrome
-            , R.drawable.sf_search
-            , R.drawable.sf_simtools
+//            , R.drawable.sf_search
+//            , R.drawable.sf_simtools
 
-            , R.drawable.sf_system_setting
+//            , R.drawable.sf_system_setting
             , R.drawable.sf_fan
             , R.drawable.sf_front_video
             , R.drawable.sf_color_light
@@ -223,8 +223,8 @@ public class IconCache {
             , R.drawable.sf_bt_dark
 
             , R.drawable.sf_navi_dark
-            , R.drawable.sf_iphone
-            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_iphone
+//            , R.drawable.sf_jisuanqi
             , R.drawable.sf_liulanqi_dark
 
             , R.drawable.sf_wjgl_dark
@@ -237,7 +237,7 @@ public class IconCache {
             , R.drawable.sf_yuanche_dark
             , R.drawable.sf_yuanche_dark
 
-            , R.drawable.sf_message
+//            , R.drawable.sf_message
             , R.drawable.sf_gaode_dark
           //  , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink_dark
@@ -250,20 +250,20 @@ public class IconCache {
             , R.drawable.sf_youtube_dark
             , R.drawable.sf_playstore_dark
             , R.drawable.sf_safri_dark
-            , R.drawable.sf_soundrecorder
+//            , R.drawable.sf_soundrecorder
             , R.drawable.sf_gg_dark
 
-            , R.drawable.sf_calender
-            , R.drawable.sf_clock
-            , R.drawable.sf_contact
+//            , R.drawable.sf_calender
+//            , R.drawable.sf_clock
+//            , R.drawable.sf_contact
             , R.drawable.sf_gallery_dark
 
-            , R.drawable.sf_camera
+//            , R.drawable.sf_camera
             , R.drawable.sf_chrome_dark
-            , R.drawable.sf_search
-            , R.drawable.sf_simtools
+//            , R.drawable.sf_search
+//            , R.drawable.sf_simtools
 
-            , R.drawable.sf_system_setting
+//            , R.drawable.sf_system_setting
             , R.drawable.sf_fan_dark
             , R.drawable.sf_front_video_dark
             , R.drawable.sf_color_light_dark
@@ -280,8 +280,8 @@ public class IconCache {
             , R.drawable.sf_bt_yellow
 
             , R.drawable.sf_navi_yellow
-            , R.drawable.sf_iphone
-            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_iphone
+//            , R.drawable.sf_jisuanqi
             , R.drawable.sf_liulanqi_yellow
 
             , R.drawable.sf_wjgl_yellow
@@ -294,7 +294,7 @@ public class IconCache {
             , R.drawable.sf_yuanche_yellow
             , R.drawable.sf_yuanche_yellow
 
-            , R.drawable.sf_message
+//            , R.drawable.sf_message
             , R.drawable.sf_gaode_yellow
        //     , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink_yellow
@@ -307,20 +307,20 @@ public class IconCache {
             , R.drawable.sf_youtube_yellow
             , R.drawable.sf_playstore_yellow
             , R.drawable.sf_safri_yellow
-            , R.drawable.sf_soundrecorder
+//            , R.drawable.sf_soundrecorder
             , R.drawable.sf_gg_yellow
 
-            , R.drawable.sf_calender
-            , R.drawable.sf_clock
-            , R.drawable.sf_contact
+ //           , R.drawable.sf_calender
+ //           , R.drawable.sf_clock
+ //           , R.drawable.sf_contact
             , R.drawable.sf_gallery_yellow
 
-            , R.drawable.sf_camera
+ //           , R.drawable.sf_camera
             , R.drawable.sf_chrome_yellow
-            , R.drawable.sf_search
-            , R.drawable.sf_simtools
+//            , R.drawable.sf_search
+//            , R.drawable.sf_simtools
 
-            , R.drawable.sf_system_setting
+ //           , R.drawable.sf_system_setting
             , R.drawable.sf_fan_yellow
             , R.drawable.sf_front_video_yellow
             , R.drawable.sf_color_light_yellow
