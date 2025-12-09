@@ -16,10 +16,7 @@
 
 package com.awell.launcher2;
 
-import static android.media.MediaMetadata.METADATA_KEY_ALBUM_ART;
 import static android.media.MediaMetadata.METADATA_KEY_ALBUM_ART_URI;
-import static android.media.MediaMetadata.METADATA_KEY_ART;
-import static android.media.MediaMetadata.METADATA_KEY_MEDIA_URI;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -47,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -125,14 +121,14 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                     long currentTime = System.currentTimeMillis();
                     // 检查是否达到时间间隔,到达指定间隔发送数据
                     if (currentTime - lastUpdateTime >= UPDATE_INTERVAL) {
-                        Log.d(TAG, "onPlaybackStateChanged: metadata=>" + mMediaController.getMetadata());
                         lastUpdateTime = currentTime;
+                        MediaMetadata metadata = mMediaController != null ? mMediaController.getMetadata() : null;
+                        Log.d(TAG, "onPlaybackStateChanged: metadata=>" + metadata);
                         handlePlayingTime(mMediaController);
-                        if (mMediaController.getMetadata() != null) {
-                            handleMetadataArtUri();
-                        }
-                        if (mMediaController.getMetadata() != null) {
-                            handleMetadataChange(mMediaController, mMediaController.getMetadata());
+                        handleMetadataArtUri(metadata);
+
+                        if (metadata != null) {
+                            handleMetadataChange(mMediaController, metadata);
                         }
 
                         if (mLastPlayState != state.getState()) {
@@ -160,7 +156,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
             CURRENT_UPDATE_TIMES = 0;
             if (metadata != null) {
 
-                handleMetadataArtUri();
+                handleMetadataArtUri(metadata);
 
                 handleMetadataChange(mMediaController, metadata);
 
@@ -174,23 +170,30 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         }
     };
 
-    private void handleMetadataArtUri() {
-        if (mMediaController.getMetadata() != null) {
-            String metaArtUri = mMediaController.getMetadata().getString(METADATA_KEY_ALBUM_ART_URI);
-            //Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
+    private void handleMetadataArtUri(MediaMetadata metadata) {
 
-            if (metaArtUri != null && hasImage(metaArtUri) && !metaArtUri.equals(mLastUri)
-                    //"default" 重新注册到media session里的元数据可能只包含300的图片
-                    || ("default".equals(mLastUri) && metaArtUri != null)) {
-                mLastUri = metaArtUri;
-                Log.i(TAG, "handleMetadataArtUri: huang update uri =>" + mLastUri);
-                notifyHostAlbumArtUpdate(metaArtUri);
-            } else if (metaArtUri == null && !Objects.equals(mLastUri, null)) {
-                //没有网络也需要调用，使用默认图片
-                //获取的METADATA_KEY_ALBUM_ART 一直在变化
+        if (metadata == null) {
+            Log.w(TAG, "handleMetadataArtUri: metadata is null");
+            if (mLastUri != null) {
                 mLastUri = null;
                 notifyHostAlbumArtUpdate(null);
             }
+            return;
+        }
+
+        String metaArtUri = metadata.getString(METADATA_KEY_ALBUM_ART_URI);
+        //Log.i(TAG, "handleMetadataArtUri: huang mLastUri=>" + mLastUri + " metaArtUri=>" + metaArtUri);
+        if (metaArtUri != null && hasImage(metaArtUri) && !metaArtUri.equals(mLastUri)
+                //"default" 重新注册到media session里的元数据可能只包含300的图片
+                || ("default".equals(mLastUri) && metaArtUri != null)) {
+            mLastUri = metaArtUri;
+            Log.i(TAG, "handleMetadataArtUri: huang update uri =>" + mLastUri);
+            notifyHostAlbumArtUpdate(metaArtUri);
+        } else if (metaArtUri == null && !Objects.equals(mLastUri, null)) {
+            //没有网络也需要调用，使用默认图片
+            //获取的METADATA_KEY_ALBUM_ART 一直在变化
+            mLastUri = null;
+            notifyHostAlbumArtUpdate(null);
         }
     }
 
