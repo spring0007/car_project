@@ -202,7 +202,6 @@ public class Utils {
      * @return
      */
     public static AppInfo getAppInfoFromPackage(String packageName, List<AppInfo> allAppInfoList) {
-        Log.e("Log_Utils", "packageName = " + packageName);
         AppInfo getAppInfo = null;
         for (AppInfo appInfo : allAppInfoList)
             if (appInfo.package_name.equals(packageName))

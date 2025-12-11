@@ -99,6 +99,7 @@ public class SystemUIClient {
         if (mBound && mService != null) {
             try {
                 Bundle bundle = options.toBundle();
+                Rect rect= (Rect) bundle.get("android:activity.launchBounds");
                 mService.startOrSetFreeformType(intent, bundle, windowType);
             } catch (Exception e) {
                 Log.e(TAG, "startFreeform: error==>" + e.getMessage());
@@ -161,7 +162,6 @@ public class SystemUIClient {
             intentFreeform.setComponent(cmp);
         }
 
-        Log.i(TAG, "startShowFreeform: huang intentFreeform=>" + intentFreeform + " options=>" + options + " windowType=>" + windowType);
         startOrSetFreeformType(intentFreeform, options, windowType);
     }
 
@@ -179,7 +179,6 @@ public class SystemUIClient {
     }
 
     private Rect getNav(Context context) {
-        Log.i(TAG, "getNav: huang mRect=>" + mRect);
         if (mRect != null) {
             return mRect;
         }

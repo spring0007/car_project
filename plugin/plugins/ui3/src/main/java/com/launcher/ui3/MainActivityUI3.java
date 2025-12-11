@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -46,8 +47,11 @@ import com.launcher.ui3.databinding.MusicWidgetBinding;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class MainActivityUI3 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI3.class.getSimpleName();
@@ -79,7 +83,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
         clickApp();
 
-        initAddappView();
+        initAddAppView();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
@@ -92,16 +96,15 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     }
 
     private LinearLayoutManager linearLayoutManager;
-    private AppInofAdapter appInofAdapter;
-    private List<AppInfo> allAppInfoList, showAppInfoLis;
+    private AppInofAdapter appInfoAdapter;
+    private List<AppInfo> allAppInfoList, showAppInfoList;
     private AppInfo placehodlerInfo;
     private MyDbHelper myDbHelper;
     private SQLiteDatabase sqLiteDatabase;
 
-    private void initAddappView() {
-
-        showAppInfoLis = new ArrayList<>();
-        allAppInfoList = getAllAppInfo(this, false);
+    private void initAddAppView() {
+        showAppInfoList = new ArrayList<>();
+        allAppInfoList = new ArrayList<>();
 
         placehodlerInfo = new AppInfo();
         placehodlerInfo.setIcon(getDrawable(R.drawable.sf_app_add_icon));
@@ -111,51 +114,67 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         // 获取已保存需要显示的app包名，如果没有，则显示默认
         myDbHelper = new MyDbHelper(this, "show_app", null, 1);
         sqLiteDatabase = myDbHelper.getWritableDatabase();
-        List<String> stroageAppList = new ArrayList<>();
+
+        appInfoAdapter = new AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.rv.setLayoutManager(linearLayoutManager);
+        binding.rv.setAdapter(appInfoAdapter);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getShowHotApp();
+            }
+        }).start();
+
+    }
+
+    private void getShowHotApp() {
+        List<String> storageAppList = new ArrayList<>();
+        showAppInfoList = getAllAppInfo(this, false);
         Cursor cursor = myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null);
         if (cursor != null) {
-            Log.e("MainActi", "cursor != null..");
             while (cursor.moveToNext()) {
                 @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
-                stroageAppList.add(packageName);
+                storageAppList.add(packageName);
                 // 删除记录
                 sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
             }
-            for (String packageName : stroageAppList){
+            for (String packageName : storageAppList) {
                 AppInfo app = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
-                if(app != null){
-                    showAppInfoLis.add(Utils.getAppInfoFromPackage(packageName, allAppInfoList));
+                if (app != null) {
+                    showAppInfoList.add(Utils.getAppInfoFromPackage(packageName, allAppInfoList));
                 }
             }
             cursor.close();
         }
 
         // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoLis.size() == 0){
-            for (String packName : Utils.defaultShowApp){
+        if (showAppInfoList.isEmpty()) {
+            for (String packName : Utils.defaultShowApp) {
                 AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-                if(appInfo != null){
-                    showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
+                if (appInfo != null) {
+                    showAppInfoList.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
                 }
             }
         }
 
         // 添加到数据库
-        for (AppInfo storagePac : showAppInfoLis) {
+        for (AppInfo storagePac : showAppInfoList) {
             if (storagePac != null) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put("packagename", storagePac.package_name);
                 sqLiteDatabase.insert("showapp", null, contentValues);
             }
         }
-        Log.e("Log_MainActi", "showAppInfoLis = " + showAppInfoLis);
-        showAppInfoLis.add(placehodlerInfo);
-
-//        findViewById(R.id.rl_content_view).setOnClickListener(v -> hidePopup());
-        appInofAdapter = new AppInofAdapter(this, showAppInfoLis, showPopupI, addSelectAppCallback);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        binding.rv.setLayoutManager(linearLayoutManager);
-        binding.rv.setAdapter(appInofAdapter);
+        showAppInfoList.add(placehodlerInfo);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                appInfoAdapter.setContentList(showAppInfoList);
+                appInfoAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private ShowPopupI showPopupI = new ShowPopupI() {
@@ -174,19 +193,19 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     private AddSelectAppCallback addSelectAppCallback = new AddSelectAppCallback() {
         @Override
         public void addAppInfo(AppInfo appInfo) {
-            for (AppInfo pcka : showAppInfoLis)
-                if (pcka.package_name.equals(appInfo.package_name)) {
+            for (AppInfo pack : showAppInfoList)
+                if (pack.package_name.equals(appInfo.package_name)) {
                     if (popupWindow != null) popupWindow.dismiss();
 
                     showPopupI.hidePopup();
                     return;
                 }
-            showAppInfoLis.remove(placehodlerInfo);
+            showAppInfoList.remove(placehodlerInfo);
 
-            showAppInfoLis.add(appInfo);
-            showAppInfoLis.add(placehodlerInfo);
-            appInofAdapter.setContentList(showAppInfoLis);
-            appInofAdapter.notifyDataSetChanged();
+            showAppInfoList.add(appInfo);
+            showAppInfoList.add(placehodlerInfo);
+            appInfoAdapter.setContentList(showAppInfoList);
+            appInfoAdapter.notifyDataSetChanged();
 
             new Thread(() -> {
                 ContentValues contentValues = new ContentValues();
@@ -200,14 +219,14 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         @Override
         public void removeAppInfo(String packageName) {
             sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-            for (AppInfo pcka : showAppInfoLis)
+            for (AppInfo pcka : showAppInfoList)
                 if (pcka.package_name.equals(packageName)) {
-                    showAppInfoLis.remove(pcka);
+                    showAppInfoList.remove(pcka);
                     break;
                 }
 
-            if (appInofAdapter != null) {
-                appInofAdapter.setContentList(showAppInfoLis);
+            if (appInfoAdapter != null) {
+                appInfoAdapter.setContentList(showAppInfoList);
             }
         }
     };
@@ -243,6 +262,27 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
     }
 
+    public List<PackageInfo> getAppList(PackageManager packageManager, List<ResolveInfo> resolveInfos) {
+        List<PackageInfo> appList = new ArrayList<>();
+        Set<String> processed = new HashSet<>();
+
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            if (processed.contains(packageName)) {
+                continue;
+            }
+
+            try {
+                PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+                appList.add(packageInfo);
+                processed.add(packageName);
+            } catch (PackageManager.NameNotFoundException e) {
+                // 忽略异常
+            }
+        }
+        return appList;
+    }
+
     /**
      * 获取手机已安装应用列表
      *
@@ -251,24 +291,29 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
      * @return
      */
     private ArrayList<AppInfo> getAllAppInfo(Context ctx, boolean isFilterSystem) {
+
         ArrayList<AppInfo> appBeanList = new ArrayList<>();
         AppInfo bean = null;
         PackageManager packageManager = ctx.getPackageManager();
-        List<PackageInfo> list = packageManager.getInstalledPackages(0);
-        for (PackageInfo p : list) {
+
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+        List<PackageInfo> appList = getAppList(packageManager, resolveInfos);
+
+        for (PackageInfo p : appList) {
             bean = new AppInfo();
-            int randome = new Random().nextInt(5);
             bean.setIcon(p.applicationInfo.loadIcon(packageManager));
             bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
-            String pckaName = p.applicationInfo.packageName;
-            bean.setPackage_name(pckaName);
+            String packName = p.applicationInfo.packageName;
+            bean.setPackage_name(packName);
             int flags = p.applicationInfo.flags;
             bean.setFlags(flags);
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(pckaName)) {
+            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(packName)) {
                 appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(pckaName)) {
+            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(packName)) {
                 appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(pckaName)) {
+            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(packName)) {
                 appBeanList.add(bean);
             }
         }
@@ -309,17 +354,17 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         binding.hotsetAllapp.setOnClickListener(this);
         binding.radioIv.setOnClickListener(this);
         binding.radioLayout.ivRadioPre.setOnClickListener(v -> {
-                if (ClickUtils.isFastClick()) {
-                    return;
-                }
-                Log.d(TAG, "quickclickApp");
-                mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            Log.d(TAG, "quickclickApp");
+            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
         });
         binding.radioLayout.ivRadioNext.setOnClickListener(v -> {
-                if (ClickUtils.isFastClick()) {
-                    return;
-                }
-                mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
         });
     }
 
@@ -327,7 +372,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.radioIv.getId()){
+        } else if (v.getId() == binding.radioIv.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }
@@ -425,7 +470,6 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     };
 
 
-
     private boolean isEventConsumedByChild = false;
     private boolean isLongPressPossible = false;
     private float startX = 0f;
@@ -511,6 +555,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
             longPressRunnable = null;
         }
     }
+
     private void backgroundAlpha(float alpha) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = alpha; //0.0-1.0

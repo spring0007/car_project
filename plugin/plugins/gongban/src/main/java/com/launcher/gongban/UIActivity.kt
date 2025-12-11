@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Rect
@@ -33,7 +34,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.PopupWindow
@@ -55,9 +56,7 @@ import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
 import com.launcher.gongban.adapter.AppInofAdapter
 import com.launcher.gongban.adapter.AppPopAdapter
-import com.launcher.gongban.databinding.SpeedLayoutBinding
 import com.launcher.gongban.databinding.UiActivityBinding
-import com.launcher.gongban.utils.FreeformPackageObserver
 import com.launcher.gongban.utils.SystemUIClient
 import com.launcher.gongban.utils.SystemUIClient.HIDE_FREEFORM
 import com.launcher.gongban.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
@@ -73,7 +72,6 @@ class UIActivity : Activity(), View.OnClickListener {
 
     private val TAG = UIActivity::class.simpleName
     private lateinit var mViewBinding: UiActivityBinding
-    private lateinit var mCarSpeedLayout: SpeedLayoutBinding
 
     lateinit var mediaControl: AwellMediaControl
     private lateinit var locationManager: LocationManager
@@ -99,6 +97,8 @@ class UIActivity : Activity(), View.OnClickListener {
     private var startX = 0f
     private var startY = 0f
     private var viewConfiguration: ViewConfiguration? = null
+    private var isGlobalLayoutListenerAdded = false
+    private var lastVisibleState: Boolean? = null
 
     // 跟踪事件消费状态
     private var isEventConsumedByChild = false
@@ -110,7 +110,6 @@ class UIActivity : Activity(), View.OnClickListener {
         R.drawable.car_effect_driving_3,
     )
 
-    private lateinit var freeformObserver: FreeformPackageObserver
     lateinit var systemUIClient: SystemUIClient
     var viewAddNeedToStartFreeform: Boolean = false
     var oldFreeformPkg: String? = null
@@ -120,7 +119,6 @@ class UIActivity : Activity(), View.OnClickListener {
                 //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
                 viewAddNeedToStartFreeform = true
             } else {
-                Log.i(TAG, "huang start freeform==>")
                 systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
                 oldFreeformPkg = systemUIClient.getFreeformPkg(this)
             }
@@ -148,13 +146,6 @@ class UIActivity : Activity(), View.OnClickListener {
 
         initFreeform()
 
-        // 初始化观察者
-        freeformObserver = FreeformPackageObserver { newPackageName ->
-            // 当设置值改变时的回调
-            handleFreeformPackageChange(newPackageName)
-        }
-        freeformObserver.startObserving(contentResolver)
-
 
         // 检查 Context 和 ContentResolver
         Log.d(TAG, "Activity: $this")
@@ -166,76 +157,73 @@ class UIActivity : Activity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        val newFreeformPkg = getSettings(this, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-        oldFreeformPkg?.let {
-            if (newFreeformPkg != oldFreeformPkg) {
-                systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
-                oldFreeformPkg = newFreeformPkg
+        findViewById<ImageView>(R.id.freeform_image).post {
+            if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
+                updateImagePosition(findViewById(R.id.freeform_image))
             }
         }
 
-    }
-
-    private fun handleFreeformPackageChange(newPackageName: String?) {
-        runOnUiThread {
-            Log.i(TAG, "handleFreeformPackageChange: huang new Package Name=>${newPackageName}")
-            when {
-                newPackageName.isNullOrEmpty() -> {
-                    Log.i("MainActivity", "Freeform package cleared")
-                    // 处理清空的情况
-                    val runApp = getFreeformTask(this)
-                    Log.i(TAG, "handleFreeformPackageChange: huang run App=>${runApp}}")
-                }
-
-                else -> {
-                    Log.i("MainActivity", "Freeform package changed to: $newPackageName")
-                    // 处理包名变化
-                    // 例如：启动应用、更新UI等
-
-                }
-            }
-        }
     }
 
     private fun initFreeform() {
 
-        val freeformImage = findViewById<ImageView>(R.id.freeform_image)
-        freeformImage.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                // 移除监听，避免重复调用
-                freeformImage.viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                val location = IntArray(2)
-                freeformImage.getLocationOnScreen(location)
-                val screenX = location[0]
-                val screenY = location[1]
-                val width = freeformImage.width
-                val height = freeformImage.height
-
-                systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-
-                if (viewAddNeedToStartFreeform) {
-                    Log.i(TAG, "onGlobalLayout: huang view add finish start freeform==>")
-                    systemUIClient.startOrSetFreeformType(
-                        mViewBinding.root.context,
-                        OPEN_APP_TO_FREEFORM
-                    )
-                    oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
-                }
-
-                Log.i(
-                    TAG,
-                    "onGlobalLayout: huang screenX=${screenX} screenY=>${screenY} width=>${width} height=>${height}"
-                )
-
-            }
-        })
+        setupPositionListener()
 
         systemUIClient = SystemUIClient(this)
         systemUIClient.bindToSystemUIService(this)
         systemUIClient.setStartFreeformI(freeformImpl)
 
+    }
+
+    private fun setupPositionListener() {
+        val freeformImage = findViewById<ImageView>(R.id.freeform_image)
+
+        val layoutListener = View.OnLayoutChangeListener { _, left, top, right, bottom,
+                                                           oldLeft, oldTop, oldRight, oldBottom ->
+
+            // 检查位置是否变化或者视图是否可见
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                if (freeformImage.isVisibleOnScreen()) {
+                    updateImagePosition(freeformImage)
+                }
+            }
+        }
+
+        freeformImage.addOnLayoutChangeListener(layoutListener)
+    }
+
+    private fun updateImagePosition(imageView: ImageView) {
+        val location = IntArray(2)
+        imageView.getLocationOnScreen(location)
+        val screenX = location[0]
+        val screenY = location[1]
+        val width = imageView.width
+        val height = imageView.height
+
+        systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        Log.i(TAG, "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect}")
+        systemUIClient.startOrSetFreeformType(
+            mViewBinding.root.context,
+            OPEN_APP_TO_FREEFORM
+        )
+        oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
+    }
+
+    private fun View.isVisibleOnScreen(): Boolean {
+        if (!isShown || !isAttachedToWindow) {
+            return false
+        }
+
+        val location = IntArray(2)
+        getLocationOnScreen(location)
+
+        val screenWidth = context.resources.displayMetrics.widthPixels
+        val screenHeight = context.resources.displayMetrics.heightPixels
+
+        return location[0] + width > 0 &&
+                location[1] + height > 0 &&
+                location[0] < screenWidth &&
+                location[1] < screenHeight
     }
 
     /**
@@ -252,46 +240,58 @@ class UIActivity : Activity(), View.OnClickListener {
 
     private fun initView() {
 
-        mCarSpeedLayout = SpeedLayoutBinding.bind(mViewBinding.includeCarSpeed.root)
         initCarView()
 
         clickStartApp()
 
-        initAddappView()
+        initAddAppView()
 
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun initAddappView() {
+    private fun initAddAppView() {
         showAppInfoList = ArrayList<AppInfo>()
-        allAppInfoList = getAllAppInfo(this, false)
+        allAppInfoList = ArrayList<AppInfo>()
 
         placehodlerInfo = AppInfo()
         placehodlerInfo.setIcon(getDrawable(R.drawable.sf_app_add_icon))
         placehodlerInfo.setLabel(getString(R.string.add_app))
-
         // 获取已保存需要显示的app包名，如果没有，则显示默认
         myDbHelper = MyDbHelper(this, "show_app", null, 1)
         sqLiteDatabase = myDbHelper.writableDatabase
-        val stroageAppList: MutableList<String> = ArrayList()
+
+        appInfoAdapter = AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
+
+        linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        mViewBinding.rv.setLayoutManager(linearLayoutManager)
+        mViewBinding.rv.setAdapter(appInfoAdapter)
+
+        Thread {
+            showHostApp()
+        }.start()
+
+    }
+
+    private fun showHostApp() {
+        val storageAppList: MutableList<String> = ArrayList()
+
+        allAppInfoList = getAllAppInfo(this, false)
+
         val cursor: Cursor =
             myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null)
-        Log.e("MainActi", "cursor != null..")
         while (cursor.moveToNext()) {
             @SuppressLint("Range") val packageName =
                 cursor.getString(cursor.getColumnIndex("packagename"))
-            stroageAppList.add(packageName)
+            storageAppList.add(packageName)
             // 删除记录
             sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String>(packageName))
         }
-        for (packageName in stroageAppList) {
+        for (packageName in storageAppList) {
             val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
             if (app != null) {
                 (showAppInfoList as ArrayList<AppInfo>).add(
-                    Utils.getAppInfoFromPackage(
-                        packageName,
-                        allAppInfoList
-                    )
+                    Utils.getAppInfoFromPackage(packageName, allAppInfoList)
                 )
             }
         }
@@ -309,21 +309,17 @@ class UIActivity : Activity(), View.OnClickListener {
 
         // 添加到数据库
         for (storagePac in showAppInfoList) {
-            if (storagePac != null) {
-                val contentValues = ContentValues()
-                contentValues.put("packagename", storagePac.package_name)
-                sqLiteDatabase.insert("showapp", null, contentValues)
-            }
+            val contentValues = ContentValues()
+            contentValues.put("packagename", storagePac.package_name)
+            sqLiteDatabase.insert("showapp", null, contentValues)
         }
-        Log.e("Log_MainActi", "showAppInfoList = $showAppInfoList")
         showAppInfoList.add(placehodlerInfo)
 
-        //        findViewById(R.id.rl_content_view).setOnClickListener(v -> hidePopup());
-        appInfoAdapter = AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
-        linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        runOnUiThread {
+            appInfoAdapter.setContentList(showAppInfoList)
+            appInfoAdapter.notifyDataSetChanged()
+        }
 
-        mViewBinding.rv.setLayoutManager(linearLayoutManager)
-        mViewBinding.rv.setAdapter(appInfoAdapter)
     }
 
     private fun initCarView() {
@@ -417,8 +413,8 @@ class UIActivity : Activity(), View.OnClickListener {
         )
 
         popupWindow.isOutsideTouchable = true
+        popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
 
-        //popupWindow.setFocusable(true);
         allAppInfoList = getAllAppInfo(this, false)
 
         val rvPop = view.findViewById<RecyclerView>(R.id.rv_pop_allapp)
@@ -482,7 +478,6 @@ class UIActivity : Activity(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
 //        mMediaListener.cleanup()
-        freeformObserver.stopObserving()
         unregisterReceiver(receiver)
         systemUIClient.unbindService(this)
         AppsCustomizeControl.setActivity(null)
@@ -592,9 +587,9 @@ class UIActivity : Activity(), View.OnClickListener {
         CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
         val unitData = unit[0].toInt()
         if (unitData == 0) {
-            mCarSpeedLayout.tvGpsSpeedUnit.text = "KM/h"
+            mViewBinding.tvGpsSpeedUnit.text = "KM/h"
         } else if (unitData == 1) {
-            mCarSpeedLayout.tvGpsSpeedUnit.text = "mph"
+            mViewBinding.tvGpsSpeedUnit.text = "mph"
         }
     }
 
@@ -722,17 +717,17 @@ class UIActivity : Activity(), View.OnClickListener {
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
-                        mCarSpeedLayout.tvGpsSpeed.text = speedKm
+                        mViewBinding.tvGpsSpeed.text = speedKm
                         if (accRecor == false) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()
                             if (unitData == 0) {
-                                mCarSpeedLayout.tvGpsSpeed.text = speedKm
-                                mCarSpeedLayout.tvGpsSpeedUnit.text = "KM/h"
+                                mViewBinding.tvGpsSpeed.text = speedKm
+                                mViewBinding.tvGpsSpeedUnit.text = "KM/h"
                             } else if (unitData == 1) {
-                                mCarSpeedLayout.tvGpsSpeed.text = speedMile
-                                mCarSpeedLayout.tvGpsSpeedUnit.text = "mph"
+                                mViewBinding.tvGpsSpeed.text = speedMile
+                                mViewBinding.tvGpsSpeedUnit.text = "mph"
                             }
 
                             if (speedKm.toInt() > 0 || speedMile.toInt() > 0) {
@@ -752,7 +747,7 @@ class UIActivity : Activity(), View.OnClickListener {
                     }
 
                     MSG_CLEAR_SPEED -> {
-                        mCarSpeedLayout.tvGpsSpeed.text = 0.toString()
+                        mViewBinding.tvGpsSpeed.text = 0.toString()
                         stopAnimation()
                     }
 
@@ -821,7 +816,6 @@ class UIActivity : Activity(), View.OnClickListener {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         AppsCustomizeControl.hideApps()
-        Log.i(TAG, "onNewIntent: huang ==>")
     }
 
     private fun startActivity(packName: String, className: String?) {
@@ -846,10 +840,23 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun getAllAppInfo(context: Context, isFilterSystem: Boolean): ArrayList<AppInfo> {
         val appBeanList: ArrayList<AppInfo> = ArrayList()
 
-        val packageManager = context.packageManager
-        val list: List<PackageInfo> = packageManager.getInstalledPackages(0)
+        val intent = Intent(Intent.ACTION_MAIN, null).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
 
-        for (p in list) {
+        val packageManager = context.packageManager
+        val resolveInfos = packageManager.queryIntentActivities(intent, 0)
+
+        val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
+            try {
+                packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
+            } catch (e: PackageManager.NameNotFoundException) {
+                null
+            }
+        }.distinctBy { it.packageName }
+
+
+        for (p in appList) {
             val bean = AppInfo()
             bean.setIcon(p.applicationInfo.loadIcon(packageManager))
             bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
