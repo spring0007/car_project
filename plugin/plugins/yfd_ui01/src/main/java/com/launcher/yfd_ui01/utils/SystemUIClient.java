@@ -1,9 +1,11 @@
 package com.launcher.yfd_ui01.utils;
+import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemProperties;
 import android.util.Log;
@@ -109,6 +111,22 @@ public class SystemUIClient {
         }
     }
 
+    public void startOrSetFreeformType(Intent intent, ActivityOptions options, int windowType) {
+        if (!isServiceConnected()) {
+            Log.w(TAG, "Service not connected, cannot start freeform");
+            return;
+        }
+
+        try {
+            Bundle bundle = options.toBundle();
+            Rect rect= (Rect) bundle.get("android:activity.launchBounds");
+            mService.startOrSetFreeformTypeWithOptions(intent, bundle, windowType);
+        } catch (Exception e) {
+            Log.e(TAG, "startFreeform: error==>" + e.getMessage());
+        }
+
+    }
+
     /**
      * Start or set freeform window with calculated bounds
      */
@@ -141,12 +159,11 @@ public class SystemUIClient {
      */
     private Rect adjustBoundsForNavigationBar(Context context, Rect baseRect) {
         int position = android.os.SystemProperties.getInt("persist.sys.awell.navbar.position", 0);
-        if (position == 0) {
-            return baseRect; // No navigation bar
-        }
-        
         int navigationBarSize = getNavigationBarSize(context, position);
-        if (navigationBarSize <= 0) {
+
+        if (position == 0 || navigationBarSize <= 0) {
+            SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT + "," + DEFAULT_TOP);
+            SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + DEFAULT_HEIGHT);
             return baseRect;
         }
         
@@ -176,7 +193,7 @@ public class SystemUIClient {
                 );
             }
             case 3: { // Bottom
-                int heights = DEFAULT_HEIGHT - navigationBarSize;
+                int heights = DEFAULT_HEIGHT - navigationBarSize+10;
                 SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT + "," + DEFAULT_TOP);
                 SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + heights);
                 return new Rect(
@@ -188,6 +205,8 @@ public class SystemUIClient {
 
             }
             default:
+                SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT + "," + DEFAULT_TOP);
+                SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH + "," + DEFAULT_HEIGHT);
                 return baseRect;
         }
     }
