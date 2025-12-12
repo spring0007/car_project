@@ -1,705 +1,360 @@
-package com.launcher.yfd_ui01;
+package com.launcher.yfd_ui01
 
-import static com.awell.utils.Utils.startWallpaper;
-import static com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM;
-import static com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM;
-import static com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN;
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.graphics.Rect
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewConfiguration
+import android.widget.ImageView
+import androidx.annotation.RequiresPermission
+import com.awell.launcher2.IconCache
+import com.awell.utils.CommonData
+import com.awell.utils.Utils.startWallpaper
+import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding
+import com.launcher.yfd_ui01.utils.SystemUIClient
+import com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM
+import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
+import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
+import java.lang.Math.abs
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
+class MainActivity_YFD_UI01 : Activity() {
+    private val TAG = MainActivity_YFD_UI01::class.simpleName
+    private  lateinit var mViewBinding: ActivityMainUi01Binding
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+    private lateinit var locationManager: LocationManager
 
-import com.awell.control.AppsCustomizeControl;
-import com.awell.control.AwellMediaControl;
-import com.launcher.yfd_ui01.utils.SystemUIClient;
-import com.awell.launcher2.IconCache;
-import com.awell.utils.CommonData;
-import com.launcher.yfd_ui01.app.GlobalViewManager;
-import com.launcher.yfd_ui01.app.IconManager;
-import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding;
-import com.launcher.yfd_ui01.databinding.DialWidgetBinding;
-import com.launcher.yfd_ui01.databinding.MusicWidgetBinding;
-
-import org.jetbrains.annotations.NotNull;
-
-public class MainActivity_YFD_UI01 extends Activity implements View.OnClickListener {
-    private final String TAG = MainActivity_YFD_UI01.class.getSimpleName();
-    private ActivityMainUi01Binding binding;
-    private MusicWidgetBinding musicWidgetBinding;
-    private MusicWidget musicWidget;
-    private DialWidgetBinding dialWidgetBinding;
-    private DialWidget dialWidget;
-    private DashboardView dashboardView;
-    private AwellMediaControl mediaControl;
-    private final int MSG_UPDATE_SPEED = 1;
-    private final int MSG_CLEAR_SPEED = 2;
-    private Handler mHandlerSpeed = null;
-    private boolean accRecor;
-    private final int SPEEDHOME = 20;
-    private SystemUIClient mServiceClient;
-    private Context mContext;
-
-//    private SpeedSimulator speedSimulator;
-
-    private SystemUIClient.UIClientCallback call = new SystemUIClient.UIClientCallback() {
-        @Override
-        public void startFreeform() {
-            if (mServiceClient != null) {
-                mServiceClient.startOrSetFreeformType(mContext, OPEN_APP_TO_FREEFORM);
+    private var handler: Handler? = null
+    private var startX = 0f
+    private var startY = 0f
+    private var viewConfiguration: ViewConfiguration? = null
+    private var isGlobalLayoutListenerAdded = false
+    private var lastVisibleState: Boolean? = null
+    // 跟踪事件消费状态
+    private var isEventConsumedByChild = false
+    private var isLongPressPossible = false
+    lateinit var systemUIClient: SystemUIClient
+    var viewAddNeedToStartFreeform: Boolean = false
+    var oldFreeformPkg: String? = null
+    private var accRecor = false
+    private val freeformImpl: SystemUIClient.UIClientCallback =
+        SystemUIClient.UIClientCallback {
+            if (systemUIClient.rect == null) {
+                //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
+                viewAddNeedToStartFreeform = true
+            } else {
+                systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
+              //  oldFreeformPkg = systemUIClient.getFreeformPkg(this)
             }
         }
-    };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.i(TAG, "lqq,onCreate");
-        bindSystemUIService();
-        IconManager.init(getApplicationContext());
-        binding = ActivityMainUi01Binding.inflate(getLayoutInflater());
-
-        mContext = this;
-        mediaControl = new AwellMediaControl();
-        mediaControl.bindDataService(this);
-        mediaControl.setUpdateMusicView(mediaImpl);
-
-        musicWidgetBinding = binding.layoutMusicWidget;
-        musicWidget = musicWidgetBinding.musicWidgetLayout;
-        musicWidget.setMediaLibrary(mediaControl);
-        musicWidget.setActivity(this, musicWidget);
-        dashboardView = binding.carSpeedPoint;
-        dialWidgetBinding = binding.layoutDialWidget;
-        dialWidget = dialWidgetBinding.dialWidgetLayout;
-        dialWidget.findViews(this, dialWidget);
-        //setLauncherPackage(this.getApplicationContext());
-        setContentView(binding.getRoot());
-        initReceiver();
-        initLongTouch();
-
-        clickApp();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            handler.removeMessages(SPEEDHOME);
-            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
-        }
-
-        updateSpeedUnitText();
-//        // 创建速度模拟器
-//        speedSimulator = new SpeedSimulator(new SpeedSimulator.SpeedChangeListener() {
-//            @Override
-//            public void onSpeedChanged(int speed) {
-//                // 在主线程中更新UI
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        // 您可以在这里处理其他与速度相关的逻辑
-//                        Log.i(TAG, "speed = " + speed);
-//                        dashboardView.udDataSpeed(speed);
-//                        binding.carSpeedTv.setText("" + speed);
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//        // 开始模拟
-//        speedSimulator.startSimulation();
-
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+	    mViewBinding = ActivityMainUi01Binding.inflate(layoutInflater)
+        Settings.System.putString(mViewBinding.root.context.contentResolver, "ui_has_freeform", "true")
+        setContentView(mViewBinding.root)
+        initView()
+        initTouchAndSpeedListener()
+        initBroadcastReceiver()
+        initFreeform()
     }
-
-    private void bindSystemUIService() {
-        mServiceClient = new SystemUIClient();
-        mServiceClient.bindToSystemUIService(this);
-        mServiceClient.setCallback(call);
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i(TAG, "lqq,onRestart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "lqq,onResume,isAllShowing=" + isAppsShow());
-        if (!isAppsShow()) {
-            if (mServiceClient != null) {
-                mServiceClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM);
+    override fun onResume() {
+        super.onResume()
+        findViewById<ImageView>(R.id.freeform_bg).post {
+            if (findViewById<ImageView>(R.id.freeform_bg).isVisibleOnScreen()) {
+                updateImagePosition(findViewById(R.id.freeform_bg))
             }
-            if (dialWidget != null)
-                dialWidget.startAnimation();
-
         }
 
     }
+    private fun initFreeform() {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "lqq,onPause");
-        if (dialWidget != null)
-            dialWidget.stopAnimation();
-        if (dashboardView != null)
-            dashboardView.closeAnimation();
+        setupPositionListener()
+
+        systemUIClient = SystemUIClient(this)
+        systemUIClient.bindToSystemUIService(this)
+        systemUIClient.setCallback(freeformImpl)
+
     }
 
+    private fun setupPositionListener() {
+        val freeformImage = findViewById<ImageView>(R.id.freeform_bg)
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 0x10 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            handler.removeMessages(SPEEDHOME);
-            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
-        }
-    }
+        val layoutListener = View.OnLayoutChangeListener { _, left, top, right, bottom,
+                                                           oldLeft, oldTop, oldRight, oldBottom ->
 
-    private void initLongTouch() {
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                Log.i(TAG, "handlerNew msg.what = " + msg.what);
-                switch (msg.what) {
-                    case 100:
-                        break;
-                    case SPEEDHOME:
-                        speedhome();
-                        break;
-                    default:
-                        break;
+            // 检查位置是否变化或者视图是否可见
+            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+                if (freeformImage.isVisibleOnScreen()) {
+                    updateImagePosition(freeformImage)
                 }
             }
-        };
-        viewConfiguration = ViewConfiguration.get(this);
-    }
-
-
-    @SuppressLint("HandlerLeak")
-    private void speedhome() {
-        Log.i(TAG, "speed come in");
-        mHandlerSpeed = new Handler() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case MSG_UPDATE_SPEED:
-                        int speed = msg.arg1;
-                        binding.carSpeedTv.setText("" + speed);
-                        /**
-                         * gps车速
-                         */
-                        int speed_km = msg.arg1;
-                        int speed_mile = msg.arg2;
-                        Log.i(TAG, "accRecor = " + accRecor);
-                        if (!accRecor) {
-                            byte[] unit = new byte[1];
-                            CommonData.readDataToMeta(unit, 0x84);
-                            int unitData = unit[0];
-                            Log.e(TAG, "unit Data = " + unitData);
-                            if (unitData == 0) {
-                                binding.carSpeedTv.setText(speed_km + "");
-                                binding.carSpeedUnitTv.setText("km/h");
-                            } else if (unitData == 1) {
-                                binding.carSpeedTv.setText(speed_mile + "");
-                                binding.carSpeedUnitTv.setText("mph");
-                            }
-//                            if (animationDrawableTwo != null) {
-//                                if (speed_km > 0 || speed_mile > 0) {
-//                                    animationDrawableTwo.start();
-//                                } else {
-//                                    animationDrawableTwo.stop();
-//                                }
-//                            }
-                        }
-                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
-                        break;
-                    case MSG_CLEAR_SPEED:
-                        binding.carSpeedTv.setText("" + 0);
-                        dashboardView.udDataSpeed(0);
-//                        if (animationDrawableTwo != null) {
-//                            animationDrawableTwo.stop();
-//                        }
-                        break;
-                }
-            }
-        };
-        LocationManager mlocationManager = null;
-        if (null == mlocationManager)
-            mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Log.i(TAG, "mlocationManager==" + mlocationManager);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location != null && location.hasSpeed()) {
-
-                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
-                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
-                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
-
-                    dashboardView.udDataSpeed(speed);
-                    Message msg = mHandlerSpeed.obtainMessage();
-                    msg.what = MSG_UPDATE_SPEED;
-                    msg.arg1 = speed;
-                    msg.arg2 = speedMile;
-                    mHandlerSpeed.sendMessage(msg);
-                }
-            }
-        }, mHandlerSpeed.getLooper());
-    }
-
-    private void updateSpeedUnitText() {
-        byte[] unit = new byte[1];
-        CommonData.readDataToMeta(unit, 0x84);
-        int unitData = unit[0];
-        Log.e(TAG, "unit Data = " + unitData);
-        if (binding.carSpeedUnitTv != null) {
-            if (unitData == 0) {
-                binding.carSpeedUnitTv.setText("km/h");
-            } else if (unitData == 1) {
-                binding.carSpeedUnitTv.setText("mph");
-            }
-        }
-    }
-
-    private void initReceiver() {
-        IntentFilter filter = new IntentFilter();
-
-        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
-        filter.addAction(CommonData.ACTION_ACC_ON);
-        filter.addAction(CommonData.ACTION_ACC_OFF);
-        filter.addAction("com.zjinnova.zlink");
-        filter.addAction("android.launcher.show.allApp");
-        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
-        filter.addAction("top_session_package_change");
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        filter.addAction(Intent.ACTION_TIME_TICK);
-        filter.addAction(Intent.ACTION_DATE_CHANGED);
-        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
-//        updateTime();
-    }
-
-    private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
-        String SYSTEM_REASON = "reason";
-        String SYSTEM_HOME_KEY = "homekey";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.i(TAG, "mainReceiver:" + action);
-            switch (action) {
-                case CommonData.BROADCAST_LAMP_SWITCH:
-//                    if (intent.getIntExtra("lamplet_state", 0) == 1)
-//                        ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.open);
-//                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
-                    break;
-                case CommonData.ACTION_ACC_ON:
-//                    if (ivLampSwitchBg != null)
-//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
-                    break;
-                case CommonData.ACTION_ACC_OFF:
-                    accRecor = true;
-                    break;
-                case CommonData.BROADCAST_MEDIA_EXIT:
-                    String packge = intent.getStringExtra("package");
-                    if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
-
-                    }
-                    break;
-                case "com.zjinnova.zlink":
-                    String zlinStatus = intent.getStringExtra("status");
-                    String phoneMode = intent.getStringExtra("phoneMode");
-                    Log.d(TAG, "zlinStatus:" + zlinStatus);
-                    if (zlinStatus == null) {
-                        return;
-                    }
-                    musicWidget.getCarPlayData(zlinStatus, phoneMode);
-                    break;
-                case "android.launcher.show.allApp":
-                    Log.d(TAG, "mainReceiver:" + intent.getAction());
-                    showAllApps(context);
-
-                    if (mServiceClient != null) {
-                        mServiceClient.startOrSetFreeformType(context, HIDE_FREEFORM);
-                        mServiceClient.startOrSetFreeformType(context, WINDOWING_MODE_FULLSCREEN);
-                        Log.i(TAG, "onClick: huang freeform to hide222==>");
-                    }
-                    break;
-                case "CANBUS_CHANGE_SPEED_Unit":
-                    updateSpeedUnitText();
-                    break;
-                case "top_session_package_change":
-                    String sessionTopPkg = intent.getStringExtra("top_package");
-                    handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
-                    //Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
-                    break;
-                case Intent.ACTION_TIME_CHANGED:
-                    // 用户手动更改了时间
-                case Intent.ACTION_TIMEZONE_CHANGED:
-                    // 时区发生了变化
-                case Intent.ACTION_DATE_CHANGED:
-                    // 日期发生了变化
-                case Intent.ACTION_TIME_TICK:
-                    //系统时间变化
-                    if (dialWidget != null)
-                        dialWidget.updateTimeSysem();
-                    break;
-
-            }
-
-        }
-    };
-
-    public void handleMediaPlaybackResult(String value1, String value2, int value3, int value4) {
-        String oldPlayingPackage = mediaControl.getCurrentPkgName();
-        boolean isStartCommand = "start".equals(value2);
-        boolean isStopCommand = "stop".equals(value2);
-        boolean isValidPackage = !TextUtils.isEmpty(value1);
-        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
-        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
-
-
-        // 处理停止播放的情况
-        //if (isValidPackage && isStopCommand) {
-        //    mMediaListener.setCurrentPlayingPackage(null);
-        //    return;
-        //}
-
-        // 处理开始播放的情况
-        if (isValidPackage && isStartCommand) {
-            // 当前没有播放或切换到新包时，更新并启动回调
-            if (oldPlayingPackage != null && !oldPlayingPackage.equals(value1)) {
-            }
-            //Log.i(TAG, "0000----Switched to new package: " + value1);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        Log.i(TAG, "lqq,onBackPressed isAllShowing=" + isAppsShow());
-        hideAllApps(this);
-        if (!isAppsShow()) {
-            if (mServiceClient != null)
-                mServiceClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM);
-            if (dialWidget != null)
-                dialWidget.startAnimation();
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.i(TAG, "lqq,onNewIntent");
-        hideAllApps(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i(TAG, "lqq,onDestroy");
-        unregisterReceiver(mainReceiver);
-        mediaControl.unBindDataService(this);
-        distoryAllApps(this);
-        if (mServiceClient != null) {
-            mServiceClient.unbindService(this);
-        }
-        // 停止速度模拟器
-//        if (speedSimulator != null) {
-//            speedSimulator.stopSimulation();
-//        }
-    }
-
-    private void clickApp() {
-        binding.hotsetAllApp.setOnClickListener(this);
-        binding.hotsetBtApp.setOnClickListener(this);
-        binding.hotsetDspApp.setOnClickListener(this);
-        binding.hotsetWindowApp.setOnClickListener(this);
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == binding.hotsetAllApp.getId()) {
-            showAllApps(this);
-            if (mServiceClient != null) {
-                mServiceClient.startOrSetFreeformType(this, HIDE_FREEFORM);
-                mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
-                Log.i(TAG, "onClick: huang freeform to hide==>");
-            }
-        } else if (v.getId() == binding.hotsetBtApp.getId()) {
-            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-
-        } else if (v.getId() == binding.hotsetDspApp.getId()) {
-            startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
-
-        } else if (v.getId() == binding.hotsetWindowApp.getId()) {
-            if (mServiceClient != null)
-                mServiceClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN);
-        }
-    }
-
-    private void showAllApps(Context context) {
-        //AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        View root = findViewById(android.R.id.content);
-        try {
-            GlobalViewManager.getInstance(context).showApps((ViewGroup) root, 0);
-            Log.i(TAG, "GlobalViewManager.showApps ");
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.showApps failed", e);
-        }
-    }
-
-    private void hideAllApps(Context context) {
-        //AppsCustomizeControl.INSTANCE.hideApps();
-        try {
-            GlobalViewManager.getInstance(context).hideApps();
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.hideApps failed", e);
-        }
-    }
-
-    private void distoryAllApps(Context context) {
-        //AppsCustomizeControl.INSTANCE.hideApps();
-        try {
-            GlobalViewManager.getInstance(context).destroy();
-        } catch (Exception e) {
-            Log.w(TAG, "GlobalViewManager.destroy failed", e);
         }
 
+        freeformImage.addOnLayoutChangeListener(layoutListener)
     }
 
-    private boolean isAppsShow() {
-        //return AppsCustomizeControl.INSTANCE.getMAllIsShowing();
-        return GlobalViewManager.getInstance(this).isAllShowing();
+    private fun updateImagePosition(imageView: ImageView) {
+        val location = IntArray(2)
+        imageView.getLocationOnScreen(location)
+        val screenX = location[0]
+        val screenY = location[1]
+        val width = imageView.width
+        val height = imageView.height
 
+        systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        Log.i(TAG, "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect}")
+        systemUIClient.startOrSetFreeformType(
+            mViewBinding.root.context,
+            OPEN_APP_TO_FREEFORM
+        )
+       // oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
     }
 
+    private fun View.isVisibleOnScreen(): Boolean {
+        if (!isShown || !isAttachedToWindow) {
+            return false
+        }
+
+        val location = IntArray(2)
+        getLocationOnScreen(location)
+
+        val screenWidth = context.resources.displayMetrics.widthPixels
+        val screenHeight = context.resources.displayMetrics.heightPixels
+
+        return location[0] + width > 0 &&
+                location[1] + height > 0 &&
+                location[0] < screenWidth &&
+                location[1] < screenHeight
+    }
 
     /**
-     * 跳转Activity
-     *
-     * @param packName
-     * @param className
+     * 初始化长按切换壁纸和监听gps速度变化
      */
-    private void startActivity(String packName, String className) {
-        Intent intent = getPackageManager().getLaunchIntentForPackage(packName);
-        boolean isboot = true;
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun initTouchAndSpeedListener() {
+        handler = Handler(Looper.getMainLooper())
+        viewConfiguration = ViewConfiguration.get(this)
+
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+       // locationManager.requestLocationUpdates("gps", 1000, 10f, locationListener, mHandle.looper)
+    }
+
+    private fun initView() {
+        clickStartApp()
+    }
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun initBroadcastReceiver() {
+        val filter = IntentFilter()
+
+        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH)
+        filter.addAction(CommonData.ACTION_ACC_ON)
+        filter.addAction(CommonData.ACTION_ACC_OFF)
+        filter.addAction("com.zjinnova.zlink")
+        filter.addAction("android.launcher.show.allApp")
+        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
+        filter.addAction("CANBUS_CHANGE_SPEED_Unit")
+        filter.addAction("top_session_package_change")
+        filter.addAction(Intent.ACTION_TIME_CHANGED)
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        filter.addAction(Intent.ACTION_TIME_TICK)
+        filter.addAction(Intent.ACTION_DATE_CHANGED)
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(receiver, filter)
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+//        mMediaListener.cleanup()
+        unregisterReceiver(receiver)
+        systemUIClient.unbindService(this)
+        Settings.System.putString(mViewBinding.root.context.contentResolver, "ui_has_freeform", "false")
+    }
+    private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val action = intent?.action
+            Log.i(TAG, "onReceive:huang action=$action")
+            when (action) {
+                CommonData.BROADCAST_LAMP_SWITCH -> {}
+                CommonData.ACTION_ACC_ON -> {}
+                CommonData.ACTION_ACC_OFF -> {
+                    accRecor = true
+                }
+
+                CommonData.BROADCAST_MEDIA_EXIT -> {
+                    val pkg = intent.getStringExtra("package")
+                    if (pkg != null && (pkg == "cn.kuwo.kwmusiccar" || pkg == "exitAll")) {
+
+                    }
+                }
+
+                "com.zjinnova.zlink" -> {
+                    val zlinkStatus = intent.getStringExtra("status")
+                    val phoneMode = intent.getStringExtra("phoneMode")
+                    Log.d(TAG, "zlinkStatus:$zlinkStatus")
+                    if (zlinkStatus == null) {
+                        return
+                    }
+                    /*Log.i(
+                        TAG,
+                        "onReceive: huang mediaControl.getCurrentPkgName()=>${mediaControl.getCurrentPkgName()}"
+                    )*/
+                   /* if (mediaControl.getCurrentPkgName()?.equals("com.zjinnova.zlink") == true) {
+                        if ("REFRESH_JEPG" == zlinkStatus) {
+                            updateCarplayImageAlbum()
+                        }
+                    }*/
+                }
+
+                "android.launcher.show.allApp" -> {
+                   // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
+                }
+
+                "CANBUS_CHANGE_SPEED_Unit" -> {}
+                "top_session_package_change" -> {
+                    val sessionTopPkg = intent.getStringExtra("top_package")
+                  //  handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
+                }
+
+                /*Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK -> {
+                    dialWidget?.updateTimeSysem()
+                }*/
+            }
+        }
+    }
+
+    private fun clickStartApp() {
+        mViewBinding.hotsetAllApp.setOnClickListener {
+            systemUIClient.startOrSetFreeformType(this, HIDE_FREEFORM)
+            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+           // AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
+        }
+
+        mViewBinding.hotsetDspApp.setOnClickListener {
+            startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity")
+        }
+	
+	    mViewBinding.hotsetBtApp.setOnClickListener {
+            startActivity(
+                "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
+            )
+        }
+
+        mViewBinding.hotsetWindowApp.setOnClickListener {
+            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+        }
+    }
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        //AppsCustomizeControl.hideApps()
+        systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        //AppsCustomizeControl.hideApps()
+    }
+    private fun startActivity(packName: String, className: String?) {
+        val intent = packageManager.getLaunchIntentForPackage(packName)
+        var isboot = true
         if (intent != null) {
-            for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
-                Log.d(TAG, "packagename11=" + packName);
-                if (!packName.equals(IconCache.WorkSpacePackageName[index])) {
-                    isboot = false;
-                    break;
+            for (index in IconCache.WorkSpacePackageName.indices) {
+                if (packName != IconCache.WorkSpacePackageName[index]) {
+                    isboot = false
+                    break
                 }
             }
             if (packName.contains("com.autonavi")) {
-                if (isboot)
-                    Settings.System.putString(getContentResolver(), "boot_apk1", packName);
+                if (isboot) Settings.System.putString(getContentResolver(), "boot_apk1", packName)
             } else {
-                if (isboot)
-                    Settings.System.putString(getContentResolver(), "boot_apk2", packName);
+                if (isboot) Settings.System.putString(getContentResolver(), "boot_apk2", packName)
             }
-            startActivity(intent);
+            startActivity(intent)
         }
-
     }
-
-    private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
-        @Override
-        public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
-            if (!"com.awell.radio".equals(pkg)) {
-                musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
-            }
-        }
-
-        @Override
-        public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-            musicWidget.setCurMusicState(status, type);
-
-        }
-
-        @Override
-        public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
-
-        }
-
-        @Override
-        public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
-            musicWidget.setMusicNameTextView(songName, type);
-            musicWidget.setArtistNameTextView(singerName, type);
-            if ("NO_MUSIC_LIST".equals(songName)
-                    && "NO_MUSIC_LIST".equals(singerName)
-                    && "NO_MUSIC_LIST".equals(album)) {
-                musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
-                musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
-            }
-
-            if (MusicWidget.OTHER_MUSIC == type) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
-                }
-                if (!TextUtils.isEmpty(singerName)) {
-                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
-                }
-            }
-        }
-
-        @Override
-        public void updateViewPlayTime(@NotNull Bundle bundle, long currentTime, long totalTime, int type) {
-            musicWidget.setMusicSeekBar((int) currentTime, (int) totalTime, type);
-        }
-
-        @Override
-        public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
-//           runOnUiThread(() -> {
-//                binding.layoutRadioWidget.tvRadioFreq.setText(freq);
-//                binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
-//             });
-        }
-
-        @Override
-        public void handleOriginBundle(@NotNull Bundle bundle) {
-
-        }
-    };
-
-
-    private boolean isEventConsumedByChild = false;
-    private boolean isLongPressPossible = false;
-    private float startX = 0f;
-    private float startY = 0f;
-    private ViewConfiguration viewConfiguration;
-    private Handler handler;
-
     /**
      * 重写只为长按弹出壁纸选择
      */
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         // 先让子 View 处理事件
-        boolean consumed = super.dispatchTouchEvent(ev);
 
-        switch (ev.getActionMasked()) {
-            case MotionEvent.ACTION_DOWN:
+        val consumed = super.dispatchTouchEvent(ev)
+
+        when (ev.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
                 // 重置状态
-                isEventConsumedByChild = false;
-                isLongPressPossible = true;
+                isEventConsumedByChild = false
+                isLongPressPossible = true
 
                 // 记录触摸起始位置
-                startX = ev.getRawX();
-                startY = ev.getRawY();
+                startX = ev.rawX
+                startY = ev.rawY
 
                 // 启动长按检测
-                startLongPressDetection();
-                break;
+                startLongPressDetection()
+            }
 
-            case MotionEvent.ACTION_MOVE:
+            MotionEvent.ACTION_MOVE -> {
                 // 检查是否移动超过阈值
-                float dx = Math.abs(ev.getRawX() - startX);
-                float dy = Math.abs(ev.getRawY() - startY);
-                float touchSlop = 0f;
-                if (viewConfiguration != null) {
-                    touchSlop = viewConfiguration.getScaledTouchSlop();
-                }
+                val dx: Float = abs(ev.rawX - startX)
+                val dy: Float = abs(ev.rawY - startY)
+                var touchSlop = 0f
+                viewConfiguration?.let { touchSlop = it.scaledTouchSlop.toFloat() }
 
                 if (dx > touchSlop || dy > touchSlop) {
-                    cancelLongPressDetection();
+                    cancelLongPressDetection()
                 }
-                break;
+            }
 
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                cancelLongPressDetection();
-                break;
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> cancelLongPressDetection()
         }
-
         // 记录事件是否被子 View 消费
-        if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            isEventConsumedByChild = consumed;
+        if (ev.actionMasked == MotionEvent.ACTION_DOWN) {
+            isEventConsumedByChild = consumed
         }
 
-        return consumed;
+        return consumed
     }
 
-    private Runnable longPressRunnable = null;
+    private var longPressRunnable: Runnable? = null
 
-    private void startLongPressDetection() {
-        cancelLongPressDetection();
+    private fun startLongPressDetection() {
+        cancelLongPressDetection()
 
-        longPressRunnable = () -> {
-            // 只有事件没有被消费且长按可能时才触发
+        longPressRunnable = Runnable { // 只有事件没有被消费且长按可能时才触发
             if (!isEventConsumedByChild && isLongPressPossible) {
-                handleLongPressAction();
+                handleLongPressAction()
             }
-        };
-
-        if (handler != null) {
-            handler.postDelayed(
-                    longPressRunnable,
-                    ViewConfiguration.getLongPressTimeout()
-            );
         }
+        handler?.postDelayed(
+            longPressRunnable!!, ViewConfiguration.getLongPressTimeout().toLong()
+        )
     }
 
-    private void cancelLongPressDetection() {
+    private fun cancelLongPressDetection() {
         if (longPressRunnable != null) {
-            if (handler != null) {
-                handler.removeCallbacks(longPressRunnable);
-            }
-            longPressRunnable = null;
+            handler?.removeCallbacks(longPressRunnable!!)
+            longPressRunnable = null
         }
     }
 
-    private void handleLongPressAction() {
-        startWallpaper();
+    private fun handleLongPressAction() {
+        startWallpaper()
     }
 }
