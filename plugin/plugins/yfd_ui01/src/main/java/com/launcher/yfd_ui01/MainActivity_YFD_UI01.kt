@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -483,18 +484,38 @@ class MainActivity_YFD_UI01 : Activity() {
         mViewBinding.hotsetWindowApp.setOnClickListener {
             systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
         }
+        mViewBinding.hotsetWindowApp.setOnLongClickListener {
+            cancelLongPressDetection()
+            val mIntent= Intent()
+            mIntent.setPackage("com.awell.carsetting")
+            mIntent.component = ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
+            mIntent.putExtra("SelectDefaultId",3)
+            mIntent.putExtra("SelectDefaultFragment",30)
+            start_Activity(mIntent)
+            true
+        }
+
+        mViewBinding.carIcon.setOnLongClickListener {
+            cancelLongPressDetection()
+            /*startActivityForResult(
+                Intent(this, ImageSelectActivity::class.java),
+                REQUEST_SELECT_IMAGE
+            )*/
+            true
+        }
     }
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        super.onBackPressed()
         //AppsCustomizeControl.hideApps()
-	hideAllApps(this)
+	    hideAllApps(this)
         systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         //AppsCustomizeControl.hideApps()
-	hideAllApps(this)
+	    hideAllApps(this)
     }
     private fun startActivity(packName: String, className: String?) {
         val intent = packageManager.getLaunchIntentForPackage(packName)
@@ -514,6 +535,24 @@ class MainActivity_YFD_UI01 : Activity() {
             startActivity(intent)
         }
     }
+
+    private fun start_Activity(intent: Intent) {
+        val packName = intent.`package`
+        var isboot = true
+        for (index in IconCache.WorkSpacePackageName.indices) {
+            if (packName != IconCache.WorkSpacePackageName[index]) {
+                isboot = false
+                break
+            }
+        }
+        if (packName!=null && packName.contains("com.autonavi")) {
+            if (isboot) Settings.System.putString(getContentResolver(), "boot_apk1", packName)
+        } else {
+            if (isboot) Settings.System.putString(getContentResolver(), "boot_apk2", packName)
+        }
+        startActivity(intent)
+    }
+
     /**
      * 重写只为长按弹出壁纸选择
      */
