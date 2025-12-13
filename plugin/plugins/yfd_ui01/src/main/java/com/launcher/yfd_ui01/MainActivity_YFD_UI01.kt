@@ -8,9 +8,13 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.location.LocationListener
 import android.location.LocationManager
+import android.view.KeyEvent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -19,11 +23,18 @@ import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+import android.widget.GridView
 import android.widget.ImageView
+import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -32,12 +43,19 @@ import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui01.app.GlobalViewManager
 import com.launcher.yfd_ui01.app.IconManager
 import com.launcher.yfd_ui01.app.SpeedSimulator
+import com.launcher.yfd_ui01.chemo.ImagePreferences
+import com.launcher.yfd_ui01.chemo.ImageAdapter
+import com.launcher.yfd_ui01.chemo.AppCoroutineScope
+import com.launcher.yfd_ui01.chemo.ImageItem
 import com.launcher.yfd_ui01.databinding.ActivityMainUi01Binding
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
 import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
+import java.io.IOException
 import java.lang.Math.abs
+import android.view.ViewTreeObserver
+
 
 class MainActivity_YFD_UI01 : Activity() {
     private val TAG = MainActivity_YFD_UI01::class.simpleName
@@ -65,6 +83,9 @@ class MainActivity_YFD_UI01 : Activity() {
     lateinit var systemUIClient: SystemUIClient
     var viewAddNeedToStartFreeform: Boolean = false
 //    var oldFreeformPkg: String? = null
+    private lateinit var imagePreferences: ImagePreferences
+    private lateinit var appScope: AppCoroutineScope
+    private var imagePopupWindow: PopupWindow? = null
     private val freeformImpl: SystemUIClient.UIClientCallback =
         SystemUIClient.UIClientCallback {
             if (systemUIClient.rect == null) {
@@ -87,6 +108,7 @@ class MainActivity_YFD_UI01 : Activity() {
         initTouchAndSpeedListener()
         initBroadcastReceiver()
         initFreeform()
+
         // 创建速度模拟器
 //        speedSimulator = SpeedSimulator(object : SpeedSimulator.SpeedChangeListener {
 //            override fun onSpeedChanged(speed: Int) {
@@ -119,6 +141,7 @@ class MainActivity_YFD_UI01 : Activity() {
         Log.i(TAG, "lqq,onPause")
         dialWidget?.stopAnimation()
         dashboardView?.closeAnimation()
+        canclePopupWindow()
     }
     
     private fun initFreeform() {
@@ -199,9 +222,18 @@ class MainActivity_YFD_UI01 : Activity() {
         dialWidget = mViewBinding.layoutDialWidget.dialWidgetLayout
         dialWidget.findViews(this, dialWidget)
 
-
+        initPopouWindow()
         clickStartApp()
     }
+    private fun initPopouWindow(){
+        // 初始化图片存储
+        imagePreferences = ImagePreferences(this)
+        // 初始化协程作用域
+        appScope = AppCoroutineScope()
+        // 恢复之前保存的图片
+        restoreSavedImage()
+    }
+
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initBroadcastReceiver() {
         val filter = IntentFilter()
@@ -218,6 +250,8 @@ class MainActivity_YFD_UI01 : Activity() {
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         filter.addAction(Intent.ACTION_TIME_TICK)
         filter.addAction(Intent.ACTION_DATE_CHANGED)
+        filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+        filter.addAction("android.intent.action.keycode_back_down")
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
@@ -248,6 +282,9 @@ class MainActivity_YFD_UI01 : Activity() {
         super.onDestroy()
         Settings.System.putString(mViewBinding.root.context.contentResolver, "ui_has_freeform", "false")
         unregisterReceiver(receiver)
+        // 取消所有协程
+        appScope.cancelAll()
+        canclePopupWindow()
         systemUIClient.unbindService(this)
         distoryAllApps(this);
         cancelLongPressDetection()
@@ -311,6 +348,16 @@ class MainActivity_YFD_UI01 : Activity() {
                 Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK -> {
                     dialWidget?.updateTimeSysem()
                 }
+                Intent.ACTION_CLOSE_SYSTEM_DIALOGS->{
+                    var reason = intent.getStringExtra("reason");
+
+                    if(reason == "recentapps" ||reason == "homekey")//多任务；recent：最近 ,home键
+                        canclePopupWindow()
+                }
+                "android.intent.action.keycode_back_down"->{
+                    canclePopupWindow()
+                }
+
             }
         }
     }
@@ -467,9 +514,10 @@ class MainActivity_YFD_UI01 : Activity() {
     }
     private fun clickStartApp() {
         mViewBinding.hotsetAllApp.setOnClickListener {
+            canclePopupWindow()
             systemUIClient.startOrSetFreeformType(this, HIDE_FREEFORM)
             systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
-           showAllApps(this)
+            showAllApps(this)
 
         }
         mViewBinding.hotsetDspApp.setOnClickListener {
@@ -497,19 +545,19 @@ class MainActivity_YFD_UI01 : Activity() {
 
         mViewBinding.carIcon.setOnLongClickListener {
             cancelLongPressDetection()
-            /*startActivityForResult(
-                Intent(this, ImageSelectActivity::class.java),
-                REQUEST_SELECT_IMAGE
-            )*/
+            showImageSelectionPopup()
             true
         }
     }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        super.onBackPressed()
+        // super.onBackPressed() //Must be blocked
+        Log.i(TAG,"onBackPressed")
         //AppsCustomizeControl.hideApps()
 	    hideAllApps(this)
         systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
+
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -657,5 +705,213 @@ class MainActivity_YFD_UI01 : Activity() {
     private fun isAppsShow(): Boolean {
         return GlobalViewManager.getInstance(this).isAllShowing
     }
-    
+
+    //*************************PopupWindow************************************
+
+    private fun showImageSelectionPopup() {
+        // 加载布局
+        val popupView = LayoutInflater.from(this).inflate(R.layout.popup_image_selector, null)
+
+        // 获取assets中的所有图片文件
+        val imageList = getAllImagesFromAssets()
+
+        // 设置适配器
+        val gridView = popupView.findViewById<GridView>(R.id.gvImages)
+        val adapter = ImageAdapter(this, imageList , appScope)
+        gridView.adapter = adapter
+
+        // 设置项点击监听
+        gridView.setOnItemClickListener { _, _, position, _ ->
+            val selectedImage = imageList[position]
+            setImageViewBackground(selectedImage.assetPath)
+            imagePopupWindow?.dismiss()
+        }
+
+        // 创建PopupWindow
+        imagePopupWindow = PopupWindow(
+            popupView,
+            (resources.displayMetrics.widthPixels * 0.8).toInt(),
+            (resources.displayMetrics.heightPixels * 0.7).toInt(),
+            true
+        ).apply {
+            // 设置背景和动画
+            setBackgroundDrawable(BitmapDrawable())
+            animationStyle = android.R.style.Animation_Dialog
+
+            // 设置外部可点击关闭
+            isOutsideTouchable = true
+            isFocusable = true
+            windowLayoutType = TYPE_APPLICATION_OVERLAY
+
+            setOnDismissListener {
+                backgroundAlpha(1.0f)
+                // 清理适配器资源
+                adapter?.let { adapter ->
+                    if (adapter is ImageAdapter) {
+                        adapter.cleanup()
+                    }
+                }
+            }
+
+            contentView.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    contentView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    // PopupWindow显示后，显示半透明背景
+                    backgroundAlpha(0.5f)
+                }
+            })
+
+            // 设置弹出窗口的窗口属性，使其在按Home键时消失
+            val window = contentView.context as? Activity
+            window?.window?.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+            )
+
+
+            // 显示在屏幕中央
+            showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0)
+        }
+
+    }
+    private fun backgroundAlpha(alpha: Float) {
+        val lp = window.attributes
+        lp.alpha = alpha //0.0-1.0
+        window.attributes = lp
+    }
+
+    private fun getAllImagesFromAssets(): List<ImageItem> {
+        val imageList = mutableListOf<ImageItem>()
+        try {
+            // 遍历assets中的所有文件
+            traverseAssets("chemo", imageList)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            //showToast("读取图片失败")
+        }
+
+        return imageList
+    }
+
+    @Throws(IOException::class)
+    private fun traverseAssets(path: String, imageList: MutableList<ImageItem>) {
+        val assets = assets
+        val files = assets.list(path) ?: return
+
+        for (file in files) {
+            val fullPath = if (path.isEmpty()) file else "$path/$file"
+
+            try {
+                // 尝试打开文件，如果是目录会抛出异常
+                val input = assets.open(fullPath)
+                input.close()
+
+                // 如果是图片文件，添加到列表
+                if (isImageFile(file)) {
+                    imageList.add(ImageItem(fullPath, getFileNameWithoutExtension(file)))
+                }
+            } catch (e: IOException) {
+                // 如果是目录，递归遍历
+                traverseAssets(fullPath, imageList)
+            }
+        }
+    }
+
+    private fun isImageFile(fileName: String): Boolean {
+        val extensions = arrayOf(".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp")
+        val lowerFileName = fileName.lowercase()
+        return extensions.any { lowerFileName.endsWith(it) }
+    }
+
+    private fun getFileNameWithoutExtension(fileName: String): String {
+        val dotIndex = fileName.lastIndexOf('.')
+        return if (dotIndex > 0) fileName.substring(0, dotIndex) else fileName
+    }
+
+    private fun restoreSavedImage() {
+        appScope.launch {
+            try {
+                // 在IO线程加载图片
+                val bitmap = appScope.io {
+                    imagePreferences.getSavedImage()
+                }
+
+                // 在主线程更新UI
+                appScope.main {
+                    bitmap?.let {
+                        mViewBinding.carIcon.setImageBitmap(bitmap)
+                        //showToast("已恢复上次设置的图片")
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                appScope.main {
+                    //sshowToast("恢复图片失败")
+                }
+            }
+        }
+    }
+
+    private fun setImageViewBackground(assetPath: String) {
+        appScope.launch {
+            try {
+                // 在IO线程加载图片
+                val bitmap = appScope.io {
+                    loadBitmapFromAssets(assetPath)
+                }
+
+                bitmap?.let {
+                    // 保存图片到持久化存储
+                    val saveSuccess = appScope.io {
+                        imagePreferences.saveSelectedImage(assetPath, it)
+                    }
+
+                    // 在主线程更新UI
+                    appScope.main {
+                        mViewBinding.carIcon.setImageBitmap(it)
+                        if (saveSuccess) {
+                            //showToast("已设置并保存图片: ${getFileNameWithoutExtension(assetPath)}")
+                        } else {
+                            //showToast("已设置图片但保存失败: ${getFileNameWithoutExtension(assetPath)}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                appScope.main {
+                    //showToast("设置图片失败")
+                }
+            }
+        }
+    }
+
+    private suspend fun loadBitmapFromAssets(assetPath: String): Bitmap? {
+        return try {
+            val inputStream = assets.open(assetPath)
+            val options = BitmapFactory.Options().apply {
+                inSampleSize = 1 // 缩小图片以减少内存使用
+            }
+            val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+            inputStream.close()
+            bitmap
+        } catch (e: IOException) {
+            null
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+    private fun canclePopupWindow(){
+        // 关闭弹窗
+        imagePopupWindow?.let {
+            if (it.isShowing) {
+                it.dismiss()
+            }
+            imagePopupWindow = null
+        }
+    }
+
+
 }
