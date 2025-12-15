@@ -583,10 +583,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                 if (minSpanX <= LauncherModel.getCellCountX() && minSpanY <= LauncherModel.getCellCountY()) {
                     mWidgets.add(widget);
                 } else {
-                    Log.e(TAG, "Widget " + widget.provider + " can not fit on this device (" + widget.minWidth + ", " + widget.minHeight + ")");
+                    //Log.e(TAG, "Widget " + widget.provider + " can not fit on this device (" + widget.minWidth + ", " + widget.minHeight + ")");
                 }
             } else {
-                Log.e(TAG, "Widget " + widget.provider + " has invalid dimensions (" + widget.minWidth + ", " + widget.minHeight + ")");
+                //Log.e(TAG, "Widget " + widget.provider + " has invalid dimensions (" + widget.minWidth + ", " + widget.minHeight + ")");
             }
         }
         mWidgets.addAll(shortcuts);
@@ -2059,7 +2059,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             ApplicationInfo info = list.get(i);
             int index = Collections.binarySearch(mApps, info, LauncherModel.getAppNameComparator());
             if (index < 0) {
-                Log.i(TAG, "addAppsWithoutInvalidate: huang add info =>" + info);
+                //Log.i(TAG, "addAppsWithoutInvalidate: huang add info =>" + info);
                 mApps.add(-(index + 1), info);
             }
         }

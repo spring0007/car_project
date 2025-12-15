@@ -16,6 +16,11 @@
 
 package com.awell.launcher2;
 
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_DARK;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_DEFAULT;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YELLOW;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YFD_2;
+
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,6 +35,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.library.R;
@@ -123,9 +129,9 @@ public class IconCache {
             , "com.awell.canbus"
             , "com.awell.canbus2"
 
- //           , "com.android.mms"
+            //           , "com.android.mms"
             , "com.autonavi.amapauto"
-         //   , "com.txznet.txzsetting"
+            //   , "com.txznet.txzsetting"
             , "com.tima.carnet.vt"
 
             , "net.easyconn"
@@ -144,10 +150,10 @@ public class IconCache {
 //            , "com.android.contacts"
             , "com.android.gallery3d"
 
- //           , "com.mediatek.camera"
+            //           , "com.mediatek.camera"
             , "org.chromium.chrome"
- //           , "com.android.quicksearchbox"
- //           , "com.android.stk"
+            //           , "com.android.quicksearchbox"
+            //           , "com.android.stk"
 
 //            , "com.android.settings"
             , "com.awell.electricfan"
@@ -182,7 +188,7 @@ public class IconCache {
 
 //            , R.drawable.sf_message
             , R.drawable.sf_gaode
-         //   , R.drawable.sf_ggvoice
+            //   , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink
 
             , R.drawable.sf_zlink
@@ -239,7 +245,7 @@ public class IconCache {
 
 //            , R.drawable.sf_message
             , R.drawable.sf_gaode_dark
-          //  , R.drawable.sf_ggvoice
+            //  , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink_dark
 
             , R.drawable.sf_zlink_dark
@@ -296,7 +302,7 @@ public class IconCache {
 
 //            , R.drawable.sf_message
             , R.drawable.sf_gaode_yellow
-       //     , R.drawable.sf_ggvoice
+            //     , R.drawable.sf_ggvoice
             , R.drawable.sf_zlink_yellow
 
             , R.drawable.sf_zlink_yellow
@@ -310,17 +316,17 @@ public class IconCache {
 //            , R.drawable.sf_soundrecorder
             , R.drawable.sf_gg_yellow
 
- //           , R.drawable.sf_calender
- //           , R.drawable.sf_clock
- //           , R.drawable.sf_contact
+            //           , R.drawable.sf_calender
+            //           , R.drawable.sf_clock
+            //           , R.drawable.sf_contact
             , R.drawable.sf_gallery_yellow
 
- //           , R.drawable.sf_camera
+            //           , R.drawable.sf_camera
             , R.drawable.sf_chrome_yellow
 //            , R.drawable.sf_search
 //            , R.drawable.sf_simtools
 
- //           , R.drawable.sf_system_setting
+            //           , R.drawable.sf_system_setting
             , R.drawable.sf_fan_yellow
             , R.drawable.sf_front_video_yellow
             , R.drawable.sf_color_light_yellow
@@ -373,16 +379,23 @@ public class IconCache {
         }
     }
 
-    private int getIconResource(int index) {
-       // return themeMode == 0 ? mHomePackageIcon_116_lehang_2_dark[index] : mHomePackageIcon_116_lehang_2[index];
-        if (themeMode == 0){
-            return mHomePackageIcon_116_lehang_2_dark[index];
-        } else if (themeMode == 1){
-            return mHomePackageIcon_116_lehang_2[index];
-        }else if (themeMode == 2){
-            return mHomePackageIcon_116_lehang_2_yellow[index];
+    private int getIconResource(String pkg) {
+
+        // return themeMode == 0 ? mHomePackageIcon_116_lehang_2_dark[index] : mHomePackageIcon_116_lehang_2[index];
+        if (themeMode == 0) {
+            return PACKAGE_ICON_MAP_DARK.get(pkg);
+            //return mHomePackageIcon_116_lehang_2_dark[index];
+        } else if (themeMode == 1) {
+            return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
+            //return mHomePackageIcon_116_lehang_2[index];
+        } else if (themeMode == 2) {
+            return PACKAGE_ICON_MAP_YELLOW.get(pkg);
+            //return mHomePackageIcon_116_lehang_2_yellow[index];
+        } else if (themeMode == 100) {
+            return PACKAGE_ICON_MAP_YFD_2.get(pkg);
         }
-        return mHomePackageIcon_116_lehang_2[index];
+        return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
+        //return mHomePackageIcon_116_lehang_2[index];
     }
 
 
@@ -479,19 +492,30 @@ public class IconCache {
             String packageName = info.activityInfo.applicationInfo.packageName;
             application.title = entry.title;
             boolean customIconSet = false;
-            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
+
+            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
                 Utilities.FLAG = false;
-                if (packageName.contains(mHomePackageName_lehang[i])) {
-                    bmp = getFullResIcon(mContext.getResources(), getIconResource(i));
-                    application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
-                    entry.icon = application.iconBitmap;
-                    customIconSet = true;
-                    break;
-                }
-//                else {
-//                    application.iconBitmap = entry.icon;
-//                }
+                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+                application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
+                entry.icon = application.iconBitmap;
+                customIconSet = true;
             }
+
+
+//            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
+//                Utilities.FLAG = false;
+//                if (packageName.contains(mHomePackageName_lehang[i])) {
+//                    bmp = getFullResIcon(mContext.getResources(), getIconResource(i));
+//                    application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
+//                    entry.icon = application.iconBitmap;
+//                    customIconSet = true;
+//                    break;
+//                }
+////                else {
+////                    application.iconBitmap = entry.icon;
+////                }
+//            }
+
             if (!customIconSet) {
                 application.iconBitmap = entry.icon;
             }
@@ -509,14 +533,22 @@ public class IconCache {
 
             CacheEntry entry = cacheLocked(component, resolveInfo, null);
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
-            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
-                int nIndex = Utilities.isContains(packageName, mHomePackageName_lehang);
 
-                if (-1 != nIndex) {
-                    Drawable bmp = getFullResIcon(mContext.getResources(), getIconResource(nIndex));
-                    entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
-                }
+
+            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
+                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+                entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
+
+//            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
+//                int nIndex = Utilities.isContains(packageName, mHomePackageName_lehang);
+//
+//                if (-1 != nIndex) {
+//                    Drawable bmp = getFullResIcon(mContext.getResources(), getIconResource(nIndex));
+//                    entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
+//                }
+//            }
+
 
             return entry.icon;
         }
@@ -531,14 +563,21 @@ public class IconCache {
 
             CacheEntry entry = cacheLocked(component, resolveInfo, labelCache);
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
-            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
-                if (packageName.contains(mHomePackageName_lehang[i])) {
-                    bmp = getFullResIcon(mContext.getResources(),
-                            getIconResource(i));
-                    entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
-                break;
-                }
+
+            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
+                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+                entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
+
+//            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
+//                if (packageName.contains(mHomePackageName_lehang[i])) {
+//                    bmp = getFullResIcon(mContext.getResources(), getIconResource(i));
+//                    entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
+//                    break;
+//                }
+//            }
+
+
             return entry.icon;
         }
     }

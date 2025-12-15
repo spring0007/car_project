@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+/*
+* Copyright (C) 2008 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+ -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="ExtraTranslation">
+    <string name="click_play_music">请选择歌曲</string>
+    <string name="settings">设置</string>
+    <string name="bluetooth">蓝牙</string>
+    <string name="music">音乐</string>
+    <string name="navi">地图</string>
+
+
+
+    <string name="weather_desc_100">晴</string>
+    <string name="weather_desc_101">多云</string>
+    <string name="weather_desc_102">少云</string>
+    <string name="weather_desc_103">晴间多云</string>
+    <string name="weather_desc_104">阴</string>
+    <string name="weather_desc_300">阵雨</string>
+    <string name="weather_desc_301">强阵雨</string>
+    <string name="weather_desc_302">雷阵雨</string>
+    <string name="weather_desc_303">强雷阵雨</string>
+    <string name="weather_desc_304">雷阵雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">极端降雨</string>
+    <string name="weather_desc_309">毛毛雨</string>
+    <string name="weather_desc_310">暴雨</string>
+    <string name="weather_desc_311">大暴雨</string>
+    <string name="weather_desc_312">特大暴雨</string>
+    <string name="weather_desc_313">冻雨</string>
+    <string name="weather_desc_400">小雪</string>
+    <string name="weather_desc_401">中雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴雪</string>
+    <string name="weather_desc_404">雨夹雪</string>
+    <string name="weather_desc_405">雨雪天气</string>
+    <string name="weather_desc_406">阵雨夹雪</string>
+    <string name="weather_desc_407">阵雪</string>
+    <string name="weather_desc_500">薄雾</string>
+    <string name="weather_desc_501">雾</string>
+    <string name="weather_desc_502">霾</string>
+    <string name="weather_desc_503">重度霾</string>
+    <string name="weather_desc_504">轻度霾</string>
+    <string name="weather_desc_507">沙尘暴</string>
+    <string name="weather_desc_508">强沙尘暴</string>
+    <string name="weather_desc_unknown">未知</string>
+
+</resources>

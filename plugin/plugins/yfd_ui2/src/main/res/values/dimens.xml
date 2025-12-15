@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_50sp">50sp</dimen>
+
+    <dimen name="app_icon_bg_size">80dp</dimen>
+    <dimen name="recycle_app_icon_size">70dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+
+    <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
+    <dimen name="navigation_bar_width">@*android:dimen/navigation_bar_width</dimen>
+
+</resources>

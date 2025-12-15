@@ -66,7 +66,7 @@ object AppsCustomizeControl {
 
     fun setPluginThemeMode(themeMode: Int) {
         mIconCache.setPluginThemeMode(themeMode)
-        Utilities.setPluginThemeMode(themeMode,mAppContext)
+        Utilities.setPluginThemeMode(themeMode, mAppContext)
 
     }
 

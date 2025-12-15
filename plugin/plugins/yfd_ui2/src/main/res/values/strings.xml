@@ -1,0 +1,65 @@
+<resources>
+
+
+    <string name="app_name">LauncherUIYFD_UI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    <string name="ui_key">LauncherUIYFD_UI2</string>
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    <string name="ui_clazz">com.launcher.yfd_ui2.YFD_UIActivity</string>
+
+    <string name="click_play_music">Click  To Play</string>
+    <string name="music_artist">Artist</string>
+    <string name="add_app">Add</string>
+    <string name="settings">Set</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="music">Music</string>
+    <string name="navi">Navi</string>
+
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+    </string-array>
+
+
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Cloudy</string>
+    <string name="weather_desc_102">Few clouds</string>
+    <string name="weather_desc_103">Partly sunny</string>
+    <string name="weather_desc_104">Overcast</string>
+    <string name="weather_desc_300">Shower rain</string>
+    <string name="weather_desc_301">Heavy shower rain</string>
+    <string name="weather_desc_302">Thundershower</string>
+    <string name="weather_desc_303">Severe thundershower</string>
+    <string name="weather_desc_304">Thundershower with hail</string>
+    <string name="weather_desc_305">Light rain</string>
+    <string name="weather_desc_306">Moderate rain</string>
+    <string name="weather_desc_307">Heavy rain</string>
+    <string name="weather_desc_308">Extreme rain</string>
+    <string name="weather_desc_309">Drizzle rain</string>
+    <string name="weather_desc_310">Storm</string>
+    <string name="weather_desc_311">Heavy storm</string>
+    <string name="weather_desc_312">Severe storm</string>
+    <string name="weather_desc_313">Freezing rain</string>
+    <string name="weather_desc_400">Light snow</string>
+    <string name="weather_desc_401">Moderate snow</string>
+    <string name="weather_desc_402">Heavy snow</string>
+    <string name="weather_desc_403">Snowstorm</string>
+    <string name="weather_desc_404">Sleet</string>
+    <string name="weather_desc_405">Rain and snow</string>
+    <string name="weather_desc_406">Shower snow</string>
+    <string name="weather_desc_407">Snow flurry</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">Fog</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Heavy haze</string>
+    <string name="weather_desc_504">Light haze</string>
+    <string name="weather_desc_507">Sandstorm</string>
+    <string name="weather_desc_508">Heavy sandstorm</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>
