@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui01;
+package com.launcher.yfd_ui01.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+
+import com.launcher.yfd_ui01.R;
 
 /**
  * Date :2021/12/24

@@ -34,6 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
+            android:scaleType="fitXY"
             android:src="@drawable/a3_2008_2012" />
     </LinearLayout>
     <!--car speed -->
@@ -48,7 +51,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.launcher.yfd_ui01.DashboardView
+        <com.launcher.yfd_ui01.view.DashboardView
             android:id="@+id/car_speed_point"
             android:layout_width="274dp"
             android:layout_height="274dp"

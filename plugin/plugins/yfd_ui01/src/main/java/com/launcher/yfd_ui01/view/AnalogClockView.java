@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui01;
+package com.launcher.yfd_ui01.view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.launcher.yfd_ui01.R;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui01;
+package com.launcher.yfd_ui01.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import com.launcher.yfd_ui01.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

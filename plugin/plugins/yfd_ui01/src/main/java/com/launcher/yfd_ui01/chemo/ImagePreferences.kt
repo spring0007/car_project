@@ -58,7 +58,7 @@ class ImagePreferences(private val context: Context) {
     /**
      * 获取保存的asset路径
      */
-    fun getSavedAssetPath(): String? {
+    fun getSavedAssetPath(): String? {//"chemo/BMW/bmw_e46_1998_2005.png"
         return sharedPreferences.getString(KEY_SELECTED_ASSET_PATH, null)
     }
     

@@ -10,11 +10,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.location.LocationListener
 import android.location.LocationManager
-import android.view.KeyEvent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -29,7 +29,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.widget.GridView
 import android.widget.ImageView
@@ -42,7 +41,6 @@ import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui01.app.GlobalViewManager
 import com.launcher.yfd_ui01.app.IconManager
-import com.launcher.yfd_ui01.app.SpeedSimulator
 import com.launcher.yfd_ui01.chemo.ImagePreferences
 import com.launcher.yfd_ui01.chemo.ImageAdapter
 import com.launcher.yfd_ui01.chemo.AppCoroutineScope
@@ -55,6 +53,9 @@ import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
 import java.io.IOException
 import java.lang.Math.abs
 import android.view.ViewTreeObserver
+import com.launcher.yfd_ui01.view.DashboardView
+import com.launcher.yfd_ui01.view.DialWidget
+import com.launcher.yfd_ui01.view.MusicWidget
 
 
 class MainActivity_YFD_UI01 : Activity() {
@@ -251,7 +252,6 @@ class MainActivity_YFD_UI01 : Activity() {
         filter.addAction(Intent.ACTION_TIME_TICK)
         filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-        filter.addAction("android.intent.action.keycode_back_down")
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
@@ -353,9 +353,6 @@ class MainActivity_YFD_UI01 : Activity() {
 
                     if(reason == "recentapps" ||reason == "homekey")//多任务；recent：最近 ,home键
                         canclePopupWindow()
-                }
-                "android.intent.action.keycode_back_down"->{
-                    canclePopupWindow()
                 }
 
             }
@@ -735,13 +732,14 @@ class MainActivity_YFD_UI01 : Activity() {
             true
         ).apply {
             // 设置背景和动画
-            setBackgroundDrawable(BitmapDrawable())
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             animationStyle = android.R.style.Animation_Dialog
 
             // 设置外部可点击关闭
             isOutsideTouchable = true
             isFocusable = true
             windowLayoutType = TYPE_APPLICATION_OVERLAY
+
 
             setOnDismissListener {
                 backgroundAlpha(1.0f)
@@ -761,14 +759,6 @@ class MainActivity_YFD_UI01 : Activity() {
                     backgroundAlpha(0.5f)
                 }
             })
-
-            // 设置弹出窗口的窗口属性，使其在按Home键时消失
-            val window = contentView.context as? Activity
-            window?.window?.setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-            )
-
 
             // 显示在屏幕中央
             showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0)
@@ -790,7 +780,6 @@ class MainActivity_YFD_UI01 : Activity() {
             e.printStackTrace()
             //showToast("读取图片失败")
         }
-
         return imageList
     }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.launcher.yfd_ui01.DialWidget xmlns:android="http://schemas.android.com/apk/res/android"
+<com.launcher.yfd_ui01.view.DialWidget xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dial_widget_layout"
     android:layout_width="wrap_content"
@@ -7,7 +7,7 @@
     android:orientation="vertical"
     >
 
-    <com.launcher.yfd_ui01.AnalogClockView
+    <com.launcher.yfd_ui01.view.AnalogClockView
         android:id="@+id/analogClockView"
         android:layout_width="219dp"
         android:layout_height="219dp"
@@ -51,4 +51,4 @@
     </LinearLayout>
 
 
-</com.launcher.yfd_ui01.DialWidget>
+</com.launcher.yfd_ui01.view.DialWidget>

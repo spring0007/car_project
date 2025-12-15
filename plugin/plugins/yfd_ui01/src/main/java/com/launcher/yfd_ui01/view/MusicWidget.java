@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui01;
+package com.launcher.yfd_ui01.view;
 
 import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
@@ -32,6 +32,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.launcher.yfd_ui01.R;
 
 
 public class MusicWidget extends RelativeLayout implements OnClickListener {
