@@ -37,7 +37,7 @@ public class IconManager {
 
         // 需要显示的应用
         NEED_TO_SHOW_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
-            "com.android.browser", "com.android.dialer", "com.android.mms",
+            "com.android.browser",
             "com.android.calculator2", "com.android.deskclock", "com.mediatek.filemanager",
             "com.android.documentsui", "com.autonavi.amapauto", "com.awell.radio",
             "com.awell.localmusic", "com.awell.localvideo", "com.awell.backcar",
@@ -45,7 +45,7 @@ public class IconManager {
             "com.tima.carnet.vt", "com.zjinnova.zlink", "com.awell.eqselect",
             "com.awell.awellmanual", "com.awell.themesetting", "com.awell.carsetting",
             "com.android.chrome", "com.google.android.youtube", "com.google.android.apps.maps",
-            "com.android.vending", "org.chromium.chrome"
+            "com.android.vending", "org.chromium.chrome","com.awell.navigation"
         ));
 
         // 自定义图标映射
@@ -72,6 +72,7 @@ public class IconManager {
             tempIcons.put("org.chromium.chrome", R.drawable.yfd_ui1_chrome);
             tempIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
             tempIcons.put("com.awell.electricfan",R.drawable.yfd_ui1_fan);
+            tempIcons.put("com.awell.weather",R.drawable.yfd_ui1_weather);
         } catch (Exception e) {
             // 静默处理初始化异常
         }
