@@ -624,6 +624,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                     getUiActivity().toString().contains(currentPluginUi)) {
                 //使用Plugin的Activity上下文
                 context = getUiActivity();
+                Log.i(TAG, "onClick: huang use plugin context=>" + context);
             }
 
             startActivitySafely(v, context, appInfo.intent, appInfo);
