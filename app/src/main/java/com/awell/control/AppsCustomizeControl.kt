@@ -55,7 +55,7 @@ object AppsCustomizeControl {
     fun initialize(context: Context, model: LauncherModel, iconCache: IconCache) {
         if (mIsInitialized)
             return
-        Log.i(TAG, "initialize: huang initialize==>${this}")
+        //Log.i(TAG, "initialize: huang initialize==>${this}")
         mAppContext = context.applicationContext
         initView(context)
         mModel = model
@@ -200,29 +200,29 @@ object AppsCustomizeControl {
 
 
     fun bindPackagesUpdated() {
-        Log.i(TAG, "bindPackagesUpdated: huang ==>")
+        //Log.i(TAG, "bindPackagesUpdated: huang ==>")
         mAppsCustomizeContent?.onPackagesUpdated()
     }
 
     fun bindAppsRemoved(packageNames: ArrayList<String>?, permanent: Boolean) {
-        Log.i(TAG, "bindAppsRemoved: huang ==>")
+        //Log.i(TAG, "bindAppsRemoved: huang ==>")
         mAppsCustomizeContent?.removeApps(packageNames)
     }
 
     fun bindAppsUpdated(apps: ArrayList<ApplicationInfo>?) {
-        Log.i(TAG, "bindAppsUpdated: huang bind apps update =>")
+        //Log.i(TAG, "bindAppsUpdated: huang bind apps update =>")
         mAppsCustomizeContent?.updateApps(apps)
 
     }
 
     fun bindAppsAdded(apps: ArrayList<ApplicationInfo>?) {
-        Log.i(TAG, "bindAppsAdded: huang apps ==>")
+        //Log.i(TAG, "bindAppsAdded: huang apps ==>")
         mAppsCustomizeContent?.addApps(apps)
     }
 
     fun bindApps(apps: ArrayList<ApplicationInfo>?) {
         val setAllAppsRunnable = Runnable {
-            Log.i(TAG, "bindApps: huang bind apps=>")
+            //Log.i(TAG, "bindApps: huang bind apps=>")
             mAppsCustomizeContent?.setApps(apps)
         }
 

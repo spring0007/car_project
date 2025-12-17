@@ -170,7 +170,7 @@
 
 
     <com.launcher.yfd_ui2.view.AnalogClockSurfaceView
-        android:id="@+id/clock_view"
+        android:id="@+id/clockView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@+id/clock_"
@@ -179,7 +179,7 @@
         app:layout_constraintTop_toTopOf="@+id/clock_" />
 
     <TextClock
-        android:id="@+id/time"
+        android:id="@+id/clockTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -202,7 +202,7 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <TextClock
-        android:id="@+id/ampm"
+        android:id="@+id/clockAmPm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -215,14 +215,14 @@
         android:text="AM"
         android:textColor="@android:color/white"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/time"
-        app:layout_constraintEnd_toEndOf="@+id/time"
+        app:layout_constraintBottom_toTopOf="@+id/clockTime"
+        app:layout_constraintEnd_toEndOf="@+id/clockTime"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
         app:layout_constraintVertical_bias="1" />
 
 
     <TextClock
-        android:id="@+id/page2_date_m"
+        android:id="@+id/clockData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -237,13 +237,13 @@
         android:text="5月18日"
         android:textColor="@android:color/white"
         android:textSize="28sp"
-        app:layout_constraintEnd_toEndOf="@+id/time"
+        app:layout_constraintEnd_toEndOf="@+id/clockTime"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@+id/time"
-        app:layout_constraintTop_toBottomOf="@+id/time" />
+        app:layout_constraintStart_toStartOf="@+id/clockTime"
+        app:layout_constraintTop_toBottomOf="@+id/clockTime" />
 
     <TextClock
-        android:id="@+id/textClock"
+        android:id="@+id/textWeek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:format12Hour="EEE"
@@ -253,8 +253,8 @@
         android:shadowDx="0"
         android:shadowDy="5"
         android:shadowRadius="6"
-        app:layout_constraintStart_toStartOf="@+id/page2_date_m"
-        app:layout_constraintTop_toBottomOf="@+id/page2_date_m" />
+        app:layout_constraintStart_toStartOf="@+id/clockData"
+        app:layout_constraintTop_toBottomOf="@+id/clockData" />
 
 
     <ImageView
@@ -398,7 +398,7 @@
         app:layout_constraintStart_toStartOf="@+id/freeform_image" />
 
     <ImageView
-        android:id="@+id/freeform_full_screen"
+        android:id="@+id/freeformFullScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
@@ -412,9 +412,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic"
-        app:layout_constraintBottom_toBottomOf="@+id/freeform_full_screen"
-        app:layout_constraintStart_toEndOf="@+id/freeform_full_screen"
-        app:layout_constraintTop_toTopOf="@+id/freeform_full_screen" />
+        app:layout_constraintBottom_toBottomOf="@+id/freeformFullScreen"
+        app:layout_constraintStart_toEndOf="@+id/freeformFullScreen"
+        app:layout_constraintTop_toTopOf="@+id/freeformFullScreen" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"

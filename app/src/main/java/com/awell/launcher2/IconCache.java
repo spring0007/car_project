@@ -34,6 +34,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -392,10 +393,35 @@ public class IconCache {
             return PACKAGE_ICON_MAP_YELLOW.get(pkg);
             //return mHomePackageIcon_116_lehang_2_yellow[index];
         } else if (themeMode == 100) {
+//            getPluginDrawable();
             return PACKAGE_ICON_MAP_YFD_2.get(pkg);
         }
         return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
         //return mHomePackageIcon_116_lehang_2[index];
+    }
+
+    private void getPluginDrawable() {
+        try {
+            // 获取目标APK的类加载器
+            ClassLoader classLoader = mContext.getClassLoader();
+            Log.i(TAG, "getPluginDrawable: huang class loader=>" + classLoader);
+            // 加载目标类
+            Class<?> iconPkgMapClass = classLoader.loadClass("完整包名.IconPkgMap");
+
+            // 获取静态字段
+            Field field = iconPkgMapClass.getField("PACKAGE_ICON_MAP_YFD_2");
+            Map<String, Integer> map = (Map<String, Integer>) field.get(null);
+
+            // 遍历Map数据
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Integer value = entry.getValue();
+                Log.d("IconPkgMap", "Key: " + key + ", Value: " + value);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

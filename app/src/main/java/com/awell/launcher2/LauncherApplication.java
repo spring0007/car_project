@@ -31,7 +31,9 @@ import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -56,7 +58,7 @@ import java.lang.reflect.Method;
 
 public class LauncherApplication extends RePluginApplication implements ViewModelStoreOwner {
     private static final String TAG = LauncherApplication.class.getSimpleName();
-    private static final Boolean D = true;
+    private static Boolean D = false;
     private LauncherModel mModel;
     public IconCache mIconCache;
     ModelImpl model = new ModelImpl();
@@ -79,7 +81,15 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
-
+        int debug = 0;
+        try {
+            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
+        } catch (NumberFormatException e) {
+            debug = 1;
+        }
+        if (debug == 1) {
+            D = true;
+        }
 
         if (isProcess(this, ":GuardService")) {
             if (D) {
@@ -118,12 +128,12 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         Log.i(TAG, "initHostModule: huang getPackageName()=>" + getPackageName());
         if (isProcess(this, getPackageName())) {
 //            if (getPackageName().equals(BuildConfig.APPLICATION_ID)) {
-                //运行在宿主进程
-                startHostService();
-                hostInit();
-                if (D) {
-                    Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
-                }
+            //运行在宿主进程
+            startHostService();
+            hostInit();
+            if (D) {
+                Log.i(TAG, "Host onCreate: huang application create mAppContext==>" + mAppContext);
+            }
 //            }
         }
 

@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -77,6 +78,7 @@ import kotlin.math.min
 
 class YFD_UIActivity : Activity(), View.OnClickListener {
 
+    private var isWeatherTimerRunning: Boolean = false
     private val TAG = YFD_UIActivity::class.simpleName
     private lateinit var mViewBinding: UiActivityBinding
 
@@ -105,8 +107,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     private var startX = 0f
     private var startY = 0f
     private var viewConfiguration: ViewConfiguration? = null
-    private var isGlobalLayoutListenerAdded = false
-    private var lastVisibleState: Boolean? = null
 
     // 跟踪事件消费状态
     private var isEventConsumedByChild = false
@@ -161,6 +161,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
         initFreeform()
 
+        //Log.i(TAG, "onCreate: huang class loader=>${classLoader}")
         setPluginThemeMode(100)
 
     }
@@ -172,7 +173,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 updateImagePosition(findViewById(R.id.freeform_image))
             }
         }
+        if (!isWeatherTimerRunning) {
+            handler?.postDelayed(weatherRefreshRunnable, 0)
+            isWeatherTimerRunning = true
+        }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler?.removeCallbacks(weatherRefreshRunnable)
+        isWeatherTimerRunning = false
     }
 
     private fun initFreeform() {
@@ -272,6 +283,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     private fun loadWeatherData() {
         Thread {
             val info = WeatherHelper.getCurrentWeather(this)
+            Log.i(TAG, "loadWeatherData: huang info=>${info}")
             handler?.post(Runnable {
                 info?.also {
                     mViewBinding.weatherTemp.text = "${it.temperature}°"
@@ -317,7 +329,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     private fun initWeather() {
         checkAndRequestPermission()
 
-        handler?.postDelayed(weatherRefreshRunnable, 0)
+        //handler?.postDelayed(weatherRefreshRunnable, 0)
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -897,7 +909,23 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             )
         }
 
-        mViewBinding.freeformFullScreen.setOnClickListener(this)
+        //mViewBinding.freeformFullScreen.setOnClickListener(this)
+        mViewBinding.freeformFullScreen.setOnLongClickListener {
+            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            true
+        }
+        mViewBinding.weatherTemp.setOnClickListener(this)
+        mViewBinding.weatherImage.setOnClickListener(this)
+        mViewBinding.weatherCondition.setOnClickListener(this)
+
+
+        mViewBinding.clockView.setOnClickListener(this)
+        mViewBinding.clockAmPm.setOnClickListener(this)
+        mViewBinding.clockTime.setOnClickListener(this)
+        mViewBinding.clockData.setOnClickListener(this)
+        mViewBinding.textWeek.setOnClickListener(this)
+
+
     }
 
     @Deprecated("Deprecated in Java")
@@ -1080,6 +1108,26 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         when (v?.id) {
             mViewBinding.freeformFullScreen.id -> {
                 systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            }
+
+            mViewBinding.weatherTemp.id,
+            mViewBinding.weatherCondition.id,
+            mViewBinding.weatherImage.id -> {
+                val intent = Intent()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                intent.component =
+                    ComponentName("com.awell.weather", "com.awell.weather.MainActivity")
+                startActivity(intent)
+            }
+
+            mViewBinding.clockView.id,
+            mViewBinding.clockAmPm.id,
+            mViewBinding.clockTime.id,
+            mViewBinding.clockData.id,
+            mViewBinding.textWeek.id -> {
+                val intent = Intent(Settings.ACTION_DATE_SETTINGS)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
             }
         }
     }
