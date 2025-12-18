@@ -909,9 +909,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             )
         }
 
-        //mViewBinding.freeformFullScreen.setOnClickListener(this)
+        mViewBinding.freeformFullScreen.setOnClickListener(this)
         mViewBinding.freeformFullScreen.setOnLongClickListener {
-            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            cancelLongPressDetection()
+            val mIntent = Intent()
+            mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            mIntent.setPackage("com.awell.carsetting")
+            mIntent.component =
+                ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
+            mIntent.putExtra("SelectDefaultId", 3)
+            mIntent.putExtra("SelectDefaultFragment", 30)
+            startActivity(mIntent)
             true
         }
         mViewBinding.weatherTemp.setOnClickListener(this)
