@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name" >LauncherUI_YFD_UI01</string><!-- app 名称 -->
+    <string name="app_name" >LauncherUI1_YFD</string><!-- app 名称 -->
 
-    <string name="ui_key" >LauncherUI_YFD_UI01</string>
+    <string name="ui_key" >LauncherUI1_YFD</string>
     <string name="ui_clazz" >com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
 
 

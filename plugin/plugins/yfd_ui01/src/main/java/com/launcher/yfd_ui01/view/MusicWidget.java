@@ -95,9 +95,10 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         this.mediaControl = mediaControl;
     }
 
+
     private void findViews(Context context, View view) {
         this.mContext = context;
-        ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
+//        ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
         ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
 
         mMusicNameTextView = view.findViewById(R.id.music_widget_music_name);
@@ -117,13 +118,13 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         musicNextIv.setOnClickListener(this);
 
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
-        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
+//        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
-        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
-        ivLoadnim.setOnClickListener(this);
+//        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
+//        ivLoadnim.setOnClickListener(this);
 //        mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
 //        mObjectAnimator.setInterpolator(new LinearInterpolator());
-        stopLoadAnim();
+//        stopLoadAnim();
 
         setImageIcon(currentMedia);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
@@ -260,6 +261,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             }
         }
     }
+    
 
     public void stopLoadAnim() {
 //        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
@@ -347,7 +349,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             return;
         }
 
-        Glide.with(this)
+       /* Glide.with(this)
                 .load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -355,7 +357,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 .circleCrop()
                 .placeholder(R.drawable.ui7_music_icon)
                 .error(R.drawable.ui7_music_icon)
-                .into(ivLoadnim);
+                .into(ivLoadnim);*/
 
     }
 
@@ -376,8 +378,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mBar.setProgress(curProgress);
             }
             if (curProgress > 0 && curProgress < 1000) {
-                stopLoadAnim();
-                startLoadAnim();
+                //stopLoadAnim();
+                //startLoadAnim();
             }
             //if (mTotalTimeTextView != null) {
             //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
@@ -415,14 +417,14 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 //            }
             mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
-            pauseLoadAnim();
+           // pauseLoadAnim();
             mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
 
     private void setImageIcon(int index) {
 
-        ll_control_layout_music.setVisibility(VISIBLE);
+//        ll_control_layout_music.setVisibility(VISIBLE);
         ll_name_layout_music.setVisibility(VISIBLE);
 
     }

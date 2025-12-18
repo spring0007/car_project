@@ -8,6 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -154,8 +155,9 @@ public class AppGridView extends RelativeLayout {
             final int FLAG_SYSTEM = ApplicationInfo.FLAG_SYSTEM;
             
             // 预计算过滤条件
-            boolean hasFilterApps = !Utils.filterAppPackageName.isEmpty();
-            boolean hasNeedToShowApps = !IconManager.NEED_TO_SHOW_PACKAGE_NAMES.isEmpty();
+            //boolean hasFilterApps = !Utils.filterAppPackageName.isEmpty();
+            boolean hasFilterApps = !IconManager.NEED_TO_BLOCKED_PACKAGE_NAMES.isEmpty();
+            boolean hasNeedToShowApps = false;//!IconManager.NEED_TO_SHOW_PACKAGE_NAMES.isEmpty();
             boolean hasPackageOrder = !IconManager.PACKAGE_ORDER_LIST.isEmpty();
             
             // 第一阶段：快速收集基本信息
@@ -163,13 +165,18 @@ public class AppGridView extends RelativeLayout {
             for (PackageInfo p : packages) {
                 ApplicationInfo appInfo = p.applicationInfo;
                 if (appInfo == null) continue;
+                if(!appInfo.enabled) continue;
+                final Intent intent = packageManager.getLaunchIntentForPackage(appInfo.packageName);
+                if(intent==null)continue;
+                if(appInfo.packageName.contains("launcher"))continue;
                 
                 String packageName = appInfo.packageName;
+
                 int flags = appInfo.flags;
-                boolean isSystemApp = (flags & FLAG_SYSTEM) != 0;
-                
+                //boolean isSystemApp = (flags & FLAG_SYSTEM) != 0;
+                //Log.i(TAG,"packageName="+packageName+",isSystemApp="+isSystemApp);
                 // 应用过滤逻辑
-                if (!shouldIncludeApp(packageName, isSystemApp, hasFilterApps, hasNeedToShowApps)) {
+                if (shouldIncludeApp(packageName, /*isSystemApp,*/ hasFilterApps ,hasNeedToShowApps)) {
                     continue;
                 }
                 
@@ -229,15 +236,17 @@ public class AppGridView extends RelativeLayout {
     /**
      * 判断是否应该包含该应用
      */
-    private boolean shouldIncludeApp(String packageName, boolean isSystemApp, 
+    private boolean shouldIncludeApp(String packageName, /*boolean isSystemApp,*/
                                    boolean hasFilterApps, boolean hasNeedToShowApps) {
         // 过滤掉非系统应用中的指定包名
-        if (!isSystemApp && hasFilterApps && Utils.filterAppPackageName.contains(packageName)) {
-            return false;
-        }
-        
+       /* if (!isSystemApp && hasFilterApps && Utils.filterAppPackageName.contains(packageName)) {
+            return true;
+        }*/
+        // 过滤掉(系统/非系统)应用中的指定包名
+        return hasFilterApps && IconManager.NEED_TO_BLOCKED_PACKAGE_NAMES.contains(packageName);
+
         // 只显示非系统应用或需要显示的系统应用
-        return !isSystemApp || (hasNeedToShowApps && IconManager.NEED_TO_SHOW_PACKAGE_NAMES.contains(packageName));
+       // return !isSystemApp ||  (hasNeedToShowApps && IconManager.NEED_TO_SHOW_PACKAGE_NAMES.contains(packageName));
     }
 
     /**

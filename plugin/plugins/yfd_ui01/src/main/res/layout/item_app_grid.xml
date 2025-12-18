@@ -30,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_bg"
         android:layout_centerHorizontal="true"
-        android:textSize="12sp"
+        android:textSize="13sp"
         android:textColor="@android:color/white"
-        android:maxLines="1"
+        android:maxLines="2"
         android:ellipsize="end"
         android:gravity="center" />
 

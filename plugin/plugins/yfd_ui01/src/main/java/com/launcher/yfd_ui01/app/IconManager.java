@@ -24,19 +24,29 @@ public class IconManager {
     // 使用不可变集合提高性能
     private static final Map<String, Integer> CUSTOM_ICONS;
     public static final List<String> PACKAGE_ORDER_LIST;
-    public static final List<String> NEED_TO_SHOW_PACKAGE_NAMES;
+    //public static final List<String> NEED_TO_SHOW_PACKAGE_NAMES;
+
+    public static final List<String> NEED_TO_BLOCKED_PACKAGE_NAMES;
 
     // 静态初始化块，避免重复创建
     static {
         // 包名顺序列表
         PACKAGE_ORDER_LIST = Collections.unmodifiableList(Arrays.asList(
             "com.awell.localmusic", "com.awell.radio", "com.awell.localvideo",
-            "com.awell.bluetooth", "com.awell.dspeffect", "com.google.android.apps.maps",
-            "com.google.android.youtube", "com.android.chrome", "com.awell.themesetting"
+            "com.awell.bluetooth","com.awell.carsetting","com.google.android.apps.maps",
+            "com.awell.dspeffect", "com.google.android.youtube", "com.android.chrome", "com.awell.themesetting"
+        ));
+        // 不需要显示的应用
+        NEED_TO_BLOCKED_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
+                "com.google.android.googlequicksearchbox","com.google.android.apps.googleassistant",
+                "com.android.gallery3d","com.google.android.healthconnect.controller",
+                "com.android.traceur"
+
+
         ));
 
         // 需要显示的应用
-        NEED_TO_SHOW_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
+        /*NEED_TO_SHOW_PACKAGE_NAMES =Collections.unmodifiableList(Arrays.asList(
             "com.android.browser",
             "com.android.calculator2", "com.android.deskclock", "com.mediatek.filemanager",
             "com.android.documentsui", "com.autonavi.amapauto", "com.awell.radio",
@@ -45,8 +55,8 @@ public class IconManager {
             "com.tima.carnet.vt", "com.zjinnova.zlink", "com.awell.eqselect",
             "com.awell.awellmanual", "com.awell.themesetting", "com.awell.carsetting",
             "com.android.chrome", "com.google.android.youtube", "com.google.android.apps.maps",
-            "com.android.vending", "org.chromium.chrome","com.awell.navigation"
-        ));
+            "com.android.vending", "org.chromium.chrome","com.awell.navigation","com.awell.weather"
+        ));*/
 
         // 自定义图标映射
         Map<String, Integer> tempIcons = new HashMap<>();
@@ -60,11 +70,11 @@ public class IconManager {
             tempIcons.put("com.awell.carsetting", R.drawable.yfd_ui1_settings);
             tempIcons.put("com.awell.backcar", R.drawable.yfd_ui1_aux);
             tempIcons.put("com.awell.eqselect", R.drawable.yfd_ui1_dsp);
-            tempIcons.put("com.awell.canbus", R.drawable.yfd_ui1_streering_wheel);
+            tempIcons.put("com.awell.canbus", R.drawable.yfd_ui1_carinfo);
             tempIcons.put("com.tima.carnet.vt", R.drawable.yfd_ui1_tlink5);
             tempIcons.put("net.easyconn", R.drawable.yfd_ui1_tlink5);
             tempIcons.put("com.zjinnova.zlink", R.drawable.yfd_ui1_tlink5);
-            tempIcons.put("com.awell.awellmanual", R.drawable.yfd_ui1_dev_tools);
+            tempIcons.put("com.awell.awellmanual", R.drawable.yfd_ui1_manual);
             tempIcons.put("com.google.android.apps.maps", R.drawable.yfd_ui1_maps);
             tempIcons.put("com.google.android.youtube", R.drawable.yfd_ui1_youtube);
             tempIcons.put("com.android.vending", R.drawable.yfd_ui1_play_store);
@@ -73,6 +83,9 @@ public class IconManager {
             tempIcons.put("com.facebook.katana", R.drawable.yfd_ui1_facebook);
             tempIcons.put("com.awell.electricfan",R.drawable.yfd_ui1_fan);
             tempIcons.put("com.awell.weather",R.drawable.yfd_ui1_weather);
+            tempIcons.put("com.awell.keystudy",R.drawable.yfd_ui1_streering_wheel);
+            tempIcons.put("com.awell.navigation",R.drawable.yfd_ui1_nav);
+
         } catch (Exception e) {
             // 静默处理初始化异常
         }

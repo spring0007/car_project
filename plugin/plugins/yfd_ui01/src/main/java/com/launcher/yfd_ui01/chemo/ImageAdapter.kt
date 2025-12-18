@@ -52,7 +52,7 @@ class ImageAdapter(
             viewHolder.ivImage.setImageBitmap(cachedBitmap)
         } else {
             // 设置占位符
-            viewHolder.ivImage.setImageResource(android.R.color.darker_gray)
+            viewHolder.ivImage.setImageResource(R.drawable.a3_2008_2012)
             // 异步加载图片
             loadImageAsync(viewHolder.ivImage, imageItem, position)
         }
