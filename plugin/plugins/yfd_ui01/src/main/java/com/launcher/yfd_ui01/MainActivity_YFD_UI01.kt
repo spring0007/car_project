@@ -53,6 +53,7 @@ import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
 import java.io.IOException
 import java.lang.Math.abs
 import android.view.ViewTreeObserver
+import com.launcher.yfd_ui01.utils.SystemUIClient.CLOSE_FREEFORM
 import com.launcher.yfd_ui01.view.DashboardView
 import com.launcher.yfd_ui01.view.DialWidget
 import com.launcher.yfd_ui01.view.MusicWidget
@@ -60,13 +61,15 @@ import com.launcher.yfd_ui01.view.MusicWidget
 
 class MainActivity_YFD_UI01 : Activity() {
     private val TAG = MainActivity_YFD_UI01::class.simpleName
-    private  lateinit var mViewBinding: ActivityMainUi01Binding
+    private lateinit var mViewBinding: ActivityMainUi01Binding
 
     lateinit var mediaControl: AwellMediaControl
     private lateinit var musicWidget: MusicWidget
     private lateinit var locationManager: LocationManager
     private lateinit var dashboardView: DashboardView
     private lateinit var dialWidget: DialWidget
+    private lateinit var freeformBg: ImageView
+
     //private lateinit var speedSimulator: SpeedSimulator
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
@@ -76,14 +79,16 @@ class MainActivity_YFD_UI01 : Activity() {
     private var startX = 0f
     private var startY = 0f
     private var viewConfiguration: ViewConfiguration? = null
-//    private var isGlobalLayoutListenerAdded = false
+
+    //    private var isGlobalLayoutListenerAdded = false
 //    private var lastVisibleState: Boolean? = null
     // 跟踪事件消费状态
     private var isEventConsumedByChild = false
     private var isLongPressPossible = false
     lateinit var systemUIClient: SystemUIClient
     var viewAddNeedToStartFreeform: Boolean = false
-//    var oldFreeformPkg: String? = null
+
+    //    var oldFreeformPkg: String? = null
     private lateinit var imagePreferences: ImagePreferences
     private lateinit var appScope: AppCoroutineScope
     private var imagePopupWindow: PopupWindow? = null
@@ -93,15 +98,21 @@ class MainActivity_YFD_UI01 : Activity() {
                 //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
                 viewAddNeedToStartFreeform = true
             } else {
-                systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
-              //  oldFreeformPkg = systemUIClient.getFreeformPkg(this)
+                if (freeformBg?.isVisibleOnScreen() == true)
+                    systemUIClient.startOrSetFreeformType(this, freeformBg, OPEN_APP_TO_FREEFORM)
+                //  oldFreeformPkg = systemUIClient.getFreeformPkg(this)
             }
         }
+
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-	    mViewBinding = ActivityMainUi01Binding.inflate(layoutInflater)
-        Settings.System.putString(mViewBinding.root.context.contentResolver, "ui_has_freeform", "true")
+        mViewBinding = ActivityMainUi01Binding.inflate(layoutInflater)
+        Settings.System.putString(
+            mViewBinding.root.context.contentResolver,
+            "ui_has_freeform",
+            "true"
+        )
         IconManager.init(mViewBinding.root.context);
         setContentView(mViewBinding.root)
         initView()
@@ -127,8 +138,19 @@ class MainActivity_YFD_UI01 : Activity() {
 //        speedSimulator.startSimulation()
 
     }
+
+    private fun initFreeform() {
+        freeformBg = mViewBinding.freeformBg
+        systemUIClient = SystemUIClient(this)
+        systemUIClient.bindToSystemUIService(this)
+        systemUIClient.setCallback(freeformImpl)
+        freeformBg.addOnLayoutChangeListener(layoutListener)
+
+    }
+
     override fun onResume() {
         super.onResume()
+        Log.i(TAG, "onResume")
         findViewById<ImageView>(R.id.freeform_bg).post {
             if (findViewById<ImageView>(R.id.freeform_bg).isVisibleOnScreen()) {
                 updateImagePosition(findViewById(R.id.freeform_bg))
@@ -136,39 +158,50 @@ class MainActivity_YFD_UI01 : Activity() {
         }
 
     }
-    
+
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Log.i(TAG, "onAttachedToWindow")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if(systemUIClient.getmFreeformMode() != WINDOWING_MODE_FULLSCREEN)
+                systemUIClient.startOrSetFreeformType(this, freeformBg, HIDE_FREEFORM)
+        Log.i(TAG, "onStop")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i(TAG, "onStart")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i(TAG, "onRestart")
+    }
+
+
+
     override fun onPause() {
         super.onPause()
-        Log.i(TAG, "lqq,onPause")
+        Log.i(TAG, "onPause")
         dialWidget?.stopAnimation()
         dashboardView?.closeAnimation()
         canclePopupWindow()
     }
-    
-    private fun initFreeform() {
 
-        setupPositionListener()
-        systemUIClient = SystemUIClient(this)
-        systemUIClient.bindToSystemUIService(this)
-        systemUIClient.setCallback(freeformImpl)
+    private val layoutListener = View.OnLayoutChangeListener { view, left, top, right, bottom,
+                                                               oldLeft, oldTop, oldRight, oldBottom ->
 
-    }
-
-    private fun setupPositionListener() {
-        val freeformImage = findViewById<ImageView>(R.id.freeform_bg)
-
-        val layoutListener = View.OnLayoutChangeListener { _, left, top, right, bottom,
-                                                           oldLeft, oldTop, oldRight, oldBottom ->
-
-            // 检查位置是否变化或者视图是否可见
-            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-                if (freeformImage.isVisibleOnScreen()) {
-                    updateImagePosition(freeformImage)
-                }
+        Log.i(TAG, "left=" + left + "" + ",top=" + top)
+        // 检查位置是否变化或者视图是否可见
+        if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
+            if (view.isVisibleOnScreen()) {
+                updateImagePosition(view as ImageView)
             }
         }
-
-        freeformImage.addOnLayoutChangeListener(layoutListener)
     }
 
     private fun updateImagePosition(imageView: ImageView) {
@@ -180,12 +213,15 @@ class MainActivity_YFD_UI01 : Activity() {
         val height = imageView.height
 
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        Log.i(TAG, "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect}")
+        Log.i(
+            TAG,
+            "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect},view = ${imageView.isVisibleOnScreen()}"
+        )
         systemUIClient.startOrSetFreeformType(
-            mViewBinding.root.context,
+            mViewBinding.root.context, imageView,
             OPEN_APP_TO_FREEFORM
         )
-       // oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
+        // oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
     }
 
     private fun View.isVisibleOnScreen(): Boolean {
@@ -218,7 +254,6 @@ class MainActivity_YFD_UI01 : Activity() {
     }
 
     private fun initView() {
-
         dashboardView = mViewBinding.carSpeedPoint
         dialWidget = mViewBinding.layoutDialWidget.dialWidgetLayout
         dialWidget.findViews(this, dialWidget)
@@ -226,7 +261,8 @@ class MainActivity_YFD_UI01 : Activity() {
         initPopouWindow()
         clickStartApp()
     }
-    private fun initPopouWindow(){
+
+    private fun initPopouWindow() {
         // 初始化图片存储
         imagePreferences = ImagePreferences(this)
         // 初始化协程作用域
@@ -252,14 +288,14 @@ class MainActivity_YFD_UI01 : Activity() {
         filter.addAction(Intent.ACTION_TIME_TICK)
         filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(receiver, filter)
         }
     }
-    
+
     /**
      * 初始化媒体信息
      * 以及绑定宿主服务
@@ -272,20 +308,32 @@ class MainActivity_YFD_UI01 : Activity() {
         Log.i(TAG, "initMediaMusic: huang UI2 bind data service=>${this}")
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
-	    musicWidget = mViewBinding.layoutMusicWidget.musicWidgetLayout
-	    musicWidget.setMediaLibrary(mediaControl)
+        musicWidget = mViewBinding.layoutMusicWidget.musicWidgetLayout
+        musicWidget.setMediaLibrary(mediaControl)
         musicWidget.setActivity(this, musicWidget)
 
     }
-    
+
+
     override fun onDestroy() {
         super.onDestroy()
-        Settings.System.putString(mViewBinding.root.context.contentResolver, "ui_has_freeform", "false")
+        Log.i(TAG, "onDestroy")
+        Settings.System.putString(
+            mViewBinding.root.context.contentResolver,
+            "ui_has_freeform",
+            "false"
+        )
         unregisterReceiver(receiver)
         // 取消所有协程
         appScope.cancelAll()
         canclePopupWindow()
-        systemUIClient.unbindService(this)
+        try {
+            systemUIClient.unbindService(this)
+        } catch (e: Exception) {
+            Log.w("TAG", "onDestroy:  unbind systemUIClient service==>${this}")
+        }
+
+        freeformBg.removeOnLayoutChangeListener(layoutListener)
         distoryAllApps(this);
         cancelLongPressDetection()
         try {
@@ -297,10 +345,7 @@ class MainActivity_YFD_UI01 : Activity() {
 
         // 停止速度模拟器
         //speedSimulator?.stopSimulation()
-
-
     }
-
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -331,11 +376,15 @@ class MainActivity_YFD_UI01 : Activity() {
                 }
 
                 "android.launcher.show.allApp" -> {
-                   // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
+                    // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                     showAllApps(context)
 
-                    systemUIClient?.startOrSetFreeformType(context, HIDE_FREEFORM)
-                    systemUIClient?.startOrSetFreeformType(context, WINDOWING_MODE_FULLSCREEN)
+                    systemUIClient?.startOrSetFreeformType(context, freeformBg, HIDE_FREEFORM)
+                    systemUIClient?.startOrSetFreeformType(
+                        context,
+                        freeformBg,
+                        WINDOWING_MODE_FULLSCREEN
+                    )
                     Log.i(TAG, "onClick: huang freeform to hide222==>")
                 }
 
@@ -348,17 +397,21 @@ class MainActivity_YFD_UI01 : Activity() {
                 Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK -> {
                     dialWidget?.updateTimeSysem()
                 }
-                Intent.ACTION_CLOSE_SYSTEM_DIALOGS->{
+
+                Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
                     var reason = intent.getStringExtra("reason");
 
-                    if(reason == "recentapps" ||reason == "homekey")//多任务；recent：最近 ,home键
+
+
+                    if (reason == "recentapps" || reason == "homekey") {//多任务；recent：最近 ,home键
                         canclePopupWindow()
+                    }
                 }
 
             }
         }
     }
-    
+
     fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
 
         val oldPlayingPackage = mediaControl.getCurrentPkgName()
@@ -393,7 +446,7 @@ class MainActivity_YFD_UI01 : Activity() {
         }
     }
 
-        val mHandle: Handler by lazy {
+    val mHandle: Handler by lazy {
         object : Handler(Looper.getMainLooper()) {
             @SuppressLint("SetTextI18n")
             override fun handleMessage(msg: Message) {
@@ -509,11 +562,12 @@ class MainActivity_YFD_UI01 : Activity() {
             }
         }
     }
+
     private fun clickStartApp() {
         mViewBinding.hotsetAllApp.setOnClickListener {
             canclePopupWindow()
-            systemUIClient.startOrSetFreeformType(this, HIDE_FREEFORM)
-            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            systemUIClient.startOrSetFreeformType(this, freeformBg, HIDE_FREEFORM)
+            systemUIClient.startOrSetFreeformType(this, freeformBg, WINDOWING_MODE_FULLSCREEN)
             showAllApps(this)
 
         }
@@ -527,15 +581,16 @@ class MainActivity_YFD_UI01 : Activity() {
         }
 
         mViewBinding.hotsetWindowApp.setOnClickListener {
-            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            systemUIClient.startOrSetFreeformType(this, freeformBg, WINDOWING_MODE_FULLSCREEN)
         }
         mViewBinding.hotsetWindowApp.setOnLongClickListener {
             cancelLongPressDetection()
-            val mIntent= Intent()
+            val mIntent = Intent()
             mIntent.setPackage("com.awell.carsetting")
-            mIntent.component = ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
-            mIntent.putExtra("SelectDefaultId",3)
-            mIntent.putExtra("SelectDefaultFragment",30)
+            mIntent.component =
+                ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
+            mIntent.putExtra("SelectDefaultId", 3)
+            mIntent.putExtra("SelectDefaultFragment", 30)
             start_Activity(mIntent)
             true
         }
@@ -545,23 +600,32 @@ class MainActivity_YFD_UI01 : Activity() {
             showImageSelectionPopup()
             true
         }
+        mViewBinding.layoutDialWidget.dialWidgetLayout.setOnClickListener {
+            val intent = Intent(Settings.ACTION_DATE_SETTINGS)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        }
+
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // super.onBackPressed() //Must be blocked
-        Log.i(TAG,"onBackPressed")
+        Log.i(TAG, "onBackPressed")
         //AppsCustomizeControl.hideApps()
-	    hideAllApps(this)
-        systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
+        hideAllApps(this)
+        if (freeformBg.isVisibleOnScreen())
+            systemUIClient.startOrSetFreeformType(this, freeformBg, OPEN_APP_TO_FREEFORM)
 
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        Log.i(TAG, "onNewIntent")
         //AppsCustomizeControl.hideApps()
-	    hideAllApps(this)
+        hideAllApps(this)
     }
+
     private fun startActivity(packName: String, className: String?) {
         val intent = packageManager.getLaunchIntentForPackage(packName)
         var isboot = true
@@ -590,7 +654,7 @@ class MainActivity_YFD_UI01 : Activity() {
                 break
             }
         }
-        if (packName!=null && packName.contains("com.autonavi")) {
+        if (packName != null && packName.contains("com.autonavi")) {
             if (isboot) Settings.System.putString(getContentResolver(), "boot_apk1", packName)
         } else {
             if (isboot) Settings.System.putString(getContentResolver(), "boot_apk2", packName)
@@ -712,9 +776,11 @@ class MainActivity_YFD_UI01 : Activity() {
         // 获取assets中的所有图片文件
         val imageList = getAllImagesFromAssets()
 
+        preloadFirstPageImages(imageList)
+
         // 设置适配器
         val gridView = popupView.findViewById<GridView>(R.id.gvImages)
-        val adapter = ImageAdapter(this, imageList , appScope)
+        val adapter = ImageAdapter(this, imageList, appScope)
         gridView.adapter = adapter
 
         // 设置项点击监听
@@ -765,6 +831,23 @@ class MainActivity_YFD_UI01 : Activity() {
         }
 
     }
+
+    private fun preloadFirstPageImages(imageList: List<ImageItem>) {
+        // 预加载前9张图片（第一屏）
+        val count = minOf(9, imageList.size)
+        for (i in 0 until count) {
+            appScope.launch {
+                try {
+                    val bitmap = loadBitmapFromAssets(imageList[i].assetPath)
+                    // 放入全局缓存
+                    // 可以在ImageAdapter中访问这个缓存
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
     private fun backgroundAlpha(alpha: Float) {
         val lp = window.attributes
         lp.alpha = alpha //0.0-1.0
@@ -892,7 +975,8 @@ class MainActivity_YFD_UI01 : Activity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-    private fun canclePopupWindow(){
+
+    private fun canclePopupWindow() {
         // 关闭弹窗
         imagePopupWindow?.let {
             if (it.isShowing) {

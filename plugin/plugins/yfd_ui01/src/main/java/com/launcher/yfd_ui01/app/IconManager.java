@@ -1,6 +1,5 @@
 package com.launcher.yfd_ui01.app;
 
-import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
@@ -40,7 +39,7 @@ public class IconManager {
         NEED_TO_BLOCKED_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
                 "com.google.android.googlequicksearchbox","com.google.android.apps.googleassistant",
                 "com.android.gallery3d","com.google.android.healthconnect.controller",
-                "com.android.traceur"
+                "com.android.traceur","com.awell.platformservice"
 
 
         ));
