@@ -14,7 +14,7 @@
 -->
 
 <resources>
-    <dimen name="app_icon_size">135dp</dimen>
+    <dimen name="app_icon_size">125dp</dimen>
     <dimen name="app_icon_size_with">135dp</dimen>
     <dimen name="app_icon_size_height">135dp</dimen>
     <dimen name="reveal_radius">64dp</dimen>
