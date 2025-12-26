@@ -67,9 +67,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     private static final float OVERSCROLL_ACCELERATE_FACTOR = 2;
     private static final float OVERSCROLL_DAMP_FACTOR = 0.14f;
 
-    private static final float RETURN_TO_ORIGINAL_PAGE_THRESHOLD = 0.33f;
+    private static final float RETURN_TO_ORIGINAL_PAGE_THRESHOLD = 0.167f; // 改为1/6
     // The page is moved more than halfway, automatically move to the next page on touch up.
-    private static final float SIGNIFICANT_MOVE_THRESHOLD = 0.4f;
+    private static final float SIGNIFICANT_MOVE_THRESHOLD = 0.167f; // 改为1/6
 
     // The following constants need to be scaled based on density. The scaled versions will be
     // assigned to the corresponding member variables below.
