@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -41,10 +42,14 @@ import java.util.Objects;
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private final boolean D = true;
+    private boolean D = true;
 
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
+
+
+    private static final String mFreeformPkgSettings = "freeform_app_package_name";
+
 
     private final String DEFAULT_KEY = "LauncherUI8";
     private final String DEFAULT_CLAZZ = "com.launcher.ui8.MainActivityUI8";
@@ -63,6 +68,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int debug = 0;
+        try {
+            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
+        } catch (NumberFormatException e) {
+            debug = 1;
+        }
+        if (debug == 1) {
+            D = true;
+        }
+
         if (D) {
             Log.i(TAG, "onCreate: huang launcher main activity create==>");
         }
@@ -308,7 +324,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
-                if ("com.awell.launcher.host.MainActivity".equals(topActivity)) {
+                if ("com.awell.launcher.host.MainActivity".equals(topActivity) || topIsFreeform()) {
                     String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
@@ -332,9 +348,34 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return className;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "getTopActivity:  error=>" + e.getMessage());
         }
         return null;
+    }
+
+    private boolean topIsFreeform() {
+        String free_packName = Settings.System.getString(getContentResolver(), mFreeformPkgSettings);
+
+        try {
+            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+            // 传入参数1表示只获取最顶部的1个任务
+            List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
+            if (runningTasks != null && !runningTasks.isEmpty()) {
+                ComponentName topActivity = runningTasks.get(0).topActivity;
+                String packageName = topActivity.getPackageName();
+                if (packageName.contains(free_packName)) {
+                    if (D) {
+                        Log.i(TAG, "topIsFreeform: huang top app is freeform app=>");
+                    }
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "topIsFreeform:  error=>" + e.getMessage());
+        }
+
+
+        return false;
     }
 
 }
