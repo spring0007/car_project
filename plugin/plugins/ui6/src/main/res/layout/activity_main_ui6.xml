@@ -111,44 +111,44 @@
 
         <ImageView
             android:id="@+id/hotset_nav_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:src="@drawable/hotset_nav_app" />
 
         <ImageView
             android:id="@+id/hotset_video_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:layout_marginStart="@dimen/main_app_margin_start"
             android:src="@drawable/hotset_video_app" />
 
         <ImageView
             android:id="@+id/hotset_settings_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:layout_marginStart="@dimen/main_app_margin_start"
             android:layout_marginEnd="@dimen/main_app_margin_end"
             android:src="@drawable/hotset_settings_app" />
 
         <ImageView
             android:id="@+id/hotset_allapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:layout_marginStart="@dimen/main_app_margin_end"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_all_app" />
         <ImageView
             android:id="@+id/hotset_radio_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:layout_marginStart="115dp"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_radio_app" />
 
         <ImageView
             android:id="@+id/hotset_btapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_app_size"
+            android:layout_height="@dimen/hotset_app_size"
             android:layout_marginStart="115dp"
             android:importantForAccessibility="no"
             android:src="@drawable/hotset_bt_app" />

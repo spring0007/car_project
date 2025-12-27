@@ -130,8 +130,8 @@
             <!-- 专辑图背景 -->
             <ImageView
                 android:id="@+id/img_song_art_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/dial_widget_size"
+                android:layout_height="@dimen/dial_widget_size"
                 android:layout_marginTop="10dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ui6_music_bg" />
@@ -172,8 +172,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_control_size"
+                android:layout_height="@dimen/music_control_size"
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:src="@drawable/sf_music_pre"
@@ -182,8 +182,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_control_size"
+                android:layout_height="@dimen/music_control_size"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:padding="10dp"
@@ -193,8 +193,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_control_size"
+                android:layout_height="@dimen/music_control_size"
                 android:padding="10dp"
                 android:src="@drawable/sf_music_next"
                 tools:ignore="ContentDescription" />

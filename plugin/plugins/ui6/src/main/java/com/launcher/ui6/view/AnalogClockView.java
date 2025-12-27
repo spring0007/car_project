@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -33,8 +35,8 @@ public class AnalogClockView extends View {
     private float minuteRotation = 0;
     private float hourRotation = 0;
 
-
     private boolean isRunning = false;
+    
     public AnalogClockView(Context context) {
         super(context);
         init();
@@ -73,7 +75,6 @@ public class AnalogClockView extends View {
         secondAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-               // secondRotation = (float) animation.getAnimatedValue();//有问题,已解决,屏蔽此处
                 updateTimeFromSystem();
                 invalidate();
             }
@@ -96,6 +97,28 @@ public class AnalogClockView extends View {
         secondRotation = (seconds * 6) + (mill_seconds * 0.006f);
     }
 
+    // 添加分辨率适配方法
+    private float getOptimalScaleFactor() {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        int screenWidth = metrics.widthPixels;
+        int screenHeight = metrics.heightPixels;
+        
+        float scaleFactor;
+        
+        if (screenWidth == 1024 && screenHeight == 600) {
+            scaleFactor = 0.75f;
+            Log.d("AnalogClockView", "1024x600分辨率，使用缩放因子: " + scaleFactor);
+        } else if (screenWidth == 1280 && screenHeight == 720) {
+            scaleFactor = 1.0f;
+            Log.d("AnalogClockView", "1280x720分辨率，使用缩放因子: " + scaleFactor);
+        } else {
+            scaleFactor = 1.0f;
+            Log.d("AnalogClockView", "其他分辨率(" + screenWidth + "x" + screenHeight + ")，使用缩放因子: " + scaleFactor);
+        }
+        
+        return scaleFactor;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -103,10 +126,8 @@ public class AnalogClockView extends View {
         centerX = w / 2;
         centerY = h / 2;
 
-        // 计算缩放因子，使时钟适应View大小
-        int minSize = Math.min(w, h);
-        //float bgWidth = clockBackground.getWidth();
-        //scaleFactor = (minSize * 0.8f) / bgWidth;
+        // 根据分辨率计算缩放因子
+        scaleFactor = getOptimalScaleFactor();
         
         // 如果没有运行动画，则开始动画
         if (!isRunning) {
@@ -114,68 +135,99 @@ public class AnalogClockView extends View {
         }
     }
 
+    // 添加 onMeasure 方法确保正确测量
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 获取基础尺寸（基于原始图片大小）
+        int baseSize = Math.max(clockBackground.getWidth(), clockBackground.getHeight());
+        
+        // 根据缩放因子计算最终尺寸
+        float scale = getOptimalScaleFactor();
+        int desiredSize = (int) (baseSize * scale);
+        
+        // 考虑 padding
+        desiredSize += getPaddingLeft() + getPaddingRight();
+        
+        // 设置测量尺寸
+        setMeasuredDimension(desiredSize, desiredSize);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+    
         // 保存画布状态
         canvas.save();
-
+    
         // 移动到中心点
         canvas.translate(centerX, centerY);
-        canvas.scale(scaleFactor, scaleFactor);
-
-        // 绘制表盘背景
-        drawBitmapCentered(canvas, clockBackground, 0, 0, 0);
-
-        // 绘制时针
-        drawBitmapCenteredPoint(canvas, hourHand, 0, 0, (float) -hourHand.getWidth() / 2,  (float)-hourHand.getHeight()-10, hourRotation);
-
-        // 绘制分针
-        drawBitmapCenteredPoint(canvas, minuteHand, 0, 0, (float) -minuteHand.getWidth() / 2,  (float)-minuteHand.getHeight()-7, minuteRotation);
-
-        // 绘制秒针
-        drawBitmapCenteredPoint(canvas, secondHand, 0, 0, (float) -secondHand.getWidth() / 2,  (float)-secondHand.getHeight()-5,secondRotation);
-
-        // 绘制中心原点
-        drawBitmapCentered(canvas, centerDot, 0, 0, 0);
-
+        
+        // 不缩放整个画布，改为单独缩放每个图片
+    
+        // 绘制表盘背景（应用缩放）
+        drawScaledBitmapCentered(canvas, clockBackground, 0, 0, 0, scaleFactor);
+    
+        // 绘制时针（应用缩放）
+        drawScaledBitmapCenteredPoint(canvas, hourHand, 0, 0, 
+            (float) -hourHand.getWidth() / 2, (float)-hourHand.getHeight()-10, 
+            hourRotation, scaleFactor);
+    
+        // 绘制分针（应用缩放）
+        drawScaledBitmapCenteredPoint(canvas, minuteHand, 0, 0, 
+            (float) -minuteHand.getWidth() / 2, (float)-minuteHand.getHeight()-7, 
+            minuteRotation, scaleFactor);
+    
+        // 绘制秒针（应用缩放）
+        drawScaledBitmapCenteredPoint(canvas, secondHand, 0, 0, 
+            (float) -secondHand.getWidth() / 2, (float)-secondHand.getHeight()-5, 
+            secondRotation, scaleFactor);
+    
+        // 绘制中心原点（应用缩放）
+        drawScaledBitmapCentered(canvas, centerDot, 0, 0, 0, scaleFactor);
+    
         // 恢复画布状态
         canvas.restore();
     }
-
-    private void drawBitmapCentered(Canvas canvas, Bitmap bitmap, float x, float y, float rotation) {
+    
+    // 新的绘制方法：单独缩放每个图片，保持位置不变
+    private void drawScaledBitmapCentered(Canvas canvas, Bitmap bitmap, float x, float y, float rotation, float scale) {
         matrix.reset();
-
-        // 移动到中心点
+    
+        // 先移动到中心点（不缩放）
         matrix.postTranslate(-bitmap.getWidth() / 2, -bitmap.getHeight() / 2);
-
+    
         // 应用旋转
         matrix.postRotate(rotation);
-
+    
+        // 应用缩放（在旋转之后，这样缩放不会影响位置）
+        matrix.postScale(scale, scale);
+    
         // 移动到指定位置
         matrix.postTranslate(x, y);
-
+    
         // 绘制位图
         canvas.drawBitmap(bitmap, matrix, paint);
     }
-
-    private void drawBitmapCenteredPoint(Canvas canvas, Bitmap bitmap, float x, float y,float dx, float dy, float rotation) {
+    
+    private void drawScaledBitmapCenteredPoint(Canvas canvas, Bitmap bitmap, float x, float y, 
+                                             float dx, float dy, float rotation, float scale) {
         matrix.reset();
-
-        // 移动到中心点
+    
+        // 先移动到偏移点（不缩放）
         matrix.postTranslate(dx, dy);
-
+    
         // 应用旋转
         matrix.postRotate(rotation);
-
+    
+        // 应用缩放（在旋转之后，这样缩放不会影响位置）
+        matrix.postScale(scale, scale);
+    
         // 移动到指定位置
         matrix.postTranslate(x, y);
-
+    
         // 绘制位图
         canvas.drawBitmap(bitmap, matrix, paint);
     }
-
 
     @Override
     protected void onAttachedToWindow() {
@@ -222,9 +274,8 @@ public class AnalogClockView extends View {
         }
         invalidate();
     }
+    
     public boolean isRunning() {
         return isRunning;
     }
-
-
 }

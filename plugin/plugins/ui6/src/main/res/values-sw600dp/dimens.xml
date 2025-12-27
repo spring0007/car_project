@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dial_widget_size">160dp</dimen>
+    <dimen name="hotset_app_size">60dp</dimen>
+    <dimen name="music_control_size">55dp</dimen>
+    <dimen name="dial_date_top">30dp</dimen>
+</resources>
