@@ -4,6 +4,7 @@ import static com.awell.launcher2.LauncherApplication.getmAppContext;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.TaskInfo;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -324,8 +325,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             } else {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
-                if ("com.awell.launcher.host.MainActivity".equals(topActivity) || topIsFreeform()) {
-                    String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
+                String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
+                if ("com.awell.launcher.host.MainActivity".equals(topActivity) && apkClazz.equals(activity)) {
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
                 }
@@ -344,38 +345,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 ComponentName topActivity = runningTasks.get(0).topActivity;
                 String packageName = topActivity.getPackageName();
                 String className = topActivity.getClassName();
-                Log.d(TAG, "getTopActivity: Package: " + packageName + ", Class: " + className);
+                Log.d(TAG, "getTopActivity: huang Package: " + packageName + ", Class: " + className);
                 return className;
             }
         } catch (Exception e) {
-            Log.e(TAG, "getTopActivity:  error=>" + e.getMessage());
+            Log.e(TAG, "getTopActivity: huang error=>" + e.getMessage());
         }
         return null;
     }
 
-    private boolean topIsFreeform() {
-        String free_packName = Settings.System.getString(getContentResolver(), mFreeformPkgSettings);
-
-        try {
-            ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-            // 传入参数1表示只获取最顶部的1个任务
-            List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
-            if (runningTasks != null && !runningTasks.isEmpty()) {
-                ComponentName topActivity = runningTasks.get(0).topActivity;
-                String packageName = topActivity.getPackageName();
-                if (packageName.contains(free_packName)) {
-                    if (D) {
-                        Log.i(TAG, "topIsFreeform: huang top app is freeform app=>");
-                    }
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "topIsFreeform:  error=>" + e.getMessage());
-        }
-
-
-        return false;
-    }
 
 }
