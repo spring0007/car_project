@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="music_btn_padding">28dp</dimen>
-    <dimen name="radio_widget_top">125dp</dimen>
+    <dimen name="radio_widget_top">165dp</dimen>
     <dimen name="radio_widget_start">84dp</dimen>
-    <dimen name="radio_control_top">10dp</dimen>
+    <dimen name="radio_control_top">13dp</dimen>
     <dimen name="music_widget_top">140dp</dimen>
     <dimen name="music_widget_end">80dp</dimen>
 </resources>
