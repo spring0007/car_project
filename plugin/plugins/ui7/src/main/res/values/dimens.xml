@@ -5,4 +5,6 @@
     <dimen name="recycle_app_icon_size">100dp</dimen>
     <dimen name="recycle_app_width">160dp</dimen>
 
+    <dimen name="text_size">30sp</dimen>
+
 </resources>
