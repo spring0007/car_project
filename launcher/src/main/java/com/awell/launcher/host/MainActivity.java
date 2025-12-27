@@ -326,7 +326,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
                 String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
-                if ("com.awell.launcher.host.MainActivity".equals(topActivity) && apkClazz.equals(activity)) {
+                if ("com.awell.launcher.host.MainActivity".equals(topActivity) || apkClazz.equals(activity)) {
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
                 }
