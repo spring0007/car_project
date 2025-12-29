@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/sf_music_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/time_bg_width"
+            android:layout_height="@dimen/time_bg_height"
             android:src="@drawable/sf_time_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/img_song_art_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/music_album_width"
+            android:layout_height="@dimen/music_album_height"
             android:src="@drawable/ablum_bg"
             app:layout_constraintStart_toStartOf="@+id/sf_music_bg"
             app:layout_constraintEnd_toEndOf="@+id/sf_music_bg"

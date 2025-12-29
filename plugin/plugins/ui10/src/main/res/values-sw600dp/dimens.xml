@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_bg_width">454dp</dimen>
+    <dimen name="time_bg_height">212dp</dimen>
+    <dimen name="time_bg_inner_width">156dp</dimen>
+    <dimen name="time_bg_inner_height">104dp</dimen>
+    <dimen name="time_text_size">80sp</dimen>
+    <dimen name="hotset_width">117dp</dimen>
+    <dimen name="hotset_height">112dp</dimen>
+    <dimen name="music_album_width">158dp</dimen>
+    <dimen name="music_album_height">150dp</dimen>
+</resources>
