@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_widget_width">366dp</dimen>
+    <dimen name="time_widget_height">292dp</dimen>
+    <dimen name="car_width">202dp</dimen>
+    <dimen name="car_height">131dp</dimen>
+    <dimen name="time_start_radio">0.07</dimen>
+    <dimen name="music_start_radio">0.07</dimen>
+    <dimen name="time_font_size">62sp</dimen>
+</resources>

@@ -13,7 +13,7 @@
         android:format24Hour="HH:mm"
         android:text="00:00"
         android:textColor="@android:color/white"
-        android:textSize="72sp"
+        android:textSize="@dimen/time_font_size"
         android:textStyle="bold" />
 
     <TextClock
