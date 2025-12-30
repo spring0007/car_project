@@ -10,13 +10,13 @@
     <ImageView
         android:id="@+id/hotseat_bg_iv"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/hotset_height"
         android:src="@drawable/sf_hotseat_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="@dimen/hotset_top"/>
 
     <ImageView
         android:id="@+id/hotset_nav_app"
@@ -70,13 +70,13 @@
 
     <ImageView
         android:id="@+id/time_bg_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/time_bg_width"
+        android:layout_height="@dimen/time_bg_height"
         android:src="@drawable/sf_time_bg"
         app:layout_constraintStart_toEndOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toStartOf="@+id/layout_radio_widget"
         app:layout_constraintTop_toTopOf="@+id/hotseat_bg_iv"
-        android:layout_marginStart="13dp"/>
+        android:layout_marginStart="@dimen/hotset_start"/>
 
     <TextClock
         android:id="@+id/time_hour"
@@ -86,7 +86,7 @@
         android:format24Hour="HH:mm"
         android:text="00:00"
         android:textColor="@android:color/white"
-        android:textSize="105sp"
+        android:textSize="@dimen/time_tv_size"
         app:layout_constraintStart_toStartOf="@+id/time_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_iv"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
@@ -129,7 +129,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/time_bg_iv"
         app:layout_constraintTop_toBottomOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/hotseat_bg_iv"/>
+        app:layout_constraintBottom_toBottomOf="@+id/hotseat_bg_iv"
+        />
 
     <include layout="@layout/radio_widget"
         android:id="@+id/layout_radio_widget"
@@ -138,20 +139,20 @@
         app:layout_constraintStart_toEndOf="@+id/time_bg_iv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
-        android:layout_marginStart="13dp"
+        android:layout_marginStart="@dimen/radio_start"
         android:layout_marginEnd="15dp"/>
 
     <ImageView
         android:id="@+id/bt_bg_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bt_bg_width"
+        android:layout_height="@dimen/bt_bg_height"
         android:src="@drawable/sf_bt_bg"
         app:layout_constraintTop_toTopOf="@+id/layout_music_widget"
         app:layout_constraintBottom_toBottomOf="@+id/layout_music_widget"
         app:layout_constraintStart_toEndOf="@+id/layout_music_widget"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="13dp"
-        android:layout_marginEnd="15dp"/>
+        android:layout_marginEnd="0dp"/>
 
     <TextView
         android:id="@+id/bt_status_tv"

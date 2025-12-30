@@ -8,15 +8,15 @@
 
     <ImageView
         android:id="@+id/radio_bg_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/radio_bg_width"
+        android:layout_height="@dimen/radio_bg_height"
         android:src="@drawable/sf_radio_bg"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/radio_icon_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/radio_iv_width"
+        android:layout_height="@dimen/radio_iv_height"
         android:src="@drawable/radio_icon"
         app:layout_constraintTop_toTopOf="@+id/radio_bg_iv"
         app:layout_constraintBottom_toBottomOf="@+id/radio_bg_iv"
@@ -48,12 +48,12 @@
 
     <ImageView
         android:id="@+id/radio_progress_iv"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/radio_progress_width"
         android:layout_height="wrap_content"
         android:src="@drawable/radio_progress"
         app:layout_constraintStart_toEndOf="@+id/radio_icon_iv"
         app:layout_constraintEnd_toEndOf="@+id/radio_bg_iv"
-        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintHorizontal_bias="@dimen/radio_progress_radio"
         app:layout_constraintTop_toBottomOf="@+id/tv_radio_am_fm"/>
 
     <ImageView
@@ -88,6 +88,7 @@
         android:padding="10dp"
         app:layout_constraintStart_toEndOf="@+id/tv_radio_freq"
         app:layout_constraintEnd_toEndOf="@+id/radio_bg_iv"
-        app:layout_constraintTop_toBottomOf="@+id/radio_progress_iv"/>
+        app:layout_constraintTop_toBottomOf="@+id/radio_progress_iv"
+        android:layout_marginEnd="@dimen/music_next_end"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
