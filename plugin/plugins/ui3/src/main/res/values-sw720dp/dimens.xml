@@ -8,4 +8,6 @@
 
     <dimen name="bottom_frame_width">909dp</dimen>
     <dimen name="bottom_frame_height">174dp</dimen>
+
+    <dimen name="time_start_radio">0.95</dimen>
 </resources>
