@@ -6,7 +6,7 @@
     <dimen name="top_radio">0.25</dimen>
     <dimen name="car_iv_width">754dp</dimen>
     <dimen name="car_iv_height">319dp</dimen>
-    <dimen name="music_iv_width">304dp</dimen>
+    <dimen name="music_iv_width">270dp</dimen>
     <dimen name="car_iv_start">0dp</dimen>
     <dimen name="car_speed_radio">0.11</dimen>
     <dimen name="music_widget_radio">0.1</dimen>
