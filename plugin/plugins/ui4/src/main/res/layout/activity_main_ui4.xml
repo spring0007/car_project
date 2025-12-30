@@ -19,15 +19,15 @@
 
     <ImageView
         android:id="@+id/music_widget_bg_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/music_iv_width"
+        android:layout_height="@dimen/car_iv_height"
         android:src="@drawable/bg_music_widget"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="@dimen/top_radio" />
 
     <include
         android:id="@+id/layout_music_widget"
@@ -38,14 +38,14 @@
         app:layout_constraintEnd_toEndOf="@+id/music_widget_bg_iv"
         app:layout_constraintStart_toStartOf="@+id/music_widget_bg_iv"
         app:layout_constraintTop_toTopOf="@+id/music_widget_bg_iv"
-        app:layout_constraintHorizontal_bias="0.3"/>
+        app:layout_constraintHorizontal_bias="@dimen/music_widget_radio" />
 
     <ImageView
         android:id="@+id/car_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/car_iv_width"
+        android:layout_height="@dimen/car_iv_start"
         android:src="@drawable/sf_car_bg"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="@dimen/car_iv_start"
         android:layout_marginEnd="30dp"
         app:layout_constraintStart_toEndOf="@+id/music_widget_bg_iv"
         app:layout_constraintTop_toTopOf="@+id/music_widget_bg_iv"
@@ -62,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="@+id/car_iv"
         app:layout_constraintStart_toStartOf="@+id/car_iv"
         app:layout_constraintTop_toTopOf="@+id/car_iv"
-        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintHorizontal_bias="@dimen/car_speed_radio"
         app:layout_constraintVertical_bias="0.9"/>
 
     <TextView
@@ -79,8 +79,8 @@
 
     <LinearLayout
         android:id="@+id/rv_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/rv_item_width"
+        android:layout_height="@dimen/rv_item_height"
         android:orientation="horizontal"
         android:background="@drawable/sf_rv_bg"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -91,11 +91,11 @@
         android:layout_marginTop="15dp">
         <ImageView
             android:id="@+id/hotset_allapp"
-            android:layout_width="120dp"
+            android:layout_width="@dimen/hotset_allapp_width"
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:src="@drawable/hotset_all_app"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"

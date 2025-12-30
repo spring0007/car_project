@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="40sp"
+            android:textSize="@dimen/radio_freq_size"
             android:textColor="@color/white"
             android:text="107.50"
             android:gravity="center"/>
@@ -80,12 +80,8 @@
         android:layout_weight="1"
         android:layout_gravity="center">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/radio_icon_size"
+            android:layout_height="@dimen/radio_icon_size"
             android:src="@drawable/radio_icon" />
-
     </LinearLayout>
-
-
-
 </LinearLayout>
