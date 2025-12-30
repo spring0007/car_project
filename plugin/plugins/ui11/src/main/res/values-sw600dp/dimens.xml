@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hotset_top">50dp</dimen>
+    <dimen name="hotset_start">120dp</dimen>
+    <dimen name="hotset_height">500dp</dimen>
+    <dimen name="time_bg_width">369dp</dimen>
+    <dimen name="time_bg_height">240dp</dimen>
+    <dimen name="time_tv_size">90sp</dimen>
+    <dimen name="radio_start">13dp</dimen>
+    <dimen name="radio_bg_width">567dp</dimen>
+    <dimen name="radio_bg_height">239dp</dimen>
+    <dimen name="radio_iv_width">148dp</dimen>
+    <dimen name="radio_progress_radio">0.1</dimen>
+    <dimen name="radio_progress_width">257dp</dimen>
+    <dimen name="radio_iv_height">152dp</dimen>
+    <dimen name="music_play_size">125dp</dimen>
+    <dimen name="music_next_end">45dp</dimen>
+    <dimen name="music_bg_width">507dp</dimen>
+    <dimen name="music_bg_height">219dp</dimen>
+    <dimen name="bt_bg_width">329dp</dimen>
+    <dimen name="bt_bg_height">219dp</dimen>
+</resources>

@@ -7,4 +7,6 @@
 
     <dimen name="bottom_frame_width">763dp</dimen>
     <dimen name="bottom_frame_height">154dp</dimen>
+
+    <dimen name="time_start_radio">0.98</dimen>
 </resources>
