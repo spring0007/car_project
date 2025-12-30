@@ -43,7 +43,7 @@
     <ImageView
         android:id="@+id/car_iv"
         android:layout_width="@dimen/car_iv_width"
-        android:layout_height="@dimen/car_iv_start"
+        android:layout_height="@dimen/car_iv_height"
         android:src="@drawable/sf_car_bg"
         android:layout_marginStart="@dimen/car_iv_start"
         android:layout_marginEnd="30dp"
