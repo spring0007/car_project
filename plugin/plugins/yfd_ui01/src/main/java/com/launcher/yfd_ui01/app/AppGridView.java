@@ -8,12 +8,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.content.res.Resources;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +18,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.awell.addapp.AppInfo;
-import com.awell.utils.Utils;
 import com.launcher.yfd_ui01.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,7 +63,7 @@ public class AppGridView extends RelativeLayout {
     }
     
     private void init(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.app_grid_view, this, true);
+        LayoutInflater.from(context).inflate(R.layout.fragment_menu, this, true);
         initViews(context);
         loadApps(context);
         setupViewPagerListener();

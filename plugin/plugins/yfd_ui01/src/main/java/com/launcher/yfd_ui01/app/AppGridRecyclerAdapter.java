@@ -29,7 +29,6 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     private final Context context;
     private List<AppInfo> appList;
     private final IconManager iconManager;
-
     public AppGridRecyclerAdapter(Context context, List<AppInfo> appList) {
         this.context = context;
         this.appList = appList;
@@ -51,7 +50,7 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
                 int position = parent.getChildAdapterPosition(view);
                 if (position == RecyclerView.NO_POSITION) return;
 
-                int column = position % spanCount;
+                //int column = position % spanCount;
 
                 if (includeEdge) {
                     // 左右都有边距，且间距均匀分布
@@ -89,8 +88,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_grid, parent, false);
-        return new Holder(v);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_grid, parent, false);
+        return new Holder(view);
     }
 
     @Override
@@ -105,7 +104,6 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         
         // 异步加载图标
         loadAppIcon(holder.icon, appInfo);
-        
         // 预加载点击事件所需的资源
         holder.itemView.setTag(appInfo);
         holder.itemView.setOnClickListener(clickListener);
@@ -201,8 +199,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
 
         Holder(@NonNull View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.app_icon);
-            name = itemView.findViewById(R.id.app_name);
+            icon = itemView.findViewById(R.id.item_app_icon);
+            name = itemView.findViewById(R.id.item_app_name);
         }
         
     }

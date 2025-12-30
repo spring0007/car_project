@@ -38,7 +38,7 @@ public class AppPagerAdapter extends PagerAdapter {
     
     // 共享的ItemDecoration
     private final RecyclerView.ItemDecoration sharedItemDecoration =
-        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 56, 30, true);
+        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 56, 40, true);
 
     public AppPagerAdapter(Context context, List<List<AppInfo>> pages, int itemsPerPage) {
         this.context = context;

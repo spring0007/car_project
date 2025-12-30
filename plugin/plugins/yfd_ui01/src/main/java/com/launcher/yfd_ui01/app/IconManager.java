@@ -1,8 +1,15 @@
 package com.launcher.yfd_ui01.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+
 import androidx.core.content.ContextCompat;
+
+import com.awell.addapp.AppInfo;
 import com.launcher.yfd_ui01.R;
 
 import java.util.Arrays;
@@ -84,6 +91,7 @@ public class IconManager {
             tempIcons.put("com.awell.weather",R.drawable.yfd_ui1_weather);
             tempIcons.put("com.awell.keystudy",R.drawable.yfd_ui1_streering_wheel);
             tempIcons.put("com.awell.navigation",R.drawable.yfd_ui1_nav);
+            tempIcons.put("com.launcher.yfd_ui01",R.drawable.yfd_ui1_menu);//单独处理
 
         } catch (Exception e) {
             // 静默处理初始化异常
@@ -170,6 +178,43 @@ public class IconManager {
 
         return null;
     }
+
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static AppInfo getAppIcon(Context context, String packageName) throws PackageManager.NameNotFoundException {
+        if (packageName == null) return null;
+        AppInfo info = new AppInfo();
+        //单独处理
+        if("com.launcher.yfd_ui01".equals(packageName)){
+            info.setIcon(context.getDrawable(R.drawable.yfd_ui1_menu));
+            info.setLabel(context.getString(R.string.apps));
+
+            return info;
+        }
+        PackageManager pm = context.getPackageManager();
+        PackageInfo packageInfo = pm.getPackageInfo(packageName,PackageManager.GET_ACTIVITIES);
+
+        // 检查自定义图标
+        Integer resId = CUSTOM_ICONS.get(packageName);
+        if (resId != null) {
+            Drawable drawable = ContextCompat.getDrawable(context, resId);
+            if (drawable != null) {
+                info.setIcon(drawable);
+               // return drawable;
+            }
+        }else{
+            if(packageInfo != null){
+                info.setIcon( packageInfo.applicationInfo.loadIcon(pm));
+            }else
+                info.setIcon(context.getDrawable(R.drawable.yfd_ui1_boot_animation));
+        }
+
+        assert packageInfo != null;
+        info.setLabel(pm.getApplicationLabel(packageInfo.applicationInfo).toString());
+
+        return info;
+    }
+
     
     /**
      * 批量预加载常用图标

@@ -146,6 +146,7 @@ public class AnalogClockView extends View {
         secondRotation = (seconds * 6.0f) + (milliseconds * 0.006f);
     }
 
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -153,11 +154,21 @@ public class AnalogClockView extends View {
         centerX = w / 2;
         centerY = h / 2;
 
-        // 计算合适的缩放因子
         if (clockBackground != null) {
-            int minSize = Math.min(w, h);
-            float bgSize = Math.min(clockBackground.getWidth(), clockBackground.getHeight());
-            //scaleFactor = (minSize * 0.9f) / bgSize; // 留10%边距
+            // 计算缩放因子，让表盘背景适应视图大小
+            float viewAspect = (float) w / h;
+            float bgAspect = (float) clockBackground.getWidth() / clockBackground.getHeight();
+
+            if (viewAspect > bgAspect) {
+                // 视图更宽，以高度为基准缩放
+                scaleFactor = (float) h / clockBackground.getHeight();
+            } else {
+                // 视图更高，以宽度为基准缩放
+                scaleFactor = (float) w / clockBackground.getWidth();
+            }
+
+            // 留出5%的边距
+            scaleFactor *= 0.95f;
         }
 
         // 如果没有运行，则重置到当前时间

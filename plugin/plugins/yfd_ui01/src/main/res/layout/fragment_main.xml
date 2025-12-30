@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!--dial layout-->
+    <include
+        layout="@layout/dial_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.171"
+        app:layout_constraintHeight_percent="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintHorizontal_bias="0.92"
+        />
+
+    <!--car icon -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="25dp"
+        android:background="@drawable/ui7_car_bg"
+        android:gravity="center|bottom"
+        app:layout_constraintWidth_percent="0.25"
+        app:layout_constraintHeight_percent="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.34"
+        >
+
+        <ImageView
+            android:id="@+id/car_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleY="1.2"
+            android:scaleX="1.2"
+            android:scaleType="fitXY"
+            android:src="@drawable/a3_2008_2012" />
+    </LinearLayout>
+
+    <!--car speed -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="45dp"
+        android:background="@drawable/ui7_car_peed_bg"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_percent="0.38"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.92"
+        app:layout_constraintWidth_percent="0.214">
+
+        <com.launcher.yfd_ui01.view.DashboardView
+            android:id="@+id/car_speed_point"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/freeform_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.41"
+        app:layout_constraintHeight_percent="0.47"
+        android:layout_marginTop="60dp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/freeform_bg"
+        />
+    <!-- music layout -->
+    <include
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.41"
+        app:layout_constraintHeight_percent="0.36"
+        app:layout_constraintTop_toBottomOf="@+id/freeform_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.91"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
+
+    <!-- car speed -->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="142dp"-->
+    <!--        android:gravity="center_horizontal"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/car_speed_tv"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:fontFamily="@font/harmonyos_sans_sc_medium"-->
+    <!--            android:text="120"-->
+    <!--            android:textColor="@color/grey_9494"-->
+    <!--            android:textSize="75sp" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/car_speed_unit_tv"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginStart="18dp"-->
+    <!--            android:fontFamily="@font/harmonyos_sans_sc_regular"-->
+    <!--            android:text="km/h"-->
+    <!--            android:textColor="@color/grey_9494"-->
+    <!--            android:textSize="30sp" />-->
+    <!--    </LinearLayout>-->
+
+    <!-- bottom app -->
+    <GridLayout
+        android:id="@+id/host_linear"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.23"
+        app:layout_constraintHeight_percent="0.45"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.93">
+
+
+        <com.launcher.yfd_ui01.view.AppItemView
+            android:id="@+id/hotset_bt_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:appBg="@drawable/yfd_ui1_bg"
+            app:appIcon="@drawable/yfd_ui1_bluetooth"
+            app:appName="@string/bluetooth"
+            />
+
+        <com.launcher.yfd_ui01.view.AppItemView
+            android:id="@+id/hotset_all_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:appBg="@drawable/yfd_ui1_bg"
+            app:appIcon="@drawable/yfd_ui1_menu"
+            app:appName="@string/apps"
+            />
+
+        <com.launcher.yfd_ui01.view.AppItemView
+            android:id="@+id/hotset_dsp_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:appBg="@drawable/yfd_ui1_bg"
+            app:appIcon="@drawable/yfd_ui1_dsp"
+            app:appName="@string/dsp"
+            />
+
+        <com.launcher.yfd_ui01.view.AppItemView
+            android:id="@+id/hotset_window_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:appBg="@drawable/yfd_ui1_bg"
+            app:appIcon="@drawable/yfd_ui1_windowapp"
+            app:appName="@string/window_app"
+            />
+
+    </GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

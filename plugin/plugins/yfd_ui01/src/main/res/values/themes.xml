@@ -17,4 +17,21 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="appTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowShowWallpaper">true</item>
+        <!-- 可选：全屏显示 -->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!-- 可选：透明状态栏（API 19+） -->
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- 可选：透明导航栏（API 19+） -->
+        <item name="android:windowTranslucentNavigation">false</item>
+        <!-- 防止内容区域有默认背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>

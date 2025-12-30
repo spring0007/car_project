@@ -42,16 +42,27 @@ public class DialWidget extends LinearLayout {
         calendar = Calendar.getInstance();
         dateFormat = new SimpleDateFormat("MM-dd", Locale.getDefault());
         timeHandler = new Handler(Looper.getMainLooper());
+        
+        // 设置ConstraintLayout参数
+        setLayoutParams(new LayoutParams(
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT
+        ));
     }
 
-    public void findViews(Context context, View view) {
-        analogClockView = view.findViewById(R.id.analogClockView);
-        tv_am_pm = view.findViewById(R.id.dial_am_pm);
-        tv_date = view.findViewById(R.id.dial_date);
-        tv_week = view.findViewById(R.id.dial_week);
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         
+        // 直接在当前视图中查找子视图
+        analogClockView = findViewById(R.id.analogClockView);
+        tv_am_pm = findViewById(R.id.dial_am_pm);
+        tv_date = findViewById(R.id.dial_date);
+        tv_week = findViewById(R.id.dial_week);
+
         setupDigitalTimeUpdater();
         updateTime();
+
     }
 
     @SuppressLint("DefaultLocale")
@@ -130,7 +141,7 @@ public class DialWidget extends LinearLayout {
         }
     }
 
-    public void updateTimeSysem() {
+    public void updateTimeSystem() {
         updateTime();
         if (analogClockView != null) {
             analogClockView.resetToCurrentTime();
@@ -151,11 +162,29 @@ public class DialWidget extends LinearLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        startAnimation();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         stopAnimation();
         if (timeHandler != null) {
             timeHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+        if (visibility == View.VISIBLE) {
+            if (!isAnimationRunning) {
+                startAnimation();
+            }
+        } else {
+            stopAnimation();
         }
     }
 }

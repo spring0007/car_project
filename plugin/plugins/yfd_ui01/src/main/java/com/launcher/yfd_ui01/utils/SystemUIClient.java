@@ -191,21 +191,22 @@ public class SystemUIClient {
         Log.i(TAG, "startShowFreeform: huang reason=>" + reason);
         ActivityOptions options = makeLaunchOptions(context, view);
 
-        //Intent intentFreeform = new Intent();
-        Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        Intent intentFreeform = new Intent();
+        /*Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
         if (intentFreeform == null) {
             Log.i(TAG, "startShowFreeform: hintentFreeformn= null");
             return;
-        }
+        }*/
+
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         intentFreeform.setPackage(pkg);
 
-        /*if (clazz != null) {
+        if (clazz != null) {
             ComponentName cmp = new ComponentName(pkg, clazz);
             intentFreeform.setComponent(cmp);
-        }*/
+        }
 
         startOrSetFreeformType(intentFreeform, options, windowType);
     }
@@ -220,9 +221,9 @@ public class SystemUIClient {
         //ActivityOptions activityOptions = ActivityOptions.makeScaleUpAnimation(view,0,0,view.getWidth(),view.getHeight());
         ActivityOptions activityOptions = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right,R.drawable.slide_out_left,0xcccccc);
+            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1,0xcccccc);
         }else
-            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right,R.drawable.slide_out_left);
+            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1);
         //ActivityOptions.makeBasic();
 
         try {

@@ -124,7 +124,6 @@
             android:thumbOffset="0dip"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/ll_name_layout_music"
-
             tools:ignore="MissingConstraints" />
 
         <!-- 音乐控制 -->

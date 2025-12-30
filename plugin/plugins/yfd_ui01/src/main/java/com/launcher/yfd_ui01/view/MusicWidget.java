@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -79,8 +80,17 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
 //    private MediaNotificationListener mediaNotificationListener = null;
 
+
+    public MusicWidget(Context context) {
+        this(context, null);
+    }
+
     public MusicWidget(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public MusicWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         this.mContext = context;
     }
 
@@ -109,6 +119,12 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         mBar.setOnClickListener(this);
         mBar.setMax(100);
         mBar.setProgress(0);
+        mBar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
 
         mPlayStateImageView = view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
@@ -118,7 +134,40 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         musicNextIv.setOnClickListener(this);
 
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
-//        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
+//        ll_name_layout_music.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
+//            @Override
+//            public void onDraw() {
+//                if (ll_name_layout_music.getVisibility()== View.VISIBLE) {
+//                    Log.i(TAG,"lqq,requestFocus");
+//                    mMusicNameTextView.requestFocus();
+//                    ll_name_layout_music.getViewTreeObserver().removeOnDrawListener(this);
+//
+//                }
+//
+//            }
+//        });
+
+        // 监听布局完成并给予焦点
+        mMusicNameTextView.addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(@NonNull View view1) {
+                if (view1.getVisibility() == View.VISIBLE) {
+                    view1.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view1.requestFocus();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View v) {
+                // 清理工作
+                removeOnAttachStateChangeListener(this);
+            }
+        });
+////        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
 //        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
 //        ivLoadnim.setOnClickListener(this);

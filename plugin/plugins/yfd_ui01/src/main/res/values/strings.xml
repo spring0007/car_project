@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name" >LauncherUI1_YFD</string><!-- app 名称 -->
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
 
-    <string name="ui_key" >LauncherUI1_YFD</string>
-    <string name="ui_clazz" >com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
+    <string name="ui_key">LauncherUI1</string>
+    <string name="ui_clazz">com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
 
 
     <string name="click_play_music">Song Title</string>
@@ -28,8 +28,13 @@
     <string name="unable_uninstall_current_desktop_application">Unable to uninstall the current desktop application</string>
     <string name="error_uninstalling_application">Error uninstalling application</string>
     <string name="select_image">选择图片</string>
+    <string name="choose_brand">Choose a brand</string>
+    <string name="choose_model">Choose car model</string>
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
+        <item>wallpaper_01</item>
+        <item>wallpaper_02</item>
+        <item>wallpaper_03</item>
     </string-array>
     <string-array name="week_str">
         <item>@string/sunday</item>
