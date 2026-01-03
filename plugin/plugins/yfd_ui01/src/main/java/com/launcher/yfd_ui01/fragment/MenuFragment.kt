@@ -9,31 +9,31 @@ import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.awell.addapp.AppInfo
 import com.launcher.yfd_ui01.MainActivity_YFD_UI01
 import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.AppPagerAdapter
 import com.launcher.yfd_ui01.app.IconManager
-import kotlinx.coroutines.CoroutineScope
+import com.launcher.yfd_ui01.manager.FragmentAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.NonCancellable.isCancelled
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Objects
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlin.math.abs
 
 class MenuFragment : Fragment() {
@@ -46,10 +46,8 @@ class MenuFragment : Fragment() {
     private var iconManager: IconManager? = null
     
     private var packageReceiver: BroadcastReceiver? = null
-    private var homeReceiver : BroadcastReceiver? = null
-    private var executorService: ExecutorService = Executors.newSingleThreadExecutor()
+    private var homeReceiver: BroadcastReceiver? = null
     private var isLoading = false
-    private var isFragmentActive = true
     
     // 页面监听器和适配器
     private var pageChangeListener: ViewPager.OnPageChangeListener? = null
@@ -62,12 +60,28 @@ class MenuFragment : Fragment() {
     private var lastX = 0f
     private var countTouch:Int = 0
     private val SWIPE_THRESHOLD = 150 // 滑动阈值
-
+    
+    // 状态标志
+    private var isViewCreated = false
+    private var isDataInitialized = false
+    private var shouldLoadDataOnResume = false
+    
+    // 新增：用于等待视图布局完成的Handler
+    private val handler = Handler(Looper.getMainLooper())
+    private var layoutCheckRunnable: Runnable? = null
+    private var layoutObserver: ViewTreeObserver.OnGlobalLayoutListener? = null
 
     companion object {
         fun newInstance(): MenuFragment {
             return MenuFragment()
         }
+    }
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.i(TAG, "onCreate called")
+        // 确保Fragment不会被重建时重复添加
+        retainInstance = false
     }
 
     override fun onCreateView(
@@ -75,30 +89,133 @@ class MenuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_menu, container, false)
-        return view
-       // return super.onCreateView(inflater, container, savedInstanceState)
+        Log.i(TAG, "onCreateView called")
+        return inflater.inflate(R.layout.fragment_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i(TAG, "onViewCreated called, savedInstanceState=$savedInstanceState")
+        Log.i(TAG, "view,height = ${view.height} ,width =${view.width} ")
         swipeActivity = activity as MainActivity_YFD_UI01
-        viewPager = view.findViewById(R.id.viewPager)
+        viewPager = view.findViewById(R.id.viewPager1)
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         pageIndicator = view.findViewById(R.id.pageIndicator)
-        iconManager = IconManager.getInstance(requireContext())
+        iconManager = IconManager.getInstance(swipeActivity.applicationContext)
+        Log.i(TAG, "nestedScrollView,height = ${nestedScrollView.height} ,width =${nestedScrollView.width} ")
+        isViewCreated = true
+        
+        // 先设置默认视图
+        setupDefaultViews()
+        
+        // 检查视图是否已经布局完成
+        checkViewLayoutAndInitData()
+        
+        setupViewPagerListener()
+        setupSwipeGesture()
+    }
+    
+    /**
+     * 检查视图布局状态并初始化数据
+     */
+    private fun checkViewLayoutAndInitData() {
+        if (view == null) {
+            Log.w(TAG, "View为null，无法检查布局")
+            return
+        }
+        
+        // 方法1：使用ViewTreeObserver监听布局完成
+        layoutObserver = ViewTreeObserver.OnGlobalLayoutListener {
+            if (isViewReady()) {
+                // 布局完成，初始化数据
+                view?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutObserver)
+                layoutObserver = null
+                safeInitData()
+            }
+        }
+        
+        view?.viewTreeObserver?.addOnGlobalLayoutListener(layoutObserver)
+        
+        // 方法2：同时使用Handler延迟检查作为备份
+        layoutCheckRunnable = Runnable {
+            if (isViewReady()) {
+                safeInitData()
+            } else {
+                // 如果还没准备好，再次延迟检查
+                handler.postDelayed(layoutCheckRunnable!!, 16) // 约1帧的时间
+            }
+        }
+        
+        handler.post(layoutCheckRunnable!!)
+    }
+    
+    /**
+     * 检查视图是否准备好
+     */
+    private fun isViewReady(): Boolean {
+        return if (view != null && view!!.width > 0 && view!!.height > 0) {
+            Log.i(TAG, "视图已准备好，宽=${view!!.width}, 高=${view!!.height}")
+            true
+        } else {
+            Log.i(TAG, "视图未准备好，宽=${view?.width ?: 0}, 高=${view?.height ?: 0}")
+            false
+        }
+    }
+    
+    /**
+     * 安全地初始化数据
+     */
+    private fun safeInitData() {
+        Log.i(TAG, "safeInitData called, viewCreated=$isViewCreated, initialized=$isDataInitialized")
+        
+        if (!isViewCreated || isDataInitialized) return
+        
+        // 检查视图是否可用
+        if (!isAdded || view == null || view?.parent == null) {
+            Log.w(TAG, "视图不可用，延迟初始化")
+            view?.post {
+                if (isViewCreated && !isDataInitialized) {
+                    initData()
+                }
+            }
+            return
+        }
+        
         initData()
     }
     
     private fun initData() {
-        // 初始化数据
+        if (!isViewCreated || isDataInitialized || !isAdded) {
+            Log.w(TAG, "initData跳过: viewCreated=$isViewCreated, initialized=$isDataInitialized, added=$isAdded")
+            return
+        }
+        
+        Log.i(TAG, "initData called")
+        
+        // 设置默认视图
+        setupDefaultViews()
+        
+        // 立即开始加载应用数据
         loadApps()
-        setupViewPagerListener()
-        registerPackageReceiver()
-        // 处理滑动冲突
-        setupSwipeGesture()
-
-
+        
+        isDataInitialized = true
+    }
+    
+    private fun setupDefaultViews() {
+        Log.i(TAG, "setupDefaultViews called")
+        // 设置初始页面指示器
+        pageIndicator.removeAllViews()
+        val dot = ImageView(swipeActivity.applicationContext).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(5, 0, 5, 0)
+            }
+            setImageResource(R.drawable.indicator_selected)
+        }
+        pageIndicator.addView(dot)
+        pageIndicator.visibility = View.GONE // 初始隐藏，加载完成后再显示
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -133,6 +250,9 @@ class MenuFragment : Fragment() {
                         }
                     }
                 }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    countTouch = 0
+                }
             }
             false
         }
@@ -147,70 +267,103 @@ class MenuFragment : Fragment() {
         return false
     }
     private fun startFragment(){
-        Log.i(TAG,"startFragment")
+        if (!isAdded || isDetached) return
         // 触发切换到Fragment
-        requireActivity().supportFragmentManager.beginTransaction()
+        try {
+        /*requireActivity().supportFragmentManager.beginTransaction()
             //.setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_top)
             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
             .replace(R.id.fragment_container, MainFragment())
             .addToBackStack(null)
-            .commitAllowingStateLoss()
-    }
-
-
-    /**
-     * 设置 Fragment 活跃状态
-     */
-    fun setFragmentActive(active: Boolean) {
-        this.isFragmentActive = active
-        if (active && executorService.isShutdown) {
-            // 如果线程池已关闭但需要重新激活，重新创建线程池
-            executorService = Executors.newSingleThreadExecutor()
+            .commitAllowingStateLoss()*/
+            swipeActivity.goToFragment(0, FragmentAnimation.FADE)
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Error starting fragment", e)
         }
-
     }
 
-    fun isFragmentActive(): Boolean {
-        return isFragmentActive
-    }
+
 
     private fun loadApps() {
-        if (!isFragmentActive || isLoading) return
+        if (!isAdded || isLoading || view == null) {
+            Log.w(TAG, "loadApps: 条件不满足 - added=$isAdded, loading=$isLoading, view=${view != null}")
+            return
+        }
         isLoading = true
 
         loadJob?.cancel() // 取消之前的加载任务
 
-        loadJob = CoroutineScope(Dispatchers.IO).launch {
-            if (!isFragmentActive) {
-                isLoading = false
-                return@launch
-            }
-
+        loadJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
-                val allApps = getAllAppInfo(requireContext())
-                if (isCancelled || !isFragmentActive) return@launch
-
-                val pages = splitIntoPages(allApps)
-
-                withContext(Dispatchers.Main) {
-                    if (!isAdded || !isFragmentActive) return@withContext
-
-                    try {
-                        currentAdapter = AppPagerAdapter(requireContext(), pages, ITEMS_PER_PAGE)
-                        viewPager.adapter = currentAdapter
-                        setupPageIndicator()
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error setting adapter", e)
-                    } finally {
-                        isLoading = false
-                    }
+                Log.i(TAG, "开始加载应用列表")
+                
+                // 检查Fragment状态
+                if (!isAdded || view == null) {
+                    Log.w(TAG, "loadApps: Fragment状态异常，取消加载")
+                    return@launch
                 }
+                
+                val allApps = withContext(Dispatchers.IO) {
+                    getAllAppInfo(swipeActivity.applicationContext)
+                }
+                
+                // 再次检查Fragment状态
+                if (!isAdded || view == null) {
+                    Log.w(TAG, "loadApps: Fragment状态异常，取消显示")
+                    return@launch
+                }
+                
+                Log.i(TAG, "应用列表加载完成，共${allApps.size}个应用")
+                
+                val pages = splitIntoPages(allApps)
+                Log.i(TAG, "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
+                currentAdapter = AppPagerAdapter(swipeActivity.applicationContext, pages, ITEMS_PER_PAGE)
+
+                
+                // 确保ViewPager存在
+                if (viewPager == null) {
+                    Log.e(TAG, "ViewPager is null")
+                    return@launch
+                }
+                
+                // 等待ViewPager完成测量
+                if (viewPager.height <= 0) {
+                    Log.w(TAG, "ViewPager高度为0，等待测量完成")
+                    viewPager.post {
+                        setAdapterAndIndicator()
+                    }
+                } else {
+                    setAdapterAndIndicator()
+                }
+                
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading apps", e)
-                withContext(Dispatchers.Main) {
-                    isLoading = false
-                }
+            } finally {
+                isLoading = false
             }
+        }
+    }
+    
+    /**
+     * 设置适配器和指示器（在视图测量完成后调用）
+     */
+    private fun setAdapterAndIndicator() {
+        Log.i(TAG, "setAdapterAndIndicator, ViewPager高度=${viewPager.height}")
+        
+        try {
+            if (viewPager.adapter != currentAdapter) {
+                viewPager.adapter = currentAdapter
+            }
+            setupPageIndicator()
+            
+            // 预加载常用图标
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                iconManager?.preloadCommonIcons()
+            }
+            
+            Log.i(TAG, "ViewPager适配器设置完成")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error setting adapter", e)
         }
     }
 
@@ -231,7 +384,7 @@ class MenuFragment : Fragment() {
     /**
      * 获取所有应用信息
      */
-    private fun getAllAppInfo(ctx: Context): List<AppInfo> {
+    private suspend fun getAllAppInfo(ctx: Context): List<AppInfo> = withContext(Dispatchers.IO) {
         val appBeanList = mutableListOf<AppInfo>()
         val packageManager = ctx.packageManager
 
@@ -269,48 +422,18 @@ class MenuFragment : Fragment() {
             }
 
             // 第二阶段：批量处理图标
-            requireActivity().runOnUiThread {
-                updateAppIcons(tempList)
-                appBeanList.addAll(tempList)
+            updateAppIcons(tempList)
+            appBeanList.addAll(tempList)
 
-                // 第三阶段：排序
-                sortAppList(appBeanList, hasPackageOrder)
-
-                // 完成数据处理后更新UI
-                onAppDataReady(appBeanList)
-            }
+            // 第三阶段：排序
+            sortAppList(appBeanList)
 
         } catch (e: Exception) {
             Log.e(TAG, "Error getting app info", e)
         }
 
-        return appBeanList
-    }
-
-    /**
-     * 应用数据准备完成后的回调
-     */
-    private fun onAppDataReady(appList: List<AppInfo>) {
-        if (!isFragmentActive || !isAdded) return
-
-        val pages = splitIntoPages(appList)
-
-        view?.post {
-            if (!isAdded || !isFragmentActive) return@post
-
-            try {
-                currentAdapter = AppPagerAdapter(requireContext(), pages, ITEMS_PER_PAGE)
-                viewPager.adapter = currentAdapter
-                setupPageIndicator()
-
-                // 预加载常用图标
-                iconManager?.preloadCommonIcons()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error setting adapter", e)
-            } finally {
-                isLoading = false
-            }
-        }
+        Log.i(TAG, "获取到${appBeanList.size}个应用")
+        return@withContext appBeanList
     }
 
     /**
@@ -368,7 +491,9 @@ class MenuFragment : Fragment() {
     /**
      * 排序应用列表
      */
-    private fun sortAppList(appList: MutableList<AppInfo>, hasPackageOrder: Boolean) {
+    private fun sortAppList(appList: MutableList<AppInfo>) {
+        val hasPackageOrder = IconManager.PACKAGE_ORDER_LIST.isNotEmpty()
+        
         if (!hasPackageOrder) {
             // 如果没有预定义顺序，直接按包名排序
             appList.sortBy { it.package_name?.lowercase() }
@@ -416,18 +541,19 @@ class MenuFragment : Fragment() {
         pageIndicator.removeAllViews()
 
         for (i in 0 until pageCount) {
-            val dot = ImageView(context)
-            val params = LinearLayout.LayoutParams(
+            val dot = ImageView(swipeActivity.applicationContext).apply {
+                layoutParams	 = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(5, 0, 5, 0)
-            dot.layoutParams = params
-            dot.setImageResource(R.drawable.indicator_unselected)
+                ).apply {
+		            setMargins(5, 0, 5, 0)
+                }
+            setImageResource(R.drawable.indicator_unselected)
+            }
             pageIndicator.addView(dot)
         }
 
-        updateIndicator(0)
+        updateIndicator(viewPager.currentItem)
     }
 
     private fun updateIndicator(currentPosition: Int) {
@@ -454,16 +580,12 @@ class MenuFragment : Fragment() {
     }
 
     private fun registerPackageReceiver() {
-
-        homeReceiver= object : BroadcastReceiver() {
+        homeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                val action = intent.action
-                when (action) {
+                when (intent.action) {
                     Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
-                        var reason = intent.getStringExtra("reason");
-                        Log.i(TAG,"ACTION_CLOSE_SYSTEM_DIALOGS")
-                        if (reason == "homekey") { //home键
-                            Log.i(TAG,"ACTION_CLOSE_SYSTEM_DIALOGS")
+                        val reason = intent.getStringExtra("reason")
+                        if (reason == "homekey") {
                             startFragment()
                         }
                     }
@@ -475,9 +597,7 @@ class MenuFragment : Fragment() {
         packageReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 val action = intent.action
-                val packageName = intent.data?.schemeSpecificPart
-
-                if (packageName == null) return
+                val packageName = intent.data?.schemeSpecificPart ?: return
 
                 when (action) {
                     Intent.ACTION_PACKAGE_ADDED,
@@ -489,96 +609,62 @@ class MenuFragment : Fragment() {
             }
         }
 
-        val filter = IntentFilter().apply {
+        val packageFilter = IntentFilter().apply {
             addAction(Intent.ACTION_PACKAGE_ADDED)
             addAction(Intent.ACTION_PACKAGE_REMOVED)
             addAction(Intent.ACTION_PACKAGE_CHANGED)
-            addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+
             addDataScheme("package")
         }
 
-        val filter1 = IntentFilter().apply {
+        val homeFilter = IntentFilter().apply {
             addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
         }
 
-        ContextCompat.registerReceiver(
-            requireContext(),
-            homeReceiver,
-            filter1,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
+        try {
+            ContextCompat.registerReceiver(
+                swipeActivity.applicationContext,
+                homeReceiver,
+                homeFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
 
-
-        ContextCompat.registerReceiver(
-            requireContext(),
-            packageReceiver,
-            filter,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
+            ContextCompat.registerReceiver(
+                swipeActivity.applicationContext,
+                packageReceiver,
+                packageFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Error registering receivers", e)
+        }
     }
 
     private fun updateAppGrid() {
-        if (!isFragmentActive) return
+        if (!isAdded || isLoading) return
 
-        val currentPage = viewPager.currentItem
+        loadJob?.cancel()
         loadApps()
-
-        // 延迟恢复页面位置，等待新数据加载完成
-        view?.postDelayed({
-            if (isAdded && viewPager.adapter != null) {
-                val pageCount = viewPager.adapter?.count ?: 0
-                val newIndex = currentPage.coerceAtMost(pageCount - 1).coerceAtLeast(0)
-                viewPager.setCurrentItem(newIndex, false)
-            }
-        }, 100)
     }
 
-    /**
-     * 清理 Fragment 资源
-     */
-    private fun closeFragment() {
-        try {
-            // 首先标记为不活跃状态
-            isFragmentActive = false
-            isLoading = false
-
-            // 取消所有协程任务
-            loadJob?.cancel()
-            loadJob = null
-
-            // 停止所有后台任务
-            if (!executorService.isShutdown) {
-                executorService.shutdownNow()
+    private fun closeReceiver(){
+        // 取消广播注册
+        packageReceiver?.let {
+            try {
+                requireContext().unregisterReceiver(it)
+            } catch (e: IllegalArgumentException) {
+                // 忽略已经反注册的情况
             }
+            packageReceiver = null
+        }
 
-            // 取消广播注册
-            packageReceiver?.let {
-                try {
-                    requireContext().unregisterReceiver(it)
-                } catch (e: IllegalArgumentException) {
-                    // 忽略已经反注册的情况
-                }
-                packageReceiver = null
+        homeReceiver?.let {
+            try {
+                requireContext().unregisterReceiver(it)
+            } catch (e: IllegalArgumentException) {
+                // 忽略已经反注册的情况
             }
-
-            homeReceiver?.let {
-                try {
-                    requireContext().unregisterReceiver(it)
-                } catch (e: IllegalArgumentException) {
-                    // 忽略已经反注册的情况
-                }
-                homeReceiver = null
-            }
-
-            // 清理视图相关资源
-            cleanupViews()
-
-            // 清理图标缓存
-            iconManager?.clearCache()
-            iconManager = null
-
-        } catch (e: Exception) {
-            Log.w(TAG, "Error in closeFragment", e)
+            homeReceiver = null
         }
     }
 
@@ -588,29 +674,67 @@ class MenuFragment : Fragment() {
         }
         pageChangeListener = null
         viewPager.adapter = null
-        pageIndicator.removeAllViews()
         currentAdapter = null
+        
+        // 移除布局监听器和Runnable
+        layoutObserver?.let {
+            view?.viewTreeObserver?.removeOnGlobalLayoutListener(it)
+            layoutObserver = null
+        }
+        
+        layoutCheckRunnable?.let {
+            handler.removeCallbacks(it)
+            layoutCheckRunnable = null
+        }
     }
-
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG,"onResume")
-        setFragmentActive(true)
-        // 如果需要实时更新应用列表，可以在恢复时重新加载
-        // loadApps()
+        Log.i(TAG, "onResume called, viewCreated=$isViewCreated, dataInitialized=$isDataInitialized")
+        
+        // 如果需要加载数据，现在执行
+        if (shouldLoadDataOnResume) {
+            shouldLoadDataOnResume = false
+            checkViewLayoutAndInitData()
+        } else if (isViewCreated && !isDataInitialized) {
+            // 视图已创建但数据未初始化，重新初始化
+            checkViewLayoutAndInitData()
+        }
+        
+        registerPackageReceiver()
     }
 
     override fun onPause() {
         super.onPause()
         Log.i(TAG,"onPause")
-        setFragmentActive(false)
+        closeReceiver()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG,"onStop")
+        closeReceiver()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.i(TAG, "onDestroyView called")
+        closeReceiver()
+        cleanupViews()
+        isViewCreated = false
+        isDataInitialized = false
     }
 
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG,"onDestroy")
-        closeFragment()
+        loadJob?.cancel()
+        loadJob = null
+        iconManager = null
+        // 确保清理Handler相关资源
+        layoutCheckRunnable?.let {
+            handler.removeCallbacks(it)
+            layoutCheckRunnable = null
+        }
     }
-
 }

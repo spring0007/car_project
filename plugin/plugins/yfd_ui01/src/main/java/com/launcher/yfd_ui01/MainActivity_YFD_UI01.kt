@@ -1,10 +1,12 @@
 package com.launcher.yfd_ui01
 
-
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-
+import android.view.MotionEvent
+import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import com.launcher.yfd_ui01.databinding.FragmentMainBinding
 import com.launcher.yfd_ui01.fragment.MainFragment
 import com.launcher.yfd_ui01.fragment.MenuFragment
@@ -12,117 +14,200 @@ import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.manager.FragmentStackManager
 import kotlin.math.abs
 
-class MainActivity_YFD_UI01 :  AppCompatActivity() {
+class MainActivity_YFD_UI01 :  FragmentActivity() {
     private val TAG = "MainFragmentActivity"
-    lateinit var fragmentStackManager: FragmentStackManager
+    private lateinit var fragmentStackManager: FragmentStackManager
     private lateinit var mViewBinding: FragmentMainBinding
+    
+    // 标记是否正在重建
+    private var isRecreating = false
+    // 标记是否从MenuFragment失去焦点
+    private var lostFocusFromMenu = false
+    // 标记是否从其他应用返回
+    private var returningFromOtherApp = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fragment)
-        fragmentStackManager =    FragmentStackManager(supportFragmentManager, R.id.fragment_container)
-        if (savedInstanceState == null) {
-            initializeFragments()
-        } else {
-            // 恢复状态
-            fragmentStackManager.restoreState(savedInstanceState)
+        
+        if (savedInstanceState != null) {
+            isRecreating = true
+            Log.d(TAG, "Activity正在重建")
         }
+        
+        setContentView(R.layout.activity_fragment)
+        
+        // 初始化ViewBinding
         mViewBinding = FragmentMainBinding.inflate(layoutInflater)
-        // Activity入场动画
-        //overridePendingTransition(R.anim.slide_in_bottom, 0)
+        
+        // 初始化FragmentStackManager
+        fragmentStackManager = FragmentStackManager(supportFragmentManager, R.id.fragment_container)
 
-        //setupGestureDetector()
-        // 打印Fragment堆栈状态（调试）
-        fragmentStackManager.printFragmentStack()
+        if (savedInstanceState != null) {
+            fragmentStackManager.restoreState(savedInstanceState)
+            // 恢复状态
+            lostFocusFromMenu = savedInstanceState.getBoolean("lostFocusFromMenu", false)
+            returningFromOtherApp = savedInstanceState.getBoolean("returningFromOtherApp", false)
+        } else {
+            // 首次创建，初始化Fragment
+            initializeFragments()
+        }
+	// 监听用户交互
+        setupUserInteractionListener()
+        
+        // 观察是否需要导航到主Fragment
+        /*fragmentStackManager.shouldNavigateToMain.observe(this) { shouldNavigate ->
+            if (shouldNavigate != null && shouldNavigate) {
+                fragmentStackManager.checkAndReturnToMain()
+            }
+        }*/
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        fragmentStackManager.saveState(outState)
+        outState.putBoolean("lostFocusFromMenu", lostFocusFromMenu)
+        outState.putBoolean("returningFromOtherApp", returningFromOtherApp)
+        Log.d(TAG, "保存Activity状态")
+    }
 
     private fun initializeFragments() {
         Log.d("FragmentStack", "初始化Fragment...")
-
-        // 1. 设置默认Fragment（第一个，会显示）
-        fragmentStackManager.setDefaultFragment(
-            MainFragment.newInstance(),"MainFragment")
-
-        // 2. 添加其他Fragment（默认隐藏）
-        fragmentStackManager.addFragmentAndHide(
-            MenuFragment.newInstance(), "MenuFragment")
+        
+        // 使用新的初始化方法
+        fragmentStackManager.initializeFragments(
+            MainFragment.newInstance(),
+            MenuFragment.newInstance()
+        )
     }
 
-    /**
-     * Fragment滑动回调
-     */
-    protected open fun onFragmentSwiped(direction: FragmentStackManager.SlideDirection) {
-        Log.i(TAG,"lqq,onFragmentSwiped,direction="+direction)
-        // 子类可以重写此方法
-        //updateUIForCurrentFragment()
-        val position = getCurrentFragmentPosition()
-        val total = fragmentStackManager.getFragmentCount()
-        Log.i(TAG,"lqq,position="+position+",total="+total)
-        if(position==0 && direction  == FragmentStackManager.SlideDirection.UP )
-            fragmentStackManager.slideToFragment(FragmentStackManager.SlideDirection.UP)
-
-
-    }
-    
-    /**
-     * 更新UI（如标题、指示器等）
-     */
-    private fun updateUIForCurrentFragment() {
-        val position = getCurrentFragmentPosition()
-        val total = fragmentStackManager.getFragmentCount()
-
-        Log.i(TAG,"lqq,position="+position+",total="+total)
-
-    }
-    
     /**
      * 获取当前Fragment位置
      */
     fun getCurrentFragmentPosition(): Int {
-        // 这里需要根据实际情况实现
-        return when (fragmentStackManager.getCurrentFragment()) {
-            is MainFragment -> 0
-            is MenuFragment -> 1
-//            is FragmentC -> 2
-            else -> 0
-        }
+        return fragmentStackManager.getCurrentFragmentPosition()
     }
 
     /**
      * 跳转到指定Fragment
      */
-    fun goToFragment(position: Int, animation: FragmentAnimation = FragmentAnimation.SLIDE_FROM_LEFT) {
+    fun goToFragment(position: Int, animation: FragmentAnimation = FragmentAnimation.FADE) {
         val currentPosition = getCurrentFragmentPosition()
-        Log.i(TAG,"currentPosition="+currentPosition+",position="+position)
+        Log.i(TAG,"currentPosition=$currentPosition,position=$position")
+        
         if (position == currentPosition) return
         
-        val direction = if (position > currentPosition) {
-            FragmentStackManager.SlideDirection.LEFT
-        } else {
-            FragmentStackManager.SlideDirection.RIGHT
+        val tag = when (position) {
+            0 -> FragmentStackManager.TAG_MAIN
+            1 -> FragmentStackManager.TAG_MENU
+            else -> FragmentStackManager.TAG_MAIN
         }
         
-        // 计算需要滑动的次数
-        val steps = abs(position - currentPosition)
-        repeat(steps) {
-            fragmentStackManager.slideToFragment(direction, animation)
+        fragmentStackManager.switchToFragment(tag, animation)
+    }
+
+    override fun onBackPressed() {
+        Log.i(TAG, "onBackPressed")
+        
+        val currentPosition = getCurrentFragmentPosition()
+        
+        if (currentPosition == 1) {
+            // 在MenuFragment，返回MainFragment
+            goToFragment(0, FragmentAnimation.FADE)
+        } else {
+            // 在主Fragment，检查返回栈
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+            } else {
+                // 最小化到后台
+                moveTaskToBack(true)
+            }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume: Activity回到前台，isRecreating=$isRecreating, lostFocusFromMenu=$lostFocusFromMenu")
+        
+        // 处理从其他应用返回的情况
+        handleReturnFromOtherApp()
+        
+        // 如果是重建后的第一次onResume，重置标志
+        if (isRecreating) {
+            isRecreating = false
+        }
+    }
 
-    override fun onBackPressed() {
-        Log.i(TAG,"lqq,onBackPressed")
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            super.onBackPressed()
-            val position = getCurrentFragmentPosition() - 1
-            // 更新当前Fragment位置
-            val newPosition = maxOf(0, position)
-            Log.i(TAG,"lqq,onBackPressed="+position+",newPosition="+newPosition)
-            updateUIForCurrentFragment()
-        } /*else {
-            finish()
-            overridePendingTransition(0, R.anim.slide_out_bottom)
-        }*/
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause: Activity进入后台")
+        
+        // 检查当前是否在MenuFragment
+        if (getCurrentFragmentPosition() == 1) {
+            lostFocusFromMenu = true
+            Log.d(TAG, "从MenuFragment进入后台，标记需要返回MainFragment")
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: Activity进入后台")
+    }
+    /**
+     * 处理从其他应用返回的情况
+     */
+    private fun handleReturnFromOtherApp() {
+        if (returningFromOtherApp) {
+            Log.d(TAG, "从其他应用返回")
+            
+            // 延迟处理，确保UI已经稳定
+            Handler(Looper.getMainLooper()).postDelayed({
+                // 如果之前是从MenuFragment失去焦点的，返回MainFragment
+                if (lostFocusFromMenu && getCurrentFragmentPosition() == 1) {
+                    Log.d(TAG, "从MenuFragment跳转到其他应用后返回，切换到MainFragment")
+                    goToFragment(0, FragmentAnimation.FADE)
+                }
+                
+                // 重置标记
+                lostFocusFromMenu = false
+                returningFromOtherApp = false
+            }, 100)
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        Log.d(TAG, "onWindowFocusChanged, hasFocus=$hasFocus")
+        
+        if (!hasFocus) {
+            // Activity失去焦点，可能是跳转到其他应用
+            Log.d(TAG, "Activity失去焦点，可能跳转到其他应用")
+            returningFromOtherApp = true
+        } else {
+            // Activity获得焦点
+            Log.d(TAG, "Activity获得焦点")
+        }
+    }
+    
+    /**
+     * 设置用户交互监听
+     */
+    private fun setupUserInteractionListener() {
+        // 监听ContentView的触摸事件
+        val contentView = findViewById<ViewGroup>(android.R.id.content)
+        contentView.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // 用户触摸屏幕，重置标记
+                    lostFocusFromMenu = false
+                    returningFromOtherApp = false
+                }
+            }
+            false
+        }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: Activity销毁")
     }
 }

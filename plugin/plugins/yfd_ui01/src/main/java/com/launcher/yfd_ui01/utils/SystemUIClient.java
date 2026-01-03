@@ -23,6 +23,7 @@ import com.launcher.yfd_ui01.R;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Objects;
 
 public class SystemUIClient {
     private static final String TAG = "SystemUIClient";
@@ -139,13 +140,13 @@ public class SystemUIClient {
             Log.w(TAG, "Service not connected, cannot start freeform2");
             return;
         }
-        final long currentTime = System.currentTimeMillis();
+        /*final long currentTime = System.currentTimeMillis();
         if ((currentTime - lastUpdateTime < UPDATE_INTERVAL) && (lastFreeFormType == windowType)) {
             Log.w(TAG, "The time interval is too short, cannot start freeform3");
             return;
         }
         lastFreeFormType = windowType;
-        lastUpdateTime = currentTime;
+        lastUpdateTime = currentTime;*/
 
         try {
             Bundle bundle = options.toBundle();
@@ -162,7 +163,7 @@ public class SystemUIClient {
     /**
      * Start or set freeform window with calculated bounds
      */
-    public void startOrSetFreeformType(Context context, View view, int windowType) {
+    public void startOrSetFreeformType(Context context,int windowType) {
 
         String pkg = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
         String clazz = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME);
@@ -172,31 +173,38 @@ public class SystemUIClient {
         if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(clazz)) {
             pkg = free_packName;
             clazz = free_className;
+            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME ,pkg);
+            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME ,clazz);
         }
 
         if (!isAppInstalled(context, pkg)) {
-            pkg = "com.autonavi.amapauto";
-            clazz = "com.autonavi.amapauto.MainMapActivity";
+            pkg =  free_packName;//"com.autonavi.amapauto";
+            clazz = free_className;//"com.autonavi.amapauto.MainMapActivity";
+            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME ,pkg);
+            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME ,clazz);
         }
 
 
         if (isAppRunning(context, pkg)) {
-            startShowFreeform(context, "app is running", view, windowType, pkg, clazz);
+            startShowFreeform(context,  true,"app is running", windowType, pkg, clazz);
         } else {
-            startShowFreeform(context, "app not running", view, OPEN_APP_TO_FREEFORM, pkg, clazz);
+            startShowFreeform(context, false,"app not running", OPEN_APP_TO_FREEFORM, pkg, clazz);
         }
     }
 
-    private void startShowFreeform(Context context, String reason, View view, int windowType, String pkg, String clazz) {
+    private void startShowFreeform(Context context, boolean isRun, String reason, int windowType, String pkg, String clazz) {
         Log.i(TAG, "startShowFreeform: huang reason=>" + reason);
-        ActivityOptions options = makeLaunchOptions(context, view);
+        ActivityOptions options = makeLaunchOptions(context);
 
         Intent intentFreeform = new Intent();
-        /*Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        //Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
         if (intentFreeform == null) {
             Log.i(TAG, "startShowFreeform: hintentFreeformn= null");
             return;
-        }*/
+        }
+        if(pkg.equals("com.autonavi.amapauto"))
+            clazz = "com.autonavi.amapauto.MainMapActivity";
+
 
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -212,18 +220,18 @@ public class SystemUIClient {
     }
 
 
-    private ActivityOptions makeLaunchOptions(Context context, View view) {
+    private ActivityOptions makeLaunchOptions(Context context) {
 
         // 获取View在屏幕中的位置
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
+        //int[] location = new int[2];
+        //view.getLocationOnScreen(location);
 
         //ActivityOptions activityOptions = ActivityOptions.makeScaleUpAnimation(view,0,0,view.getWidth(),view.getHeight());
-        ActivityOptions activityOptions = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1,0xcccccc);
-        }else
-            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1);
+        ActivityOptions activityOptions = ActivityOptions.makeBasic();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1,0xcccccc);
+//        }else
+//            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1);
         //ActivityOptions.makeBasic();
 
         try {
@@ -259,9 +267,10 @@ public class SystemUIClient {
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         boolean appRun = false;
         for (ActivityManager.RunningTaskInfo info : list) {
-            if (info.baseActivity != null) {
+            if (info.topActivity != null) {
                 try {
-                    if (!TextUtils.isEmpty(packageName) &&packageName.equals(info.baseActivity.getPackageName())) {
+                    if (info.topActivity.getPackageName().equals(packageName) ||
+                            Objects.requireNonNull(info.baseActivity).getPackageName().equals(packageName))  {
                         appRun = true;
                         break;
                     }
@@ -273,6 +282,17 @@ public class SystemUIClient {
         return appRun;
     }
 
+    private String getTopActivity(Context context, String packageName) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
+        for (ActivityManager.RunningTaskInfo info : list) {
+            if (info.topActivity != null) {
+                if (info.topActivity.getPackageName().equals(packageName))
+                      return  info.topActivity.getClassName();
+            }
+        }
+        return null;
+    }
 
     public void setRect(Rect rect) {
         this.mRect = rect;

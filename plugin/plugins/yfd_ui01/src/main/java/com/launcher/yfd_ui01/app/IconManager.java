@@ -44,7 +44,7 @@ public class IconManager {
         ));
         // 不需要显示的应用
         NEED_TO_BLOCKED_PACKAGE_NAMES = Collections.unmodifiableList(Arrays.asList(
-                "com.google.android.googlequicksearchbox","com.google.android.apps.googleassistant",
+                /*"com.google.android.googlequicksearchbox",*/"com.google.android.apps.googleassistant",
                 "com.android.gallery3d","com.google.android.healthconnect.controller",
                 "com.android.traceur","com.awell.platformservice"
 
@@ -91,7 +91,9 @@ public class IconManager {
             tempIcons.put("com.awell.weather",R.drawable.yfd_ui1_weather);
             tempIcons.put("com.awell.keystudy",R.drawable.yfd_ui1_streering_wheel);
             tempIcons.put("com.awell.navigation",R.drawable.yfd_ui1_nav);
+            tempIcons.put("com.google.android.googlequicksearchbox",R.drawable.yfd_ui1_google);
             tempIcons.put("com.launcher.yfd_ui01",R.drawable.yfd_ui1_menu);//单独处理
+
 
         } catch (Exception e) {
             // 静默处理初始化异常

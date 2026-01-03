@@ -1,7 +1,5 @@
 package com.launcher.yfd_ui01.app;
 
-import static com.launcher.yfd_ui01.app.AppGridView.ITEMS_PER_PAGE;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +20,7 @@ import java.util.List;
  * 优化的PagerAdapter，为每个页面创建RecyclerView（网格布局）
  */
 public class AppPagerAdapter extends PagerAdapter {
+    private static final int ITEMS_PER_PAGE = 18;
     private final Context context;
     private final List<List<AppInfo>> pages;
     
@@ -35,10 +34,6 @@ public class AppPagerAdapter extends PagerAdapter {
     
     // 共享的ItemAnimator，禁用变化动画
     private final DefaultItemAnimator sharedAnimator = createSharedItemAnimator();
-    
-    // 共享的ItemDecoration
-    private final RecyclerView.ItemDecoration sharedItemDecoration =
-        AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, 56, 40, true);
 
     public AppPagerAdapter(Context context, List<List<AppInfo>> pages, int itemsPerPage) {
         this.context = context;
@@ -59,7 +54,8 @@ public class AppPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         RecyclerView recyclerView = createRecyclerView(container.getContext());
-        setupRecyclerView(recyclerView, position);
+        Log.i("AppPagerAdapter","container,height="+container.getHeight()+",width="+container.getWidth());
+        setupRecyclerView(recyclerView, position ,container.getWidth(),container.getHeight());
         container.addView(recyclerView);
         return recyclerView;
     }
@@ -103,13 +99,25 @@ public class AppPagerAdapter extends PagerAdapter {
     /**
      * 配置RecyclerView
      */
-    private void setupRecyclerView(RecyclerView recyclerView, int position) {
+    private void setupRecyclerView(RecyclerView recyclerView, int position ,int width, int height) {
         if (pages == null || position < 0 || position >= pages.size()) return;
         
         // 设置适配器
         AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(context, pages.get(position));
         recyclerView.setAdapter(adapter);
-        
+        // 153, 150
+        int leftSpacing = (width - 153*6)/7;
+        int topSpacing = (height - 150*3)/4;
+        Log.i("AppPagerAdapter","recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
+        if(leftSpacing<0)
+            leftSpacing = 10;
+        if(topSpacing<0)
+            topSpacing = 10;
+
+
+
+        // 共享的ItemDecoration
+        RecyclerView.ItemDecoration sharedItemDecoration = AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, leftSpacing, topSpacing, true);
         // 使用共享的ItemDecoration和ItemAnimator
         recyclerView.addItemDecoration(sharedItemDecoration);
         recyclerView.setItemAnimator(sharedAnimator);

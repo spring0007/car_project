@@ -49,6 +49,7 @@ import com.launcher.yfd_ui01.app.IconManager
 import com.launcher.yfd_ui01.chemo2.CarDataScanner
 import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
+import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM
@@ -104,7 +105,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 viewAddNeedToStartFreeform = true
             } else {
                 if (freeformBg?.isVisibleOnScreen() == true)
-                    systemUIClient.startOrSetFreeformType(context, freeformBg, OPEN_APP_TO_FREEFORM)
+                    systemUIClient.startOrSetFreeformType(context, OPEN_APP_TO_FREEFORM)
             }
         }
 
@@ -132,16 +133,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         super.onViewCreated(view, savedInstanceState)
         swipeActivity = activity as MainActivity_YFD_UI01
         dashboardView = view.findViewById(R.id.car_speed_point)
-//        val includedView = view.findViewById<View>(R.id.layout_dial_widget)
-//        if (includedView is DialWidget) {
-//            dialWidget = includedView
-//        } else {
-        // 方法2：如果 include 有 id，它可能是一个 ViewGroup，需要在其中查找
         dialWidget = view.findViewById(R.id.dial_widget_layout)
-        // }
-
-        //dialWidget.findViews(requireContext(), dialWidget)
-
         carIcon = view.findViewById(R.id.car_icon)
         hotsetWindowApp = view.findViewById(R.id.hotset_window_app)
         hotsetBtApp = view.findViewById(R.id.hotset_bt_app)
@@ -151,7 +143,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         getAppInfoByPkg(hotsetDspApp,2,"com.awell.eqselect")
         getAppInfoByPkg(hotsetAllApp,3,"com.launcher.yfd_ui01")
 
-
+        Log.i(TAG, "onViewCreated")
         view.setOnTouchListener(this)
         view.setOnLongClickListener{
             startWallpaper()
@@ -235,7 +227,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             TAG,
             "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect},view = ${imageView.isVisibleOnScreen()}"
         )
-        systemUIClient.startOrSetFreeformType( context, imageView, OPEN_APP_TO_FREEFORM)
+        systemUIClient.startOrSetFreeformType( context, OPEN_APP_TO_FREEFORM)
     }
 
     /**
@@ -322,10 +314,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                    // showAllApps(context)
 
-                    systemUIClient?.startOrSetFreeformType(context, freeformBg, HIDE_FREEFORM)
+                    systemUIClient?.startOrSetFreeformType(context, HIDE_FREEFORM)
                     systemUIClient?.startOrSetFreeformType(
                         context,
-                        freeformBg,
                         WINDOWING_MODE_FULLSCREEN
                     )
                     Log.i(TAG, "onClick: huang freeform to hide222==>")
@@ -511,12 +502,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             var pkg = Settings.System.getString(requireContext().contentResolver,"launcher_app_icon_3")
 
             if(TextUtils.isEmpty(pkg) || pkg.equals("com.launcher.yfd_ui01")){
-                swipeActivity.supportFragmentManager.beginTransaction()
+                /*swipeActivity.supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                     //.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
                     .replace(R.id.fragment_container, MenuFragment())
                     .addToBackStack(null)
-                    .commitAllowingStateLoss()
+                    .commitAllowingStateLoss()*/
+
+                swipeActivity.goToFragment(1, FragmentAnimation.FADE)
             }else{
                 var intent = startActivityByPkg(3,"com.launcher.yfd_ui01")
                 if (intent==null)
@@ -546,7 +539,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
 
         hotsetWindowApp.setOnClickListener {
-             systemUIClient.startOrSetFreeformType(requireContext(), freeformBg, WINDOWING_MODE_FULLSCREEN)
+             systemUIClient.startOrSetFreeformType(requireContext(), WINDOWING_MODE_FULLSCREEN)
 
         }
         hotsetWindowApp.setOnLongClickListener {
@@ -832,13 +825,39 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onResume() {
         super.onResume()
         initBroadcastReceiver()
+        dialWidget?.startAnimation()
         SystemProperties.set("persist.sys.lz.freeform_display","1")
-        freeformBg.post {
-            if (freeformBg.isVisibleOnScreen()) {
-                updateImagePosition(freeformBg)
+        if (isVisible) {
+            freeformBg.post {
+                if (freeformBg.isVisibleOnScreen()) {
+                    freeformBg.focusable = View.FOCUSABLE
+                    updateImagePosition(freeformBg)
+                }
             }
         }
         Log.i(TAG,"lqq,onResume")
+    }
+
+    /**
+     * 使用show/hide方式切换Fragment时，会调用此方法
+     */
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Log.i(TAG, "onHiddenChanged: hidden=$hidden")
+
+        if (hidden) {
+            // Fragment被隐藏，隐藏自由窗口
+            systemUIClient.startOrSetFreeformType(requireContext(),  HIDE_FREEFORM)
+            systemUIClient.startOrSetFreeformType(requireContext(),  WINDOWING_MODE_FULLSCREEN)
+        } else {
+            // Fragment被显示，显示自由窗口
+            freeformBg.post {
+                if (freeformBg.isVisibleOnScreen()) {
+                    freeformBg.focusable = View.FOCUSABLE
+                    updateImagePosition(freeformBg)
+                }
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -846,11 +865,16 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         Log.i(TAG,"lqq,onAttach")
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        Log.i(TAG,"lqq,onDetach")
+    }
+
     override fun onStop() {
         super.onStop()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
-            systemUIClient.startOrSetFreeformType(requireContext(), freeformBg, HIDE_FREEFORM)
-            systemUIClient.startOrSetFreeformType(requireContext(), freeformBg, WINDOWING_MODE_FULLSCREEN)
+            systemUIClient.startOrSetFreeformType(requireContext(),  HIDE_FREEFORM)
+            systemUIClient.startOrSetFreeformType(requireContext(),  WINDOWING_MODE_FULLSCREEN)
         }
         SystemProperties.set("persist.sys.lz.freeform_display","0")
         Log.i(TAG,"lqq,onStop")
@@ -864,20 +888,24 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         requireContext().unregisterReceiver(receiver)
         Log.i(TAG,"lqq,onPause")
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        freeformBg?.removeOnLayoutChangeListener(layoutListener)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Settings.System.putString(requireContext().contentResolver, "ui_has_freeform","false")
 
         // 取消所有协程
    //     appScope.cancelAll()
-        canclePopupWindow()
+        //canclePopupWindow()
         try {
             systemUIClient.unbindService(requireContext())
         } catch (e: Exception) {
             Log.w("TAG", "onDestroy:  unbind systemUIClient service==>${this}")
         }
-
-        freeformBg.removeOnLayoutChangeListener(layoutListener)
         try {
             mediaControl.unBindDataService(requireContext())
             Log.i(TAG, "onDestroy: huang unbind data service==>${this}")
@@ -893,213 +921,13 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     //*************************PopupWindow************************************
 
-//    private fun showImageSelectionPopup() {
-//        // 加载布局
-//        val popupView = LayoutInflater.from(requireContext()).inflate(R.layout.popup_image_selector, null)
-//
-//        // 获取assets中的所有图片文件
-//        val imageList = getAllImagesFromAssets()
-//
-//        preloadFirstPageImages(imageList)
-//
-//        // 设置适配器
-//        val gridView = popupView.findViewById<GridView>(R.id.gvImages)
-//        val adapter = ImageAdapter(requireContext(), imageList, appScope)
-//        gridView.adapter = adapter
-//
-//        // 设置项点击监听
-//        gridView.setOnItemClickListener { _, _, position, _ ->
-//            val selectedImage = imageList[position]
-//            setImageViewBackground(selectedImage.assetPath)
-//            Log.i(TAG,"lqq,assetPath="+selectedImage.assetPath)
-//            imagePopupWindow?.dismiss()
-//        }
-//
-//        // 创建PopupWindow
-//        imagePopupWindow = PopupWindow(
-//            popupView,
-//            (resources.displayMetrics.widthPixels * 0.8).toInt(),
-//            (resources.displayMetrics.heightPixels * 0.7).toInt(),
-//            true
-//        ).apply {
-//            // 设置背景和动画
-//            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            animationStyle = android.R.style.Animation_Dialog
-//
-//            // 设置外部可点击关闭
-//            isOutsideTouchable = true
-//            isFocusable = true
-//            windowLayoutType = TYPE_APPLICATION_OVERLAY
-//
-//
-//            setOnDismissListener {
-//                backgroundAlpha(1.0f)
-//                // 清理适配器资源
-//                adapter?.let { adapter ->
-//                    if (adapter is ImageAdapter) {
-//                        adapter.cleanup()
-//                    }
-//                }
-//            }
-//
-//            contentView.viewTreeObserver.addOnGlobalLayoutListener(object :
-//                ViewTreeObserver.OnGlobalLayoutListener {
-//                override fun onGlobalLayout() {
-//                    contentView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-//                    // PopupWindow显示后，显示半透明背景
-//                    backgroundAlpha(0.5f)
-//                }
-//            })
-//
-//            // 显示在屏幕中央
-//            showAtLocation(swipeActivity.findViewById(android.R.id.content), Gravity.CENTER, 0, 0)
-//        }
-//
-//    }
 
-//    private fun preloadFirstPageImages(imageList: List<ImageItem>) {
-//        // 预加载前9张图片（第一屏）
-//        val count = minOf(9, imageList.size)
-//        for (i in 0 until count) {
-//            appScope.launch {
-//                try {
-//                    val bitmap = loadBitmapFromAssets(imageList[i].assetPath)
-//                    // 放入全局缓存
-//                    // 可以在ImageAdapter中访问这个缓存
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//            }
-//        }
-//    }
 
     private fun backgroundAlpha(alpha: Float) {
         val lp = swipeActivity.window.attributes
         lp.alpha = alpha //0.0-1.0
         swipeActivity.window.attributes = lp
     }
-
-//    private fun getAllImagesFromAssets(): List<ImageItem> {
-//        val imageList = mutableListOf<ImageItem>()
-//        try {
-//            // 遍历assets中的所有文件
-//            traverseAssets("chemo", imageList)
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//            //showToast("读取图片失败")
-//        }
-//        return imageList
-//    }
-
-//    @Throws(IOException::class)
-//    private fun traverseAssets(path: String, imageList: MutableList<ImageItem>) {
-//        val assets = swipeActivity.assets
-//        val files = assets.list(path) ?: return
-//
-//        for (file in files) {
-//            val fullPath = if (path.isEmpty()) file else "$path/$file"
-//
-//            try {
-//                // 尝试打开文件，如果是目录会抛出异常
-//                val input = swipeActivity.assets.open(fullPath)
-//                input.close()
-//
-//                // 如果是图片文件，添加到列表
-//                if (isImageFile(file)) {
-//                    imageList.add(ImageItem(fullPath, getFileNameWithoutExtension(file)))
-//                }
-//            } catch (e: IOException) {
-//                // 如果是目录，递归遍历
-//                traverseAssets(fullPath, imageList)
-//            }
-//        }
-//    }
-
-//    private fun isImageFile(fileName: String): Boolean {
-//        val extensions = arrayOf(".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp")
-//        val lowerFileName = fileName.lowercase()
-//        return extensions.any { lowerFileName.endsWith(it) }
-//    }
-
-//    private fun getFileNameWithoutExtension(fileName: String): String {
-//        val dotIndex = fileName.lastIndexOf('.')
-//        return if (dotIndex > 0) fileName.substring(0, dotIndex) else fileName
-//    }
-//
-//    private fun restoreSavedImage() {
-//        appScope.launch {
-//            try {
-//                // 在IO线程加载图片
-//                val bitmap = appScope.io {
-//                    imagePreferences.getSavedImage()
-//                }
-//
-//                // 在主线程更新UI
-//                appScope.main {
-//                    bitmap?.let {
-//                        carIcon.setImageBitmap(bitmap)
-//                        showToast("已恢复上次设置的图片")
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                appScope.main {
-//                    showToast("恢复图片失败")
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun setImageViewBackground(assetPath: String) {
-//        appScope.launch {
-//            try {
-//                // 在IO线程加载图片
-//                val bitmap = appScope.io {
-//                    loadBitmapFromAssets(assetPath)
-//                }
-//
-//                bitmap?.let {
-//                    // 保存图片到持久化存储
-//                    val saveSuccess = appScope.io {
-//                        imagePreferences.saveSelectedImage(assetPath, it)
-//                    }
-//
-//                    // 在主线程更新UI
-//                    appScope.main {
-//                        carIcon.setImageBitmap(it)
-//                        if (saveSuccess) {
-//                            showToast("已设置并保存图片: ${getFileNameWithoutExtension(assetPath)}")
-//                        } else {
-//                            showToast("已设置图片但保存失败: ${getFileNameWithoutExtension(assetPath)}")
-//                        }
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                appScope.main {
-//                    showToast("设置图片失败")
-//                }
-//            }
-//        }
-//    }
-
-//    private suspend fun loadBitmapFromAssets(assetPath: String): Bitmap? {
-//        return try {
-//            val inputStream = swipeActivity.assets.open(assetPath)
-//            val options = BitmapFactory.Options().apply {
-//                inSampleSize = 1 // 缩小图片以减少内存使用
-//            }
-//            val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
-//            inputStream.close()
-//            bitmap
-//        } catch (e: IOException) {
-//            null
-//        }
-//    }
-
-//    private fun showToast(message: String) {
-//        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-//    }
 
     private fun canclePopupWindow() {
         // 关闭弹窗
@@ -1175,11 +1003,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 val dy =event.y - startY
                 Log.i(TAG,"lqq,ACTION_MOVE,dx= $dx ,dy= $dy")
                 if(dy<-150 && abs(dx)< 80 ){
-                    swipeActivity.supportFragmentManager.beginTransaction()
-                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.fragment_container, MenuFragment())
-                        .addToBackStack(null)
-                        .commitAllowingStateLoss()
+
+                    swipeActivity.goToFragment(1, FragmentAnimation.FADE)
+
+//                    swipeActivity.supportFragmentManager.beginTransaction()
+//                        .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+//                        .replace(R.id.fragment_container, MenuFragment())
+//                        .addToBackStack(null)
+//                        .commitAllowingStateLoss()
                     return true
                 }
 

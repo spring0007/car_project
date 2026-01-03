@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,7 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
                     }
                     outRect.bottom = 0;
                 }
+
             }
         };
     }
@@ -229,7 +231,7 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context, "无法启动卸载程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.uninstall, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -17,17 +17,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Plugin01_Theme">
+        android:theme="@style/appTheme">
         <activity
             android:name=".MainActivity_YFD_UI01"
-            android:theme="@style/appTheme"
             android:enabled="true"
             android:exported="true"
             android:launchMode="singleTask">
-<!--        <intent-filter>-->
-<!--            <action android:name="android.intent.action.MAIN" />-->
-<!--            <category android:name="android.intent.category.LAUNCHER" />-->
-<!--        </intent-filter>-->
         </activity>
     </application>
 

@@ -24,9 +24,10 @@
         android:layout_marginEnd="19dp"
         />
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
         android:orientation="horizontal">
 
         <TextView
@@ -36,8 +37,8 @@
             android:text="11-03"
             android:textSize="21sp"
             android:textColor="@color/white"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="30dp"/>
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,8 +47,8 @@
             android:text="@string/monday"
             android:textSize="21sp"
             android:textColor="@color/white"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"/>
+            android:layout_gravity="end"
+            android:layout_marginStart="10dp"/>
     </LinearLayout>
 
 
