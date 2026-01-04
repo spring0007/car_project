@@ -15,7 +15,6 @@ import android.os.IBinder;
 import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.android.systemui.awell.services.ISystemUIService;
@@ -59,7 +58,7 @@ public class SystemUIClient {
             mService = ISystemUIService.Stub.asInterface(service);
             mIsBound = true;
             lastFreeFormType = 0;
-            Log.i(TAG, "Service connected successfully");
+            LogUtil.i( "Service connected successfully");
 //            SystemProperties.set("persist.sys.lz.default_freeform_size", DEFAULT_WIDTH+","+DEFAULT_HEIGHT);
 //            SystemProperties.set("persist.sys.lz.default_freeform_position", DEFAULT_LEFT+","+DEFAULT_TOP);
             if (mCallback != null) {
@@ -74,7 +73,7 @@ public class SystemUIClient {
             lastFreeFormType = 0;
 //            SystemProperties.set("persist.sys.lz.default_freeform_size", "0,0");
 //            SystemProperties.set("persist.sys.lz.default_freeform_position", "-1,-1");
-            Log.i(TAG, "Service disconnected");
+            LogUtil.i( "Service disconnected");
 
         }
     };
@@ -88,7 +87,7 @@ public class SystemUIClient {
      */
     public void bindToSystemUIService(Context context) {
         if (context == null) {
-            Log.e(TAG, "Context is null, cannot bind service");
+            LogUtil.e( "Context is null, cannot bind service");
             return;
         }
         
@@ -98,7 +97,7 @@ public class SystemUIClient {
             context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         } catch (Exception e) {
-            Log.e(TAG, "Failed to connect: " + e.getMessage());
+            LogUtil.e( "Failed to connect: " + e.getMessage());
         }
     }
 
@@ -110,7 +109,7 @@ public class SystemUIClient {
         	try {
             	context.unbindService(mConnection);
             } catch (Exception e) {
-                Log.w(TAG, "Error during disconnect: " + e.getMessage());
+                LogUtil.w( "Error during disconnect: " + e.getMessage());
             }
         }
         mIsBound = false;
@@ -122,27 +121,27 @@ public class SystemUIClient {
      */
     public void setFreeformType(int type) {
         if (!isServiceConnected()) {
-            Log.w(TAG, "Service not connected, cannot set freeform type1");
+            LogUtil.w( "Service not connected, cannot set freeform type1");
             return;
         }
         
         try {
             mFreeformMode = type;
             mService.setFreeformType(type);
-            Log.i(TAG, "Freeform type set to: " + type);
+            LogUtil.i( "Freeform type set to: " + type);
         } catch (Exception e) {
-            Log.e(TAG, "Failed to setFreeformType : " + e.getMessage());
+            LogUtil.e( "Failed to setFreeformType : " + e.getMessage());
         }
     }
 
     public void startOrSetFreeformType(Intent intent, ActivityOptions options, int windowType) {
         if (!isServiceConnected()) {
-            Log.w(TAG, "Service not connected, cannot start freeform2");
+            LogUtil.w( "Service not connected, cannot start freeform2");
             return;
         }
         /*final long currentTime = System.currentTimeMillis();
         if ((currentTime - lastUpdateTime < UPDATE_INTERVAL) && (lastFreeFormType == windowType)) {
-            Log.w(TAG, "The time interval is too short, cannot start freeform3");
+            LogUtil.w( "The time interval is too short, cannot start freeform3");
             return;
         }
         lastFreeFormType = windowType;
@@ -151,10 +150,10 @@ public class SystemUIClient {
         try {
             Bundle bundle = options.toBundle();
             mFreeformMode = windowType;
-            Log.i(TAG, "startOrSetFreeformType: huang  , type=>" + windowType);
+            LogUtil.i( "startOrSetFreeformType: huang  , type=>" + windowType);
             mService.startOrSetFreeformTypeWithOptions(intent, bundle, windowType);
         } catch (Exception e) {
-            Log.e(TAG, "startFreeform: error==>" + e.getMessage());
+            LogUtil.e( "startFreeform: error==>" + e.getMessage());
         }
 
     }
@@ -168,22 +167,29 @@ public class SystemUIClient {
         String pkg = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
         String clazz = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME);
 
-        Log.i(TAG, "startOrSetFreeformType: huang pkg= " + pkg + ", clazz= " + clazz + " type=>" + windowType);
+        LogUtil.i( "startOrSetFreeformType: huang pkg= " + pkg + ", clazz= " + clazz + " type=>" + windowType);
 
         if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(clazz)) {
             pkg = free_packName;
             clazz = free_className;
-            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME ,pkg);
-            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME ,clazz);
+            try {
+                Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME, pkg);
+                Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME, clazz);
+            } catch (Exception e) {
+                LogUtil.w( "Failed to write default freeform settings: " + e.getMessage());
+            }
         }
 
         if (!isAppInstalled(context, pkg)) {
-            pkg =  free_packName;//"com.autonavi.amapauto";
-            clazz = free_className;//"com.autonavi.amapauto.MainMapActivity";
-            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME ,pkg);
-            Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME ,clazz);
+            pkg = free_packName;
+            clazz = free_className;
+            try {
+                Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME, pkg);
+                Settings.System.putString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME, clazz);
+            } catch (Exception e) {
+                LogUtil.w( "Failed to write fallback freeform settings: " + e.getMessage());
+            }
         }
-
 
         if (isAppRunning(context, pkg)) {
             startShowFreeform(context,  true,"app is running", windowType, pkg, clazz);
@@ -193,13 +199,13 @@ public class SystemUIClient {
     }
 
     private void startShowFreeform(Context context, boolean isRun, String reason, int windowType, String pkg, String clazz) {
-        Log.i(TAG, "startShowFreeform: huang reason=>" + reason);
+        LogUtil.i( "startShowFreeform: huang reason=>" + reason);
         ActivityOptions options = makeLaunchOptions(context);
 
         Intent intentFreeform = new Intent();
         //Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
         if (intentFreeform == null) {
-            Log.i(TAG, "startShowFreeform: hintentFreeformn= null");
+            LogUtil.i( "startShowFreeform: hintentFreeformn= null");
             return;
         }
         if(pkg.equals("com.autonavi.amapauto"))
@@ -238,7 +244,7 @@ public class SystemUIClient {
             Method method = ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class);
             method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
         } catch (Exception e) {
-            Log.e(TAG, "startFreeFormActivity: error==> " + e.getMessage());
+            LogUtil.e( "startFreeFormActivity: error==> " + e.getMessage());
         }
         activityOptions.setLaunchBounds(mRect);
         return activityOptions;

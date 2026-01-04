@@ -13,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 
 import com.awell.addapp.AppInfo;
+import com.launcher.yfd_ui01.utils.LogUtil;
 
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class AppPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         RecyclerView recyclerView = createRecyclerView(container.getContext());
-        Log.i("AppPagerAdapter","container,height="+container.getHeight()+",width="+container.getWidth());
+        LogUtil.i("container,height="+container.getHeight()+",width="+container.getWidth());
         setupRecyclerView(recyclerView, position ,container.getWidth(),container.getHeight());
         container.addView(recyclerView);
         return recyclerView;
@@ -108,7 +109,7 @@ public class AppPagerAdapter extends PagerAdapter {
         // 153, 150
         int leftSpacing = (width - 153*6)/7;
         int topSpacing = (height - 150*3)/4;
-        Log.i("AppPagerAdapter","recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
+        LogUtil.i("recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
         if(leftSpacing<0)
             leftSpacing = 10;
         if(topSpacing<0)

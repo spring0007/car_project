@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,6 +29,7 @@ import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.AppPagerAdapter
 import com.launcher.yfd_ui01.app.IconManager
 import com.launcher.yfd_ui01.manager.FragmentAnimation
+import com.launcher.yfd_ui01.utils.LogUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -79,7 +79,7 @@ class MenuFragment : Fragment() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(TAG, "onCreate called")
+        LogUtil.i( "onCreate called")
         // 确保Fragment不会被重建时重复添加
         retainInstance = false
     }
@@ -89,20 +89,18 @@ class MenuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "onCreateView called")
+        LogUtil.i( "onCreateView called")
         return inflater.inflate(R.layout.fragment_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i(TAG, "onViewCreated called, savedInstanceState=$savedInstanceState")
-        Log.i(TAG, "view,height = ${view.height} ,width =${view.width} ")
+        LogUtil.i( "onViewCreated called, savedInstanceState=$savedInstanceState")
         swipeActivity = activity as MainActivity_YFD_UI01
         viewPager = view.findViewById(R.id.viewPager1)
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         pageIndicator = view.findViewById(R.id.pageIndicator)
         iconManager = IconManager.getInstance(swipeActivity.applicationContext)
-        Log.i(TAG, "nestedScrollView,height = ${nestedScrollView.height} ,width =${nestedScrollView.width} ")
         isViewCreated = true
         
         // 先设置默认视图
@@ -120,7 +118,7 @@ class MenuFragment : Fragment() {
      */
     private fun checkViewLayoutAndInitData() {
         if (view == null) {
-            Log.w(TAG, "View为null，无法检查布局")
+            LogUtil.i( "View为null，无法检查布局")
             return
         }
         
@@ -142,10 +140,10 @@ class MenuFragment : Fragment() {
                 safeInitData()
             } else {
                 // 如果还没准备好，再次延迟检查
-                handler.postDelayed(layoutCheckRunnable!!, 16) // 约1帧的时间
+                handler.postDelayed(layoutCheckRunnable!!, 100) // 约1帧的时间
             }
         }
-        
+
         handler.post(layoutCheckRunnable!!)
     }
     
@@ -154,10 +152,10 @@ class MenuFragment : Fragment() {
      */
     private fun isViewReady(): Boolean {
         return if (view != null && view!!.width > 0 && view!!.height > 0) {
-            Log.i(TAG, "视图已准备好，宽=${view!!.width}, 高=${view!!.height}")
+            LogUtil.i( "视图已准备好，宽=${requireView().width}, 高=${requireView().height}")
             true
         } else {
-            Log.i(TAG, "视图未准备好，宽=${view?.width ?: 0}, 高=${view?.height ?: 0}")
+            LogUtil.i( "视图未准备好，宽=${view?.width ?: 0}, 高=${view?.height ?: 0}")
             false
         }
     }
@@ -166,13 +164,13 @@ class MenuFragment : Fragment() {
      * 安全地初始化数据
      */
     private fun safeInitData() {
-        Log.i(TAG, "safeInitData called, viewCreated=$isViewCreated, initialized=$isDataInitialized")
+        LogUtil.i( "safeInitData called, viewCreated=$isViewCreated, initialized=$isDataInitialized")
         
         if (!isViewCreated || isDataInitialized) return
         
         // 检查视图是否可用
         if (!isAdded || view == null || view?.parent == null) {
-            Log.w(TAG, "视图不可用，延迟初始化")
+            LogUtil.w( "视图不可用，延迟初始化")
             view?.post {
                 if (isViewCreated && !isDataInitialized) {
                     initData()
@@ -186,11 +184,11 @@ class MenuFragment : Fragment() {
     
     private fun initData() {
         if (!isViewCreated || isDataInitialized || !isAdded) {
-            Log.w(TAG, "initData跳过: viewCreated=$isViewCreated, initialized=$isDataInitialized, added=$isAdded")
+            LogUtil.w("initData跳过: viewCreated=$isViewCreated, initialized=$isDataInitialized, added=$isAdded")
             return
         }
         
-        Log.i(TAG, "initData called")
+        LogUtil.i( "initData called")
         
         // 设置默认视图
         setupDefaultViews()
@@ -202,7 +200,7 @@ class MenuFragment : Fragment() {
     }
     
     private fun setupDefaultViews() {
-        Log.i(TAG, "setupDefaultViews called")
+        LogUtil.i( "setupDefaultViews called")
         // 设置初始页面指示器
         pageIndicator.removeAllViews()
         val dot = ImageView(swipeActivity.applicationContext).apply {
@@ -225,12 +223,12 @@ class MenuFragment : Fragment() {
                 MotionEvent.ACTION_DOWN -> {
                     lastX = event.x
                     lastY = event.y
-                    Log.i(TAG, "lastX=$lastX,lastY=$lastY")
+                    LogUtil.i( "lastX=$lastX,lastY=$lastY")
 
                 }
                 MotionEvent.ACTION_UP -> {
                     countTouch= 0
-                    Log.i(TAG, "action_up")
+                    LogUtil.i( "action_up")
                 }
                 MotionEvent.ACTION_MOVE -> {
                     if(countTouch==0){
@@ -242,7 +240,7 @@ class MenuFragment : Fragment() {
                     val deltaX = event.x - lastX
                     val deltaY = event.y - lastY
 
-                    Log.i(TAG, "deltaY="+deltaY+",deltaX="+abs(deltaX))
+                    LogUtil.i( "deltaY="+deltaY+",deltaX="+abs(deltaX))
                     if (deltaY > SWIPE_THRESHOLD  && abs(deltaX)< 80  ) {
                         // 检查是否需要切换到其他Fragment
                         if (shouldSwitchFragment()) {
@@ -278,7 +276,7 @@ class MenuFragment : Fragment() {
             .commitAllowingStateLoss()*/
             swipeActivity.goToFragment(0, FragmentAnimation.FADE)
         } catch (e: IllegalStateException) {
-            Log.e(TAG, "Error starting fragment", e)
+            LogUtil.e("Error starting fragment", e)
         }
     }
 
@@ -286,7 +284,7 @@ class MenuFragment : Fragment() {
 
     private fun loadApps() {
         if (!isAdded || isLoading || view == null) {
-            Log.w(TAG, "loadApps: 条件不满足 - added=$isAdded, loading=$isLoading, view=${view != null}")
+            LogUtil.i("loadApps: 条件不满足 - added=$isAdded, loading=$isLoading, view=${view != null}")
             return
         }
         isLoading = true
@@ -295,11 +293,11 @@ class MenuFragment : Fragment() {
 
         loadJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             try {
-                Log.i(TAG, "开始加载应用列表")
+                LogUtil.i( "开始加载应用列表")
                 
                 // 检查Fragment状态
                 if (!isAdded || view == null) {
-                    Log.w(TAG, "loadApps: Fragment状态异常，取消加载")
+                    LogUtil.i("loadApps: Fragment状态异常，取消加载")
                     return@launch
                 }
                 
@@ -309,26 +307,26 @@ class MenuFragment : Fragment() {
                 
                 // 再次检查Fragment状态
                 if (!isAdded || view == null) {
-                    Log.w(TAG, "loadApps: Fragment状态异常，取消显示")
+                    LogUtil.i( "loadApps: Fragment状态异常，取消显示")
                     return@launch
                 }
                 
-                Log.i(TAG, "应用列表加载完成，共${allApps.size}个应用")
+                LogUtil.i( "应用列表加载完成，共${allApps.size}个应用")
                 
                 val pages = splitIntoPages(allApps)
-                Log.i(TAG, "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
+                LogUtil.i( "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
                 currentAdapter = AppPagerAdapter(swipeActivity.applicationContext, pages, ITEMS_PER_PAGE)
 
                 
                 // 确保ViewPager存在
                 if (viewPager == null) {
-                    Log.e(TAG, "ViewPager is null")
+                    LogUtil.i( "ViewPager is null")
                     return@launch
                 }
                 
                 // 等待ViewPager完成测量
                 if (viewPager.height <= 0) {
-                    Log.w(TAG, "ViewPager高度为0，等待测量完成")
+                    LogUtil.i( "ViewPager高度为0，等待测量完成")
                     viewPager.post {
                         setAdapterAndIndicator()
                     }
@@ -337,7 +335,7 @@ class MenuFragment : Fragment() {
                 }
                 
             } catch (e: Exception) {
-                Log.e(TAG, "Error loading apps", e)
+                LogUtil.e( "Error loading apps", e)
             } finally {
                 isLoading = false
             }
@@ -348,7 +346,7 @@ class MenuFragment : Fragment() {
      * 设置适配器和指示器（在视图测量完成后调用）
      */
     private fun setAdapterAndIndicator() {
-        Log.i(TAG, "setAdapterAndIndicator, ViewPager高度=${viewPager.height}")
+        LogUtil.i( "setAdapterAndIndicator, ViewPager高度=${viewPager.height}")
         
         try {
             if (viewPager.adapter != currentAdapter) {
@@ -361,9 +359,9 @@ class MenuFragment : Fragment() {
                 iconManager?.preloadCommonIcons()
             }
             
-            Log.i(TAG, "ViewPager适配器设置完成")
+            LogUtil.i( "ViewPager适配器设置完成")
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting adapter", e)
+            LogUtil.e( "Error setting adapter", e)
         }
     }
 
@@ -429,10 +427,10 @@ class MenuFragment : Fragment() {
             sortAppList(appBeanList)
 
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting app info", e)
+            LogUtil.e( "Error getting app info", e)
         }
 
-        Log.i(TAG, "获取到${appBeanList.size}个应用")
+        LogUtil.i( "获取到${appBeanList.size}个应用")
         return@withContext appBeanList
     }
 
@@ -465,7 +463,7 @@ class MenuFragment : Fragment() {
             bean.flags = flags
             bean
         } catch (e: Exception) {
-            Log.w(TAG, "Error creating app info for: $packageName", e)
+            LogUtil.e( "Error creating app info for: $packageName", e)
             null
         }
     }
@@ -636,7 +634,7 @@ class MenuFragment : Fragment() {
                 ContextCompat.RECEIVER_NOT_EXPORTED
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Error registering receivers", e)
+            LogUtil.e( "Error registering receivers", e)
         }
     }
 
@@ -690,7 +688,7 @@ class MenuFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "onResume called, viewCreated=$isViewCreated, dataInitialized=$isDataInitialized")
+        LogUtil.i( "onResume called, viewCreated=$isViewCreated, dataInitialized=$isDataInitialized")
         
         // 如果需要加载数据，现在执行
         if (shouldLoadDataOnResume) {
@@ -706,19 +704,19 @@ class MenuFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        Log.i(TAG,"onPause")
+        LogUtil.i("onPause")
         closeReceiver()
     }
 
     override fun onStop() {
         super.onStop()
-        Log.i(TAG,"onStop")
+        LogUtil.i("onStop")
         closeReceiver()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i(TAG, "onDestroyView called")
+        LogUtil.i( "onDestroyView called")
         closeReceiver()
         cleanupViews()
         isViewCreated = false
@@ -727,7 +725,7 @@ class MenuFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG,"onDestroy")
+        LogUtil.i("onDestroy")
         loadJob?.cancel()
         loadJob = null
         iconManager = null

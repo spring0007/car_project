@@ -12,6 +12,7 @@ import com.launcher.yfd_ui01.fragment.MainFragment
 import com.launcher.yfd_ui01.fragment.MenuFragment
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.manager.FragmentStackManager
+import com.launcher.yfd_ui01.utils.LogUtil
 import kotlin.math.abs
 
 class MainActivity_YFD_UI01 :  FragmentActivity() {
@@ -28,10 +29,9 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
         if (savedInstanceState != null) {
             isRecreating = true
-            Log.d(TAG, "Activity正在重建")
+            LogUtil.d( "Activity正在重建")
         }
         
         setContentView(R.layout.activity_fragment)
@@ -43,12 +43,22 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
         fragmentStackManager = FragmentStackManager(supportFragmentManager, R.id.fragment_container)
 
         if (savedInstanceState != null) {
+            // 仅恢复状态标识与 fragment tag，若 fragment 未被系统恢复则初始化它们
             fragmentStackManager.restoreState(savedInstanceState)
-            // 恢复状态
             lostFocusFromMenu = savedInstanceState.getBoolean("lostFocusFromMenu", false)
             returningFromOtherApp = savedInstanceState.getBoolean("returningFromOtherApp", false)
+
+            // 如果系统没有恢复 fragment（比如第一次创建或 fragment 被移除），则初始化
+            val mainFrag = supportFragmentManager.findFragmentByTag(FragmentStackManager.TAG_MAIN)
+            val menuFrag = supportFragmentManager.findFragmentByTag(FragmentStackManager.TAG_MENU)
+            if (mainFrag == null || menuFrag == null) {
+                initializeFragments()
+            } else {
+                // 保证内部状态一致
+                LogUtil.d("Fragments 已由系统恢复")
+            }
         } else {
-            // 首次创建，初始化Fragment
+            // 首次创建，初始化 Fragment
             initializeFragments()
         }
 	// 监听用户交互
@@ -67,11 +77,11 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
         fragmentStackManager.saveState(outState)
         outState.putBoolean("lostFocusFromMenu", lostFocusFromMenu)
         outState.putBoolean("returningFromOtherApp", returningFromOtherApp)
-        Log.d(TAG, "保存Activity状态")
+        LogUtil.d( "保存Activity状态")
     }
 
     private fun initializeFragments() {
-        Log.d("FragmentStack", "初始化Fragment...")
+        LogUtil.d( "初始化Fragment...")
         
         // 使用新的初始化方法
         fragmentStackManager.initializeFragments(
@@ -92,7 +102,7 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
      */
     fun goToFragment(position: Int, animation: FragmentAnimation = FragmentAnimation.FADE) {
         val currentPosition = getCurrentFragmentPosition()
-        Log.i(TAG,"currentPosition=$currentPosition,position=$position")
+        LogUtil.i("currentPosition=$currentPosition,position=$position")
         
         if (position == currentPosition) return
         
@@ -106,7 +116,7 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
     }
 
     override fun onBackPressed() {
-        Log.i(TAG, "onBackPressed")
+        LogUtil.i( "onBackPressed")
         
         val currentPosition = getCurrentFragmentPosition()
         
@@ -126,7 +136,7 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume: Activity回到前台，isRecreating=$isRecreating, lostFocusFromMenu=$lostFocusFromMenu")
+        LogUtil.d( "onResume: Activity回到前台，isRecreating=$isRecreating, lostFocusFromMenu=$lostFocusFromMenu")
         
         // 处理从其他应用返回的情况
         handleReturnFromOtherApp()
@@ -139,52 +149,50 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
 
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "onPause: Activity进入后台")
+        LogUtil.d( "onPause: Activity进入后台")
         
         // 检查当前是否在MenuFragment
         if (getCurrentFragmentPosition() == 1) {
             lostFocusFromMenu = true
-            Log.d(TAG, "从MenuFragment进入后台，标记需要返回MainFragment")
+            LogUtil.d( "从MenuFragment进入后台，标记需要返回MainFragment")
         }
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "onStop: Activity进入后台")
+        LogUtil.d( "onStop: Activity进入后台")
     }
     /**
      * 处理从其他应用返回的情况
      */
     private fun handleReturnFromOtherApp() {
         if (returningFromOtherApp) {
-            Log.d(TAG, "从其他应用返回")
-            
-            // 延迟处理，确保UI已经稳定
-            Handler(Looper.getMainLooper()).postDelayed({
-                // 如果之前是从MenuFragment失去焦点的，返回MainFragment
-                if (lostFocusFromMenu && getCurrentFragmentPosition() == 1) {
-                    Log.d(TAG, "从MenuFragment跳转到其他应用后返回，切换到MainFragment")
-                    goToFragment(0, FragmentAnimation.FADE)
-                }
-                
-                // 重置标记
-                lostFocusFromMenu = false
-                returningFromOtherApp = false
-            }, 100)
+            LogUtil.d("从其他应用返回")
+
+            // 立即处理：如果之前是从 MenuFragment 失去焦点并且当前仍为 MenuFragment，直接无动画切换到 MainFragment
+            if (lostFocusFromMenu && getCurrentFragmentPosition() == 1) {
+                LogUtil.d( "从MenuFragment跳转到其他应用后返回，立即切换到MainFragment（无动画）")
+                // 使用无动画切换，避免 UI 闪烁
+                goToFragment(0, FragmentAnimation.NONE)
+            }
+
+            // 重置标志
+            lostFocusFromMenu = false
+            returningFromOtherApp = false
         }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        Log.d(TAG, "onWindowFocusChanged, hasFocus=$hasFocus")
+        LogUtil.d( "onWindowFocusChanged, hasFocus=$hasFocus")
         
         if (!hasFocus) {
             // Activity失去焦点，可能是跳转到其他应用
-            Log.d(TAG, "Activity失去焦点，可能跳转到其他应用")
+            LogUtil.d( "Activity失去焦点，可能跳转到其他应用")
             returningFromOtherApp = true
         } else {
             // Activity获得焦点
-            Log.d(TAG, "Activity获得焦点")
+            LogUtil.d( "Activity获得焦点")
         }
     }
     
@@ -208,6 +216,6 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
     
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy: Activity销毁")
+        LogUtil.d( "onDestroy: Activity销毁")
     }
 }

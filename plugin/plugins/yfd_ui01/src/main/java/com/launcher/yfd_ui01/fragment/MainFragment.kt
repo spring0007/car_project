@@ -51,6 +51,7 @@ import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
+import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
@@ -143,7 +144,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         getAppInfoByPkg(hotsetDspApp,2,"com.awell.eqselect")
         getAppInfoByPkg(hotsetAllApp,3,"com.launcher.yfd_ui01")
 
-        Log.i(TAG, "onViewCreated")
+        LogUtil.i( "onViewCreated")
         view.setOnTouchListener(this)
         view.setOnLongClickListener{
             startWallpaper()
@@ -172,7 +173,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 //                // 在主线程中更新UI
 //                runOnUiThread {
 //                    // 您可以在这里处理其他与速度相关的逻辑
-//                    Log.i(TAG, "speed = $speed")
+//                    LogUtil.i( "speed = $speed")
 //                    dashboardView.udDataSpeed(speed)
 //                   // mViewBinding.carSpeedTv.text = "$speed"
 //                }
@@ -206,7 +207,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private val layoutListener = View.OnLayoutChangeListener { view, left, top, right, bottom,
                                                                oldLeft, oldTop, oldRight, oldBottom ->
 
-        Log.i(TAG, "left=" + left + "" + ",top=" + top)
+        LogUtil.i("left=" + left + "" + ",top=" + top)
         // 检查位置是否变化或者视图是否可见
         if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
             if (view.isVisibleOnScreen()) {
@@ -223,10 +224,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val height = imageView.height
 
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        Log.i(
-            TAG,
-            "updateImagePosition: huang Starting freeform... rect=${systemUIClient.rect},view = ${imageView.isVisibleOnScreen()}"
-        )
         systemUIClient.startOrSetFreeformType( context, OPEN_APP_TO_FREEFORM)
     }
 
@@ -239,7 +236,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
 //        mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
-        Log.i(TAG, "initMediaMusic: huang UI2 bind data service=>${this}")
+        LogUtil.i( "initMediaMusic: huang UI2 bind data service=>${this}")
         mediaControl.bindDataService(requireContext())
         mediaControl.updateMusicView = mediaImpl
         musicWidget = view.findViewById(R.id.music_widget_layout)
@@ -285,7 +282,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
-            Log.i(TAG, "onReceive:huang action=$action")
+            LogUtil.i( "onReceive:huang action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
                 CommonData.ACTION_ACC_ON -> {}
@@ -303,7 +300,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 "com.zjinnova.zlink" -> {
                     val zlinkStatus = intent.getStringExtra("status")
                     val phoneMode = intent.getStringExtra("phoneMode")
-                    Log.d(TAG, "zlinkStatus:$zlinkStatus")
+                    LogUtil.d( "zlinkStatus:$zlinkStatus")
                     if (zlinkStatus == null) {
                         return
                     }
@@ -319,7 +316,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                         context,
                         WINDOWING_MODE_FULLSCREEN
                     )
-                    Log.i(TAG, "onClick: huang freeform to hide222==>")
+                    LogUtil.i( "onClick: huang freeform to hide222==>")
                 }
 
                 "CANBUS_CHANGE_SPEED_Unit" -> {}
@@ -700,7 +697,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 withContext(Dispatchers.Main) {
                     carIcon.setImageResource(R.drawable.a3_2008_2012)
                 }
-                Log.e("MainActivity", "加载图片失败: $assetPath", e)
+                LogUtil.e("加载图片失败: $assetPath", e)
             }
         }
     }
@@ -721,7 +718,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                    // carIcon.contentDescription = displayName
                     return
                 } catch (e: Exception) {
-                    Log.e("MainActivity", "恢复图片失败，尝试从assets加载", e)
+                    LogUtil.e( "恢复图片失败，尝试从assets加载", e)
                 }
             }
         }
@@ -819,7 +816,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     override fun onStart() {
         super.onStart()
-        Log.i(TAG,"lqq,onStart")
+        LogUtil.i("lqq,onStart")
     }
 
     override fun onResume() {
@@ -835,7 +832,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 }
             }
         }
-        Log.i(TAG,"lqq,onResume")
+        LogUtil.i("lqq,onResume")
     }
 
     /**
@@ -843,7 +840,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
      */
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-        Log.i(TAG, "onHiddenChanged: hidden=$hidden")
+        LogUtil.i( "onHiddenChanged: hidden=$hidden")
 
         if (hidden) {
             // Fragment被隐藏，隐藏自由窗口
@@ -862,12 +859,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.i(TAG,"lqq,onAttach")
+        LogUtil.i("lqq,onAttach")
     }
 
     override fun onDetach() {
         super.onDetach()
-        Log.i(TAG,"lqq,onDetach")
+        LogUtil.i("lqq,onDetach")
     }
 
     override fun onStop() {
@@ -877,7 +874,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             systemUIClient.startOrSetFreeformType(requireContext(),  WINDOWING_MODE_FULLSCREEN)
         }
         SystemProperties.set("persist.sys.lz.freeform_display","0")
-        Log.i(TAG,"lqq,onStop")
+        LogUtil.i("lqq,onStop")
     }
 
     override fun onPause() {
@@ -886,7 +883,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         dashboardView?.closeAnimation()
         canclePopupWindow()
         requireContext().unregisterReceiver(receiver)
-        Log.i(TAG,"lqq,onPause")
+        LogUtil.i("lqq,onPause")
     }
 
     override fun onDestroyView() {
@@ -904,18 +901,18 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         try {
             systemUIClient.unbindService(requireContext())
         } catch (e: Exception) {
-            Log.w("TAG", "onDestroy:  unbind systemUIClient service==>${this}")
+            LogUtil.w( "onDestroy:  unbind systemUIClient service==>${this}")
         }
         try {
             mediaControl.unBindDataService(requireContext())
-            Log.i(TAG, "onDestroy: huang unbind data service==>${this}")
+            LogUtil.i( "onDestroy: huang unbind data service==>${this}")
         } catch (e: Exception) {
-            Log.e(TAG, "onDestroy: unBindDataService error=>${e.message}")
+            LogUtil.e( "onDestroy: unBindDataService error=>${e.message}")
         }
 
         // 停止速度模拟器
         //speedSimulator?.stopSimulation()
-        Log.i(TAG,"lqq,onDestroyView")
+        LogUtil.i("lqq,onDestroyView")
     }
 
 
@@ -994,14 +991,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 // 记录触摸起始位置
                 startX = event.x
                 startY = event.y
-                Log.i(TAG,"lqq,ACTION_DOWN,startX= $startX ,startY= $startY")
+                LogUtil.i("lqq,ACTION_DOWN,startX= $startX ,startY= $startY")
             }
 
             MotionEvent.ACTION_MOVE -> {
                 // 检查是否移动超过阈值
                 val dx= event.x - startX
                 val dy =event.y - startY
-                Log.i(TAG,"lqq,ACTION_MOVE,dx= $dx ,dy= $dy")
+                LogUtil.i("lqq,ACTION_MOVE,dx= $dx ,dy= $dy")
                 if(dy<-150 && abs(dx)< 80 ){
 
                     swipeActivity.goToFragment(1, FragmentAnimation.FADE)
@@ -1017,7 +1014,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             }
 
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                Log.i(TAG,"lqq,ACTION_UP")
+                LogUtil.i("lqq,ACTION_UP")
 
             }
         }

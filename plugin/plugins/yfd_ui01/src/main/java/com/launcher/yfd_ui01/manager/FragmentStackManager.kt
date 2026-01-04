@@ -1,10 +1,10 @@
 package com.launcher.yfd_ui01.manager
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.launcher.yfd_ui01.R
+import com.launcher.yfd_ui01.utils.LogUtil
 
 class FragmentStackManager(
     private val fragmentManager: FragmentManager,
@@ -26,23 +26,46 @@ class FragmentStackManager(
     fun initializeFragments(mainFragment: Fragment, menuFragment: Fragment) {
         if (fragmentsAdded) return
 
-        // 先清空已有的Fragment
+        // 如果系统或其他地方已经恢复了 fragment，就不要重复添加
+        val existingMain = fragmentManager.findFragmentByTag(TAG_MAIN)
+        val existingMenu = fragmentManager.findFragmentByTag(TAG_MENU)
+
+        if (existingMain != null && existingMenu != null) {
+            // 确保显示主界面，隐藏菜单
+            val transaction = fragmentManager.beginTransaction()
+            transaction.show(existingMain)
+            transaction.hide(existingMenu)
+            try {
+                transaction.commitNow()
+            } catch (e: IllegalStateException) {
+                transaction.commitAllowingStateLoss()
+            }
+            fragmentsAdded = true
+            currentFragmentTag = TAG_MAIN
+            return
+        }
+
+        // 先清空已有的Fragment（防止重复残留）
         clearAllFragments()
-        
+
         // 使用show/hide方式：先添加两个Fragment，然后显示一个隐藏一个
         val transaction = fragmentManager.beginTransaction()
-        
+
         // 添加主Fragment
         transaction.add(containerId, mainFragment, TAG_MAIN)
-        
+
         // 添加菜单Fragment
         transaction.add(containerId, menuFragment, TAG_MENU)
-        
+
         // 隐藏菜单Fragment
         transaction.hide(menuFragment)
-        
-        transaction.commitNow()
-        
+
+        try {
+            transaction.commitNow()
+        } catch (e: IllegalStateException) {
+            transaction.commitAllowingStateLoss()
+        }
+
         fragmentsAdded = true
         currentFragmentTag = TAG_MAIN
     }
@@ -75,18 +98,19 @@ class FragmentStackManager(
                 }
             }
             
-            // 隐藏当前Fragment，显示目标Fragment
+            // 隐藏当前Fragment，显示目标Fragment（show/hide 模式通常不需要加入 back stack）
             transaction.hide(currentFragment)
             transaction.show(targetFragment)
 
-            // 添加到返回栈
-            transaction.addToBackStack("switch_${currentFragmentTag}_to_$tag")
-            
             // 安全提交事务
-            transaction.commitAllowingStateLoss()
-            
+            try {
+                transaction.commitNow()
+            } catch (e: IllegalStateException) {
+                transaction.commitAllowingStateLoss()
+            }
+
             currentFragmentTag = tag
-            Log.d("FragmentStackManager", "切换到Fragment: $tag")
+            LogUtil.d( "切换到Fragment: $tag")
         }
     }
     /**
@@ -127,7 +151,8 @@ class FragmentStackManager(
     /**
      * 获取Fragment总数
      */
-    val fragmentCount: Int = 2 // MainFragment和MenuFragment
+    val fragmentCount: Int
+        get() = 2 // MainFragment和MenuFragment
     
 
     
