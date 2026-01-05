@@ -4,8 +4,7 @@
     android:id="@+id/dial_widget_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <com.launcher.yfd_ui01.view.AnalogClockView
         android:id="@+id/analogClockView"
@@ -13,43 +12,27 @@
         android:layout_height="219dp"
         tools:ignore="MissingConstraints" />
 
-    <TextView
+    <TextClock
+        android:id="@+id/dial_am_pm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dial_am_pm"
-        android:text="PM"
-        android:textSize="15sp"
-        android:textColor="@color/white"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginEnd="19dp"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:format12Hour="aa"
+        android:format24Hour="aa"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <TextClock
+        android:id="@+id/dial_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dial_date"
-            android:text="11-03"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:layout_gravity="start"
-            android:layout_marginStart="10dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dial_week"
-            android:text="@string/monday"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:layout_gravity="end"
-            android:layout_marginStart="10dp"/>
-    </LinearLayout>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="3dp"
+        android:format12Hour="dd-MM EE"
+        android:format24Hour="dd-MM EE"
+        android:textColor="@color/white"
+        android:textSize="21sp" />
 
 
 </com.launcher.yfd_ui01.view.DialWidget>

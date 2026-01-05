@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.android.systemui.awell.services.ISystemUIService;
@@ -33,6 +34,9 @@ public class SystemUIClient {
 
     private final String free_packName = "com.google.android.apps.maps";
     private final String free_className = "com.google.android.maps.MapsActivity";
+
+    private final String  GAODE_PKG = "com.autonavi.amapauto";
+    private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
 
     // Window mode constants
     public static final int WINDOWING_MODE_FULLSCREEN = 1;
@@ -114,6 +118,26 @@ public class SystemUIClient {
         }
         mIsBound = false;
         mService = null;
+    }
+
+    public void fullScreenFreeform() {
+        if (isServiceConnected()) {
+            try {
+                mService.fullScreenFreeform();
+            } catch (Exception e) {
+                Log.e(TAG, "fullScreenFreeform: error==>" + e.getMessage());
+            }
+        }
+    }
+
+    public void hideFreeform() {
+        if (isServiceConnected()) {
+            try {
+                mService.hideFreeform();
+            } catch (Exception e) {
+                Log.e(TAG, "hideFreeform: error==>" + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -208,9 +232,10 @@ public class SystemUIClient {
             LogUtil.i( "startShowFreeform: hintentFreeformn= null");
             return;
         }
-        if(pkg.equals("com.autonavi.amapauto"))
-            clazz = "com.autonavi.amapauto.MainMapActivity";
 
+
+        if(pkg.equals(GAODE_PKG))
+            clazz = GAODE_CLAZZ;
 
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);

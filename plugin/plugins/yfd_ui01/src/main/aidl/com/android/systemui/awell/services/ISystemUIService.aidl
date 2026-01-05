@@ -8,4 +8,7 @@ interface ISystemUIService {
     void setFreeformType(int type);
     void startOrSetFreeformTypeWithOptions(in Intent intent, in Bundle options,int windowType);
     void startOrSetFreeformType(in Rect rect,int windowType);
+    void fullScreenFreeform();
+    void hideFreeform();
+
 }

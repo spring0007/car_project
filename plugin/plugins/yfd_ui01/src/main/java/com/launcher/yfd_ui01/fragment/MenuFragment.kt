@@ -28,7 +28,9 @@ import com.launcher.yfd_ui01.MainActivity_YFD_UI01
 import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.AppPagerAdapter
 import com.launcher.yfd_ui01.app.IconManager
+import com.launcher.yfd_ui01.manager.BackHandlerHelper
 import com.launcher.yfd_ui01.manager.FragmentAnimation
+import com.launcher.yfd_ui01.manager.FragmentBackHandler
 import com.launcher.yfd_ui01.utils.LogUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -36,7 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
-class MenuFragment : Fragment() {
+class MenuFragment : Fragment() , FragmentBackHandler {
 
     private val TAG: String = "Menu_Fragment"
     private val ITEMS_PER_PAGE = 18 // 6列 x 3行 = 18个应用每页
@@ -59,7 +61,7 @@ class MenuFragment : Fragment() {
     private var lastY = 0f
     private var lastX = 0f
     private var countTouch:Int = 0
-    private val SWIPE_THRESHOLD = 150 // 滑动阈值
+    private val SWIPE_THRESHOLD = 100 // 滑动阈值
     
     // 状态标志
     private var isViewCreated = false
@@ -152,10 +154,10 @@ class MenuFragment : Fragment() {
      */
     private fun isViewReady(): Boolean {
         return if (view != null && view!!.width > 0 && view!!.height > 0) {
-            LogUtil.i( "视图已准备好，宽=${requireView().width}, 高=${requireView().height}")
+            //LogUtil.i( "视图已准备好，宽=${requireView().width}, 高=${requireView().height}")
             true
         } else {
-            LogUtil.i( "视图未准备好，宽=${view?.width ?: 0}, 高=${view?.height ?: 0}")
+            //LogUtil.i( "视图未准备好，宽=${view?.width ?: 0}, 高=${view?.height ?: 0}")
             false
         }
     }
@@ -164,7 +166,7 @@ class MenuFragment : Fragment() {
      * 安全地初始化数据
      */
     private fun safeInitData() {
-        LogUtil.i( "safeInitData called, viewCreated=$isViewCreated, initialized=$isDataInitialized")
+       // LogUtil.i( "safeInitData called, viewCreated=$isViewCreated, initialized=$isDataInitialized")
         
         if (!isViewCreated || isDataInitialized) return
         
@@ -315,7 +317,7 @@ class MenuFragment : Fragment() {
                 
                 val pages = splitIntoPages(allApps)
                 LogUtil.i( "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
-                currentAdapter = AppPagerAdapter(swipeActivity.applicationContext, pages, ITEMS_PER_PAGE)
+                currentAdapter = AppPagerAdapter(swipeActivity, pages, ITEMS_PER_PAGE)
 
                 
                 // 确保ViewPager存在
@@ -734,5 +736,9 @@ class MenuFragment : Fragment() {
             handler.removeCallbacks(it)
             layoutCheckRunnable = null
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        return BackHandlerHelper.handleBackPress(this);
     }
 }

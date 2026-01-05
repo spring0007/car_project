@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import com.launcher.yfd_ui01.databinding.FragmentMainBinding
 import com.launcher.yfd_ui01.fragment.MainFragment
 import com.launcher.yfd_ui01.fragment.MenuFragment
+import com.launcher.yfd_ui01.manager.BackHandlerHelper
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.manager.FragmentStackManager
 import com.launcher.yfd_ui01.utils.LogUtil
@@ -117,7 +118,9 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
 
     override fun onBackPressed() {
         LogUtil.i( "onBackPressed")
-        
+       /* if (!BackHandlerHelper.handleBackPress(this)) {
+            super.onBackPressed();
+        }*/
         val currentPosition = getCurrentFragmentPosition()
         
         if (currentPosition == 1) {

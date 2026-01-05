@@ -9,11 +9,8 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
@@ -24,18 +21,13 @@ import android.os.Message
 import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-import android.widget.GridView
 import android.widget.ImageView
-import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.fragment.app.Fragment
 import com.awell.addapp.AppInfo
@@ -53,7 +45,6 @@ import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
 import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
-import com.launcher.yfd_ui01.utils.SystemUIClient.HIDE_FREEFORM
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
 import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
 import com.launcher.yfd_ui01.view.AppItemView
@@ -65,10 +56,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
 import kotlin.math.abs
 
-class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUpdateListener{
+class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUpdateListener {
 
 
     private val TAG = MainFragment::class.simpleName
@@ -106,13 +96,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 viewAddNeedToStartFreeform = true
             } else {
                 if (freeformBg?.isVisibleOnScreen() == true)
-                    systemUIClient.startOrSetFreeformType(context, OPEN_APP_TO_FREEFORM)
+                    updateImagePosition(freeformBg)
+                    //systemUIClient.startOrSetFreeformType(swipeActivity, OPEN_APP_TO_FREEFORM)
             }
         }
 
-    private val sharedPrefs by lazy {
-        requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
-    }
+//    private val sharedPrefs by lazy {
+//        requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
+//    }
     companion object {
         fun newInstance(): MainFragment {
             return MainFragment()
@@ -198,8 +189,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     private fun initFreeform(view:View) {
         freeformBg = view.findViewById(R.id.freeform_bg)
-        systemUIClient = SystemUIClient(requireContext())
-        systemUIClient.bindToSystemUIService(requireContext())
+        systemUIClient = SystemUIClient(swipeActivity)
+        systemUIClient.bindToSystemUIService(swipeActivity)
         systemUIClient.setCallback(freeformImpl)
         freeformBg.addOnLayoutChangeListener(layoutListener)
 
@@ -224,7 +215,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val height = imageView.height
 
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        systemUIClient.startOrSetFreeformType( context, OPEN_APP_TO_FREEFORM)
+        systemUIClient.startOrSetFreeformType( swipeActivity, OPEN_APP_TO_FREEFORM)
+
     }
 
     /**
@@ -268,8 +260,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         filter.addAction("top_session_package_change")
         filter.addAction(Intent.ACTION_TIME_CHANGED)
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
-        filter.addAction(Intent.ACTION_TIME_TICK)
-        filter.addAction(Intent.ACTION_DATE_CHANGED)
+        //filter.addAction(Intent.ACTION_TIME_TICK)
+        //filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -285,9 +277,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             LogUtil.i( "onReceive:huang action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
-                CommonData.ACTION_ACC_ON -> {}
+                CommonData.ACTION_ACC_ON -> {
+                    freeformBg?.visibility = View.VISIBLE
+                }
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
+                    freeformBg?.visibility = View.GONE
                 }
 
                 CommonData.BROADCAST_MEDIA_EXIT -> {
@@ -311,11 +306,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                    // showAllApps(context)
 
-                    systemUIClient?.startOrSetFreeformType(context, HIDE_FREEFORM)
-                    systemUIClient?.startOrSetFreeformType(
-                        context,
-                        WINDOWING_MODE_FULLSCREEN
-                    )
+                    systemUIClient?.hideFreeform()
                     LogUtil.i( "onClick: huang freeform to hide222==>")
                 }
 
@@ -325,7 +316,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
 
-                Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED, Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK -> {
+                Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED /*,Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK*/ -> {
                     dialWidget?.updateTimeSystem()
                 }
 
@@ -493,9 +484,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private fun clickStartApp() {
         hotsetAllApp.setOnClickListener {
             //canclePopupWindow()
-            //systemUIClient.startOrSetFreeformType(context, freeformBg, HIDE_FREEFORM)
-            //systemUIClient.startOrSetFreeformType(context, freeformBg, WINDOWING_MODE_FULLSCREEN)
-            //showAllApps(this)
             var pkg = Settings.System.getString(requireContext().contentResolver,"launcher_app_icon_3")
 
             if(TextUtils.isEmpty(pkg) || pkg.equals("com.launcher.yfd_ui01")){
@@ -537,6 +525,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         hotsetWindowApp.setOnClickListener {
              systemUIClient.startOrSetFreeformType(requireContext(), WINDOWING_MODE_FULLSCREEN)
+            //systemUIClient.fullScreenFreeform()
 
         }
         hotsetWindowApp.setOnLongClickListener {
@@ -824,6 +813,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         initBroadcastReceiver()
         dialWidget?.startAnimation()
         SystemProperties.set("persist.sys.lz.freeform_display","1")
+        SystemProperties.set("persist.sys.lz.freeform_launcher_idle","1")
+
         if (isVisible) {
             freeformBg.post {
                 if (freeformBg.isVisibleOnScreen()) {
@@ -844,15 +835,21 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         if (hidden) {
             // Fragment被隐藏，隐藏自由窗口
-            systemUIClient.startOrSetFreeformType(requireContext(),  HIDE_FREEFORM)
-            systemUIClient.startOrSetFreeformType(requireContext(),  WINDOWING_MODE_FULLSCREEN)
+            SystemProperties.set("persist.sys.lz.freeform_display","0")
+            SystemProperties.set("persist.sys.lz.freeform_launcher_idle","0")
+
+            systemUIClient.hideFreeform()
+
         } else {
             // Fragment被显示，显示自由窗口
             freeformBg.post {
                 if (freeformBg.isVisibleOnScreen()) {
+                    SystemProperties.set("persist.sys.lz.freeform_display","1")
+                    SystemProperties.set("persist.sys.lz.freeform_launcher_idle","1")
                     freeformBg.focusable = View.FOCUSABLE
                     updateImagePosition(freeformBg)
                 }
+
             }
         }
     }
@@ -868,10 +865,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
 
     override fun onStop() {
+        SystemProperties.set("persist.sys.lz.freeform_launcher_idle","0")
         super.onStop()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
-            systemUIClient.startOrSetFreeformType(requireContext(),  HIDE_FREEFORM)
-            systemUIClient.startOrSetFreeformType(requireContext(),  WINDOWING_MODE_FULLSCREEN)
+            systemUIClient.hideFreeform()
         }
         SystemProperties.set("persist.sys.lz.freeform_display","0")
         LogUtil.i("lqq,onStop")
@@ -889,17 +886,19 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onDestroyView() {
         super.onDestroyView()
         freeformBg?.removeOnLayoutChangeListener(layoutListener)
+        LogUtil.i("lqq,onDestroyView")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        LogUtil.i("lqq,onDestroy")
         Settings.System.putString(requireContext().contentResolver, "ui_has_freeform","false")
 
         // 取消所有协程
    //     appScope.cancelAll()
         //canclePopupWindow()
         try {
-            systemUIClient.unbindService(requireContext())
+            systemUIClient.unbindService(swipeActivity)
         } catch (e: Exception) {
             LogUtil.w( "onDestroy:  unbind systemUIClient service==>${this}")
         }
@@ -999,7 +998,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 val dx= event.x - startX
                 val dy =event.y - startY
                 LogUtil.i("lqq,ACTION_MOVE,dx= $dx ,dy= $dy")
-                if(dy<-150 && abs(dx)< 80 ){
+                if(dy<-100 && abs(dx)< 80 ){
 
                     swipeActivity.goToFragment(1, FragmentAnimation.FADE)
 
