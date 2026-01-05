@@ -160,7 +160,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         AppsCustomizeControl.setActivity(this)
 
         initFreeform()
-
+        Settings.System.putString(contentResolver, "ui_has_freeform","true")
         //Log.i(TAG, "onCreate: huang class loader=>${classLoader}")
         setPluginThemeMode(100)
 
@@ -563,6 +563,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onDestroy()
 //        mMediaListener.cleanup()
         unregisterReceiver(receiver)
+        Settings.System.putString(contentResolver, "ui_has_freeform","false")
         systemUIClient.unbindService(this)
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
