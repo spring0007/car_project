@@ -26,6 +26,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -127,6 +128,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
                 viewAddNeedToStartFreeform = true
             } else {
+                SystemProperties.set("persist.sys.lz.freeform_display","1")
                 systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
                 oldFreeformPkg = systemUIClient.getFreeformPkg(this)
             }
@@ -186,6 +188,11 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         isWeatherTimerRunning = false
     }
 
+    override fun onStop() {
+        super.onStop()
+        SystemProperties.set("persist.sys.lz.freeform_display","0")
+    }
+
     private fun initFreeform() {
 
         setupPositionListener()
@@ -222,6 +229,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val height = imageView.height
 
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        SystemProperties.set("persist.sys.lz.freeform_display","1")
         systemUIClient.startOrSetFreeformType(
             mViewBinding.root.context,
             OPEN_APP_TO_FREEFORM
@@ -636,7 +644,9 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
 
                 "android.launcher.show.allApp" -> {
+                    SystemProperties.set("persist.sys.lz.freeform_display","0")
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
+
                 }
 
                 "CANBUS_CHANGE_SPEED_Unit" -> {
@@ -899,8 +909,10 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeAppAllApp.setOnClickListener {
+            SystemProperties.set("persist.sys.lz.freeform_display","0")
             systemUIClient.startOrSetFreeformType(this, HIDE_FREEFORM)
             systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+
             AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
         }
 
@@ -940,7 +952,9 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
+        SystemProperties.set("persist.sys.lz.freeform_display","1")
         systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
+
     }
 
     override fun onNewIntent(intent: Intent?) {
