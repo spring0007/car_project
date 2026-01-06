@@ -4,7 +4,6 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.ContentValues
@@ -62,12 +61,12 @@ import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui2.adapter.AppInofAdapter
 import com.launcher.yfd_ui2.adapter.AppPopAdapter
 import com.launcher.yfd_ui2.databinding.UiActivityBinding
+import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GAODE_PKG
+import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GOOGLE_PKG
+import com.launcher.yfd_ui2.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
+import com.launcher.yfd_ui2.utils.FreeformUtils.startFreeformApp
 import com.launcher.yfd_ui2.utils.SystemUIClient
-import com.launcher.yfd_ui2.utils.SystemUIClient.HIDE_FREEFORM
 import com.launcher.yfd_ui2.utils.SystemUIClient.MUSIC_PKG
-import com.launcher.yfd_ui2.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
-import com.launcher.yfd_ui2.utils.SystemUIClient.SETTINGS_FREEFORM_APP_PACKAGE_NAME
-import com.launcher.yfd_ui2.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
 import com.launcher.yfd_ui2.utils.WeatherHelper
 import com.launcher.yfd_ui2.utils.WeatherIconLoader
 import com.launcher.yfd_ui2.utils.WeatherTextMapper
@@ -120,19 +119,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     )
 
     lateinit var systemUIClient: SystemUIClient
-    var viewAddNeedToStartFreeform: Boolean = false
-    var oldFreeformPkg: String? = null
-    private val freeformImpl: SystemUIClient.SystemStartFreeform =
-        SystemUIClient.SystemStartFreeform {
-            if (systemUIClient.rect == null) {
-                //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
-                viewAddNeedToStartFreeform = true
-            } else {
-                SystemProperties.set("persist.sys.lz.freeform_display","1")
-                systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
-                oldFreeformPkg = systemUIClient.getFreeformPkg(this)
-            }
-        }
 
     private val weatherRefreshRunnable: Runnable = object : Runnable {
         override fun run() {
@@ -161,20 +147,21 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
         AppsCustomizeControl.setActivity(this)
 
-        initFreeform()
-        Settings.System.putString(contentResolver, "ui_has_freeform","true")
-        //Log.i(TAG, "onCreate: huang class loader=>${classLoader}")
+        initFreeformControl()
+        Settings.System.putString(contentResolver, "ui_has_freeform", "true")
+
         setPluginThemeMode(100)
 
     }
 
     override fun onResume() {
         super.onResume()
-        findViewById<ImageView>(R.id.freeform_image).post {
+        findViewById<ImageView>(R.id.freeform_image).postDelayed({
             if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
-                updateImagePosition(findViewById(R.id.freeform_image))
+                updateImagePosition(findViewById(R.id.freeform_image), "onResume")
             }
-        }
+        }, 100)
+
         if (!isWeatherTimerRunning) {
             handler?.postDelayed(weatherRefreshRunnable, 0)
             isWeatherTimerRunning = true
@@ -188,39 +175,14 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         isWeatherTimerRunning = false
     }
 
-    override fun onStop() {
-        super.onStop()
-        SystemProperties.set("persist.sys.lz.freeform_display","0")
-    }
-
-    private fun initFreeform() {
-
-        setupPositionListener()
+    private fun initFreeformControl() {
 
         systemUIClient = SystemUIClient(this)
         systemUIClient.bindToSystemUIService(this)
-        systemUIClient.setStartFreeformI(freeformImpl)
-
+        appInfoAdapter.setSystemUIClient(systemUIClient)
     }
 
-    private fun setupPositionListener() {
-        val freeformImage = findViewById<ImageView>(R.id.freeform_image)
-
-        val layoutListener = View.OnLayoutChangeListener { _, left, top, right, bottom,
-                                                           oldLeft, oldTop, oldRight, oldBottom ->
-
-            // 检查位置是否变化或者视图是否可见
-            if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-                if (freeformImage.isVisibleOnScreen()) {
-                    updateImagePosition(freeformImage)
-                }
-            }
-        }
-
-        freeformImage.addOnLayoutChangeListener(layoutListener)
-    }
-
-    private fun updateImagePosition(imageView: ImageView) {
+    private fun updateImagePosition(imageView: ImageView, reason: String) {
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
         val screenX = location[0]
@@ -228,13 +190,13 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val width = imageView.width
         val height = imageView.height
 
-        systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        SystemProperties.set("persist.sys.lz.freeform_display","1")
-        systemUIClient.startOrSetFreeformType(
-            mViewBinding.root.context,
-            OPEN_APP_TO_FREEFORM
-        )
-        oldFreeformPkg = systemUIClient.getFreeformPkg(baseContext)
+        val rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        SystemProperties.set("persist.sys.lz.freeform_display", "1")
+        //todo bootapk_packname bootapk_classname -- adb shell settings get system bootapk_packname
+        //todo 开机时候检查时否有开机自启的apk，有，不启动小窗，没有，启动小窗
+        Log.i(TAG, "updateImagePosition: huang rect=>${rect} reason=${reason}")
+        startFreeformApp(this, rect)
+
     }
 
     private fun View.isVisibleOnScreen(): Boolean {
@@ -278,7 +240,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                loadWeatherData();
+                loadWeatherData()
             } else {
                 // 处理权限被拒绝
                 //showPermissionDeniedMessage()
@@ -291,8 +253,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     private fun loadWeatherData() {
         Thread {
             val info = WeatherHelper.getCurrentWeather(this)
-            Log.i(TAG, "loadWeatherData: huang info=>${info}")
-            handler?.post(Runnable {
+            //Log.i(TAG, "loadWeatherData: huang info=>${info}")
+            handler?.post {
                 info?.also {
                     mViewBinding.weatherTemp.text = "${it.temperature}°"
                     mViewBinding.weatherCondition.text = (WeatherTextMapper.description(
@@ -305,7 +267,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     mViewBinding.weatherCondition.text = ""
                     WeatherIconLoader.load(mViewBinding.weatherImage, "100")
                 }
-            })
+            }
         }.start()
     }
 
@@ -352,7 +314,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         myDbHelper = MyDbHelper(this, "show_app", null, 1)
         sqLiteDatabase = myDbHelper.writableDatabase
 
-        appInfoAdapter = AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
+        appInfoAdapter =
+            AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
 
         linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
@@ -382,7 +345,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         for (packageName in storageAppList) {
             val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
             if (app != null) {
-                (showAppInfoList as ArrayList<AppInfo>).add(
+                showAppInfoList.add(
                     Utils.getAppInfoFromPackage(packageName, allAppInfoList)
                 )
             }
@@ -427,17 +390,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         @SuppressLint("NotifyDataSetChanged")
         override fun addAppInfo(appInfo: AppInfo) {
             for (pack in showAppInfoList)
-                if (pack.package_name.equals(appInfo?.package_name)) {
+                if (pack.package_name.equals(appInfo.package_name)) {
                     popupWindow.dismiss()
                     showPopupI.hidePopup()
                     return
                 }
-            showAppInfoList.remove(placehodlerInfo);
+            showAppInfoList.remove(placehodlerInfo)
 
             showAppInfoList.add(appInfo)
-            showAppInfoList.add(placehodlerInfo);
-            appInfoAdapter.setContentList(showAppInfoList);
-            appInfoAdapter.notifyDataSetChanged();
+            showAppInfoList.add(placehodlerInfo)
+            appInfoAdapter.setContentList(showAppInfoList)
+            appInfoAdapter.notifyDataSetChanged()
             thread {
                 val contentValues = ContentValues().apply {
                     put("packagename", appInfo.package_name)
@@ -446,7 +409,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             }
 
 
-            showPopupI.hidePopup();
+            showPopupI.hidePopup()
         }
 
         override fun removeAppInfo(packageName: String?) {
@@ -571,7 +534,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onDestroy()
 //        mMediaListener.cleanup()
         unregisterReceiver(receiver)
-        Settings.System.putString(contentResolver, "ui_has_freeform","false")
+        Settings.System.putString(contentResolver, "ui_has_freeform", "false")
         systemUIClient.unbindService(this)
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
@@ -644,9 +607,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
 
                 "android.launcher.show.allApp" -> {
-                    SystemProperties.set("persist.sys.lz.freeform_display","0")
+                    SystemProperties.set("persist.sys.lz.freeform_display", "0")
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
-
                 }
 
                 "CANBUS_CHANGE_SPEED_Unit" -> {
@@ -869,15 +831,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             val pkg =
                 Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
             when (pkg) {
-                SystemUIClient.NAVI_GOOGLE_PKG -> systemUIClient.startOrSetFreeformType(
-                    this,
-                    WINDOWING_MODE_FULLSCREEN
-                )
-
-                SystemUIClient.NAVI_GAODE_PKG -> systemUIClient.startOrSetFreeformType(
-                    this,
-                    WINDOWING_MODE_FULLSCREEN
-                )
+                NAVI_GAODE_PKG,
+                NAVI_GOOGLE_PKG -> systemUIClient.fullScreenFreeform()
 
                 else -> startActivity(
                     "com.awell.navigation", "com.awell.navigation.MainActivity"
@@ -891,7 +846,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
             when (pkg) {
                 MUSIC_PKG -> {
-                    systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+                    systemUIClient.fullScreenFreeform()
+
                 }
 
                 else -> {
@@ -909,9 +865,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeAppAllApp.setOnClickListener {
-            SystemProperties.set("persist.sys.lz.freeform_display","0")
-            systemUIClient.startOrSetFreeformType(this, HIDE_FREEFORM)
-            systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+            SystemProperties.set("persist.sys.lz.freeform_display", "0")
+            systemUIClient.hideFreeform()
 
             AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
         }
@@ -952,9 +907,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
-        SystemProperties.set("persist.sys.lz.freeform_display","1")
-        systemUIClient.startOrSetFreeformType(this, OPEN_APP_TO_FREEFORM)
-
+        SystemProperties.set("persist.sys.lz.freeform_display", "1")
+        findViewById<ImageView>(R.id.freeform_image).post {
+            if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
+                updateImagePosition(findViewById(R.id.freeform_image), " back press")
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -1028,34 +986,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
 
-    private fun getFreeformTask(context: Context): ActivityManager.RunningTaskInfo? {
-        val am = context.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-        val list = am.getRunningTasks(100)
-        for (info in list) {
-            if (info.topActivity != null) {
-                try {
-                    val free_packName: String =
-                        getSettings(context, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-                    if (free_packName == info.topActivity?.packageName
-                    ) {
-                        return info
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-        return null
-    }
-
-    private fun getSettings(context: Context, key: String): String {
-        val value = Settings.System.getString(context.contentResolver, key)
-        if (value != null) {
-            return value
-        }
-        return ""
-    }
-
     /**
      * 重写只为长按弹出壁纸选择
      */
@@ -1123,14 +1053,13 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun handleLongPressAction() {
-        //Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
             mViewBinding.freeformFullScreen.id -> {
-                systemUIClient.startOrSetFreeformType(this, WINDOWING_MODE_FULLSCREEN)
+                systemUIClient.fullScreenFreeform()
             }
 
             mViewBinding.weatherTemp.id,

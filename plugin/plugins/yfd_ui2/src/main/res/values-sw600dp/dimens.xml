@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+
+    <dimen name="text_50sp">50sp</dimen>
+
+    <dimen name="app_icon_bg_size">80dp</dimen>
+    <dimen name="recycle_app_icon_size">70dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+
+    <dimen name="clockAmPm_size">16sp</dimen>
+    <dimen name="clockTime_size">36sp</dimen>
+    <dimen name="clockData_size">18sp</dimen>
+    <dimen name="weatherImage_size">60dp</dimen>
+    <dimen name="weatherTemp_size">36sp</dimen>
+    <dimen name="gpsSpeed_size">36sp</dimen>
+    <dimen name="gpsSpeedUnit_size">16sp</dimen>
+    <dimen name="weatherCondition_size">16sp</dimen>
+    <dimen name="weatherTemp_minWidth">80dp</dimen>
+    <dimen name="weatherTemp_marginEnd">4dp</dimen>
+    <dimen name="weatherImage_marginEnd">4dp</dimen>
+    <dimen name="clockViewWidth_size">160dp</dimen>
+
+</resources>

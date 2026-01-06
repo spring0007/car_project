@@ -6,4 +6,9 @@ import android.os.Bundle;
 interface ISystemUIService {
     void setFreeformType(int type);
     void startOrSetFreeformType(in Intent intent, in Bundle options,int windowType);
+    void startOrSetFreeformTypeWithOptions(in Intent intent, in Bundle options,int windowType);
+
+    void fullScreenFreeform();
+    void hideFreeform();
+
 }

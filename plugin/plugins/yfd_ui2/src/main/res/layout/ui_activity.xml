@@ -62,7 +62,7 @@
         android:shadowRadius="10"
         android:text="0"
         android:textColor="@android:color/white"
-        android:textSize="46sp"
+        android:textSize="@dimen/gpsSpeed_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/home_navi_bg"
         app:layout_constraintEnd_toEndOf="@+id/home_navi_bg"
@@ -82,7 +82,7 @@
         android:shadowRadius="2"
         android:text="KM/h"
         android:textColor="@android:color/white"
-        android:textSize="26sp"
+        android:textSize="@dimen/gpsSpeedUnit_size"
         app:layout_constraintEnd_toEndOf="@+id/tv_gps_speed"
         app:layout_constraintStart_toStartOf="@+id/tv_gps_speed"
         app:layout_constraintTop_toBottomOf="@+id/tv_gps_speed" />
@@ -101,9 +101,9 @@
 
     <ImageView
         android:id="@+id/weatherImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginEnd="10dp"
+        android:layout_width="@dimen/weatherImage_size"
+        android:layout_height="@dimen/weatherImage_size"
+        android:layout_marginEnd="@dimen/weatherImage_marginEnd"
         app:layout_constraintEnd_toStartOf="@+id/weatherTemp"
         app:layout_constraintTop_toTopOf="@+id/tv_gps_speed" />
 
@@ -111,12 +111,12 @@
         android:id="@+id/weatherTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/weatherTemp_marginEnd"
         android:gravity="center"
-        android:minWidth="100dp"
+        android:minWidth="@dimen/weatherTemp_minWidth"
         android:text="天气"
         android:textColor="@color/white"
-        android:textSize="46sp"
+        android:textSize="@dimen/weatherTemp_size"
         app:layout_constraintBottom_toBottomOf="@+id/tv_gps_speed"
         app:layout_constraintEnd_toEndOf="@+id/home_navi_bg"
         app:layout_constraintTop_toTopOf="@+id/tv_gps_speed" />
@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:text="Sun"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="@dimen/weatherCondition_size"
         app:layout_constraintEnd_toEndOf="@+id/weatherTemp"
         app:layout_constraintStart_toStartOf="@+id/weatherTemp"
         app:layout_constraintTop_toBottomOf="@+id/weatherTemp" />
@@ -159,7 +159,7 @@
 
     <ImageView
         android:id="@+id/clock_"
-        android:layout_width="190dp"
+        android:layout_width="@dimen/clockViewWidth_size"
         android:layout_height="0dp"
         android:scaleX="1"
         android:src="@drawable/dial"
@@ -192,7 +192,7 @@
         android:shadowRadius="6"
         android:text="00:00"
         android:textColor="@android:color/white"
-        android:textSize="46sp"
+        android:textSize="@dimen/clockTime_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_iv"
@@ -214,7 +214,7 @@
         android:shadowRadius="6"
         android:text="AM"
         android:textColor="@android:color/white"
-        android:textSize="22sp"
+        android:textSize="@dimen/clockAmPm_size"
         app:layout_constraintBottom_toTopOf="@+id/clockTime"
         app:layout_constraintEnd_toEndOf="@+id/clockTime"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
@@ -235,7 +235,7 @@
         android:shadowDy="5"
         android:shadowRadius="6"
         android:textColor="@android:color/white"
-        android:textSize="28sp"
+        android:textSize="@dimen/clockData_size"
         app:layout_constraintEnd_toEndOf="@+id/clockTime"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="@+id/clockTime"
@@ -274,6 +274,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="28dp"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/home_navi_selector"
         app:layout_constraintBottom_toTopOf="@+id/home_app_music"
@@ -298,6 +299,7 @@
         android:layout_height="0dp"
         android:clickable="true"
         android:focusable="true"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/home_music_selector"
         app:layout_constraintBottom_toTopOf="@+id/home_app_bluetooth"
@@ -319,6 +321,7 @@
         android:id="@+id/home_app_bluetooth"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/home_bt_selector"
         app:layout_constraintBottom_toTopOf="@+id/home_app_setting"
@@ -341,6 +344,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="48dp"
+        android:padding="10dp"
         android:scaleType="fitCenter"
         android:src="@drawable/home_setting_selector"
         app:layout_constraintBottom_toBottomOf="@+id/guideline_bottom_2"
@@ -371,6 +375,18 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_bottom_2"
         app:layout_goneMarginEnd="8dp" />
 
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/apps"
+        app:layout_constraintBottom_toBottomOf="@+id/home_app_all_app_bg"
+        app:layout_constraintEnd_toEndOf="@+id/home_app_all_app_bg"
+        app:layout_constraintStart_toStartOf="@+id/home_app_all_app_bg"
+        app:layout_constraintTop_toTopOf="@+id/guideline_bottom_2" />
+
+
     <ImageView
         android:id="@+id/home_app_all_app"
         android:layout_width="0dp"
@@ -379,8 +395,9 @@
         android:src="@drawable/home_app_selector"
         app:layout_constraintBottom_toBottomOf="@+id/home_app_all_app_bg"
         app:layout_constraintDimensionRatio="1:1"
+        android:padding="18dp"
         app:layout_constraintEnd_toEndOf="@+id/home_app_all_app_bg"
-        app:layout_constraintHeight_percent="0.16"
+        app:layout_constraintHeight_percent="0.14"
         app:layout_constraintStart_toStartOf="@+id/home_app_all_app_bg"
         app:layout_constraintTop_toTopOf="@+id/home_app_all_app_bg" />
 
