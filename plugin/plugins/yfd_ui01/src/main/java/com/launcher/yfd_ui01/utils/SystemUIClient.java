@@ -123,9 +123,11 @@ public class SystemUIClient {
     public void fullScreenFreeform() {
         if (isServiceConnected()) {
             try {
+                LogUtil.e( "fullScreenFreeform" );
+                mFreeformMode = WINDOWING_MODE_FULLSCREEN;
                 mService.fullScreenFreeform();
             } catch (Exception e) {
-                Log.e(TAG, "fullScreenFreeform: error==>" + e.getMessage());
+                LogUtil.e( "fullScreenFreeform: error==>" + e.getMessage());
             }
         }
     }
@@ -133,9 +135,11 @@ public class SystemUIClient {
     public void hideFreeform() {
         if (isServiceConnected()) {
             try {
+                LogUtil.e( "hideFreeform" );
+                mFreeformMode = HIDE_FREEFORM;
                 mService.hideFreeform();
             } catch (Exception e) {
-                Log.e(TAG, "hideFreeform: error==>" + e.getMessage());
+                LogUtil.e( "hideFreeform: error==>" + e.getMessage());
             }
         }
     }
@@ -182,7 +186,7 @@ public class SystemUIClient {
 
     }
 
-
+    private String top_Activity =null;
     /**
      * Start or set freeform window with calculated bounds
      */
@@ -232,6 +236,11 @@ public class SystemUIClient {
             LogUtil.i( "startShowFreeform: hintentFreeformn= null");
             return;
         }
+        LogUtil.i("isRun="+isRun+",clazz="+clazz+",top_Activity="+top_Activity);
+        if(isRun && (!clazz.equals(top_Activity))){
+            clazz = top_Activity;
+
+        }
 
 
         if(pkg.equals(GAODE_PKG))
@@ -259,6 +268,14 @@ public class SystemUIClient {
 
         //ActivityOptions activityOptions = ActivityOptions.makeScaleUpAnimation(view,0,0,view.getWidth(),view.getHeight());
         ActivityOptions activityOptions = ActivityOptions.makeBasic();
+        /*ActivityOptions.makeCustomAnimation(
+                context,
+                R.anim.slide_from_bottom_right,  // 自定义右下角进入动画
+                R.anim.no_animation  // 退出动画
+        ); */ //
+
+
+
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            activityOptions = ActivityOptions.makeCustomAnimation(context,R.drawable.slide_in_right1,R.drawable.slide_out_left1,0xcccccc);
 //        }else
@@ -270,6 +287,16 @@ public class SystemUIClient {
             method.invoke(activityOptions, WINDOWING_MODE_FREEFORM);
         } catch (Exception e) {
             LogUtil.e( "startFreeFormActivity: error==> " + e.getMessage());
+        }
+        try {
+            Method setTaskAlwaysOnTopMethod = ActivityOptions.class.getMethod(
+                    "setTaskAlwaysOnTop",
+                    boolean.class
+            );
+            setTaskAlwaysOnTopMethod.invoke(activityOptions, true);
+            LogUtil.d( "setTaskAlwaysOnTop: true");
+        } catch (Exception e) {
+            LogUtil.e( "startFreeFormActivity: setTaskAlwaysOnTop error==> " + e.getMessage());
         }
         activityOptions.setLaunchBounds(mRect);
         return activityOptions;
@@ -297,11 +324,13 @@ public class SystemUIClient {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
         boolean appRun = false;
+        top_Activity = null;
         for (ActivityManager.RunningTaskInfo info : list) {
             if (info.topActivity != null) {
                 try {
                     if (info.topActivity.getPackageName().equals(packageName) ||
                             Objects.requireNonNull(info.baseActivity).getPackageName().equals(packageName))  {
+                        top_Activity= info.topActivity.getClassName();
                         appRun = true;
                         break;
                     }

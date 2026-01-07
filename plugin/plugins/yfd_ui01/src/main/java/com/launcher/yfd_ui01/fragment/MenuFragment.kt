@@ -28,9 +28,7 @@ import com.launcher.yfd_ui01.MainActivity_YFD_UI01
 import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.AppPagerAdapter
 import com.launcher.yfd_ui01.app.IconManager
-import com.launcher.yfd_ui01.manager.BackHandlerHelper
 import com.launcher.yfd_ui01.manager.FragmentAnimation
-import com.launcher.yfd_ui01.manager.FragmentBackHandler
 import com.launcher.yfd_ui01.utils.LogUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,7 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
-class MenuFragment : Fragment() , FragmentBackHandler {
+class MenuFragment : Fragment()  {
 
     private val TAG: String = "Menu_Fragment"
     private val ITEMS_PER_PAGE = 18 // 6列 x 3行 = 18个应用每页
@@ -243,7 +241,7 @@ class MenuFragment : Fragment() , FragmentBackHandler {
                     val deltaY = event.y - lastY
 
                     LogUtil.i( "deltaY="+deltaY+",deltaX="+abs(deltaX))
-                    if (deltaY > SWIPE_THRESHOLD  && abs(deltaX)< 80  ) {
+                    if (deltaY > SWIPE_THRESHOLD  /*&& abs(deltaX)< 80 */ ) {
                         // 检查是否需要切换到其他Fragment
                         if (shouldSwitchFragment()) {
                             return@setOnTouchListener true
@@ -317,7 +315,7 @@ class MenuFragment : Fragment() , FragmentBackHandler {
                 
                 val pages = splitIntoPages(allApps)
                 LogUtil.i( "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
-                currentAdapter = AppPagerAdapter(swipeActivity, pages, ITEMS_PER_PAGE)
+                currentAdapter = AppPagerAdapter(swipeActivity.applicationContext, pages, ITEMS_PER_PAGE)
 
                 
                 // 确保ViewPager存在
@@ -738,7 +736,4 @@ class MenuFragment : Fragment() , FragmentBackHandler {
         }
     }
 
-    override fun onBackPressed(): Boolean {
-        return BackHandlerHelper.handleBackPress(this);
-    }
 }

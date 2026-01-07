@@ -288,7 +288,9 @@ class CarPopupWindow(
         val brandRv = currentContainer.findViewById<RecyclerView?>(R.id.rv_brands)
         val adapter = brandRv?.adapter as? BrandAdapter
         adapter?.getPositionForLetter(letter)?.let { position ->
-            brandRv.scrollToPosition(position)
+            val layoutManager = brandRv.layoutManager as? LinearLayoutManager
+            layoutManager?.scrollToPositionWithOffset(position, 0)
+            //brandRv.scrollToPosition(position)
         }
     }
     

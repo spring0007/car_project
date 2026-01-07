@@ -13,24 +13,13 @@
         tools:ignore="MissingConstraints" />
 
     <TextClock
-        android:id="@+id/dial_am_pm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="19dp"
-        android:format12Hour="aa"
-        android:format24Hour="aa"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
-
-    <TextClock
         android:id="@+id/dial_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="3dp"
-        android:format12Hour="dd-MM EE"
-        android:format24Hour="dd-MM EE"
+        android:format12Hour="MM-dd EE"
+        android:format24Hour="MM-dd EE"
         android:textColor="@color/white"
         android:textSize="21sp" />
 

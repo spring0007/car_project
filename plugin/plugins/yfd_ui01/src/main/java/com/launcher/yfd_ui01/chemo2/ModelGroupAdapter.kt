@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.launcher.yfd_ui01.R
 import kotlinx.coroutines.CoroutineScope
@@ -24,9 +25,9 @@ class ModelGroupAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvGroupName: TextView = view.findViewById(R.id.tv_model_group_name)
-//        val tvVersionCount: TextView = view.findViewById(R.id.tv_model_version_count)
-//        val ivPreview: ImageView = view.findViewById(R.id.iv_model_preview)
-        val rootView: LinearLayout = view.findViewById(R.id.cv_model_root)
+        val tvVersionCount: TextView = view.findViewById(R.id.tv_model_version_count)
+        val ivPreview: ImageView = view.findViewById(R.id.iv_model_preview)
+        val rootView: CardView = view.findViewById(R.id.cv_model_root)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,13 +40,13 @@ class ModelGroupAdapter(
         val modelGroup = modelGroups[position]
 
         holder.tvGroupName.text = modelGroup.displayName
-        //holder.tvVersionCount.text = "${modelGroup.versions.size}个版本"
+        holder.tvVersionCount.text = "${modelGroup.versions.size} versions" // 个版本
 
         // 加载第一个版本作为预览图
-//        if (modelGroup.versions.isNotEmpty()) {
-//            val firstVersion = modelGroup.versions.first()
-//            loadThumbnail(holder.itemView.context, firstVersion.imagePath, holder.ivPreview)
-//        }
+        if (modelGroup.versions.isNotEmpty()) {
+            val firstVersion = modelGroup.versions.first()
+            loadThumbnail(holder.itemView.context, firstVersion.imagePath, holder.ivPreview)
+        }
 
         holder.rootView.setOnClickListener {
             onModelGroupClick(modelGroup)

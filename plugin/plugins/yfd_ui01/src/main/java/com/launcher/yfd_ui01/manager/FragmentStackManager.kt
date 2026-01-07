@@ -161,6 +161,7 @@ class FragmentStackManager(
      */
     fun saveState(outState: Bundle): Boolean {
         outState.putString(KEY_CURRENT_TAG, currentFragmentTag)
+        outState.putBoolean(KEY_FRAGMENTS_ADDED, fragmentsAdded)
         return true
     }
     
@@ -169,7 +170,55 @@ class FragmentStackManager(
      */
     fun restoreState(savedInstanceState: Bundle): Boolean {
         currentFragmentTag = savedInstanceState.getString(KEY_CURRENT_TAG, TAG_MAIN)
+        fragmentsAdded = savedInstanceState.getBoolean(KEY_FRAGMENTS_ADDED, false)
+
+        // 恢复后立即确保显示正确的Fragment
+        if (fragmentsAdded) {
+            ensureCurrentFragmentDisplayed()
+        }
         return true
+    }
+
+    /**
+     * 确保当前显示的Fragment是正确的
+     */
+    fun ensureCurrentFragmentDisplayed() {
+        if (!fragmentsAdded) return
+
+        val targetFragment = fragmentManager.findFragmentByTag(currentFragmentTag)
+        val otherTag = if (currentFragmentTag == TAG_MAIN) TAG_MENU else TAG_MAIN
+        val otherFragment = fragmentManager.findFragmentByTag(otherTag)
+
+        if (targetFragment != null && otherFragment != null) {
+            val transaction = fragmentManager.beginTransaction()
+
+            // 根据当前标签决定显示哪个，隐藏哪个
+            if (currentFragmentTag == TAG_MAIN) {
+                transaction.show(targetFragment)
+                transaction.hide(otherFragment)
+            } else {
+                transaction.hide(otherFragment)
+                transaction.show(targetFragment)
+            }
+
+            try {
+                transaction.commitNow()
+            } catch (e: IllegalStateException) {
+                transaction.commitAllowingStateLoss()
+            }
+        }
+    }
+
+    /**
+     * 在Activity的onResume中调用此方法，确保Fragment状态正确
+     */
+    fun onActivityResumed() {
+        if (fragmentsAdded) {
+            // 更新当前显示的Fragment标签
+            updateCurrentFragmentTag()
+            // 确保显示正确的Fragment
+            ensureCurrentFragmentDisplayed()
+        }
     }
 
     /**

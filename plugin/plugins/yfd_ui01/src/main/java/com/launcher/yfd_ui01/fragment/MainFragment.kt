@@ -215,6 +215,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val height = imageView.height
 
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_last_bounds",
+            systemUIClient.rect.flattenToString()
+        );
         systemUIClient.startOrSetFreeformType( swipeActivity, OPEN_APP_TO_FREEFORM)
 
     }
@@ -278,11 +281,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
                 CommonData.ACTION_ACC_ON -> {
-                    freeformBg?.visibility = View.VISIBLE
+                    if (freeformBg?.isVisibleOnScreen() == true)
+                        updateImagePosition(freeformBg)
+                    //freeformBg?.visibility = View.VISIBLE
                 }
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
-                    freeformBg?.visibility = View.GONE
+                    //freeformBg?.visibility = View.GONE
+                    systemUIClient?.hideFreeform()
                 }
 
                 CommonData.BROADCAST_MEDIA_EXIT -> {
@@ -494,38 +500,39 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     .addToBackStack(null)
                     .commitAllowingStateLoss()*/
 
-                swipeActivity.goToFragment(1, FragmentAnimation.FADE)
+                swipeActivity.goToFragment(1, FragmentAnimation.NONE)
             }else{
                 var intent = startActivityByPkg(3,"com.launcher.yfd_ui01")
                 if (intent==null)
-                    startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity")
+                    startActivityByPkgClazz("com.awell.eqselect", "com.awell.eqselect.MainActivity")
                 else
-                    start_Activity(intent)
+                    startActivityIntent(intent)
             }
         }
 
         hotsetDspApp.setOnClickListener {
             var intent = startActivityByPkg(2,"com.awell.eqselect")
             if (intent==null)
-                startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity")
+                startActivityByPkgClazz("com.awell.eqselect", "com.awell.eqselect.MainActivity")
             else
-                start_Activity(intent)
+                startActivityIntent(intent)
 
         }
 
         hotsetBtApp.setOnClickListener {
             var intent = startActivityByPkg(1,"com.awell.bluetooth")
+            LogUtil.i("intent="+intent)
             if (intent==null)
-                startActivity(
+                startActivityByPkgClazz(
                     "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
                 )
             else
-                start_Activity(intent)
+                startActivityIntent(intent)
         }
 
         hotsetWindowApp.setOnClickListener {
-             systemUIClient.startOrSetFreeformType(requireContext(), WINDOWING_MODE_FULLSCREEN)
-            //systemUIClient.fullScreenFreeform()
+             //systemUIClient.startOrSetFreeformType(swipeActivity, WINDOWING_MODE_FULLSCREEN)
+            systemUIClient.fullScreenFreeform()
 
         }
         hotsetWindowApp.setOnLongClickListener {
@@ -536,7 +543,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
             mIntent.putExtra("SelectDefaultId", 3)
             mIntent.putExtra("SelectDefaultFragment", 30)
-            start_Activity(mIntent)
+            startActivityIntent(mIntent)
             true
         }
 
@@ -739,7 +746,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         appPopupWindow?.show(swipeActivity.findViewById(android.R.id.content),0,10)
 
     }
-    private fun startActivity(packName: String, className: String?) {
+    private fun startActivityByPkgClazz(packName: String, className: String?) {
         val intent = swipeActivity.packageManager.getLaunchIntentForPackage(packName)
         var isboot = true
         if (intent != null) {
@@ -754,11 +761,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             } else {
                 if (isboot) Settings.System.putString(requireContext().contentResolver, "boot_apk2", packName)
             }
-            startActivity(intent)
+            swipeActivity.applicationContext.startActivity(intent)
         }
     }
 
-    private fun start_Activity(intent: Intent) {
+    private fun startActivityIntent(intent: Intent) {
         val packName = intent.`package`
         var isboot = true
         for (index in IconCache.WorkSpacePackageName.indices) {
@@ -772,7 +779,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         } else {
             if (isboot) Settings.System.putString(requireContext().contentResolver, "boot_apk2", packName)
         }
-        startActivity(intent)
+        swipeActivity.applicationContext.startActivity(intent)
     }
 
 
