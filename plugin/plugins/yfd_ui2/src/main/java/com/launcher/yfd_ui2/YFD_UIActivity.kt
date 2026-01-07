@@ -575,10 +575,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
                 CommonData.ACTION_ACC_ON -> {
                     mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
+                    findViewById<ImageView>(R.id.freeform_image).post {
+                        if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
+                            updateImagePosition(findViewById(R.id.freeform_image), "acc_on")
+                        }
+                    }
+
                 }
 
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
+                    systemUIClient?.hideFreeform()
                 }
 
                 CommonData.BROADCAST_MEDIA_EXIT -> {
