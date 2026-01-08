@@ -153,14 +153,23 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         setPluginThemeMode(100)
 
     }
-
+    private val handlerFreeform = Handler(Looper.getMainLooper())
+    private val freeformRunnable = Runnable {
+        if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
+            updateImagePosition(findViewById(R.id.freeform_image), "onResume")
+        }
+    }
     override fun onResume() {
         super.onResume()
-        findViewById<ImageView>(R.id.freeform_image).postDelayed({
+        Log.i(TAG,"onResume")
+        /*findViewById<ImageView>(R.id.freeform_image).postDelayed({
             if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
                 updateImagePosition(findViewById(R.id.freeform_image), "onResume")
             }
-        }, 100)
+        }, 100)*/
+        handlerFreeform.removeCallbacks(freeformRunnable)
+        // 重新发送新的延时任务
+        handlerFreeform.postDelayed(freeformRunnable, 100)
 
         if (!isWeatherTimerRunning) {
             handler?.postDelayed(weatherRefreshRunnable, 0)
@@ -169,9 +178,20 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.i(TAG,"onStop")
+        Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+        Log.w(TAG,"freeform_launcher_idle,0")
+        if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen())
+            systemUIClient.hideFreeform()
+    }
+
     override fun onPause() {
         super.onPause()
+        Log.i(TAG,"onPause")
         handler?.removeCallbacks(weatherRefreshRunnable)
+        handlerFreeform.removeCallbacks(freeformRunnable)
         isWeatherTimerRunning = false
     }
 
@@ -191,7 +211,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val height = imageView.height
 
         val rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        SystemProperties.set("persist.sys.lz.freeform_display", "1")
+        Settings.System.putString(contentResolver,"freeform_launcher_idle", "1");
+        Log.w(TAG,"freeform_launcher_idle,1")
         //todo bootapk_packname bootapk_classname -- adb shell settings get system bootapk_packname
         //todo 开机时候检查时否有开机自启的apk，有，不启动小窗，没有，启动小窗
         Log.i(TAG, "updateImagePosition: huang rect=>${rect} reason=${reason}")
@@ -534,7 +555,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onDestroy()
 //        mMediaListener.cleanup()
         unregisterReceiver(receiver)
-        Settings.System.putString(contentResolver, "ui_has_freeform", "false")
         systemUIClient.unbindService(this)
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
@@ -614,7 +634,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
 
                 "android.launcher.show.allApp" -> {
-                    SystemProperties.set("persist.sys.lz.freeform_display", "0")
+                    Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+                    Log.w(TAG,"freeform_launcher_idle,0")
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                 }
 
@@ -872,7 +893,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeAppAllApp.setOnClickListener {
-            SystemProperties.set("persist.sys.lz.freeform_display", "0")
+            Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+            Log.w(TAG,"freeform_launcher_idle,0")
             systemUIClient.hideFreeform()
 
             AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
@@ -914,7 +936,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
-        SystemProperties.set("persist.sys.lz.freeform_display", "1")
+        Settings.System.putString(contentResolver,"freeform_launcher_idle", "1");
+        Log.w(TAG,"freeform_launcher_idle,1")
         findViewById<ImageView>(R.id.freeform_image).post {
             if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
                 updateImagePosition(findViewById(R.id.freeform_image), " back press")

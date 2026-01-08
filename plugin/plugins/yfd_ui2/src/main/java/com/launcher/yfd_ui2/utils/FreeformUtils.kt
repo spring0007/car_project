@@ -10,6 +10,7 @@ import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
+import java.util.Objects
 
 object FreeformUtils {
 
@@ -33,10 +34,13 @@ object FreeformUtils {
     val MUSIC_KUWO_PKG: String = "cn.kuwo.kwmusiccar"
     val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.MainActivity"
     //val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.WelcomeActivity"
+    private var top_Activity: String? = null
 
     fun startFreeformApp(context: Context, rect: Rect) {
 
         putStringSettingsSystem(context, SETTINGS_UI_HAS_FREEFORM, "true")
+        Settings.System.putString(context.contentResolver,"freeform_last_bounds",
+            rect.flattenToString());
 
         var pkg =
             Settings.System.getString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
@@ -47,20 +51,24 @@ object FreeformUtils {
 
         if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(clazz)) {
             pkg = NAVI_GOOGLE_PKG
-            clazz = NAVI_GOOGLE_CLAZZ
+            clazz = NAVI_GOOGLE_PKG
         }
 
         if (!isAppInstalled(context, pkg)) {
-            pkg = NAVI_GAODE_PKG
-            clazz = NAVI_GAODE_CLAZZ
+            pkg = NAVI_GOOGLE_PKG
+            clazz = NAVI_GOOGLE_PKG
         }
 
-        if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
+        /*if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
             clazz = MUSIC_KUWO_CLAZZ
         }
         if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {
             clazz = NAVI_GAODE_CLAZZ
-        }
+        }*/
+        val isRun = isAppRunning(context,pkg)
+        if(isRun && top_Activity!=null &&  (!clazz.equals(top_Activity)))
+            clazz = top_Activity
+
 
         val options: ActivityOptions = makeLaunchOptions(context, rect)
         val intentFreeform = Intent()
@@ -120,6 +128,30 @@ object FreeformUtils {
         } catch (e: PackageManager.NameNotFoundException) {
             return false
         }
+    }
+
+    private fun isAppRunning(context: Context, packageName: String): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val list = am.getRunningTasks(100)
+        var appRun = false
+        top_Activity = null
+        for (info in list) {
+            if (info.topActivity != null) {
+                try {
+                    if (info.topActivity!!.packageName == packageName ||
+                        Objects.requireNonNull<ComponentName?>(info.baseActivity)
+                            .getPackageName() == packageName
+                    ) {
+                        top_Activity = info.topActivity!!.className
+                        appRun = true
+                        break
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return appRun
     }
 
     fun putStringSettingsSystem(context: Context, name: String, value: String) {
