@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="car_top">40dp</dimen>
+    <dimen name="music_widget_top">100dp</dimen>
+</resources>

@@ -6,4 +6,5 @@
     <dimen name="radio_control_top">10dp</dimen>
     <dimen name="music_widget_top">140dp</dimen>
     <dimen name="music_widget_end">80dp</dimen>
+    <dimen name="car_top">40dp</dimen>
 </resources>

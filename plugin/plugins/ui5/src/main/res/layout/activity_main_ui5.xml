@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivityUI5"
-    android:background="@drawable/ui5_bg">
+    android:background="@drawable/ui5_bg_new1">
 
 
     <!-- radio layout -->
@@ -34,6 +34,7 @@
 
     <!-- car speed -->
     <LinearLayout
+        android:id="@+id/car_speed_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -61,9 +62,17 @@
             android:textColor="@color/grey_9494"
             android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:layout_marginStart="18dp"
-            android:textSize="30sp"
-             />
+            android:textSize="30sp" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ui5_car"
+        app:layout_constraintTop_toBottomOf="@+id/car_speed_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/car_top"/>
 
     <!-- bottom app -->
     <LinearLayout
