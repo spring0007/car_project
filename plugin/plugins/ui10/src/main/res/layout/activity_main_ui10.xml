@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="@dimen/time_start_ratio"
         app:layout_constraintVertical_bias="0.3"/>
 
     <ImageView
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="@dimen/time_inner_start_ratio"
         app:layout_constraintVertical_bias="0.31"/>
 
     <ImageView
@@ -105,7 +105,7 @@
         app:layout_constraintStart_toEndOf="@+id/time_bg_iv"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
         app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginStart="@dimen/music_layout_start"/>
 
     <ImageView
         android:id="@+id/hotset_nav_app"

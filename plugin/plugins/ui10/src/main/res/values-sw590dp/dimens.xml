@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_start_ratio">0.2</dimen>
+    <dimen name="time_inner_start_ratio">0.18</dimen>
+    <dimen name="time_bg_width">574dp</dimen>
+    <dimen name="time_bg_height">210dp</dimen>
+    <dimen name="hotset_width">107dp</dimen>
+    <dimen name="hotset_height">102dp</dimen>
+    <dimen name="music_layout_start">60dp</dimen>
+</resources>
