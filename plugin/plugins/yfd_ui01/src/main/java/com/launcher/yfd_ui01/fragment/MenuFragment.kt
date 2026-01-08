@@ -219,38 +219,33 @@ class MenuFragment : Fragment()  {
     @SuppressLint("ClickableViewAccessibility")
     private fun setupSwipeGesture() {
         nestedScrollView.setOnTouchListener { v, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
+            val n = event.action
+            if (n == MotionEvent.ACTION_DOWN) {
+                lastX = event.x
+                lastY = event.y
+                LogUtil.i( "lastX=$lastX,lastY=$lastY")
+
+            }
+            else if (n == MotionEvent.ACTION_MOVE) {
+                if(countTouch==0){
                     lastX = event.x
                     lastY = event.y
-                    LogUtil.i( "lastX=$lastX,lastY=$lastY")
-
+                    false
                 }
-                MotionEvent.ACTION_UP -> {
-                    countTouch= 0
-                    LogUtil.i( "action_up")
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    if(countTouch==0){
-                        lastX = event.x
-                        lastY = event.y
-                        false
-                    }
-                    countTouch++
-                    val deltaX = event.x - lastX
-                    val deltaY = event.y - lastY
+                countTouch++
+                val deltaX = event.x - lastX
+                val deltaY = event.y - lastY
 
-                    LogUtil.i( "deltaY="+deltaY+",deltaX="+abs(deltaX))
-                    if (deltaY > SWIPE_THRESHOLD  /*&& abs(deltaX)< 80 */ ) {
-                        // 检查是否需要切换到其他Fragment
-                        if (shouldSwitchFragment()) {
-                            return@setOnTouchListener true
-                        }
+                //LogUtil.i( "deltaY="+deltaY+",deltaX="+abs(deltaX))
+                if (deltaY > SWIPE_THRESHOLD  /*&& abs(deltaX)< 80 */ ) {
+                    // 检查是否需要切换到其他Fragment
+                    if (shouldSwitchFragment()) {
+                        return@setOnTouchListener true
                     }
                 }
-                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    countTouch = 0
-                }
+            }
+            else if (n == MotionEvent.ACTION_UP || n == MotionEvent.ACTION_CANCEL) {
+                countTouch = 0
             }
             false
         }
@@ -315,7 +310,7 @@ class MenuFragment : Fragment()  {
                 
                 val pages = splitIntoPages(allApps)
                 LogUtil.i( "viewPager,height = ${viewPager.height} ,width =${viewPager.width} ")
-                currentAdapter = AppPagerAdapter(swipeActivity.applicationContext, pages, ITEMS_PER_PAGE)
+                currentAdapter = AppPagerAdapter(swipeActivity, pages, ITEMS_PER_PAGE)
 
                 
                 // 确保ViewPager存在

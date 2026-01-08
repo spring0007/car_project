@@ -35,8 +35,8 @@ public class SystemUIClient {
     private final String free_packName = "com.google.android.apps.maps";
     private final String free_className = "com.google.android.maps.MapsActivity";
 
-    private final String  GAODE_PKG = "com.autonavi.amapauto";
-    private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
+    //private final String  GAODE_PKG = "com.autonavi.amapauto";
+    //private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
 
     // Window mode constants
     public static final int WINDOWING_MODE_FULLSCREEN = 1;
@@ -144,58 +144,14 @@ public class SystemUIClient {
         }
     }
 
-    /**
-     * Set freeform window type
-     */
-    public void setFreeformType(int type) {
-        if (!isServiceConnected()) {
-            LogUtil.w( "Service not connected, cannot set freeform type1");
-            return;
-        }
-        
-        try {
-            mFreeformMode = type;
-            mService.setFreeformType(type);
-            LogUtil.i( "Freeform type set to: " + type);
-        } catch (Exception e) {
-            LogUtil.e( "Failed to setFreeformType : " + e.getMessage());
-        }
-    }
-
-    public void startOrSetFreeformType(Intent intent, ActivityOptions options, int windowType) {
-        if (!isServiceConnected()) {
-            LogUtil.w( "Service not connected, cannot start freeform2");
-            return;
-        }
-        /*final long currentTime = System.currentTimeMillis();
-        if ((currentTime - lastUpdateTime < UPDATE_INTERVAL) && (lastFreeFormType == windowType)) {
-            LogUtil.w( "The time interval is too short, cannot start freeform3");
-            return;
-        }
-        lastFreeFormType = windowType;
-        lastUpdateTime = currentTime;*/
-
-        try {
-            Bundle bundle = options.toBundle();
-            mFreeformMode = windowType;
-            LogUtil.i( "startOrSetFreeformType: huang  , type=>" + windowType);
-            mService.startOrSetFreeformTypeWithOptions(intent, bundle, windowType);
-        } catch (Exception e) {
-            LogUtil.e( "startFreeform: error==>" + e.getMessage());
-        }
-
-    }
-
     private String top_Activity =null;
     /**
      * Start or set freeform window with calculated bounds
      */
-    public void startOrSetFreeformType(Context context,int windowType) {
+    public void startOrSetFreeformType(Context context) {
 
         String pkg = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
         String clazz = Settings.System.getString(context.getContentResolver(), SETTINGS_FREEFORM_APP_CLAZZ_NAME);
-
-        LogUtil.i( "startOrSetFreeformType: huang pkg= " + pkg + ", clazz= " + clazz + " type=>" + windowType);
 
         if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(clazz)) {
             pkg = free_packName;
@@ -220,18 +176,18 @@ public class SystemUIClient {
         }
 
         if (isAppRunning(context, pkg)) {
-            startShowFreeform(context,  true,"app is running", windowType, pkg, clazz);
+            startShowFreeform(context,  true,"app is running", OPEN_APP_TO_FREEFORM, pkg, clazz);
         } else {
             startShowFreeform(context, false,"app not running", OPEN_APP_TO_FREEFORM, pkg, clazz);
         }
     }
 
     private void startShowFreeform(Context context, boolean isRun, String reason, int windowType, String pkg, String clazz) {
-        LogUtil.i( "startShowFreeform: huang reason=>" + reason);
+        LogUtil.i( "startOrSetFreeformType: huang pkg= " + pkg + ", clazz= " + clazz + " type=>" + windowType +",isRun="+isRun+",reason=>"+reason);
         ActivityOptions options = makeLaunchOptions(context);
 
-        Intent intentFreeform = new Intent();
-        //Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        //Intent intentFreeform = new Intent();
+        Intent intentFreeform = context.getPackageManager().getLaunchIntentForPackage(pkg);
         if (intentFreeform == null) {
             LogUtil.i( "startShowFreeform: hintentFreeformn= null");
             return;
@@ -242,9 +198,8 @@ public class SystemUIClient {
 
         }
 
-
-        if(pkg.equals(GAODE_PKG))
-            clazz = GAODE_CLAZZ;
+        //if(pkg.equals(GAODE_PKG))
+        //    clazz = GAODE_CLAZZ;
 
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -256,7 +211,30 @@ public class SystemUIClient {
             intentFreeform.setComponent(cmp);
         }
 
-        startOrSetFreeformType(intentFreeform, options, windowType);
+
+        if (!isServiceConnected()) {
+            LogUtil.w( "Service not connected, cannot start freeform2");
+            return;
+        }
+        /*final long currentTime = System.currentTimeMillis();
+        if ((currentTime - lastUpdateTime < UPDATE_INTERVAL) && (lastFreeFormType == windowType)) {
+            LogUtil.w( "The time interval is too short, cannot start freeform3");
+            return;
+        }
+        lastFreeFormType = windowType;
+        lastUpdateTime = currentTime;*/
+
+        try {
+            //Bundle bundle = options.toBundle();
+            mFreeformMode = windowType;
+            LogUtil.i( "startOrSetFreeformType: huang  , type=>" + windowType);
+            mService.startOrSetFreeformTypeWithOptions(intentFreeform, options.toBundle(), windowType);
+        } catch (Exception e) {
+            LogUtil.e( "startFreeform: error==>" + e.getMessage());
+        }
+
+      //  startOrSetFreeformType(intentFreeform, options, windowType);
+
     }
 
 
@@ -340,18 +318,6 @@ public class SystemUIClient {
             }
         }
         return appRun;
-    }
-
-    private String getTopActivity(Context context, String packageName) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
-        for (ActivityManager.RunningTaskInfo info : list) {
-            if (info.topActivity != null) {
-                if (info.topActivity.getPackageName().equals(packageName))
-                      return  info.topActivity.getClassName();
-            }
-        }
-        return null;
     }
 
     public void setRect(Rect rect) {

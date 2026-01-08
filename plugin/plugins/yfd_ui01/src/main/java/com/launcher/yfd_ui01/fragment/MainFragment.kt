@@ -30,6 +30,7 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.annotation.RequiresPermission
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.awell.addapp.AppInfo
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -46,13 +47,14 @@ import com.launcher.yfd_ui01.pop.AppPopupWindow
 import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
-import com.launcher.yfd_ui01.utils.SystemUIClient.WINDOWING_MODE_FULLSCREEN
 import com.launcher.yfd_ui01.view.AppItemView
 import com.launcher.yfd_ui01.view.DashboardView
 import com.launcher.yfd_ui01.view.DialWidget
 import com.launcher.yfd_ui01.view.MusicWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -96,8 +98,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 viewAddNeedToStartFreeform = true
             } else {
                 if (freeformBg?.isVisibleOnScreen() == true)
-                    updateImagePosition(freeformBg)
-                    //systemUIClient.startOrSetFreeformType(swipeActivity, OPEN_APP_TO_FREEFORM)
+                    updateImagePosition(freeformBg,"systemUIClient init")
             }
         }
 
@@ -147,17 +148,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         initMediaMusic(view)
         initFreeform(view)
 
-        // 初始化数据
-        Settings.System.putString(
-            requireContext().contentResolver,
-            "ui_has_freeform",
-            "true"
-        )
-
         initTouchAndSpeedListener()
         clickStartApp()
         //chemo reset data
         restoreCarModel()
+        initBroadcastReceiver()
         // 创建速度模拟器
 //        speedSimulator = SpeedSimulator(object : SpeedSimulator.SpeedChangeListener {
 //            override fun onSpeedChanged(speed: Int) {
@@ -202,23 +197,23 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         // 检查位置是否变化或者视图是否可见
         if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
             if (view.isVisibleOnScreen()) {
-                updateImagePosition(view as ImageView)
+                updateImagePosition(view as ImageView ,"layoutListener")
             }
         }
     }
-    private fun updateImagePosition(imageView: ImageView) {
+    private fun updateImagePosition(imageView: ImageView, reason:String) {
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
         val screenX = location[0]
         val screenY = location[1]
         val width = imageView.width
         val height = imageView.height
-
+        LogUtil.i(reason)
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
         Settings.System.putString(swipeActivity.contentResolver,"freeform_last_bounds",
             systemUIClient.rect.flattenToString()
         );
-        systemUIClient.startOrSetFreeformType( swipeActivity, OPEN_APP_TO_FREEFORM)
+        systemUIClient.startOrSetFreeformType( swipeActivity)
 
     }
 
@@ -240,14 +235,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     }
 
-//    private fun initPopouWindow() {
-//        // 初始化图片存储
-//        imagePreferences = ImagePreferences(requireContext())
-//        // 初始化协程作用域
-//        appScope = AppCoroutineScope()
-//        // 恢复之前保存的图片
-//        restoreSavedImage()
-//    }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initBroadcastReceiver() {
@@ -268,9 +255,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+            swipeActivity.registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
-            requireContext().registerReceiver(receiver, filter)
+            swipeActivity.registerReceiver(receiver, filter)
         }
     }
 
@@ -282,12 +269,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
                 CommonData.ACTION_ACC_ON -> {
                     if (freeformBg?.isVisibleOnScreen() == true)
-                        updateImagePosition(freeformBg)
-                    //freeformBg?.visibility = View.VISIBLE
+                        updateImagePosition(freeformBg ,"acc_on")
                 }
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
-                    //freeformBg?.visibility = View.GONE
+                    imageUpdateJob?.cancel()
                     systemUIClient?.hideFreeform()
                 }
 
@@ -309,9 +295,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 }
 
                 "android.launcher.show.allApp" -> {
-                    // AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
-                   // showAllApps(context)
-
+                    imageUpdateJob?.cancel()
                     systemUIClient?.hideFreeform()
                     LogUtil.i( "onClick: huang freeform to hide222==>")
                 }
@@ -499,7 +483,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     .replace(R.id.fragment_container, MenuFragment())
                     .addToBackStack(null)
                     .commitAllowingStateLoss()*/
-
                 swipeActivity.goToFragment(1, FragmentAnimation.NONE)
             }else{
                 var intent = startActivityByPkg(3,"com.launcher.yfd_ui01")
@@ -531,7 +514,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
 
         hotsetWindowApp.setOnClickListener {
-             //systemUIClient.startOrSetFreeformType(swipeActivity, WINDOWING_MODE_FULLSCREEN)
             systemUIClient.fullScreenFreeform()
 
         }
@@ -561,9 +543,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
 
         carIcon.setOnLongClickListener {
-            //cancelLongPressDetection()
-            //showImageSelectionPopup()
-
             showCarModelSelector()
             true
         }
@@ -814,21 +793,30 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         super.onStart()
         LogUtil.i("lqq,onStart")
     }
-
+    private var imageUpdateJob: Job? = null
     override fun onResume() {
         super.onResume()
-        initBroadcastReceiver()
-        dialWidget?.startAnimation()
-        SystemProperties.set("persist.sys.lz.freeform_display","1")
-        SystemProperties.set("persist.sys.lz.freeform_launcher_idle","1")
 
         if (isVisible) {
-            freeformBg.post {
+
+            Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "1");
+            LogUtil.i("freeform_launcher_idle,1")
+            dialWidget?.startAnimation()
+            imageUpdateJob?.cancel()
+
+            // 启动新的协程任务
+            imageUpdateJob = lifecycleScope.launch {
+                delay(100)
+                if (freeformBg.isVisibleOnScreen()) {
+                    updateImagePosition(freeformBg, "onResume")
+                }
+            }
+            /*freeformBg.postDelayed( {
                 if (freeformBg.isVisibleOnScreen()) {
                     freeformBg.focusable = View.FOCUSABLE
                     updateImagePosition(freeformBg)
                 }
-            }
+            },100)*/
         }
         LogUtil.i("lqq,onResume")
     }
@@ -842,19 +830,20 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         if (hidden) {
             // Fragment被隐藏，隐藏自由窗口
-            SystemProperties.set("persist.sys.lz.freeform_display","0")
-            SystemProperties.set("persist.sys.lz.freeform_launcher_idle","0")
-
+            imageUpdateJob?.cancel()
             systemUIClient.hideFreeform()
+            systemUIClient.fullScreenFreeform()
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            LogUtil.i("freeform_launcher_idle,0")
 
         } else {
             // Fragment被显示，显示自由窗口
             freeformBg.post {
                 if (freeformBg.isVisibleOnScreen()) {
-                    SystemProperties.set("persist.sys.lz.freeform_display","1")
-                    SystemProperties.set("persist.sys.lz.freeform_launcher_idle","1")
-                    freeformBg.focusable = View.FOCUSABLE
-                    updateImagePosition(freeformBg)
+                    Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1");
+                    LogUtil.i("freeform_launcher_idle,1")
+                    //freeformBg.focusable = View.FOCUSABLE
+                    updateImagePosition(freeformBg ,"hidden")
                 }
 
             }
@@ -872,12 +861,13 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
 
     override fun onStop() {
-        SystemProperties.set("persist.sys.lz.freeform_launcher_idle","0")
         super.onStop()
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+        LogUtil.i("freeform_launcher_idle,0")
+        imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
         }
-        SystemProperties.set("persist.sys.lz.freeform_display","0")
         LogUtil.i("lqq,onStop")
     }
 
@@ -886,7 +876,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         dialWidget?.stopAnimation()
         dashboardView?.closeAnimation()
         canclePopupWindow()
-        requireContext().unregisterReceiver(receiver)
+
         LogUtil.i("lqq,onPause")
     }
 
@@ -898,8 +888,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     override fun onDestroy() {
         super.onDestroy()
+        swipeActivity.unregisterReceiver(receiver)
         LogUtil.i("lqq,onDestroy")
-        Settings.System.putString(requireContext().contentResolver, "ui_has_freeform","false")
 
         // 取消所有协程
    //     appScope.cancelAll()
