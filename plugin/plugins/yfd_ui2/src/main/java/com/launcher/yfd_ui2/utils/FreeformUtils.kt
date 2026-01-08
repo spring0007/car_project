@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import java.util.Objects
 
 object FreeformUtils {
@@ -37,7 +36,7 @@ object FreeformUtils {
     private var top_Activity: String? = null
 
     fun startFreeformApp(context: Context, rect: Rect) {
-
+        LogUtil.i("startFreeformApp" );
         putStringSettingsSystem(context, SETTINGS_UI_HAS_FREEFORM, "true")
         Settings.System.putString(context.contentResolver,"freeform_last_bounds",
             rect.flattenToString());
@@ -59,20 +58,30 @@ object FreeformUtils {
             clazz = NAVI_GOOGLE_PKG
         }
 
-        /*if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
-            clazz = MUSIC_KUWO_CLAZZ
-        }
-        if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {
-            clazz = NAVI_GAODE_CLAZZ
-        }*/
         val isRun = isAppRunning(context,pkg)
         if(isRun && top_Activity!=null &&  (!clazz.equals(top_Activity)))
             clazz = top_Activity
 
-
+        /*if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
+            clazz = MUSIC_KUWO_CLAZZ
+        }*/
+        if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {
+            clazz = NAVI_GAODE_CLAZZ
+        }
+        
         val options: ActivityOptions = makeLaunchOptions(context, rect)
-        val intentFreeform = Intent()
-        intentFreeform.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        var intentFreeform = context.packageManager.getLaunchIntentForPackage(pkg)
+        if (intentFreeform==null)
+            intentFreeform = Intent()
+
+        intentFreeform.addFlags(
+            Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS or
+                    Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT or
+                    Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED or
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+        )
+
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER)
         intentFreeform.setPackage(pkg)
 
@@ -102,7 +111,7 @@ object FreeformUtils {
                 )
             method.invoke(activityOptions, WINDOWING_MODE_FREEFORM)
         } catch (e: java.lang.Exception) {
-            Log.e(TAG, "startFreeFormActivity: error==> " + e.message)
+            LogUtil.e("startFreeFormActivity: error==> " + e.message)
         }
         activityOptions.setLaunchBounds(rect)
 
@@ -112,9 +121,9 @@ object FreeformUtils {
                 Boolean::class.javaPrimitiveType
             )
             setTaskAlwaysOnTopMethod.invoke(activityOptions, true)
-            Log.d(TAG, "setTaskAlwaysOnTop: true")
+            LogUtil.d( "setTaskAlwaysOnTop: true")
         } catch (e: Exception) {
-            Log.e(TAG, "startFreeFormActivity: setTaskAlwaysOnTop error==> ${e.message}")
+            LogUtil.e( "startFreeFormActivity: setTaskAlwaysOnTop error==> ${e.message}")
         }
 
         return activityOptions
