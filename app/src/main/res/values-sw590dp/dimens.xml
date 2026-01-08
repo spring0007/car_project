@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_icon_size">105dp</dimen>
+    <dimen name="apps_customize_cell_width">130dp</dimen>
+    <dimen name="apps_customize_cell_height">190dp</dimen>
+</resources>
