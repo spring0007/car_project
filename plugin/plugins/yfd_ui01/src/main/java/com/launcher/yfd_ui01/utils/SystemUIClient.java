@@ -35,8 +35,8 @@ public class SystemUIClient {
     private final String free_packName = "com.google.android.apps.maps";
     private final String free_className = "com.google.android.maps.MapsActivity";
 
-    //private final String  GAODE_PKG = "com.autonavi.amapauto";
-    //private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
+    private final String  GAODE_PKG = "com.autonavi.amapauto";
+    private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
 
     // Window mode constants
     public static final int WINDOWING_MODE_FULLSCREEN = 1;
@@ -198,11 +198,19 @@ public class SystemUIClient {
 
         }
 
-        //if(pkg.equals(GAODE_PKG))
-        //    clazz = GAODE_CLAZZ;
+        if(pkg.equals(GAODE_PKG))
+            clazz = GAODE_CLAZZ;
 
-        intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);
+        intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |
+                    Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT |
+                    Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED |
+                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
+
+           // intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+           // intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER);
+
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         intentFreeform.setPackage(pkg);
 

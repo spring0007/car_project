@@ -255,9 +255,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            swipeActivity.registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+            requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
-            swipeActivity.registerReceiver(receiver, filter)
+            requireContext().registerReceiver(receiver, filter)
         }
     }
 
@@ -794,11 +794,17 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         LogUtil.i("lqq,onStart")
     }
     private var imageUpdateJob: Job? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+       // Settings.System.putString(requireContext().contentResolver, "freeform_launcher_idle", "1");
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onResume() {
         super.onResume()
-
+        LogUtil.i("lqq,onResume ,isVisible =$isVisible")
         if (isVisible) {
-
             Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "1");
             LogUtil.i("freeform_launcher_idle,1")
             dialWidget?.startAnimation()
@@ -818,7 +824,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 }
             },100)*/
         }
-        LogUtil.i("lqq,onResume")
     }
 
     /**
@@ -832,8 +837,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             // Fragment被隐藏，隐藏自由窗口
             imageUpdateJob?.cancel()
             systemUIClient.hideFreeform()
-            systemUIClient.fullScreenFreeform()
             Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            systemUIClient.fullScreenFreeform()
             LogUtil.i("freeform_launcher_idle,0")
 
         } else {
@@ -862,12 +867,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     override fun onStop() {
         super.onStop()
-        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
         LogUtil.i("freeform_launcher_idle,0")
         imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
         }
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
         LogUtil.i("lqq,onStop")
     }
 
@@ -888,7 +893,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     override fun onDestroy() {
         super.onDestroy()
-        swipeActivity.unregisterReceiver(receiver)
+        requireContext().unregisterReceiver(receiver)
         LogUtil.i("lqq,onDestroy")
 
         // 取消所有协程
