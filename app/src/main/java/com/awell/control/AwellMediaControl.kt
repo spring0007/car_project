@@ -34,7 +34,6 @@ class AwellMediaControl() {
     private var isBound = false
 
     init {
-        Log.i(TAG, "huang init ==>: this=${this}")
     }
 
 
@@ -312,7 +311,6 @@ class AwellMediaControl() {
     }
 
     private fun handleMediaPlay(bundle: Bundle) {
-        Log.i(TAG, "handleMediaPlay: huang bundle=${bundle}")
         val pkg = bundle.getString(AwellTool.VALUE_M1, mNullStr)
         val command = bundle.getString(AwellTool.VALUE_M2, mNullStr)
         val mediaType = bundle.getSafeInt(AwellTool.VALUE_M3, 3)

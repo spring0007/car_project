@@ -125,7 +125,6 @@ class HostToPluginService : Service() {
     init {
         albumArtProvider = AlbumArtProvider(mAppContext)
         mMediaListener.initDependencies(mAppContext)
-        Log.i(TAG, "huang init ==>: mediaLibrary=${mediaLibrary.javaClass.classLoader}")
         mediaLibrary.init(mAppContext)
         mediaLibrary.setOnDataListener(mDataListener)
     }
@@ -278,7 +277,7 @@ class HostToPluginService : Service() {
                     "start" -> {
                         pkg?.let {
                             mMediaListener.playingPackageName = pkg
-                            Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
+                            //Log.i(TAG, "saveTempValue: huang pkg==>${pkg} command=${command}")
                             if (isLocalMediaStart(pkg, command)) {
                                 //只有未注册到media session服务里的媒体开始播放的时候
                                 //才将注册到media session服务里的媒体断开回调

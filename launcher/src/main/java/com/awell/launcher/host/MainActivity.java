@@ -43,7 +43,7 @@ import java.util.Objects;
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private boolean D = true;
+    private boolean D = false;
 
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
@@ -69,21 +69,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(TAG, "onCreate: huang launcher main activity create==>");
 
-        int debug = 0;
-        try {
-            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
-        } catch (NumberFormatException e) {
-            debug = 1;
-        }
-        if (debug == 1) {
-            D = true;
-        }
+//        int debug = 0;
+//        try {
+//            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
+//        } catch (NumberFormatException e) {
+//            debug = 1;
+//        }
+//        if (debug == 1) {
+//            D = true;
+//        }
 
         if (D) {
             Log.i(TAG, "onCreate: huang launcher main activity create==>");
         }
-
 
         binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -128,16 +128,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             RePlugin.startActivity(MainActivity.this, intent);
             long endTime = System.currentTimeMillis();
-            Log.i(TAG, "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
+            if (D) {
+                Log.i(TAG, "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
+            }
         } else {
-            Log.e(TAG, "handleMessage: install external plugin failed");
+            if (D) {
+                Log.e(TAG, "handleMessage: install external plugin failed");
+            }
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
+        if (D)
+            Log.i(TAG, "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
         if (!isFirstBoot) {
             String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
             Message message = buildPluginMsg(apkClazz);
@@ -219,7 +224,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
-        Log.i(TAG, "onBackPressed: huang Intercept back==>");
+        if (D) {
+            Log.i(TAG, "onBackPressed: huang Intercept back==>");
+        }
     }
 
     private void initView() {
@@ -345,7 +352,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 ComponentName topActivity = runningTasks.get(0).topActivity;
                 String packageName = topActivity.getPackageName();
                 String className = topActivity.getClassName();
-                Log.d(TAG, "getTopActivity: huang Package: " + packageName + ", Class: " + className);
+                if (D){
+                    Log.d(TAG, "getTopActivity: huang Package: " + packageName + ", Class: " + className);
+                }
                 return className;
             }
         } catch (Exception e) {

@@ -463,7 +463,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private void updatePageCounts() {
 
 //		mNumWidgetPages = (int) Math.ceil(mWidgets.size() / (mWidgetCountX * mWidgetCountY)); // by jxy (float)
-        Log.i(TAG, "updatePageCounts: huang mNumAppsPages=>" + mNumAppsPages + " mApps.size()=>" + mApps.size() + " count=>" + (mCellCountX * mCellCountY));
+        //Log.i(TAG, "updatePageCounts: huang mNumAppsPages=>" + mNumAppsPages + " mApps.size()=>" + mApps.size() + " count=>" + (mCellCountX * mCellCountY));
         mNumAppsPages = (int) Math.ceil((float) mApps.size() / (mCellCountX * mCellCountY));
         if (mNumAppsPages == 1) {
             if (getPageIndication() != null) {

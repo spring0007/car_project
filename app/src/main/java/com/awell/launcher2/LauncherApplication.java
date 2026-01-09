@@ -29,19 +29,14 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemProperties;
 import android.os.UserHandle;
-import android.provider.Settings;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.awell.control.HostAppsHolder;
-import com.awell.impl.HostAppsImpl;
 import com.awell.impl.ModelImpl;
 import com.awell.launcher.library.BuildConfig;
 import com.awell.launcher.library.R;
@@ -81,15 +76,15 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         // set sIsScreenXLarge and sScreenDensity *before* creating icon cache
         sIsScreenLarge = getResources().getBoolean(R.bool.is_large_screen);
         sScreenDensity = getResources().getDisplayMetrics().density;
-        int debug = 0;
-        try {
-            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
-        } catch (NumberFormatException e) {
-            debug = 1;
-        }
-        if (debug == 1) {
-            D = true;
-        }
+//        int debug = 0;
+//        try {
+//            debug = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1"));
+//        } catch (NumberFormatException e) {
+//            debug = 1;
+//        }
+//        if (debug == 1) {
+//            D = true;
+//        }
 
         if (isProcess(this, ":GuardService")) {
             if (D) {
@@ -101,9 +96,8 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     }
 
     public void hostInit() {
-        HostAppsHolder.init(new HostAppsImpl());
+        //HostAppsHolder.init(new HostAppsImpl());
         initLauncherModel();
-
     }
 
     public void initLauncherModel() {
@@ -125,7 +119,9 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     }
 
     private void initHostModule() {
-        Log.i(TAG, "initHostModule: huang getPackageName()=>" + getPackageName());
+        if (D){
+            Log.i(TAG, "initHostModule: huang getPackageName()=>" + getPackageName());
+        }
         if (isProcess(this, getPackageName())) {
 //            if (getPackageName().equals(BuildConfig.APPLICATION_ID)) {
             //运行在宿主进程

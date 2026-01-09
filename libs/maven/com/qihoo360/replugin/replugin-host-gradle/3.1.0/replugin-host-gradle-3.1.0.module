@@ -28,10 +28,10 @@
           "name": "replugin-host-gradle-3.1.0.jar",
           "url": "replugin-host-gradle-3.1.0.jar",
           "size": 187556,
-          "sha512": "07b950483a8338e3ae671573ad61b117f5dc416efd7661f0f5a03553e9dfdcbbc82ce20c11b0cbdb16376838f26dbe04ff5d1ac5b1c23be018f3c5b69da6f8a2",
-          "sha256": "64e182a71df614a82ab9c84ad84b7a8059c2b2d532684fc188211fe3a5004d5f",
-          "sha1": "1e40aa09e4ecb5a53364f0ce4da1728679549733",
-          "md5": "ffd3b728339b60f95263aebcf4594b29"
+          "sha512": "cb208930a9bb78dde6b52514aa10883195d08699f5ecb90aaa405881236f71d99bcd5203a90f1192eef6cbc8b6ba3f1679e3816dc7cee6f2618901dc3d929e6b",
+          "sha256": "7c1214c5f980a15617807e3f56bfb81075a77184a1a8d82347dac85a01ed5a29",
+          "sha1": "91ff557f05589fe1d5e11cae67c98e9bf7061278",
+          "md5": "6b07816e724160c294d805181951d6e5"
         }
       ]
     },
@@ -93,10 +93,10 @@
           "name": "replugin-host-gradle-3.1.0.jar",
           "url": "replugin-host-gradle-3.1.0.jar",
           "size": 187556,
-          "sha512": "07b950483a8338e3ae671573ad61b117f5dc416efd7661f0f5a03553e9dfdcbbc82ce20c11b0cbdb16376838f26dbe04ff5d1ac5b1c23be018f3c5b69da6f8a2",
-          "sha256": "64e182a71df614a82ab9c84ad84b7a8059c2b2d532684fc188211fe3a5004d5f",
-          "sha1": "1e40aa09e4ecb5a53364f0ce4da1728679549733",
-          "md5": "ffd3b728339b60f95263aebcf4594b29"
+          "sha512": "cb208930a9bb78dde6b52514aa10883195d08699f5ecb90aaa405881236f71d99bcd5203a90f1192eef6cbc8b6ba3f1679e3816dc7cee6f2618901dc3d929e6b",
+          "sha256": "7c1214c5f980a15617807e3f56bfb81075a77184a1a8d82347dac85a01ed5a29",
+          "sha1": "91ff557f05589fe1d5e11cae67c98e9bf7061278",
+          "md5": "6b07816e724160c294d805181951d6e5"
         }
       ]
     }

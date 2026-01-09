@@ -94,7 +94,6 @@ public class LauncherProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new DatabaseHelper(getContext());
-        Log.i(TAG, "onCreate: huang provide create this==>" + this);
         ((LauncherApplication) getContext()).setLauncherProvider(this);
         return true;
     }
@@ -129,9 +128,6 @@ public class LauncherProvider extends ContentProvider {
         if (!values.containsKey(LauncherSettings.Favorites._ID)) {
             throw new RuntimeException("Error: attempting to add item without specifying an id");
         }
-        Log.i(TAG, "dbInsertAndCheck: huang insert table=>" + table);
-        Log.i(TAG, "dbInsertAndCheck: huang insert values=>" + values);
-        Log.i(TAG, "dbInsertAndCheck: huang stacks =>" + Log.getStackTraceString(new Throwable("huang")));
         return db.insert(table, nullColumnHack, values);
     }
 
@@ -144,7 +140,6 @@ public class LauncherProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues initialValues) {
         SqlArguments args = new SqlArguments(uri);
-        Log.i(TAG, "insert: huang insert uri ==>" + uri);
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final long rowId = dbInsertAndCheck(mOpenHelper, db, args.table, null, initialValues);
         if (rowId <= 0) return null;
