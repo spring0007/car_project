@@ -7,4 +7,7 @@
     <dimen name="time_start_radio">0.1</dimen>
     <dimen name="music_start_radio">0.1</dimen>
     <dimen name="time_font_size">72sp</dimen>
+    <dimen name="time_bg_hor_radio">0</dimen>
+    <dimen name="time_bg_ver_radio">0.5</dimen>
+    <dimen name="music_bg_hor_radio">1</dimen>
 </resources>

@@ -5,18 +5,16 @@
     <dimen name="recycle_app_icon_size">100dp</dimen>
     <dimen name="recycle_app_width">150dp</dimen>
 
+    <dimen name="guideline_top1">0.12</dimen>
+    <dimen name="guideline_left1">0.02</dimen>
+    <dimen name="guideline_right">0.98</dimen>
     <dimen name="top_radio">0.2</dimen>
-    <dimen name="car_iv_width">824dp</dimen>
-    <dimen name="car_iv_height">389dp</dimen>
-    <dimen name="music_iv_width">324dp</dimen>
     <dimen name="car_iv_start">30dp</dimen>
     <dimen name="car_speed_radio">0.03</dimen>
     <dimen name="music_widget_radio">0.3</dimen>
-    <dimen name="rv_item_width">738dp</dimen>
-    <dimen name="rv_item_height">209dp</dimen>
+    <dimen name="rv_width">600dp</dimen>
     <dimen name="hotset_allapp_width">120dp</dimen>
     <dimen name="radio_freq_size">40sp</dimen>
     <dimen name="radio_icon_size">170dp</dimen>
     <dimen name="radio_icon_radius">50dp</dimen>
-
 </resources>

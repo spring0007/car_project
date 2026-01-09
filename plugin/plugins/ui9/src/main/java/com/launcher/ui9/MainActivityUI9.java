@@ -118,6 +118,7 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        mediaControl.unBindDataService(this);
     }
 
     @Override
