@@ -29,6 +29,7 @@ import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.launcher.ui11.databinding.ActivityMainUi11Binding;
+import com.launcher.ui11.databinding.ActivityMainUi11NewBinding;
 import com.launcher.ui11.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivityUI11 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI11.class.getSimpleName();
-    private ActivityMainUi11Binding binding;
+   // private ActivityMainUi11Binding binding;
+    private ActivityMainUi11NewBinding binding;
     private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
@@ -50,7 +52,8 @@ public class MainActivityUI11 extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainUi11Binding.inflate(getLayoutInflater());
+       // binding = ActivityMainUi11Binding.inflate(getLayoutInflater());
+        binding = ActivityMainUi11NewBinding.inflate(getLayoutInflater());
 
 
         mediaControl = new AwellMediaControl();

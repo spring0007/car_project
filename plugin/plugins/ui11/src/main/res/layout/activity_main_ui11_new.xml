@@ -7,16 +7,37 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityUI11">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="@dimen/guideline_left1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.11" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.97" />
+
     <ImageView
         android:id="@+id/hotseat_bg_iv"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/hotset_height"
+        android:layout_height="0dp"
         android:src="@drawable/sf_hotseat_bg"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="@dimen/hotset_top"/>
+        app:layout_constraintEnd_toEndOf="@+id/guideline_left1"
+        app:layout_constraintTop_toTopOf="@id/guideline_top1"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_top2" />
 
     <ImageView
         android:id="@+id/hotset_nav_app"
@@ -68,15 +89,30 @@
         app:layout_constraintTop_toBottomOf="@+id/hotset_music_app"
         app:layout_constraintBottom_toBottomOf="@+id/hotseat_bg_iv"/>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
     <ImageView
         android:id="@+id/time_bg_iv"
-        android:layout_width="@dimen/time_bg_width"
-        android:layout_height="@dimen/time_bg_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/sf_time_bg"
-        app:layout_constraintStart_toEndOf="@+id/hotseat_bg_iv"
-        app:layout_constraintEnd_toStartOf="@+id/layout_radio_widget"
-        app:layout_constraintTop_toTopOf="@+id/hotseat_bg_iv"
-        android:layout_marginStart="@dimen/hotset_start"/>
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left1"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top1"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top" />
 
     <TextClock
         android:id="@+id/time_hour"
@@ -122,37 +158,47 @@
         app:layout_constraintTop_toTopOf="@+id/date"
         app:layout_constraintHorizontal_bias="0.35" />
 
-    <!-- music layout -->
-    <include layout="@layout/music_widget"
-        android:id="@+id/layout_music_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/time_bg_iv"
-        app:layout_constraintTop_toBottomOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/hotseat_bg_iv"
-        />
-
     <include layout="@layout/radio_widget"
         android:id="@+id/layout_radio_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/time_bg_iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top1"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_top"
         android:layout_marginStart="@dimen/radio_start"
         android:layout_marginEnd="15dp"/>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6" />
+
+    <!-- music layout -->
+    <include layout="@layout/music_widget"
+        android:id="@+id/layout_music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left1"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_left3"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top2"
+        android:layout_marginTop="13dp" />
+
     <ImageView
         android:id="@+id/bt_bg_iv"
-        android:layout_width="@dimen/bt_bg_width"
-        android:layout_height="@dimen/bt_bg_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:src="@drawable/sf_bt_bg"
+        android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="@+id/layout_music_widget"
         app:layout_constraintBottom_toBottomOf="@+id/layout_music_widget"
-        app:layout_constraintStart_toEndOf="@+id/layout_music_widget"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left3"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="13dp"
-        android:layout_marginEnd="0dp"/>
+        android:layout_marginEnd="15dp"/>
 
     <TextView
         android:id="@+id/bt_status_tv"
