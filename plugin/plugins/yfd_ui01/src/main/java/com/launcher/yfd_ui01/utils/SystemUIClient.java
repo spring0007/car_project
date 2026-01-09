@@ -37,6 +37,9 @@ public class SystemUIClient {
 
     private final String  GAODE_PKG = "com.autonavi.amapauto";
     private final String  GAODE_CLAZZ = "com.autonavi.amapauto.MainMapActivity";
+    private final String  MUSIC_KUWO_PKG1 = "cn.kuwo.player";
+    private final String  MUSIC_KUWO_CLAZZ1 = "cn.kuwo.player.activities.MainActivity";
+
 
     // Window mode constants
     public static final int WINDOWING_MODE_FULLSCREEN = 1;
@@ -198,8 +201,13 @@ public class SystemUIClient {
 
         }
 
-        if(pkg.equals(GAODE_PKG))
+        if(pkg.equals(GAODE_PKG)) {
             clazz = GAODE_CLAZZ;
+        }
+
+       /* if(pkg.equals(MUSIC_KUWO_PKG1)) {
+            clazz = MUSIC_KUWO_CLAZZ1;
+        }*/
 
         intentFreeform.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                     Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS |

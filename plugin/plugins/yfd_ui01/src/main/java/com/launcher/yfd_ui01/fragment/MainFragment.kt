@@ -44,6 +44,7 @@ import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
+import com.launcher.yfd_ui01.utils.BootStateManager
 import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
@@ -193,7 +194,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private val layoutListener = View.OnLayoutChangeListener { view, left, top, right, bottom,
                                                                oldLeft, oldTop, oldRight, oldBottom ->
 
-        LogUtil.i("left=" + left + "" + ",top=" + top)
+        LogUtil.i("left=$left,top=$top")
+        if(BootStateManager.isFirstBootAfterReboot(swipeActivity)){
+            LogUtil.i("have boot apk ,donot freeform apk")
+            return@OnLayoutChangeListener
+        }
         // 检查位置是否变化或者视图是否可见
         if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
             if (view.isVisibleOnScreen()) {
@@ -208,8 +213,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val screenY = location[1]
         val width = imageView.width
         val height = imageView.height
-        LogUtil.i(reason)
+        LogUtil.i("reason=$reason")
         systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        SystemProperties.set("persist.sys.lz.default_freeform_bounds", "$screenX,$screenY,$width,$height")
         Settings.System.putString(swipeActivity.contentResolver,"freeform_last_bounds",
             systemUIClient.rect.flattenToString()
         );
@@ -758,6 +764,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         } else {
             if (isboot) Settings.System.putString(requireContext().contentResolver, "boot_apk2", packName)
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         swipeActivity.applicationContext.startActivity(intent)
     }
 
@@ -871,8 +878,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
-        }
-        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            systemUIClient.fullScreenFreeform()
+        }else
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+
         LogUtil.i("lqq,onStop")
     }
 
