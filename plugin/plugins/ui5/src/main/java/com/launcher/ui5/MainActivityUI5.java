@@ -50,6 +50,8 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     private boolean accRecor;
     private final int SPEEDHOME = 20;
 
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,8 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         initReceiver();
         initLongTouch();
 
+        initLocationListener();
+
         clickApp();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             handler.removeMessages(SPEEDHOME);
@@ -80,6 +84,39 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
 
+    }
+
+    private void initLocationListener() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new LocationListener() {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+                if (location != null && location.hasSpeed()) {
+
+                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
+                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+
+
+                    Message msg = mHandlerSpeed.obtainMessage();
+                    msg.what = MSG_UPDATE_SPEED;
+                    msg.arg1 = speed;
+                    msg.arg2 = speedMile;
+                    mHandlerSpeed.sendMessage(msg);
+                }
+            }
+        };
     }
 
     @Override
@@ -160,46 +197,12 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                 }
             }
         };
-        LocationManager mlocationManager = null;
-        if (null == mlocationManager)
-            mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Log.i(TAG, "mlocationManager==" + mlocationManager);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location != null && location.hasSpeed()) {
-
-                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
-                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
-                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
-
-
-                    Message msg = mHandlerSpeed.obtainMessage();
-                    msg.what = MSG_UPDATE_SPEED;
-                    msg.arg1 = speed;
-                    msg.arg2 = speedMile;
-                    mHandlerSpeed.sendMessage(msg);
-                }
-            }
-        }, mHandlerSpeed.getLooper());
+        mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
     }
 
     private void updateSpeedUnitText() {
@@ -325,8 +328,34 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         unregisterReceiver(mainReceiver);
-        mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
+        cleanListener();
+        try {
+            mediaControl.unBindDataService(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void cleanListener() {
+        if (mHandlerSpeed != null) {
+            mHandlerSpeed.removeCallbacksAndMessages(null);
+            mHandlerSpeed = null;
+        }
+
+        if (mLocationManager != null && mLocationListener != null) {
+            try {
+                mLocationManager.removeUpdates(mLocationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+            mLocationManager = null;
+            mLocationListener = null;
+        }
+
+        if (binding != null) {
+            binding = null;
+        }
     }
 
     private void clickApp() {
@@ -335,7 +364,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         binding.hotsetDaohangapp.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioNext.setOnClickListener(this);
         binding.layoutRadioWidget.ivRadioPre.setOnClickListener(this);
-		binding.layoutRadioWidget.radioProgress.setOnClickListener(this);
+        binding.layoutRadioWidget.radioProgress.setOnClickListener(this);
         binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
     }
 
@@ -343,23 +372,23 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.hotsetBtapp.getId()) {
-            startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
-        }else if (v.getId() == binding.hotsetDaohangapp.getId()) {
+        } else if (v.getId() == binding.hotsetBtapp.getId()) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        } else if (v.getId() == binding.hotsetDaohangapp.getId()) {
             startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-        }else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()) {
             if (ClickUtils.isFastClick()) {
-               return;
+                return;
             }
             mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
-        }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()) {
             if (ClickUtils.isFastClick()) {
                 return;
             }
             mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
-        }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()) {
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
-        }else if (v.getId() == binding.layoutRadioWidget.radioProgress.getId()){
+        } else if (v.getId() == binding.layoutRadioWidget.radioProgress.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }
@@ -444,10 +473,10 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
-           runOnUiThread(() -> {
+            runOnUiThread(() -> {
                 binding.layoutRadioWidget.tvRadioFreq.setText(freq);
                 binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
-             });
+            });
         }
 
         @Override

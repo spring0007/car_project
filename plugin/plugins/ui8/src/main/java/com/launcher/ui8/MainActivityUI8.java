@@ -86,7 +86,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     }
 
 
-    private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mainReceiver = new BroadcastReceiver() {
         String SYSTEM_REASON = "reason";
         String SYSTEM_HOME_KEY = "homekey";
 
@@ -110,9 +110,10 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             }
         }
     };
+
     private void initLongTouch() {
         contentView = findViewById(android.R.id.content);
-        handler = new Handler(Looper.getMainLooper()){
+        handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -139,7 +140,6 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onBackPressed() {
         AppsCustomizeControl.INSTANCE.hideApps();
@@ -156,8 +156,9 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
-        mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
+        unregisterReceiver(mainReceiver);
+        mediaControl.unBindDataService(this);
     }
 
     private void clickApp() {
@@ -180,7 +181,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == binding.bottomLayout.radioIv.getId() || v.getId() == binding.bottomLayout.radioTv.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-        }else if (v.getId() == binding.bottomLayout.naviIv.getId() || v.getId() == binding.bottomLayout.naviTv.getId()) {
+        } else if (v.getId() == binding.bottomLayout.naviIv.getId() || v.getId() == binding.bottomLayout.naviTv.getId()) {
             startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
         } else if (v.getId() == binding.bottomLayout.allIv.getId() || v.getId() == binding.bottomLayout.allTv.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
@@ -188,7 +189,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == binding.bottomLayout.musicIv.getId() || v.getId() == binding.bottomLayout.musicTv.getId()) {
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        }else if (v.getId() == binding.dateLayout.time.getId() || v.getId() == binding.dateLayout.date.getId() || v.getId() == binding.dateLayout.weekday.getId()) {
+        } else if (v.getId() == binding.dateLayout.time.getId() || v.getId() == binding.dateLayout.date.getId() || v.getId() == binding.dateLayout.weekday.getId()) {
             Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
             startActivity(intent);
         }
@@ -284,7 +285,6 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     };
 
 
-
     private boolean isEventConsumedByChild = false;
     private boolean isLongPressPossible = false;
     private float startX = 0f;
@@ -370,6 +370,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             longPressRunnable = null;
         }
     }
+
     private void backgroundAlpha(float alpha) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.alpha = alpha; //0.0-1.0

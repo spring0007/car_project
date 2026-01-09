@@ -76,6 +76,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private View contentView;
 
 
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +100,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         initLongTouch();
         initAddAppView();
 
+        initLocationListener();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             handler.removeMessages(SPEEDHOME);
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
@@ -106,6 +111,39 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
 
+    }
+
+    private void initLocationListener() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new LocationListener() {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+                if (location != null && location.hasSpeed()) {
+
+                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
+                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+
+
+                    Message msg = mHandlerSpeed.obtainMessage();
+                    msg.what = MSG_UPDATE_SPEED;
+                    msg.arg1 = speed;
+                    msg.arg2 = speedMile;
+                    mHandlerSpeed.sendMessage(msg);
+                }
+            }
+        };
     }
 
     private void initClickEvent() {
@@ -206,46 +244,12 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 }
             }
         };
-        LocationManager mlocationManager = null;
-        if (null == mlocationManager)
-            mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Log.i(TAG, "mlocationManager==" + mlocationManager);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location != null && location.hasSpeed()) {
-
-                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
-                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
-                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
-
-
-                    Message msg = mHandlerSpeed.obtainMessage();
-                    msg.what = MSG_UPDATE_SPEED;
-                    msg.arg1 = speed;
-                    msg.arg2 = speedMile;
-                    mHandlerSpeed.sendMessage(msg);
-                }
-            }
-        }, mHandlerSpeed.getLooper());
+        mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
     }
 
     private void updateSpeedUnitText() {
@@ -522,6 +526,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         popupWindow.showAtLocation(contentView, Gravity.CENTER, 0, 10);
 
     }
+
     public List<PackageInfo> getAppList(PackageManager packageManager, List<ResolveInfo> resolveInfos) {
         List<PackageInfo> appList = new ArrayList<>();
         Set<String> processed = new HashSet<>();
@@ -609,7 +614,31 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+
+        cleanListener();
+
         mediaControl.unBindDataService(this);
+    }
+
+    private void cleanListener() {
+        if (mHandlerSpeed != null) {
+            mHandlerSpeed.removeCallbacksAndMessages(null);
+            mHandlerSpeed = null;
+        }
+
+        if (mLocationManager != null && mLocationListener != null) {
+            try {
+                mLocationManager.removeUpdates(mLocationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+            mLocationManager = null;
+            mLocationListener = null;
+        }
+
+        if (binding != null) {
+            binding = null;
+        }
     }
 
     @Override

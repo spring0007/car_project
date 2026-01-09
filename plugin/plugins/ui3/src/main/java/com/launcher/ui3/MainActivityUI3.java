@@ -347,7 +347,11 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
-        mediaControl.unBindDataService(this);
+        try {
+            mediaControl.unBindDataService(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void clickApp() {
