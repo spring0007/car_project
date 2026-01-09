@@ -51,6 +51,7 @@ import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
 import com.launcher.ui4.databinding.ActivityMainUi4Binding;
+import com.launcher.ui4.databinding.ActivityMainUi4NewBinding;
 import com.launcher.ui4.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +63,8 @@ import java.util.Set;
 
 public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
-    private ActivityMainUi4Binding binding;
+  //  private ActivityMainUi4Binding binding;
+    private ActivityMainUi4NewBinding binding;
     private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
@@ -77,7 +79,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainUi4Binding.inflate(getLayoutInflater());
+       // binding = ActivityMainUi4Binding.inflate(getLayoutInflater());
+        binding = ActivityMainUi4NewBinding.inflate(getLayoutInflater());
 
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
