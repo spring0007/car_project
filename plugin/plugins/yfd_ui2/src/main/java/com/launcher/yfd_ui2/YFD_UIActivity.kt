@@ -28,7 +28,6 @@ import android.os.Message
 import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -61,6 +60,7 @@ import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui2.adapter.AppInofAdapter
 import com.launcher.yfd_ui2.adapter.AppPopAdapter
 import com.launcher.yfd_ui2.databinding.UiActivityBinding
+import com.launcher.yfd_ui2.utils.BootStateManager
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
@@ -170,7 +170,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }, 100)*/
         handlerFreeform.removeCallbacks(freeformRunnable)
         // 重新发送新的延时任务
-        handlerFreeform.postDelayed(freeformRunnable, 100)
+        if(!BootStateManager.isFirstBootAfterReboot(this.applicationContext))
+            handlerFreeform.postDelayed(freeformRunnable, 100)
 
         if (!isWeatherTimerRunning) {
             handler?.postDelayed(weatherRefreshRunnable, 0)
@@ -183,9 +184,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onStop()
         LogUtil.i("onStop")
 
-        if (systemUIClient.getmFreeformMode()==0x05)
+        if (systemUIClient.getmFreeformMode()==0x05) {
             systemUIClient.hideFreeform()
-        Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
+            systemUIClient.fullScreenFreeform()
+        }else
+            Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
 
@@ -213,6 +217,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val height = imageView.height
 
         val rect = Rect(screenX, screenY, screenX + width, screenY + height)
+        SystemProperties.set("persist.sys.lz.default_freeform_bounds", "$screenX,$screenY,$width,$height")
         Settings.System.putString(contentResolver,"freeform_launcher_idle", "1");
         LogUtil.w("freeform_launcher_idle,1")
         //todo bootapk_packname bootapk_classname -- adb shell settings get system bootapk_packname
