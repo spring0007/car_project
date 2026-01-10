@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="recycle_app_icon_size">75dp</dimen>
+    <dimen name="recycle_ver_ratio">0.93</dimen>
+    <dimen name="bottom_frame_width">1230dp</dimen>
+    <dimen name="bottom_frame_height">144dp</dimen>
+</resources>

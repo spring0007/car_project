@@ -3,6 +3,7 @@
     <dimen name="app_icon_bg_size">80dp</dimen>
     <dimen name="recycle_app_icon_size">100dp</dimen>
     <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="recycle_ver_ratio">0.92</dimen>
 
     <dimen name="music_vertical_ratio">0.15</dimen>
 

@@ -26,7 +26,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
-
     <ImageView
         android:id="@+id/music_widget_bg_iv"
         android:layout_width="wrap_content"
@@ -78,6 +77,7 @@
         android:layout_width="@dimen/bottom_frame_width"
         android:layout_height="@dimen/bottom_frame_height"
         android:src="@drawable/bottom_frame"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
@@ -108,7 +108,7 @@
         app:layout_constraintEnd_toEndOf="@+id/bottom_frame"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.92" />
+        app:layout_constraintVertical_bias="@dimen/recycle_ver_ratio" />
 
     <!--<LinearLayout
         android:id="@+id/rv_layout"
