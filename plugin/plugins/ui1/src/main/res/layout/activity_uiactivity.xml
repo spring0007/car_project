@@ -21,9 +21,9 @@
 
     <ImageView
         android:id="@+id/iv_main_xiaodeng"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
+        android:layout_width="@dimen/car_width"
+        android:layout_height="@dimen/car_height"
+        android:scaleType="fitXY"
         android:src="@drawable/off"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintHorizontal_bias="@dimen/car_speed_hor_ratio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.78" />
@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/hotseat_bg" />
 
         <LinearLayout
@@ -87,40 +87,40 @@
 
             <ImageView
                 android:id="@+id/hotset_video"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
                 android:src="@drawable/hotset_video" />
 
             <ImageView
                 android:id="@+id/hotset_navi"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/bottom_icon_width"
+                android:layout_height="@dimen/bottom_icon_width"
                 android:layout_weight="1.5"
                 android:scaleType="fitCenter"
                 android:src="@drawable/hotset_navi" />
 
             <ImageView
                 android:id="@+id/hotset_allapp"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/bottom_icon_width"
+                android:layout_height="@dimen/bottom_icon_width"
                 android:layout_weight="1.5"
                 android:scaleType="fitCenter"
                 android:src="@drawable/hotset_all_app" />
 
             <ImageView
                 android:id="@+id/hotset_setting"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/bottom_icon_width"
+                android:layout_height="@dimen/bottom_icon_width"
                 android:layout_weight="1.5"
                 android:scaleType="fitCenter"
                 android:src="@drawable/hotset_setting" />
 
             <ImageView
                 android:id="@+id/hotset_bluetooth"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/bottom_icon_width"
+                android:layout_height="@dimen/bottom_icon_width"
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
                 android:src="@drawable/hotset_bt" />

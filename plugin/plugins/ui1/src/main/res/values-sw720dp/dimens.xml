@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="car_width">708dp</dimen>
+    <dimen name="car_height">348dp</dimen>
+    <dimen name="bottom_icon_width">56dp</dimen>
+    <dimen name="car_speed_hor_ratio">0.68</dimen>
+</resources>
