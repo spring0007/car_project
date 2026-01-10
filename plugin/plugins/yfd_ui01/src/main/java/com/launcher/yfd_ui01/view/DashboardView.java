@@ -8,12 +8,12 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
 import com.launcher.yfd_ui01.R;
+import com.launcher.yfd_ui01.utils.LogUtil;
 
 /**
  * Date :2021/12/24
@@ -96,10 +96,10 @@ public class DashboardView extends View {
             hourHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_car_speed_point, options);
             
             if (hourHand == null) {
-                Log.e(TAG, "Failed to load bitmap resource");
+                LogUtil.e( "Failed to load bitmap resource");
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error loading bitmap", e);
+            LogUtil.e( "Error loading bitmap", e);
         }
     }
 
@@ -145,7 +145,7 @@ public class DashboardView extends View {
             // 绘制指针
             drawBitmapCenteredPoint(canvas, hourHand, 0, 0, handCenterX, handCenterY, currentDegree);
         } catch (Exception e) {
-            Log.e(TAG, "Error in onDraw", e);
+            LogUtil.e( "Error in onDraw", e);
         } finally {
             // 恢复画布状态
             canvas.restore();

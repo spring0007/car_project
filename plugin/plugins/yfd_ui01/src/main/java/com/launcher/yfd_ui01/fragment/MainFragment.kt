@@ -270,6 +270,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
+            if(!isVisible)return
             LogUtil.i( "onReceive:huang action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
@@ -483,40 +484,18 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             var pkg = Settings.System.getString(requireContext().contentResolver,"launcher_app_icon_3")
 
             if(TextUtils.isEmpty(pkg) || pkg.equals("com.launcher.yfd_ui01")){
-                /*swipeActivity.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                    //.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
-                    .replace(R.id.fragment_container, MenuFragment())
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss()*/
                 swipeActivity.goToFragment(1, FragmentAnimation.NONE)
             }else{
-                var intent = startActivityByPkg(3,"com.launcher.yfd_ui01")
-                if (intent==null)
-                    startActivityByPkgClazz("com.awell.eqselect", "com.awell.eqselect.MainActivity")
-                else
-                    startActivityIntent(intent)
+                onClickFun(3,"com.awell.eqselect", "com.awell.eqselect.MainActivity")
             }
         }
 
         hotsetDspApp.setOnClickListener {
-            var intent = startActivityByPkg(2,"com.awell.eqselect")
-            if (intent==null)
-                startActivityByPkgClazz("com.awell.eqselect", "com.awell.eqselect.MainActivity")
-            else
-                startActivityIntent(intent)
-
+            onClickFun(2,"com.awell.eqselect", "com.awell.eqselect.MainActivity")
         }
 
         hotsetBtApp.setOnClickListener {
-            var intent = startActivityByPkg(1,"com.awell.bluetooth")
-            LogUtil.i("intent="+intent)
-            if (intent==null)
-                startActivityByPkgClazz(
-                    "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
-                )
-            else
-                startActivityIntent(intent)
+            onClickFun(1,"com.awell.bluetooth", "com.awell.bluetooth.MainActivity")
         }
 
         hotsetWindowApp.setOnClickListener {
@@ -556,6 +535,19 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             val intent = Intent(Settings.ACTION_DATE_SETTINGS)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
+        }
+    }
+
+    private fun onClickFun(appIndex:Int,pkg:String,clazz: String){
+        var intent = startActivityByPkg(appIndex,pkg)
+        if (intent==null)
+            startActivityByPkgClazz(pkg, clazz)
+        else{
+            val freePkg = Settings.System.getString(requireContext().contentResolver,"freeform_app_package_name")
+            if(intent.`package`.equals(freePkg))
+                systemUIClient.fullScreenFreeform()
+            else
+            startActivityIntent(intent)
         }
     }
 //---------------CarPopupWindow---------------
@@ -732,6 +724,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     }
     private fun startActivityByPkgClazz(packName: String, className: String?) {
+        LogUtil.i("startActivityByPkgClazz,packName=$packName")
         val intent = swipeActivity.packageManager.getLaunchIntentForPackage(packName)
         var isboot = true
         if (intent != null) {
@@ -751,6 +744,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
 
     private fun startActivityIntent(intent: Intent) {
+        LogUtil.i("startActivityIntent")
         val packName = intent.`package`
         var isboot = true
         for (index in IconCache.WorkSpacePackageName.indices) {

@@ -1,7 +1,6 @@
 package com.launcher.yfd_ui01.app;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 

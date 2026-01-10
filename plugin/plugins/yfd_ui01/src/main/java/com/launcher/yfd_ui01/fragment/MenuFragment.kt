@@ -110,6 +110,7 @@ class MenuFragment : Fragment()  {
         checkViewLayoutAndInitData()
         
         setupViewPagerListener()
+        registerPackageReceiver()
         setupSwipeGesture()
     }
     
@@ -575,6 +576,8 @@ class MenuFragment : Fragment()  {
     private fun registerPackageReceiver() {
         homeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
+                if(!isVisible)return
+                LogUtil.i("action="+intent.action)
                 when (intent.action) {
                     Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
                         val reason = intent.getStringExtra("reason")
@@ -589,6 +592,7 @@ class MenuFragment : Fragment()  {
 
         packageReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
+                if(!isVisible)return
                 val action = intent.action
                 val packageName = intent.data?.schemeSpecificPart ?: return
 
@@ -694,19 +698,17 @@ class MenuFragment : Fragment()  {
             checkViewLayoutAndInitData()
         }
         
-        registerPackageReceiver()
+
     }
 
     override fun onPause() {
         super.onPause()
         LogUtil.i("onPause")
-        closeReceiver()
     }
 
     override fun onStop() {
         super.onStop()
         LogUtil.i("onStop")
-        closeReceiver()
     }
 
     override fun onDestroyView() {

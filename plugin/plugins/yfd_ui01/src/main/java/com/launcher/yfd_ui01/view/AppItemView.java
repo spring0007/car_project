@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.launcher.yfd_ui01.R;
+import com.launcher.yfd_ui01.utils.LogUtil;
 
 public class AppItemView extends RelativeLayout implements View.OnTouchListener {
     private static final String TAG = "AppItemView";
@@ -47,7 +47,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
 //        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 //        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 //
-//        Log.d(TAG, "onMeasure - 宽度模式: " + getModeString(widthMode) +
+//        LogUtil.d( "onMeasure - 宽度模式: " + getModeString(widthMode) +
 //                    ", 尺寸: " + widthSize +
 //                    ", 高度模式: " + getModeString(heightMode) +
 //                    ", 尺寸: " + heightSize);
@@ -58,20 +58,20 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
 //            int width = dpToPx(defaultWidth);
 //            int height = dpToPx(defaultHeight);
 //            setMeasuredDimension(width, height);
-//            Log.d(TAG, "设置默认尺寸: " + width + "x" + height);
+//            LogUtil.d( "设置默认尺寸: " + width + "x" + height);
 //        }
 //    }
     
 //    @Override
 //    protected void onLayout(boolean changed, int l, int t, int r, int b) {
 //        super.onLayout(changed, l, t, r, b);
-//        Log.d(TAG, "onLayout - 位置: [" + l + ", " + t + ", " + r + ", " + b + "]");
+//        LogUtil.d( "onLayout - 位置: [" + l + ", " + t + ", " + r + ", " + b + "]");
 //    }
 //
 //    @Override
 //    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 //        super.onSizeChanged(w, h, oldw, oldh);
-//        Log.d(TAG, "onSizeChanged - 新尺寸: " + w + "x" + h);
+//        LogUtil.d( "onSizeChanged - 新尺寸: " + w + "x" + h);
 //    }
 
     
@@ -111,14 +111,14 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
                     if (appBg != null) {
                         appBg.setBackground(bgDrawable);
                     } else {
-                        Log.e("AppItemView", "appBg is null, cannot set background drawable");
+                        LogUtil.e( "appBg is null, cannot set background drawable");
                     }
                 }
 
                 typedArray.recycle();
             }
         } catch (Exception e) {
-            Log.e(TAG, "AppItemView初始化失败", e);
+            LogUtil.e("AppItemView初始化失败", e);
         }
     }
 
@@ -127,7 +127,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appIcon != null) {
             appIcon.setImageDrawable(drawable);
         } else {
-            Log.e(TAG, "setAppIcon: appIcon为null");
+            LogUtil.e( "setAppIcon: appIcon为null");
         }
     }
 
@@ -135,7 +135,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appIcon != null) {
             appIcon.setImageResource(resId);
         } else {
-            Log.e(TAG, "setAppIcon: appIcon为null, resId: " + resId);
+            LogUtil.e("setAppIcon: appIcon为null, resId: " + resId);
         }
     }
 
@@ -144,7 +144,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appName != null) {
             appName.setText(name);
         } else {
-            Log.e(TAG, "setAppName: appName为null, name: " + name);
+            LogUtil.e("setAppName: appName为null, name: " + name);
         }
     }
 
@@ -152,7 +152,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appName != null) {
             appName.setText(resId);
         } else {
-            Log.e(TAG, "setAppName: appName为null, resId: " + resId);
+            LogUtil.e( "setAppName: appName为null, resId: " + resId);
         }
     }
 
@@ -161,7 +161,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appBg != null) {
             appBg.setImageDrawable(drawable);
         } else {
-            Log.e(TAG, "setAppBg: appBg为null");
+            LogUtil.e( "setAppBg: appBg为null");
         }
     }
 
@@ -169,7 +169,7 @@ public class AppItemView extends RelativeLayout implements View.OnTouchListener 
         if (appBg != null) {
             appBg.setImageResource(resId);
         } else {
-            Log.e(TAG, "setAppBg: appBg为null, resId: " + resId);
+            LogUtil.e("setAppBg: appBg为null, resId: " + resId);
         }
     }
 

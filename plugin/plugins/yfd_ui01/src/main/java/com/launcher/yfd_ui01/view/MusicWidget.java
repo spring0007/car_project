@@ -8,9 +8,9 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +34,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.launcher.yfd_ui01.R;
+import com.launcher.yfd_ui01.utils.LogUtil;
 
 
 public class MusicWidget extends RelativeLayout implements OnClickListener {
@@ -66,7 +67,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         @Override
         public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<Drawable> target, boolean isFirstResource) {
             if (e != null) {
-                Log.e(TAG, "Glide load uri failed!! " + e.getMessage());
+                LogUtil.e( "Glide load uri failed!! " + e.getMessage());
                 return true;
             }
             return false;
@@ -134,39 +135,6 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         musicNextIv.setOnClickListener(this);
 
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
-//        ll_name_layout_music.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
-//            @Override
-//            public void onDraw() {
-//                if (ll_name_layout_music.getVisibility()== View.VISIBLE) {
-//                    Log.i(TAG,"lqq,requestFocus");
-//                    mMusicNameTextView.requestFocus();
-//                    ll_name_layout_music.getViewTreeObserver().removeOnDrawListener(this);
-//
-//                }
-//
-//            }
-//        });
-
-        // 监听布局完成并给予焦点
-        mMusicNameTextView.addOnAttachStateChangeListener(new OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(@NonNull View view1) {
-                if (view1.getVisibility() == View.VISIBLE) {
-                    view1.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            view1.requestFocus();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(View v) {
-                // 清理工作
-                removeOnAttachStateChangeListener(this);
-            }
-        });
 ////        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
 //        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
@@ -181,7 +149,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void getCarPlayData(String zlinStatus, String phoneMode) {
-        Log.e(TAG, "getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
+        LogUtil.e("getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
         if ("CONNECTED".equals(zlinStatus)) {
             //zlinkCarPlaySocketThread = new SocketThread(1555, carPlayhandler, phoneMode);
             //currentMedia = CARPLAY;
@@ -205,13 +173,13 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             setCurMusicState(false, OTHER_MUSIC);
         } else if (zlinStatus.equals("MAIN_AUDIO_START")) {
             //currentMedia = CARPLAY;
-            Log.d(TAG, "getCarPlayData-currentMedia: " + currentMedia);
+            LogUtil.d( "getCarPlayData-currentMedia: " + currentMedia);
             setCurMusicState(true, OTHER_MUSIC);
         }
     }
 
     public void setCarPlayData(String zlinStatus, String phoneMode) {
-        Log.e(TAG, "getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
+        LogUtil.e( "getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
         if ("CONNECTED".equals(zlinStatus)) {
 
             setImageIcon(currentMedia);
@@ -231,7 +199,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         } else if (zlinStatus.equals("MAIN_AUDIO_STOP")) {
             setCurMusicState(false, OTHER_MUSIC);
         } else if (zlinStatus.equals("MAIN_AUDIO_START")) {
-            Log.d(TAG, "getCarPlayData-currentMedia: " + currentMedia);
+            LogUtil.d("getCarPlayData-currentMedia: " + currentMedia);
             setCurMusicState(true, OTHER_MUSIC);
         }
     }
@@ -242,9 +210,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Log.i(TAG, "onClick v.getId() " + v.getId());
+        LogUtil.i( "onClick v.getId() " + v.getId());
         int id = v.getId();
-        Log.i(TAG, "onClick: huang currentMedia=>" + currentMedia);
+        LogUtil.i( "onClick: huang currentMedia=>" + currentMedia);
         if (id == R.id.music_widget_next) {
             if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.NEXT);
@@ -302,25 +270,28 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                     btIntent.putExtra("bt_preference_key", 3);
                     mContext.startActivity(btIntent);
                 } catch (ActivityNotFoundException e) {
-                    Log.e("TAG", "Activity not found: " + e.getMessage());
+                    LogUtil.e( "Activity not found: " + e.getMessage());
                     // 可以提示用户安装目标应用
                 }
             } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
-                launchAppByPackageName(mContext, currentPlayingPackage);
+                //当小窗应用与跳转的应用一致时,则不跳转
+                String packageName = Settings.System.getString(mContext.getContentResolver(),"freeform_app_package_name");
+                if(!currentPlayingPackage.equals(packageName))
+                    launchAppByPackageName(mContext, currentPlayingPackage);
             }
         }
     }
     
 
     public void stopLoadAnim() {
-//        Log.d(TAG, "stopLoadAnim--objectAnimator = " + mObjectAnimator);
+//        LogUtil.d( "stopLoadAnim--objectAnimator = " + mObjectAnimator);
 //        if (mObjectAnimator != null) {
 //            mObjectAnimator.cancel();
 //        }
     }
 
     public void pauseLoadAnim() {
-//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+//        LogUtil.d( "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
 //        if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
 //            mObjectAnimator.pause();
 //        }
@@ -328,7 +299,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     public void resumeLoadAnim() {
 
-//        Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
+//        LogUtil.d( "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
 //        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
 //            mObjectAnimator.resume();
 //        }
@@ -336,7 +307,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     public void startLoadAnim() {
 
-//        Log.d(TAG, "startLoadAnim--objectAnimator = " + mObjectAnimator);
+//        LogUtil.d("startLoadAnim--objectAnimator = " + mObjectAnimator);
 //        if (mObjectAnimator != null) {
 //            mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
 //            mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
@@ -352,7 +323,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         boolean isboot = true;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
-                Log.d(TAG, "packagename11 = " + pkg);
+                LogUtil.d( "packagename11 = " + pkg);
                 if (!pkg.equals(IconCache.WorkSpacePackageName[index])) {
                     isboot = false;
                     break;
@@ -370,7 +341,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        Log.d(TAG, "setMusicNameTextView: flag= " + flag + " musicname=" + musicname + " currentMedia=" + currentMedia);
+        LogUtil.d( "setMusicNameTextView: flag= " + flag + " musicname=" + musicname + " currentMedia=" + currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
@@ -381,7 +352,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
+        LogUtil.d("setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
         if (mArtistNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(artistName)) {
                 mArtistNameTextView.setText(artistName);
@@ -441,7 +412,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setCurMusicState(boolean musicState, int flag) {
-        Log.e(TAG, "flag = " + flag + "--currentMedia=" + currentMedia);
+        LogUtil.e("flag = " + flag + "--currentMedia=" + currentMedia);
         if (currentMedia == flag) {
             setCurMusicState(musicState);
         }
@@ -451,13 +422,13 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
      * 根据当前播放状态，切换UI
      */
     private void setCurMusicState(boolean musicState) {
-        Log.i(TAG, "setCurMusicState = " + musicState);
+        LogUtil.i("setCurMusicState = " + musicState);
         setTextEarquee(musicState);
         if (mPlayStateImageView == null) return;
         this.musicState = musicState;
         if (musicState) {
 //            if (currentMedia <= BT && mObjectAnimator != null) {
-//                Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
+//                LogUtil.i( "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
 //                if (!mObjectAnimator.isRunning()) {
 //                    startLoadAnim();
 //                } else {
@@ -482,8 +453,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
      * 切换当前音频播放器的播放控制器
      */
     public void switchMediaController(String packName, String status, int mediaType, int curMedia) {
-        Log.i(TAG, "switchMediaController: packName = " + packName + ", status= " + status);
-        Log.i(TAG, "switchMediaController: mediaType = " + mediaType + ", curMedia= " + curMedia);
+        LogUtil.i("switchMediaController: packName = " + packName + ", status= " + status);
+        LogUtil.i("switchMediaController: mediaType = " + mediaType + ", curMedia= " + curMedia);
 
         if ("start".equals(status)) {
             currentPlayingPackage = packName;
