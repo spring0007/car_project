@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_text_size">85sp</dimen>
+    <dimen name="time_week_size">30sp</dimen>
+    <dimen name="music_iv_size">100dp</dimen>
+    <dimen name="music_bg_size">180dp</dimen>
+</resources>

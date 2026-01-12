@@ -1,4 +1,4 @@
-package com.example.gongban;
+package com.example.plugin2;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;

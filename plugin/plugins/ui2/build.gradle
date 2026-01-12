@@ -1,10 +1,37 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+//plugins {
+//    id 'com.android.application'
+//    id 'org.jetbrains.kotlin.android'
+//}
+
+
+buildscript {
+
+    repositories {
+        if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
+            maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
+        } else {
+            google()
+            mavenCentral()
+        }
+
+        mavenLocal()
+    }
+    dependencies {
+//        classpath 'com.tencent.shadow.core:runtime:1.0'
+//        classpath 'com.tencent.shadow.core:activity-container:1.0'
+//        classpath 'com.tencent.shadow.core:gradle-plugin:1.0'
+        classpath "org.javassist:javassist:$javassist_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+
 android {
-    namespace 'com.example.gongban'
+    namespace 'com.example.plugin2'
     compileSdk 34
 
     defaultConfig {
@@ -17,7 +44,7 @@ android {
     // 修改 APK 名称
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            output.outputFileName = "LauncherUI2_plugin.apk"
+            output.outputFileName = "LauncherUI2.apk"
         }
     }
 
@@ -48,6 +75,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     kotlinOptions {
         jvmTarget = '11'

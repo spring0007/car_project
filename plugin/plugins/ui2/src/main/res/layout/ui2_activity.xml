@@ -11,9 +11,9 @@
 
     <ImageView
         android:id="@+id/iv_anim_speed_road"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/rainbow_01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,19 +21,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.58" />
 
-
     <ImageView
         android:id="@+id/ivLampSwitchBg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintDimensionRatio="1:0.8"
+        app:layout_constraintWidth_percent="0.18"
         android:src="@drawable/off"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.64" />
-
 
     <include
         android:id="@+id/include_car_speed"
@@ -47,7 +47,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1" />
 
-
     <include
         android:id="@+id/include_widget_music"
         layout="@layout/widget_layout_music_plugin2"
@@ -59,7 +58,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.08" />
-
 
     <TextClock
         android:id="@+id/time"
@@ -75,7 +73,7 @@
         android:shadowRadius="6"
         android:text="00:00"
         android:textColor="@android:color/white"
-        android:textSize="120sp"
+        android:textSize="@dimen/time_text_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +119,7 @@
         android:shadowRadius="6"
         android:text="5月18日"
         android:textColor="@android:color/white"
-        android:textSize="48sp"
+        android:textSize="@dimen/time_week_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/time"
         app:layout_constraintHorizontal_bias="0.2"
@@ -134,22 +132,27 @@
     <ImageView
         android:id="@+id/hotset_navi"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         android:src="@drawable/hotset_navi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@id/hotset_video"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="30dp"/>
 
     <!-- 链节点1 -->
     <ImageView
         android:id="@+id/hotset_video"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_video"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@id/hotset_setting"
@@ -160,9 +163,11 @@
     <ImageView
         android:id="@+id/hotset_setting"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_setting"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@id/hotset_allapp"
@@ -173,9 +178,11 @@
     <ImageView
         android:id="@+id/hotset_allapp"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_all_app"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@id/hotset_radio"
@@ -186,9 +193,11 @@
     <ImageView
         android:id="@+id/hotset_radio"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_radio"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toStartOf="@id/hotset_bluetooth"
@@ -199,14 +208,17 @@
     <ImageView
         android:id="@+id/hotset_bluetooth"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_bt"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/hotset_radio"
-        app:layout_constraintTop_toTopOf="@+id/hotset_navi" />
+        app:layout_constraintTop_toTopOf="@+id/hotset_navi"
+        android:layout_marginEnd="30dp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"

@@ -1,4 +1,4 @@
-<com.example.gongban.MusicWidgetPlugin2 xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.plugin2.MusicWidgetPlugin2 xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/music_widget_layout"
@@ -159,20 +159,20 @@
 
         <LinearLayout
             android:id="@+id/rl_music_ablum_container"
-            android:layout_width="280dp"
-            android:layout_height="280dp"
+            android:layout_width="@dimen/music_bg_size"
+            android:layout_height="@dimen/music_bg_size"
             android:layout_gravity="center"
             android:gravity="center">
 
             <RelativeLayout
                 android:id="@+id/rl_music_ablum_bg"
-                android:layout_width="260dp"
-                android:layout_height="260dp">
+                android:layout_width="@dimen/music_bg_size"
+                android:layout_height="@dimen/music_bg_size">
                 <!-- 专辑图背景 -->
                 <ImageView
                     android:id="@+id/img_song_art_bg"
-                    android:layout_width="260dp"
-                    android:layout_height="260dp"
+                    android:layout_width="@dimen/music_bg_size"
+                    android:layout_height="@dimen/music_bg_size"
                     android:layout_centerInParent="true"
                     android:clickable="true"
                     android:scaleType="fitCenter"
@@ -180,8 +180,8 @@
                 <!-- 专辑图片 -->
                 <ImageView
                     android:id="@+id/img_song_art"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="@dimen/music_iv_size"
+                    android:layout_height="@dimen/music_iv_size"
                     android:layout_centerInParent="true"
                     android:clickable="true"
                     android:scaleType="fitCenter"
@@ -249,4 +249,4 @@
                 android:layout_weight="0.8" />
         </LinearLayout>
     </LinearLayout>
-</com.example.gongban.MusicWidgetPlugin2>
+</com.example.plugin2.MusicWidgetPlugin2>

@@ -1,4 +1,4 @@
-package com.example.gongban
+package com.example.plugin2
 
 import android.Manifest
 import android.animation.ValueAnimator
@@ -32,8 +32,8 @@ import com.awell.launcher2.IconCache
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
-import com.example.gongban.databinding.SpeedLayoutBinding
-import com.example.gongban.databinding.Ui2ActivityBinding
+import com.example.plugin2.databinding.SpeedLayoutBinding
+import com.example.plugin2.databinding.Ui2ActivityBinding
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.max
