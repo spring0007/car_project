@@ -273,15 +273,20 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     public void pauseLoadAnim() {
         Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
         if (mObjectAnimator != null && mObjectAnimator.isRunning()) {
-            mObjectAnimator.pause();
+          //  mObjectAnimator.pause();
+            mObjectAnimator.cancel();
         }
     }
 
     public void resumeLoadAnim() {
 
         Log.d(TAG, "pauseLoadAnim--objectAnimator = " + mObjectAnimator);
-        if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+      //  if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
+         Log.d(TAG, "resumeLoadAnim");
+        if (mObjectAnimator.isPaused()) {
             mObjectAnimator.resume();
+        } else {
+            startLoadAnim();
         }
     }
 
@@ -372,7 +377,7 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
                 mBar.setMax(totalProgress);
                 mBar.setProgress(curProgress);
             }
-            if (curProgress > 0 && curProgress < 1000) {
+            if (musicState && curProgress > 0 && curProgress < 1000) {
                 stopLoadAnim();
                 startLoadAnim();
             }
