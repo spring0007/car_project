@@ -78,7 +78,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:gravity="center">
         <ImageView
             android:layout_width="@dimen/radio_icon_size"
             android:layout_height="@dimen/radio_icon_size"

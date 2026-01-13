@@ -2,10 +2,11 @@
 <resources>
 
     <dimen name="guideline_top1">0.12</dimen>
-    <dimen name="guideline_left1">0.1</dimen>
-    <dimen name="guideline_right">0.9</dimen>
+    <dimen name="guideline_left1">0.02</dimen>
+    <dimen name="guideline_right">0.98</dimen>
     <dimen name="hotset_allapp_width">80dp</dimen>
-    <dimen name="rv_width">700dp</dimen>
+    <dimen name="rv_width">850dp</dimen>
     <dimen name="recycle_app_width">140dp</dimen>
+    <dimen name="radio_icon_size">130dp</dimen>
 
 </resources>

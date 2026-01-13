@@ -50,7 +50,6 @@ import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
-import com.launcher.ui4.databinding.ActivityMainUi4Binding;
 import com.launcher.ui4.databinding.ActivityMainUi4NewBinding;
 import com.launcher.ui4.databinding.MusicWidgetBinding;
 
