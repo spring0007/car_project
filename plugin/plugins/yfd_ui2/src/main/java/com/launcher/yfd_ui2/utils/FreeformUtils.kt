@@ -7,8 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.os.Build
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
+import androidx.annotation.RequiresApi
 import java.util.Objects
 
 object FreeformUtils {
@@ -32,14 +35,17 @@ object FreeformUtils {
 
     val MUSIC_KUWO_PKG: String = "cn.kuwo.kwmusiccar"
     val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.MainActivity"
+
     //val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.WelcomeActivity"
     private var top_Activity: String? = null
 
     fun startFreeformApp(context: Context, rect: Rect) {
-        LogUtil.i("startFreeformApp" );
+        LogUtil.i("startFreeformApp");
         putStringSettingsSystem(context, SETTINGS_UI_HAS_FREEFORM, "true")
-        Settings.System.putString(context.contentResolver,"freeform_last_bounds",
-            rect.flattenToString());
+        Settings.System.putString(
+            context.contentResolver, "freeform_last_bounds",
+            rect.flattenToString()
+        );
 
         var pkg =
             Settings.System.getString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
@@ -58,20 +64,21 @@ object FreeformUtils {
             clazz = NAVI_GOOGLE_PKG
         }
 
-        val isRun = isAppRunning(context,pkg)
-        if(isRun && top_Activity!=null &&  (!clazz.equals(top_Activity)))
+        val isRun = isAppRunning(context, pkg)
+        if (isRun && top_Activity != null && (!clazz.equals(top_Activity)))
             clazz = top_Activity
 
-        /*if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
+        if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
             clazz = MUSIC_KUWO_CLAZZ
-        }*/
+        }
+
         if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {
             clazz = NAVI_GAODE_CLAZZ
         }
-        
+
         val options: ActivityOptions = makeLaunchOptions(context, rect)
         var intentFreeform = context.packageManager.getLaunchIntentForPackage(pkg)
-        if (intentFreeform==null)
+        if (intentFreeform == null)
             intentFreeform = Intent()
 
         intentFreeform.addFlags(
@@ -97,8 +104,8 @@ object FreeformUtils {
         return pkg == MUSIC_KUWO_PKG
     }
 
-    private fun isGaoDeMap(pkg: String):Boolean {
-        return pkg== NAVI_GAODE_PKG
+    private fun isGaoDeMap(pkg: String): Boolean {
+        return pkg == NAVI_GAODE_PKG
     }
 
     private fun makeLaunchOptions(context: Context, rect: Rect): ActivityOptions {
@@ -121,9 +128,9 @@ object FreeformUtils {
                 Boolean::class.javaPrimitiveType
             )
             setTaskAlwaysOnTopMethod.invoke(activityOptions, true)
-            LogUtil.d( "setTaskAlwaysOnTop: true")
+            LogUtil.d("setTaskAlwaysOnTop: true")
         } catch (e: Exception) {
-            LogUtil.e( "startFreeFormActivity: setTaskAlwaysOnTop error==> ${e.message}")
+            LogUtil.e("startFreeFormActivity: setTaskAlwaysOnTop error==> ${e.message}")
         }
 
         return activityOptions
@@ -161,6 +168,25 @@ object FreeformUtils {
             }
         }
         return appRun
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun isFreeformAppRunning(context: Context): Boolean {
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val list = am.getRunningTasks(100)
+        val pkg =
+            Settings.System.getString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
+        Log.i(TAG, "isFreeformAppRunning: huang pkg=>${pkg}")
+        for (info in list) {
+            info?.let {
+                Log.i(TAG, "isFreeformAppRunning: huang package=>${it.topActivity?.packageName}")
+                Log.i(TAG, "isFreeformAppRunning: huang task id=>" + it.taskId)
+                if (pkg.equals(it.topActivity?.packageName)) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     fun putStringSettingsSystem(context: Context, name: String, value: String) {

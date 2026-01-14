@@ -28,6 +28,7 @@ import android.os.Message
 import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -38,6 +39,7 @@ import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.PopupWindow
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -61,6 +63,7 @@ import com.launcher.yfd_ui2.adapter.AppInofAdapter
 import com.launcher.yfd_ui2.adapter.AppPopAdapter
 import com.launcher.yfd_ui2.databinding.UiActivityBinding
 import com.launcher.yfd_ui2.utils.BootStateManager
+import com.launcher.yfd_ui2.utils.FreeformUtils
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
@@ -154,12 +157,22 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         setPluginThemeMode(100)
 
     }
+
     private val handlerFreeform = Handler(Looper.getMainLooper())
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     private val freeformRunnable = Runnable {
         if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
-            updateImagePosition(findViewById(R.id.freeform_image), "onResume")
+            Log.i(
+                TAG,
+                "huang running=>: isFreeformAppRunning()=>${FreeformUtils.isFreeformAppRunning(this)}"
+            )
+            if (!FreeformUtils.isFreeformAppRunning(this)) {
+                updateImagePosition(findViewById(R.id.freeform_image), "onResume")
+            }
         }
     }
+
     override fun onResume() {
         super.onResume()
         LogUtil.i("onResume")
@@ -170,7 +183,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }, 100)*/
         handlerFreeform.removeCallbacks(freeformRunnable)
         // 重新发送新的延时任务
-        if(!BootStateManager.isFirstBootAfterReboot(this.applicationContext))
+        if (!BootStateManager.isFirstBootAfterReboot(this.applicationContext))
             handlerFreeform.postDelayed(freeformRunnable, 100)
 
         if (!isWeatherTimerRunning) {
@@ -184,11 +197,11 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onStop()
         LogUtil.i("onStop")
 
-        if (systemUIClient.getmFreeformMode()==0x05) {
+        if (systemUIClient.getmFreeformMode() == 0x05) {
             systemUIClient.hideFreeform()
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
-            systemUIClient.fullScreenFreeform()
-        }else
+            //systemUIClient.fullScreenFreeform()
+        } else
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -217,12 +230,15 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val height = imageView.height
 
         val rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        SystemProperties.set("persist.sys.lz.default_freeform_bounds", "$screenX,$screenY,$width,$height")
-        Settings.System.putString(contentResolver,"freeform_launcher_idle", "1");
+        SystemProperties.set(
+            "persist.sys.lz.default_freeform_bounds",
+            "$screenX,$screenY,$width,$height"
+        )
+        Settings.System.putString(contentResolver, "freeform_launcher_idle", "1");
         LogUtil.w("freeform_launcher_idle,1")
         //todo bootapk_packname bootapk_classname -- adb shell settings get system bootapk_packname
         //todo 开机时候检查时否有开机自启的apk，有，不启动小窗，没有，启动小窗
-        LogUtil.i( "updateImagePosition: huang rect=>${rect} reason=${reason}")
+        LogUtil.i("updateImagePosition: huang rect=>${rect} reason=${reason}")
         systemUIClient.setmFreeformMode(5)
         startFreeformApp(this, rect)
 
@@ -273,7 +289,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             } else {
                 // 处理权限被拒绝
                 //showPermissionDeniedMessage()
-                LogUtil.e( "onRequestPermissionsResult: not have permission==>")
+                LogUtil.e("onRequestPermissionsResult: not have permission==>")
             }
         }
     }
@@ -567,11 +583,16 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
+        unregisterCustomerListener()
         try {
             mediaControl.unBindDataService(this)
         } catch (e: Exception) {
-            LogUtil.e( "onDestroy: unBindDataService error=>${e.message}")
+            LogUtil.e("onDestroy: unBindDataService error=>${e.message}")
         }
+    }
+
+    private fun unregisterCustomerListener() {
+        locationManager.removeUpdates(locationListener)
     }
 
     /**
@@ -626,7 +647,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 "com.zjinnova.zlink" -> {
                     val zlinkStatus = intent.getStringExtra("status")
                     val phoneMode = intent.getStringExtra("phoneMode")
-                    LogUtil.d( "zlinkStatus:$zlinkStatus")
+                    LogUtil.d("zlinkStatus:$zlinkStatus")
                     if (zlinkStatus == null) {
                         return
                     }
@@ -642,7 +663,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
 
                 "android.launcher.show.allApp" -> {
-                    Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+                    Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
                     LogUtil.w("freeform_launcher_idle,0")
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                 }
@@ -904,7 +925,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
             LogUtil.w("freeform_launcher_idle,0")
             systemUIClient.hideFreeform()
-            Settings.System.putString(contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
             systemUIClient.fullScreenFreeform()
 
 
@@ -947,7 +968,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
-        Settings.System.putString(contentResolver,"freeform_launcher_idle", "1");
+        Settings.System.putString(contentResolver, "freeform_launcher_idle", "1");
         LogUtil.w("freeform_launcher_idle,1")
         findViewById<ImageView>(R.id.freeform_image).post {
             if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
