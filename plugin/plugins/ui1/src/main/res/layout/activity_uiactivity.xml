@@ -56,7 +56,104 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.78" />
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.91"/>
+
+    <ImageView
+        android:id="@+id/hotset_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/hotseat_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- 链头 -->
+    <ImageView
+        android:id="@+id/hotset_video"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_video"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@id/hotset_navi"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="15dp"/>
+
+    <!-- 链节点1 -->
+    <ImageView
+        android:id="@+id/hotset_navi"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_navi"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@id/hotset_allapp"
+        app:layout_constraintStart_toEndOf="@id/hotset_video"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:layout_marginTop="15dp"/>
+
+    <!-- 链节点2 -->
+    <ImageView
+        android:id="@+id/hotset_allapp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_all_app"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@id/hotset_setting"
+        app:layout_constraintStart_toEndOf="@id/hotset_navi"
+        android:layout_marginTop="15dp"/>
+
+    <!-- 链节点3 -->
+    <ImageView
+        android:id="@+id/hotset_setting"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_setting"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@id/hotset_bluetooth"
+        app:layout_constraintStart_toEndOf="@id/hotset_allapp"
+        android:layout_marginTop="15dp"/>
+
+    <!-- 链尾 -->
+    <ImageView
+        android:id="@+id/hotset_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_bt"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintWidth_percent="0.05"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hotset_setting"
+        android:layout_marginEnd="60dp"
+        android:layout_marginTop="15dp"/>
+
+   <!-- <FrameLayout
         android:id="@+id/host_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="143dp"
@@ -65,14 +162,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/hotset_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/hotseat_bg" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -84,46 +173,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2" />
-
-            <ImageView
-                android:id="@+id/hotset_video"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hotset_video" />
-
-            <ImageView
-                android:id="@+id/hotset_navi"
-                android:layout_width="@dimen/bottom_icon_width"
-                android:layout_height="@dimen/bottom_icon_width"
-                android:layout_weight="1.5"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hotset_navi" />
-
-            <ImageView
-                android:id="@+id/hotset_allapp"
-                android:layout_width="@dimen/bottom_icon_width"
-                android:layout_height="@dimen/bottom_icon_width"
-                android:layout_weight="1.5"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hotset_all_app" />
-
-            <ImageView
-                android:id="@+id/hotset_setting"
-                android:layout_width="@dimen/bottom_icon_width"
-                android:layout_height="@dimen/bottom_icon_width"
-                android:layout_weight="1.5"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hotset_setting" />
-
-            <ImageView
-                android:id="@+id/hotset_bluetooth"
-                android:layout_width="@dimen/bottom_icon_width"
-                android:layout_height="@dimen/bottom_icon_width"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hotset_bt" />
 
             <ImageView
                 android:id="@+id/hotset_moshi"
@@ -140,7 +189,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2" />
 
-
             <ImageView
                 android:id="@+id/hotset_dianhua"
                 android:layout_width="56dp"
@@ -149,7 +197,7 @@
                 android:src="@drawable/hotset_dianhua"
                 android:visibility="gone" />
         </LinearLayout>
-    </FrameLayout>
+    </FrameLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
