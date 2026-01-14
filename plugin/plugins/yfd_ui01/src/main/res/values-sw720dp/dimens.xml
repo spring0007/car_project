@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="music_btn_padding">28dp</dimen>
-    <dimen name="main_app_margin_start">30dp</dimen>
-    <dimen name="main_app_margin_end">92dp</dimen>
-    <dimen name="app_margin_start">30dp</dimen>
-    <dimen name="app_margin_end">21dp</dimen>
-    <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
-    <dimen name="navigation_bar_width">@*android:dimen/navigation_bar_width</dimen>
-    <!--@*android:dimen/navigation_bar_height-->
 
     <dimen name="dial_width">219dp</dimen>
     <dimen name="dial_textsize">21sp</dimen>
@@ -19,4 +11,5 @@
     <dimen name="app_gird_icon_width">60dp</dimen>
     <dimen name="car_icon_width">160dp</dimen>
     <dimen name="car_icon_height">88dp</dimen>
+
 </resources>

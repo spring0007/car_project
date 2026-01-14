@@ -95,7 +95,6 @@ class MenuFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val startTime = System.currentTimeMillis()
         super.onViewCreated(view, savedInstanceState)
         LogUtil.i("onViewCreated called, savedInstanceState=$savedInstanceState")
         swipeActivity = activity as MainActivity_YFD_UI01
@@ -114,8 +113,6 @@ class MenuFragment : Fragment() {
         setupViewPagerListener()
         registerPackageReceiver()
         setupSwipeGesture()
-
-        val endTime = System.currentTimeMillis()
     }
 
     /**
@@ -140,7 +137,7 @@ class MenuFragment : Fragment() {
         view?.viewTreeObserver?.addOnGlobalLayoutListener(layoutObserver)
 
         // 方法2：同时使用Handler延迟检查作为备份
-        layoutCheckRunnable = Runnable {
+        /*layoutCheckRunnable = Runnable {
             if (isViewReady()) {
                 safeInitData()
             } else {
@@ -149,7 +146,7 @@ class MenuFragment : Fragment() {
             }
         }
 
-        handler.post(layoutCheckRunnable!!)
+        handler.post(layoutCheckRunnable!!)*/
     }
 
     /**
@@ -622,17 +619,29 @@ class MenuFragment : Fragment() {
 
         packageReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                if (!isVisible) return
-                val action = intent.action
-                val packageName = intent.data?.schemeSpecificPart ?: return
+                if(!isVisible)return
+                LogUtil.i("pkg,action="+intent.action)
+                //val packageName = intent.data?.schemeSpecificPart ?: return
+                val packageName = intent.data!!.schemeSpecificPart
+                val replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
 
-                when (action) {
-                    Intent.ACTION_PACKAGE_ADDED,
-                    Intent.ACTION_PACKAGE_REMOVED,
-                    Intent.ACTION_PACKAGE_CHANGED -> {
-                        updateAppGrid()
+                var op = 0
+                if (packageName == null || packageName.isEmpty()) {
+                    return
+                }
+                when (intent.action) {
+                    Intent.ACTION_PACKAGE_CHANGED -> op = 2
+                    Intent.ACTION_PACKAGE_REMOVED -> if (!replacing) {
+                        op = 3
+                    }
+                    Intent.ACTION_PACKAGE_ADDED -> if (!replacing) {
+                        op = 1
+                    } else {
+                        op = 2
                     }
                 }
+                if(op!=0)
+                    updateAppData()
             }
         }
 
@@ -674,7 +683,63 @@ class MenuFragment : Fragment() {
         loadApps()
     }
 
-    private fun closeReceiver() {
+    private fun updateAppData() {
+        LogUtil.i("updateAppGrid")
+        if (!isAdded) return
+
+        // 如果当前正在做完整加载，避免并发
+        if (isLoading) {
+            LogUtil.i("updateAppGrid: 正在加载中，忽略此次更新")
+            return
+        }
+
+        loadJob?.cancel()
+
+        // 仅更新 adapter 数据以避免替换 adapter 导致的 UI 颤抖
+        loadJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                isLoading = true
+
+                val allApps = withContext(Dispatchers.IO) {
+                    getAllAppInfo(swipeActivity.applicationContext)
+                }
+
+                if (!isAdded) return@launch
+
+                val pages = splitIntoPages(allApps)
+
+                // 若已有 adapter，则直接更新数据；否则新建 adapter 并设置一次
+                if (currentAdapter != null && viewPager.adapter === currentAdapter) {
+                    currentAdapter?.updateData(pages)
+                    // 更新指示器（在主线程）
+                    setupPageIndicator()
+                } else if (currentAdapter != null) {
+                    // adapter 已存在但尚未绑定到 viewPager（罕见情况）
+                    viewPager.adapter = currentAdapter
+                    currentAdapter?.updateData(pages)
+                    setupPageIndicator()
+                } else {
+                    // 没有 adapter：创建后设置（仅第一次或极少出现）
+                    currentAdapter = AppPagerAdapter(swipeActivity, pages, ITEMS_PER_PAGE)
+                    viewPager.post {
+                        try {
+                            setAdapterAndIndicator()
+                        } catch (e: Exception) {
+                            LogUtil.e("Error setting adapter in updateAppGrid", e)
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                LogUtil.e("Error updating app grid", e)
+            } finally {
+                isLoading = false
+            }
+        }
+
+    }
+
+    private fun closeReceiver(){
         // 取消广播注册
         packageReceiver?.let {
             try {

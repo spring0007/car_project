@@ -3,6 +3,7 @@ package com.launcher.yfd_ui01.app;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -23,6 +24,8 @@ public class AppPagerAdapter extends PagerAdapter {
     private static final int ITEMS_PER_PAGE = 18;
     private final Context context;
     private final List<List<AppInfo>> pages;
+    // 保存已创建的页面 RecyclerView 引用，便于更新数据而不重建视图
+    private final android.util.SparseArray<RecyclerView> pageViews = new android.util.SparseArray<>();
     
     // 预创建的共享对象，避免重复创建
     private final GridLayoutManager.SpanSizeLookup spanSizeLookup = new GridLayoutManager.SpanSizeLookup() {
@@ -54,8 +57,10 @@ public class AppPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         RecyclerView recyclerView = createRecyclerView(container.getContext());
-        LogUtil.i("container,height="+container.getHeight()+",width="+container.getWidth());
+        //LogUtil.i("container,height="+container.getHeight()+",width="+container.getWidth());
         setupRecyclerView(recyclerView, position ,container.getWidth(),container.getHeight());
+        // 保存引用
+        pageViews.put(position, recyclerView);
         container.addView(recyclerView);
         return recyclerView;
     }
@@ -68,6 +73,8 @@ public class AppPagerAdapter extends PagerAdapter {
             recyclerView.setAdapter(null);
             recyclerView.setLayoutManager(null);
             container.removeView(recyclerView);
+            // 移除保存的引用
+            pageViews.remove(position);
         }
     }
 
@@ -104,23 +111,61 @@ public class AppPagerAdapter extends PagerAdapter {
         
         // 设置适配器
         AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(context, pages.get(position));
+
+        // 设置尺寸计算监听器
+        adapter.setOnItemSizeCalculatedListener(new AppGridRecyclerAdapter.OnItemSizeCalculatedListener() {
+            @Override
+            public void onItemSizeCalculated(int itemWidth, int itemHeight) {
+                // 根据 item 尺寸计算间距
+                //int horizontalSpacing = calculateHorizontalSpacing(itemWidth);
+                //int verticalSpacing = calculateVerticalSpacing(itemHeight);
+
+                int leftSpacing = (width - itemWidth*6)/7;
+                int topSpacing = (height - itemHeight*3)/4;
+               // LogUtil.i("recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
+                if(leftSpacing<0)
+                    leftSpacing = 10;
+                if(topSpacing<0)
+                    topSpacing = 10;
+
+
+
+                // 移除旧的 ItemDecoration
+                if (recyclerView.getItemDecorationCount() > 0) {
+                    recyclerView.removeItemDecorationAt(0);
+                }
+
+                // 添加新的 ItemDecoration
+                recyclerView.addItemDecoration(
+                        AppGridRecyclerAdapter.createGridSpacingItemDecoration(
+                                6,
+                                leftSpacing,
+                                topSpacing,
+                                true
+                        )
+                );
+            }
+        });
+
         recyclerView.setAdapter(adapter);
         // 153, 150
-        int leftSpacing = (width - 153*6)/7;
-        int topSpacing = (height - 150*3)/4;
-        LogUtil.i("recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
-        if(leftSpacing<0)
-            leftSpacing = 10;
-        if(topSpacing<0)
-            topSpacing = 10;
-
+        // 监听 RecyclerView 尺寸变化（如旋转屏幕）
+        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                // 重置尺寸计算，以便重新获取
+                adapter.resetSizeCalculation();
+            }
+        });
 
 
         // 共享的ItemDecoration
-        RecyclerView.ItemDecoration sharedItemDecoration = AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, leftSpacing, topSpacing, true);
+        //RecyclerView.ItemDecoration sharedItemDecoration = AppGridRecyclerAdapter.createGridSpacingItemDecoration(6, leftSpacing, topSpacing, true);
         // 使用共享的ItemDecoration和ItemAnimator
-        recyclerView.addItemDecoration(sharedItemDecoration);
-        recyclerView.setItemAnimator(sharedAnimator);
+        //recyclerView.addItemDecoration(sharedItemDecoration);
+
+        //recyclerView.setItemAnimator(sharedAnimator);
     }
 
     /**
@@ -140,16 +185,34 @@ public class AppPagerAdapter extends PagerAdapter {
      * 数据更新方法
      */
     public void updateData(List<List<AppInfo>> newPages) {
+        int oldCount = getCount();
         this.pages.clear();
         if (newPages != null) {
             this.pages.addAll(newPages);
         }
-        notifyDataSetChanged();
-    }
 
+        int newCount = getCount();
+
+        // 更新已创建页面中 RecyclerView 的 adapter 数据，避免重建页面导致闪烁
+        for (int i = 0; i < pageViews.size(); i++) {
+            int key = pageViews.keyAt(i);
+            RecyclerView rv = pageViews.get(key);
+            if (rv == null) continue;
+            RecyclerView.Adapter adapter = rv.getAdapter();
+            if (adapter instanceof AppGridRecyclerAdapter) {
+                List<AppInfo> listForPage = (key >= 0 && key < pages.size()) ? pages.get(key) : java.util.Collections.emptyList();
+                ((AppGridRecyclerAdapter) adapter).setAppList(listForPage);
+            }
+        }
+
+        // 仅在页数发生变化时通知 Pager 重新布局
+        if (oldCount != newCount) {
+            notifyDataSetChanged();
+        }
+    }
     @Override
     public int getItemPosition(@NonNull Object object) {
-        // 强制刷新所有页面，确保数据一致性
-        return POSITION_NONE;
+        // 默认不强制重建页面，避免由于 notifyDataSetChanged 导致的页面闪烁
+        return POSITION_UNCHANGED;
     }
 }

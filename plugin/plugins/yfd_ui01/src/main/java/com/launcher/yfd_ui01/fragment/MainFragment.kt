@@ -2,6 +2,7 @@ package com.launcher.yfd_ui01.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -18,7 +19,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.Gravity
@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.annotation.RequiresPermission
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +46,7 @@ import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
 import com.launcher.yfd_ui01.utils.BootStateManager
+import com.launcher.yfd_ui01.utils.FreeformUtils.startFreeformApp
 import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
 import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
@@ -72,6 +74,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private lateinit var dialWidget: DialWidget
     private lateinit var freeformBg: ImageView
     private lateinit var carIcon: ImageView
+    private lateinit var carIconLinear: LinearLayout
     private lateinit var hotsetWindowApp: AppItemView
     private lateinit var hotsetBtApp: AppItemView
     private lateinit var hotsetDspApp: AppItemView
@@ -92,20 +95,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     protected lateinit var swipeActivity: MainActivity_YFD_UI01
     private var startX = 0f
     private var startY = 0f
-    private val freeformImpl: SystemUIClient.UIClientCallback =
-        SystemUIClient.UIClientCallback {
-            if (systemUIClient.rect == null) {
-                //服务绑定比视图初始化快，rect未设置，启动Launcher，切换Launcher等
-                viewAddNeedToStartFreeform = true
-            } else {
-                if (freeformBg?.isVisibleOnScreen() == true)
-                    updateImagePosition(freeformBg,"systemUIClient init")
-            }
-        }
-
-//    private val sharedPrefs by lazy {
-//        requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
-//    }
     companion object {
         fun newInstance(): MainFragment {
             return MainFragment()
@@ -128,6 +117,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         swipeActivity = activity as MainActivity_YFD_UI01
         dashboardView = view.findViewById(R.id.car_speed_point)
         dialWidget = view.findViewById(R.id.dial_widget_layout)
+        carIconLinear = view.findViewById(R.id.car_icon_linear)
         carIcon = view.findViewById(R.id.car_icon)
         hotsetWindowApp = view.findViewById(R.id.hotset_window_app)
         hotsetBtApp = view.findViewById(R.id.hotset_bt_app)
@@ -187,39 +177,21 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         freeformBg = view.findViewById(R.id.freeform_bg)
         systemUIClient = SystemUIClient(swipeActivity)
         systemUIClient.bindToSystemUIService(swipeActivity)
-        systemUIClient.setCallback(freeformImpl)
-        freeformBg.addOnLayoutChangeListener(layoutListener)
 
-    }
-    private val layoutListener = View.OnLayoutChangeListener { view, left, top, right, bottom,
-                                                               oldLeft, oldTop, oldRight, oldBottom ->
-
-        LogUtil.i("left=$left,top=$top")
-        if(BootStateManager.isFirstBootAfterReboot(swipeActivity)){
-            LogUtil.i("have boot apk ,donot freeform apk")
-            return@OnLayoutChangeListener
-        }
-        // 检查位置是否变化或者视图是否可见
-        if (left != oldLeft || top != oldTop || right != oldRight || bottom != oldBottom) {
-            if (view.isVisibleOnScreen()) {
-                updateImagePosition(view as ImageView ,"layoutListener")
-            }
-        }
     }
     private fun updateImagePosition(imageView: ImageView, reason:String) {
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1");
+        LogUtil.i("freeform_launcher_idle,1")
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
         val screenX = location[0]
         val screenY = location[1]
         val width = imageView.width
         val height = imageView.height
-        LogUtil.i("reason=$reason")
-        systemUIClient.rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        SystemProperties.set("persist.sys.lz.default_freeform_bounds", "$screenX,$screenY,$width,$height")
-        Settings.System.putString(swipeActivity.contentResolver,"freeform_last_bounds",
-            systemUIClient.rect.flattenToString()
-        );
-        systemUIClient.startOrSetFreeformType( swipeActivity)
+        LogUtil.i("reason=$reason,screenx=$screenX,screeny=$screenY")
+        startFreeformApp(swipeActivity ,  Rect(screenX, screenY, screenX + width, screenY + height))
+        systemUIClient.setmFreeformMode(OPEN_APP_TO_FREEFORM)
+        //systemUIClient.startOrSetFreeformType( swipeActivity)
 
     }
 
@@ -319,11 +291,29 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
                 Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
                     var reason = intent.getStringExtra("reason");
-                    if (reason == "recentapps" || reason == "homekey") {//多任务；recent：最近 ,home键
+                    if (reason == "recentapps") {
+                        canclePopupWindow()
+                        handlerFreeform.removeCallbacks(hideFreeformRunnable)
+                        handlerFreeform.postDelayed(hideFreeformRunnable,100)
+
+                    }else if (reason == "homekey") {//多任务；recent：最近 ,home键
                         canclePopupWindow()
                     }
                 }
             }
+        }
+    }
+
+    private val handlerFreeform = Handler(Looper.getMainLooper())
+    private val hideFreeformRunnable = Runnable {
+        imageUpdateJob?.cancel()
+        if (systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM ) {
+            systemUIClient.hideFreeform()
+            /*Settings.System.putString( swipeActivity.contentResolver,"freeform_launcher_idle",
+                "0"
+            );*/
+             systemUIClient.fullScreenFreeform()
+            LogUtil.i("freeform_launcher_idle,0")
         }
     }
 
@@ -527,7 +517,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             true
         }
 
-        carIcon.setOnLongClickListener {
+        carIconLinear.setOnLongClickListener {
             showCarModelSelector()
             true
         }
@@ -538,7 +528,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
     }
 
-    private fun onClickFun(appIndex:Int,pkg:String,clazz: String){
+    @SuppressLint("SuspiciousIndentation")
+    private fun onClickFun(appIndex:Int, pkg:String, clazz: String){
         var intent = startActivityByPkg(appIndex,pkg)
         if (intent==null)
             startActivityByPkgClazz(pkg, clazz)
@@ -687,9 +678,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             if (file.exists()) {
                 try {
                     val bitmap = BitmapFactory.decodeFile(savedPath)
-                    carIcon.setImageBitmap(bitmap)
-                   // carIcon.contentDescription = displayName
-                    return
+                    if(bitmap!=null) {
+                        carIcon.setImageBitmap(bitmap)
+                        // carIcon.contentDescription = displayName
+                        return
+                    }
                 } catch (e: Exception) {
                     LogUtil.e( "恢复图片失败，尝试从assets加载", e)
                 }
@@ -796,36 +789,46 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
     private var imageUpdateJob: Job? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-       // Settings.System.putString(requireContext().contentResolver, "freeform_launcher_idle", "1");
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onResume() {
         super.onResume()
-        LogUtil.i("lqq,onResume ,isVisible =$isVisible")
-        if (isVisible) {
-            Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "1");
-            LogUtil.i("freeform_launcher_idle,1")
-            dialWidget?.startAnimation()
-            imageUpdateJob?.cancel()
+        //LogUtil.i("lqq,onResume ,isVisible=$isVisible,isAdded=$isAdded, isMenuVisible= $isMenuVisible")
+        LogUtil.i("lqq,onResume ")
+        dialWidget?.startAnimation()
+        imageUpdateJob?.cancel()
+
+
+        if (checkTopAppLollipop(swipeActivity)) {
 
             // 启动新的协程任务
             imageUpdateJob = lifecycleScope.launch {
-                delay(100)
+                delay(150)
                 if (freeformBg.isVisibleOnScreen()) {
                     updateImagePosition(freeformBg, "onResume")
                 }
             }
-            /*freeformBg.postDelayed( {
-                if (freeformBg.isVisibleOnScreen()) {
-                    freeformBg.focusable = View.FOCUSABLE
-                    updateImagePosition(freeformBg)
-                }
-            },100)*/
+            LogUtil.i("lqq,onResume ,Visible")
         }
     }
+
+    @SuppressLint("ServiceCast")
+    private fun checkTopAppLollipop(context: Context): Boolean {
+        //val myPackageName = "com.awell.launcher.host"
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        return try {
+            val tasks = am.appTasks
+            if (tasks.isNotEmpty()) {
+                val taskInfo = tasks[0].taskInfo
+                if (taskInfo != null && taskInfo.topActivity != null) {
+                    return taskInfo.topActivity!!.packageName == "com.awell.launcher.host"
+                }
+            }
+            false
+        } catch (e: SecurityException) {
+            LogUtil.e(e.message)
+            true
+        }
+    }
+
 
     /**
      * 使用show/hide方式切换Fragment时，会调用此方法
@@ -846,8 +849,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             // Fragment被显示，显示自由窗口
             freeformBg.post {
                 if (freeformBg.isVisibleOnScreen()) {
-                    Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1");
-                    LogUtil.i("freeform_launcher_idle,1")
+
                     //freeformBg.focusable = View.FOCUSABLE
                     updateImagePosition(freeformBg ,"hidden")
                 }
@@ -856,15 +858,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        LogUtil.i("lqq,onAttach")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        LogUtil.i("lqq,onDetach")
-    }
 
     override fun onStop() {
         super.onStop()
@@ -889,15 +882,16 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         LogUtil.i("lqq,onPause")
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        freeformBg?.removeOnLayoutChangeListener(layoutListener)
-        LogUtil.i("lqq,onDestroyView")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        requireContext().unregisterReceiver(receiver)
+        receiver?.let {
+            try {
+                requireContext().unregisterReceiver(it)
+            } catch (e: IllegalArgumentException) {
+                // 接收器未注册，忽略此异常或记录日志
+                e.printStackTrace()
+            }
+        }
         LogUtil.i("lqq,onDestroy")
 
         // 取消所有协程
@@ -917,7 +911,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         // 停止速度模拟器
         //speedSimulator?.stopSimulation()
-        LogUtil.i("lqq,onDestroyView")
     }
 
 
