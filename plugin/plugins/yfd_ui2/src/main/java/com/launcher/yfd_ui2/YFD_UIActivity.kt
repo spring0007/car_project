@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.ContentValues
@@ -163,16 +164,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.Q)
     private val freeformRunnable = Runnable {
         if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
-            Log.i(
+            /*Log.i(
                 TAG,
                 "huang running=>: isFreeformAppRunning()=>${FreeformUtils.isFreeformAppRunning(this)}"
             )
-            if (!FreeformUtils.isFreeformAppRunning(this)) {
+            if (!FreeformUtils.isFreeformAppRunning(this)) {*/
                 updateImagePosition(findViewById(R.id.freeform_image), "onResume")
-            }
+            //}
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()
         LogUtil.i("onResume")
@@ -183,14 +185,32 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }, 100)*/
         handlerFreeform.removeCallbacks(freeformRunnable)
         // 重新发送新的延时任务
-        if (!BootStateManager.isFirstBootAfterReboot(this.applicationContext))
-            handlerFreeform.postDelayed(freeformRunnable, 100)
+        if (checkTopAppLollipop(this))
+            handlerFreeform.postDelayed(freeformRunnable, 150)
 
         if (!isWeatherTimerRunning) {
             handler?.postDelayed(weatherRefreshRunnable, 0)
             isWeatherTimerRunning = true
         }
 
+    }
+
+    private fun checkTopAppLollipop(context: Context): Boolean {
+        //val myPackageName = "com.awell.launcher.host"
+        val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        return try {
+            val tasks = am.appTasks
+            if (tasks.isNotEmpty()) {
+                val taskInfo = tasks[0].taskInfo
+                if (taskInfo != null && taskInfo.topActivity != null) {
+                    return taskInfo.topActivity!!.packageName == "com.awell.launcher.host"
+                }
+            }
+            false
+        } catch (e: SecurityException) {
+            LogUtil.e(e.message)
+            true
+        }
     }
 
     override fun onStop() {
@@ -200,8 +220,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         if (systemUIClient.getmFreeformMode() == 0x05) {
             systemUIClient.hideFreeform()
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
-            //systemUIClient.fullScreenFreeform()
-        } else
+            systemUIClient.fullScreenFreeform()
+        }else
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -230,10 +250,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         val height = imageView.height
 
         val rect = Rect(screenX, screenY, screenX + width, screenY + height)
-        SystemProperties.set(
-            "persist.sys.lz.default_freeform_bounds",
-            "$screenX,$screenY,$width,$height"
-        )
         Settings.System.putString(contentResolver, "freeform_launcher_idle", "1");
         LogUtil.w("freeform_launcher_idle,1")
         //todo bootapk_packname bootapk_classname -- adb shell settings get system bootapk_packname
