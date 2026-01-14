@@ -48,7 +48,7 @@ class UI2Activity : Activity() {
     //    private var mMediaListener = MediaNotificationListener()
     lateinit var llMusic: MusicWidgetPlugin2
     lateinit var mediaControl: AwellMediaControl
-    lateinit var locationManager: LocationManager
+    lateinit var mLocationManager: LocationManager
 
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
@@ -117,8 +117,8 @@ class UI2Activity : Activity() {
         handler = Handler(Looper.getMainLooper())
         viewConfiguration = ViewConfiguration.get(this)
 
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, locationListener, mHandle.looper)
+        mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -205,6 +205,7 @@ class UI2Activity : Activity() {
         unregisterReceiver(receiver)
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
+        cleanListener()
         AppsCustomizeControl.hideApps()
         Log.i(TAG, "onDestroy: huang plugin2 destroy this=>${this}")
         try {
@@ -214,7 +215,14 @@ class UI2Activity : Activity() {
             Log.e(TAG, "onDestroy: unBindDataService error=>${e.message}")
         }
     }
+    private fun cleanListener() {
 
+        try {
+            mLocationManager.removeUpdates(mLocationListener)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
     /**
      * 初始化媒体信息
      * 以及绑定宿主服务
@@ -514,7 +522,7 @@ class UI2Activity : Activity() {
         }
     }
 
-    val locationListener by lazy {
+    val mLocationListener by lazy {
         LocationListener { location ->
             location.run {
                 if (hasSpeed()) {

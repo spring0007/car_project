@@ -31,15 +31,13 @@ import androidx.core.content.ContextCompat;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
-import com.awell.launcher2.LauncherApplication;
 import com.awell.utils.CommonData;
-import com.awell.utils.Utils;
 import com.launcher.ui6.databinding.ActivityMainUi6Binding;
 import com.launcher.ui6.databinding.DialWidgetBinding;
 import com.launcher.ui6.databinding.MusicWidgetBinding;
 import com.launcher.ui6.view.DialWidget;
-import org.jetbrains.annotations.NotNull;
 
+import org.jetbrains.annotations.NotNull;
 
 
 public class MainActivityUI6 extends Activity implements View.OnClickListener {
@@ -55,7 +53,38 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
     private Handler mHandlerSpeed = null;
     private boolean accRecor;
     private final int SPEEDHOME = 20;
+    LocationManager mLocationManager = null;
 
+    LocationListener mLocationListener = new LocationListener() {
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+            if (location != null && location.hasSpeed()) {
+
+                int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+                int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+                Log.i(TAG, "onLocationChanged: float speed = " + speed);
+                Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+
+
+                Message msg = mHandlerSpeed.obtainMessage();
+                msg.what = MSG_UPDATE_SPEED;
+                msg.arg1 = speed;
+                msg.arg2 = speedMile;
+                mHandlerSpeed.sendMessage(msg);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +101,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         musicWidget.setActivity(this, musicWidget);
         dialWidgetBinding = binding.layoutDialWidget;
         dialWidget = dialWidgetBinding.dialWidgetLayout;
-        dialWidget.findViews(this,dialWidget);
+        dialWidget.findViews(this, dialWidget);
         setContentView(binding.getRoot());
 
         initReceiver();
@@ -89,17 +118,18 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if(dialWidget!= null)
+        if (dialWidget != null)
             dialWidget.startAnimation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if(dialWidget!= null)
+        if (dialWidget != null)
             dialWidget.stopAnimation();
     }
 
@@ -181,46 +211,13 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
                 }
             }
         };
-        LocationManager mlocationManager = null;
-        if (null == mlocationManager)
-            mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Log.i(TAG, "mlocationManager==" + mlocationManager);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location != null && location.hasSpeed()) {
-
-                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
-                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
-                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
-
-
-                    Message msg = mHandlerSpeed.obtainMessage();
-                    msg.what = MSG_UPDATE_SPEED;
-                    msg.arg1 = speed;
-                    msg.arg2 = speedMile;
-                    mHandlerSpeed.sendMessage(msg);
-                }
-            }
-        }, mHandlerSpeed.getLooper());
+        mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
     }
 
     private void updateSpeedUnitText() {
@@ -312,7 +309,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
                     // 日期发生了变化
                 case Intent.ACTION_TIME_TICK:
                     //系统时间变化
-                    if(dialWidget!= null)
+                    if (dialWidget != null)
                         dialWidget.updateTimeSysem();
                     break;
 
@@ -362,8 +359,30 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         unregisterReceiver(mainReceiver);
-        mediaControl.unBindDataService(this);
         AppsCustomizeControl.INSTANCE.hideApps();
+        cleanListener();
+        mediaControl.unBindDataService(this);
+    }
+
+    private void cleanListener() {
+        if (mHandlerSpeed != null) {
+            mHandlerSpeed.removeCallbacksAndMessages(null);
+            mHandlerSpeed = null;
+        }
+
+        if (mLocationManager != null && mLocationListener != null) {
+            try {
+                mLocationManager.removeUpdates(mLocationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+            mLocationManager = null;
+            mLocationListener = null;
+        }
+
+        if (binding != null) {
+            binding = null;
+        }
     }
 
     private void clickApp() {
@@ -372,7 +391,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         binding.hotsetNavApp.setOnClickListener(this);
         binding.hotsetSettingsApp.setOnClickListener(this);
         binding.hotsetRadioApp.setOnClickListener(this);
-		binding.hotsetVideoApp.setOnClickListener(this);
+        binding.hotsetVideoApp.setOnClickListener(this);
         binding.layoutDialWidget.analogClockView.setOnClickListener(this);
 //        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
     }
@@ -381,17 +400,17 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.hotsetBtapp.getId()) {
-            startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
-        }else if (v.getId() == binding.hotsetNavApp.getId()) {
+        } else if (v.getId() == binding.hotsetBtapp.getId()) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+        } else if (v.getId() == binding.hotsetNavApp.getId()) {
             startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-        }else if (v.getId() == binding.hotsetSettingsApp.getId()){
+        } else if (v.getId() == binding.hotsetSettingsApp.getId()) {
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
-        }else if(v.getId() == binding.hotsetRadioApp.getId()){
+        } else if (v.getId() == binding.hotsetRadioApp.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-        }else if(v.getId() == binding.hotsetVideoApp.getId()){
+        } else if (v.getId() == binding.hotsetVideoApp.getId()) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        }else if(v.getId() == binding.layoutDialWidget.analogClockView.getId()){
+        } else if (v.getId() == binding.layoutDialWidget.analogClockView.getId()) {
             Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
             startActivity(intent);
         }

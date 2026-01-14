@@ -28,7 +28,6 @@ import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
-import com.launcher.ui11.databinding.ActivityMainUi11Binding;
 import com.launcher.ui11.databinding.ActivityMainUi11NewBinding;
 import com.launcher.ui11.databinding.MusicWidgetBinding;
 

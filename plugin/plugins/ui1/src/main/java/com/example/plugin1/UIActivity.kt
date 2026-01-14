@@ -30,11 +30,9 @@ import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
-import com.awell.launcher2.Launcher
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
-import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
 import com.example.plugin1.databinding.ActivityUiactivityBinding
 import com.example.plugin1.databinding.SpeedLayoutBinding
@@ -59,7 +57,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
 
-    lateinit var locationManager: LocationManager
+    lateinit var mLocationManager: LocationManager
 
     private var handler: Handler? = null
     private var startX = 0f
@@ -93,8 +91,8 @@ class UIActivity : Activity(), View.OnClickListener {
         initCarView()
         updateSpeedUnitText()
 
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, locationListener, mHandle.looper)
+        mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
 
         handler = Handler(Looper.getMainLooper())
         viewConfiguration = ViewConfiguration.get(this)
@@ -197,17 +195,25 @@ class UIActivity : Activity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "onDestroy: huang plugin1 destroy==>")
         mMediaListener.cleanup()
         AppsCustomizeControl.setActivity(null)
         unregisterReceiver(receiver)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
+        cleanListener()
         try {
             mediaControl.unBindDataService(this)
-            Log.i(TAG, "onDestroy: huang plugin1 unbind data service=>${this}")
         } catch (e: Exception) {
             Log.e(TAG, "onDestroy: unBindDataService error=>${e.message}")
+        }
+    }
+
+    private fun cleanListener() {
+
+        try {
+            mLocationManager.removeUpdates(mLocationListener)
+        } catch (e: SecurityException) {
+            e.printStackTrace()
         }
     }
 
@@ -222,7 +228,6 @@ class UIActivity : Activity(), View.OnClickListener {
         mMediaListener.initDependencies(baseContext)
         mediaControl = AwellMediaControl()
         mediaControl.bindDataService(this)
-        Log.i(TAG, "initMediaMusic: huang plugin1 bind data service this==>${this}")
         mediaControl.updateMusicView = mediaImpl
 
         llMusic = findViewById<MusicWidgetPlugin>(R.id.music_widget_layout)
@@ -295,9 +300,8 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    val locationListener by lazy {
+    val mLocationListener by lazy {
         LocationListener { location ->
-            Log.i(TAG, "onLocationChanged: huang change ==>${location}")
             location.run {
                 if (hasSpeed()) {
                     val speedKm = speed * 3.6
@@ -446,7 +450,6 @@ class UIActivity : Activity(), View.OnClickListener {
             }
 
             override fun handleOriginBundle(bundle: Bundle) {
-                Log.i(TAG, "handleOriginBundle: huang not to impl")
             }
         }
 
@@ -454,7 +457,6 @@ class UIActivity : Activity(), View.OnClickListener {
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
-            Log.i(TAG, "onReceive:huang action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {
                     if (intent.getIntExtra("lamplet_state", 0) == 1) {
@@ -583,12 +585,10 @@ class UIActivity : Activity(), View.OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         AppsCustomizeControl.hideApps()
-        Log.i(TAG, "onBackPressed: huang back press==>")
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Log.i(TAG, "onNewIntent: huang ===>")
         AppsCustomizeControl.hideApps()
     }
 

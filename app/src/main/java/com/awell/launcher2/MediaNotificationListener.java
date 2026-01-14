@@ -187,7 +187,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                 //"default" 重新注册到media session里的元数据可能只包含300的图片
                 || ("default".equals(mLastUri) && metaArtUri != null)) {
             mLastUri = metaArtUri;
-            Log.i(TAG, "handleMetadataArtUri: huang update uri =>" + mLastUri);
+            //Log.i(TAG, "handleMetadataArtUri: huang update uri =>" + mLastUri);
             notifyHostAlbumArtUpdate(metaArtUri);
         } else if (metaArtUri == null && !Objects.equals(mLastUri, null)) {
             //没有网络也需要调用，使用默认图片
@@ -203,6 +203,17 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
         //|| metaArtUri.contains(mKwPlayImageUri_300);
     }
 
+    MediaSessionManager.OnActiveSessionsChangedListener mSessionsListener = controllers -> {
+        // 处理会话变化
+        assert controllers != null;
+        Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size());
+        if (controllers.isEmpty()) {
+            //setPlayingPackage(null);
+            cleanup();
+            sendPlayStateToWidget(false);
+        }
+    };
+
     public void initDependencies(Context context) {
         mContext = context;
         IBinder binder = ServiceManager.getService("AwellAutoApi");
@@ -210,16 +221,6 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
         mMediaSessionManager = (MediaSessionManager) context.getSystemService(Context.MEDIA_SESSION_SERVICE);
 
-        MediaSessionManager.OnActiveSessionsChangedListener mSessionsListener = controllers -> {
-            // 处理会话变化
-            assert controllers != null;
-            Log.d(TAG, "onActiveSessionsChanged--controllers:" + controllers.size());
-            if (controllers.isEmpty()) {
-                //setPlayingPackage(null);
-                cleanup();
-                sendPlayStateToWidget(false);
-            }
-        };
         Log.d(TAG, "initDependencies--mMediaSessionManager:" + mMediaSessionManager);
         if (mMediaSessionManager != null) {
             ComponentName componentName = new ComponentName(context, NotificationListenerService.class);
@@ -227,7 +228,12 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
                     new ComponentName(mContext, NotificationListenerService.class));
             mMediaSessionManager.addOnActiveSessionsChangedListener(mSessionsListener, componentName);
         }
+    }
 
+    public void removeListener() {
+        if (mMediaSessionManager != null && mSessionsListener != null) {
+            mMediaSessionManager.removeOnActiveSessionsChangedListener(mSessionsListener);
+        }
     }
 
     public void removeCallbacks() {
@@ -240,7 +246,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     }
 
     public void startCallbacks() {
-        Log.i(TAG, "startCallbacks: huang currentControlPkgIsChange()=>" + currentControlPkgIsChange() + " isRegisterCallback=>" + isRegisterCallback);
+        //Log.i(TAG, "startCallbacks: huang currentControlPkgIsChange()=>" + currentControlPkgIsChange() + " isRegisterCallback=>" + isRegisterCallback);
         if (!isRegisterCallback || currentControlPkgIsChange()) {
             updateMediaController();
         }
@@ -339,7 +345,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
 
         // 取消之前的回调
         if (mMediaController != null) {
-            Log.d(TAG, "updateMediaController: huang removeCallbacks");
+            //Log.d(TAG, "updateMediaController: huang removeCallbacks");
             mMediaController.unregisterCallback(mMediaControllerCallback);
         }
 
@@ -429,6 +435,7 @@ public class MediaNotificationListener/* extends ServiceNotificationListenerServ
     }
 
     public void cleanup() {
+        removeListener();
         // 移除所有手动更新任务
         for (Runnable task : mUpdateRunnables.values()) {
             mUpdateHandler.removeCallbacks(task);

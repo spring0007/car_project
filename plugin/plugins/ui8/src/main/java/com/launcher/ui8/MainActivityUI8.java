@@ -157,7 +157,12 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         super.onDestroy();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
-        unregisterReceiver(mainReceiver);
+        try {
+            unregisterReceiver(mainReceiver);
+            Log.i(TAG, "onDestroy: unregisterReceiver success==>");
+        } catch (Exception e) {
+            Log.e(TAG, "onDestroy: unregisterReceiver error=>" + e.getMessage());
+        }
         mediaControl.unBindDataService(this);
     }
 
