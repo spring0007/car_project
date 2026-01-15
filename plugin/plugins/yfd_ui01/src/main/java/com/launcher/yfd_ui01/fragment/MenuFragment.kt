@@ -153,7 +153,7 @@ class MenuFragment : Fragment() {
      * 检查视图是否准备好
      */
     private fun isViewReady(): Boolean {
-        return if (view != null && view!!.width > 0 && view!!.height > 0) {
+        return if (view != null && requireView().width > 0 && requireView().height > 0) {
             //LogUtil.i( "视图已准备好，宽=${requireView().width}, 高=${requireView().height}")
             true
         } else {
@@ -299,7 +299,7 @@ class MenuFragment : Fragment() {
                 val allApps = withContext(Dispatchers.IO) {
                     getAllAppInfo(swipeActivity.applicationContext)
                 }
-                val getAllAppTime = System.currentTimeMillis()
+
                 // 再次检查Fragment状态
                 if (!isAdded || view == null) {
                     LogUtil.i("loadApps: Fragment状态异常，取消显示")
@@ -641,7 +641,7 @@ class MenuFragment : Fragment() {
                     }
                 }
                 if(op!=0)
-                    updateAppData()
+                    updateAppGrid()
             }
         }
 
@@ -684,7 +684,7 @@ class MenuFragment : Fragment() {
     }
 
     private fun updateAppData() {
-        LogUtil.i("updateAppGrid")
+        LogUtil.i("updateAppData")
         if (!isAdded) return
 
         // 如果当前正在做完整加载，避免并发

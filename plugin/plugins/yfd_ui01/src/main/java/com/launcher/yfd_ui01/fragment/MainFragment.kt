@@ -474,7 +474,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             var pkg = Settings.System.getString(requireContext().contentResolver,"launcher_app_icon_3")
 
             if(TextUtils.isEmpty(pkg) || pkg.equals("com.launcher.yfd_ui01")){
-                swipeActivity.goToFragment(1, FragmentAnimation.NONE)
+                swipeActivity.goToFragment(1, FragmentAnimation.FADE)
             }else{
                 onClickFun(3,"com.awell.eqselect", "com.awell.eqselect.MainActivity")
             }

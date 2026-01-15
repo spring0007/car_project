@@ -13,6 +13,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 
 import com.awell.addapp.AppInfo;
+import com.launcher.yfd_ui01.R;
 import com.launcher.yfd_ui01.utils.LogUtil;
 
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.List;
  */
 public class AppPagerAdapter extends PagerAdapter {
     private static final int ITEMS_PER_PAGE = 18;
+    private static final int ITEMS_VER = 6;
+    private static final int ITEMS_HOR = 3;
     private final Context context;
     private final List<List<AppInfo>> pages;
     // 保存已创建的页面 RecyclerView 引用，便于更新数据而不重建视图
@@ -120,8 +123,8 @@ public class AppPagerAdapter extends PagerAdapter {
                 //int horizontalSpacing = calculateHorizontalSpacing(itemWidth);
                 //int verticalSpacing = calculateVerticalSpacing(itemHeight);
 
-                int leftSpacing = (width - itemWidth*6)/7;
-                int topSpacing = (height - itemHeight*3)/4;
+                int leftSpacing = (width - itemWidth*ITEMS_VER)/(ITEMS_VER+1);
+                int topSpacing = (height - itemHeight*ITEMS_HOR)/(ITEMS_HOR+1);
                // LogUtil.i("recyclerView,topSpacing="+topSpacing+",leftSpacing="+leftSpacing);
                 if(leftSpacing<0)
                     leftSpacing = 10;
@@ -165,7 +168,7 @@ public class AppPagerAdapter extends PagerAdapter {
         // 使用共享的ItemDecoration和ItemAnimator
         //recyclerView.addItemDecoration(sharedItemDecoration);
 
-        //recyclerView.setItemAnimator(sharedAnimator);
+        recyclerView.setItemAnimator(sharedAnimator);
     }
 
     /**
