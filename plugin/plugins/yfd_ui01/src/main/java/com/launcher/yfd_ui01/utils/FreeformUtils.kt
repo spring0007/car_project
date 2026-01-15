@@ -171,7 +171,7 @@ object FreeformUtils {
 
     }
 
-    private fun getStringSettingsSystem(context: Context, name: String): String {
+    private fun getStringSettingsSystem(context: Context, name: String): String? {
         return Settings.System.getString(context.contentResolver, name)
     }
 
