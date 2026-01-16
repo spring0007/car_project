@@ -293,6 +293,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     var reason = intent.getStringExtra("reason");
                     if (reason == "recentapps") {
                         canclePopupWindow()
+                        imageUpdateJob?.cancel()
                         handlerFreeform.removeCallbacks(hideFreeformRunnable)
                         handlerFreeform.postDelayed(hideFreeformRunnable,100)
 

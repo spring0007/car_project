@@ -6,6 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.graphics.Rect;
 
 import com.awell.addapp.AppInfo;
 import com.launcher.yfd_ui01.R;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,10 +93,6 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         };
     }
 
-    public void setAppList(List<AppInfo> list) {
-        this.appList = list;
-        notifyDataSetChanged();
-    }
 
     @NonNull
     @Override
@@ -171,7 +172,7 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
                     imageView.setImageDrawable(customIcon);
                 }
             }
-        }, 10); // 轻微延迟，确保UI先更新
+        }, 5); // 轻微延迟，确保UI先更新
     }
 
     // 使用预定义的监听器避免重复创建
@@ -276,5 +277,86 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
 
     public interface OnItemSizeCalculatedListener {
         void onItemSizeCalculated(int itemWidth, int itemHeight);
+    }
+
+    /**
+     * 安全设置数据列表
+     */
+    public void setAppList(List<AppInfo> newAppList) {
+        // 检查是否需要更新
+        if (this.appList == newAppList) {
+            return;
+        }
+
+        // 确保在主线程
+        if (Looper.getMainLooper().getThread() != Thread.currentThread()) {
+            new Handler(Looper.getMainLooper()).post(() -> setAppList(newAppList));
+            return;
+        }
+
+        // 暂停可能的动画
+        if (recyclerViewRef != null && recyclerViewRef.get() != null) {
+            recyclerViewRef.get().getItemAnimator().endAnimations();
+        }
+
+        // 使用局部变量避免并发问题
+        final List<AppInfo> oldList = new ArrayList<>(appList);
+        final List<AppInfo> newList = new ArrayList<>(newAppList);
+
+        // 使用 DiffUtil 进行智能更新（推荐）
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldList.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newList.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                AppInfo oldItem = oldList.get(oldItemPosition);
+                AppInfo newItem = newList.get(newItemPosition);
+                return oldItem.getPackage_name().equals(newItem.getPackage_name());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                AppInfo oldItem = oldList.get(oldItemPosition);
+                AppInfo newItem = newList.get(newItemPosition);
+                return oldItem.equals(newItem);
+            }
+        });
+
+        // 更新数据
+        appList.clear();
+        appList.addAll(newList);
+
+        // 分发更新
+        diffResult.dispatchUpdatesTo(this);
+
+        // 或者使用简单的 notifyDataSetChanged（如果没有复杂的动画）
+        // mAppList = newList;
+        // notifyDataSetChanged();
+    }
+
+    // 添加对 RecyclerView 的弱引用
+    private WeakReference<RecyclerView> recyclerViewRef;
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        recyclerViewRef = new WeakReference<>(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (recyclerViewRef != null) {
+            recyclerViewRef.clear();
+            recyclerViewRef = null;
+        }
     }
 }
