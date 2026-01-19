@@ -23,23 +23,27 @@ import android.graphics.Rect;
 
 import com.awell.addapp.AppInfo;
 import com.launcher.yfd_ui01.R;
+import com.launcher.yfd_ui01.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * RecyclerView adapter for a single page (grid) of apps.
  */
 public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecyclerAdapter.Holder> {
     private final Context context;
-    private List<AppInfo> appList;
+    private final List<AppInfo> appList;
     private final IconManager iconManager;
     private OnItemSizeCalculatedListener sizeListener;
     private boolean hasCalculatedSize = false;
     public AppGridRecyclerAdapter(Context context, List<AppInfo> appList) {
         this.context = context;
-        this.appList = appList;
+        this.appList = new ArrayList<>(appList);
         this.iconManager = IconManager.getInstance(context);
         setHasStableIds(true);
     }
@@ -108,11 +112,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         AppInfo appInfo = appList.get(position);
         holder.name.setText(appInfo.getLabel());
 
-        // 优化图标加载：先设置占位符，再异步加载图标
-        holder.icon.setImageResource(R.drawable.ic_app_placeholder);
-        
-        // 异步加载图标
-        loadAppIcon(holder.icon, appInfo);
+        loadIconAsync(holder.icon, appInfo.package_name);
+        //appList.set(position,appInfo); //替换含有图片的info
         // 预加载点击事件所需的资源
         holder.itemView.setTag(appInfo);
         holder.itemView.setOnClickListener(clickListener);
@@ -151,30 +152,39 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     public void resetSizeCalculation() {
         hasCalculatedSize = false;
     }
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
-	   /**
-     * 异步加载应用图标
-     */
-    private void loadAppIcon(ImageView imageView, AppInfo appInfo) {
-        if (appInfo == null || imageView == null) return;
-        
-        // 先尝试使用应用自带的图标
-        Drawable appIcon = appInfo.getIcon();
-        if (appIcon != null) {
-            imageView.setImageDrawable(appIcon);
-        }
-        
-        // 然后异步检查是否有自定义图标
-        new android.os.Handler().postDelayed(() -> {
-            if (iconManager != null) {
-                Drawable customIcon = iconManager.getIcon(appInfo.getPackage_name());
-                if (customIcon != null && imageView.getTag() == appInfo) {
-                    imageView.setImageDrawable(customIcon);
+    private void loadIconAsync(ImageView imageView, String packageName) {
+        imageView.setImageResource(R.drawable.yfd_ui1_apk_installer);  // 先设置占位符
+
+        executor.execute(() -> {
+            try {
+                if (iconManager != null) {
+                    //然后异步检查是否有自定义图标
+                    Drawable customIcon = iconManager.getIcon(packageName);
+                    if (customIcon != null) {
+                        imageView.setImageDrawable(customIcon);
+                        return;
+                    }
                 }
-            }
-        }, 5); // 轻微延迟，确保UI先更新
-    }
 
+                PackageManager pm = imageView.getContext().getPackageManager();
+                ApplicationInfo appInfo = pm.getApplicationInfo(packageName, 0);
+                Drawable icon = appInfo.loadIcon(pm);
+
+                handler.post(() -> {
+                    if (imageView.getTag() != null && imageView.getTag().equals(packageName)) {
+                        imageView.setImageDrawable(icon);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        // 保存当前加载的包名到Tag
+        imageView.setTag(packageName);
+    }
     // 使用预定义的监听器避免重复创建
     private final View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
@@ -282,64 +292,68 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     /**
      * 安全设置数据列表
      */
-    public void setAppList(List<AppInfo> newAppList) {
+    public void setAppList(List<AppInfo> newList) {
         // 检查是否需要更新
-        if (this.appList == newAppList) {
-            return;
+        if (appList == newList ) {
+            return; // 同一个引用，无需更新
         }
 
-        // 确保在主线程
+        // 2. 确保在主线程执行
         if (Looper.getMainLooper().getThread() != Thread.currentThread()) {
-            new Handler(Looper.getMainLooper()).post(() -> setAppList(newAppList));
+            new Handler(Looper.getMainLooper()).post(() -> setAppList(newList));
             return;
         }
 
-        // 暂停可能的动画
+        // 3. 暂停动画
         if (recyclerViewRef != null && recyclerViewRef.get() != null) {
-            recyclerViewRef.get().getItemAnimator().endAnimations();
+            Objects.requireNonNull(recyclerViewRef.get().getItemAnimator()).endAnimations();
         }
 
-        // 使用局部变量避免并发问题
-        final List<AppInfo> oldList = new ArrayList<>(appList);
-        final List<AppInfo> newList = new ArrayList<>(newAppList);
-
-        // 使用 DiffUtil 进行智能更新（推荐）
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return oldList.size();
+        try {
+            // 4. 安全地创建旧列表的拷贝（避免 SubList 问题）
+            List<AppInfo> oldListCopy;
+            if (appList == null || appList.isEmpty()) {
+                oldListCopy = new ArrayList<>();
+            } else {
+                // 使用手动复制方式，避免使用 SubList 的 toArray 方法
+                oldListCopy = new ArrayList<>(appList.size());
+                oldListCopy.addAll(appList);
             }
 
-            @Override
-            public int getNewListSize() {
-                return newList.size();
+            // 5. 安全地创建新列表的拷贝
+            List<AppInfo> newListCopy;
+            if (newList == null || newList.isEmpty()) {
+                newListCopy = new ArrayList<>();
+            } else {
+                // 同样使用手动复制
+                newListCopy = new ArrayList<>(newList.size());
+                newListCopy.addAll(newList);
             }
 
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                AppInfo oldItem = oldList.get(oldItemPosition);
-                AppInfo newItem = newList.get(newItemPosition);
-                return oldItem.getPackage_name().equals(newItem.getPackage_name());
+            // 6. 计算差异
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                    new AppDiffCallback(oldListCopy, newListCopy),
+                    true
+            );
+
+            // 7. 更新数据源
+            appList.clear();
+            appList.addAll(newListCopy);
+
+            // 8. 应用更新
+            diffResult.dispatchUpdatesTo(this);
+
+        } catch (Exception e) {
+            // 如果发生异常，回退到简单的 notifyDataSetChanged
+            LogUtil.e("Error updating adapter data", e);
+            if (newList != null) {
+                appList.clear();
+                appList.addAll(newList);
+            } else {
+                appList.clear();
             }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                AppInfo oldItem = oldList.get(oldItemPosition);
-                AppInfo newItem = newList.get(newItemPosition);
-                return oldItem.equals(newItem);
-            }
-        });
-
-        // 更新数据
-        appList.clear();
-        appList.addAll(newList);
-
-        // 分发更新
-        diffResult.dispatchUpdatesTo(this);
-
-        // 或者使用简单的 notifyDataSetChanged（如果没有复杂的动画）
-        // mAppList = newList;
-        // notifyDataSetChanged();
+            notifyDataSetChanged();
+        }
     }
 
     // 添加对 RecyclerView 的弱引用
@@ -357,6 +371,56 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         if (recyclerViewRef != null) {
             recyclerViewRef.clear();
             recyclerViewRef = null;
+        }
+    }
+
+    // 添加 DiffUtil.Callback 内部类
+    private static class AppDiffCallback extends DiffUtil.Callback {
+        private final List<AppInfo> oldList;
+        private final List<AppInfo> newList;
+
+        public AppDiffCallback(List<AppInfo> oldList, List<AppInfo> newList) {
+            this.oldList = oldList != null ? oldList : new ArrayList<>();
+            this.newList = newList != null ? new ArrayList<>() : new ArrayList<>();
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            AppInfo oldItem = oldList.get(oldItemPosition);
+            AppInfo newItem = newList.get(newItemPosition);
+            // 使用包名作为唯一标识
+            return oldItem != null && newItem != null &&
+                    oldItem.getPackage_name().equals(newItem.getPackage_name());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            AppInfo oldItem = oldList.get(oldItemPosition);
+            AppInfo newItem = newList.get(newItemPosition);
+
+            if (oldItem == null || newItem == null) return false;
+
+            // 比较应用标签是否相同
+            boolean labelSame = oldItem.getLabel().equals(newItem.getLabel());
+            // 这里可以添加其他需要比较的字段
+            return labelSame;
+        }
+
+        @Override
+        public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+            // 如果需要部分更新，可以返回具体的变更信息
+            // 例如，如果只是图标更新，可以返回一个标志位
+            return super.getChangePayload(oldItemPosition, newItemPosition);
         }
     }
 }

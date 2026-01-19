@@ -123,6 +123,8 @@ public class AppPagerAdapter extends PagerAdapter {
 
         // 设置适配器
         AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(context, pages.get(position));
+        int maxLeftSpacing =  context.getResources().getDimensionPixelSize(R.dimen.menu_max_left_space);
+        int maxTopSpacing = context.getResources().getDimensionPixelSize(R.dimen.menu_max_top_space);
 
         // 设置尺寸计算监听器 - 优化版本
         adapter.setOnItemSizeCalculatedListener(new AppGridRecyclerAdapter.OnItemSizeCalculatedListener() {
@@ -139,10 +141,12 @@ public class AppPagerAdapter extends PagerAdapter {
                 if (!recyclerView.isAttachedToWindow() || recyclerView.getAdapter() == null) {
                     return;
                 }
+                //LogUtil.i("itemWidth= "+itemWidth+",itemHeight="+itemHeight);
+                // 计算间距720:54,40 800: 54,57
 
-                // 计算间距
-                int leftSpacing = Math.max(10, (width - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
-                int topSpacing = Math.max(10, (height - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
+                int leftSpacing = Math.max(maxLeftSpacing, (width - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
+                int topSpacing = Math.max(maxTopSpacing, (height - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
+                //LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
 
                 // 添加 ItemDecoration（确保只添加一次）
                 if (recyclerView.getItemDecorationCount() == 0) {
@@ -283,16 +287,12 @@ public class AppPagerAdapter extends PagerAdapter {
      */
     private void updateAdapterSafely(AppGridRecyclerAdapter adapter, List<AppInfo> newList) {
         try {
-            // 方法1：直接设置数据（如果适配器内部正确处理）
             adapter.setAppList(newList);
-
-            // 方法2：或者使用 DiffUtil（推荐）
-            // adapter.updateDataWithDiffUtil(newList);
-
         } catch (Exception e) {
-            LogUtil.e("Error updating adapter data", e);
             // 发生异常时重新创建适配器
+            LogUtil.e("Error updating adapter data", e);
             recreateAdapter(adapter, newList);
+
         }
     }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="menu_max_left_space">54dp</dimen>
+    <dimen name="menu_max_top_space">57dp</dimen>
+
+</resources>

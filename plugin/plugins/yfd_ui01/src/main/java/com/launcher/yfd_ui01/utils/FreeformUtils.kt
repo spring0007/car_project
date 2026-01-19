@@ -43,14 +43,14 @@ object FreeformUtils {
 
         var pkg =
             Settings.System.getString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-        var clazz = Settings.System.getString(
-            context.contentResolver,
-            SETTINGS_FREEFORM_APP_CLAZZ_NAME
-        )
+        var clazz: String? = null
+            //Settings.System.getString( context.contentResolver, SETTINGS_FREEFORM_APP_CLAZZ_NAME)
 
         if (TextUtils.isEmpty(pkg) || !isAppInstalled(context, pkg)) {
             pkg = NAVI_GOOGLE_PKG
-           // clazz = NAVI_GOOGLE_CLAZZ
+            clazz = NAVI_GOOGLE_CLAZZ
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME, pkg)
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_CLAZZ_NAME, NAVI_GOOGLE_CLAZZ)
         }
 
 
