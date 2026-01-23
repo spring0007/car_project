@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/app_grid_pad">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/item_app_bg"
@@ -25,14 +24,16 @@
 
     <TextView
         android:id="@+id/item_app_name"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/app_grid_bg_width"
         android:layout_height="wrap_content"
         android:layout_below="@+id/item_app_bg"
         android:layout_centerHorizontal="true"
         android:textSize="13sp"
         android:textColor="@android:color/white"
+        android:lines="2"
         android:maxLines="2"
         android:ellipsize="end"
-        android:gravity="center" />
+        android:gravity="center_horizontal"
+        />
 
 </RelativeLayout>

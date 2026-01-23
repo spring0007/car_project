@@ -45,7 +45,6 @@ import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
-import com.launcher.yfd_ui01.utils.BootStateManager
 import com.launcher.yfd_ui01.utils.FreeformUtils.startFreeformApp
 import com.launcher.yfd_ui01.utils.LogUtil
 import com.launcher.yfd_ui01.utils.SystemUIClient
@@ -803,11 +802,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             // 启动新的协程任务
             imageUpdateJob = lifecycleScope.launch {
                 delay(150)
+                LogUtil.i("lqq,onResume ,isVisibleOnScreen="+freeformBg.isVisibleOnScreen())
                 if (freeformBg.isVisibleOnScreen()) {
                     updateImagePosition(freeformBg, "onResume")
                 }
             }
-            LogUtil.i("lqq,onResume ,Visible")
         }
     }
 

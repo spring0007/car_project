@@ -7,6 +7,7 @@
     <dimen name="app_margin_end">21dp</dimen>
     <dimen name="navigation_bar_height">@*android:dimen/navigation_bar_height</dimen>
     <dimen name="navigation_bar_width">@*android:dimen/navigation_bar_width</dimen>
+    <dimen name="status_bar_height">@*android:dimen/status_bar_height</dimen>
     <!--@*android:dimen/navigation_bar_height-->
 
     <dimen name="dial_width">219dp</dimen>
@@ -20,6 +21,4 @@
     <dimen name="car_icon_width">160dp</dimen>
     <dimen name="car_icon_height">88dp</dimen>
 
-    <dimen name="menu_max_left_space">54dp</dimen>
-    <dimen name="menu_max_top_space">40dp</dimen>
 </resources>

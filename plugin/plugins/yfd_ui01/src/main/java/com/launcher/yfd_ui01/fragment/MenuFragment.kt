@@ -100,11 +100,37 @@ class MenuFragment : Fragment() {
         // 先设置默认视图
         setupDefaultViews()
 
+        // 监听ViewPager的尺寸变化
+        setupViewPagerSizeListener();
         // 检查视图是否已经布局完成
         checkViewLayoutAndInitData()
 
         setupViewPagerListener()
         registerPackageReceiver()
+    }
+
+    private fun setupViewPagerSizeListener() {
+
+        // 添加布局变化监听器
+        viewPager.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            val newWidth = right - left
+            val newHeight = bottom - top
+            val oldWidth = oldRight - oldLeft
+            val oldHeight = oldBottom - oldTop
+
+            if (newWidth != oldWidth || newHeight != oldHeight) {
+                LogUtil.i("ViewPager尺寸变化: ${newWidth}x${newHeight} (之前: ${oldWidth}x${oldHeight})")
+
+                // 尺寸变化后重新设置适配器
+                if (newWidth > 0 && newHeight > 0 && oldHeight>0 && oldWidth> 0 && currentAdapter != null) {
+                    viewPager.postDelayed(Runnable {
+                        currentAdapter!!.updateAllPageLayouts(newWidth, newHeight)
+                    }, 100)
+                    LogUtil.i("ViewPager尺寸变化后重新布局完成")
+
+                }
+            }
+        }
     }
 
     /**

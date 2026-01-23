@@ -68,7 +68,7 @@ object FreeformUtils {
         val options: ActivityOptions = makeLaunchOptions(context, rect)
         var intentFreeform = context.packageManager.getLaunchIntentForPackage(pkg)
         if (intentFreeform==null) {
-            intentFreeform = Intent();
+            intentFreeform = Intent(Intent.ACTION_MAIN);
 	        intentFreeform.setPackage(pkg)
         }
 

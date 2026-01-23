@@ -41,11 +41,53 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
     private final IconManager iconManager;
     private OnItemSizeCalculatedListener sizeListener;
     private boolean hasCalculatedSize = false;
+    private int itemWidth = 0;
+    private int itemHeight = 0;
+    private int currentLeftSpacing = 0;
+    private int currentTopSpacing = 0;
     public AppGridRecyclerAdapter(Context context, List<AppInfo> appList) {
         this.context = context;
         this.appList = new ArrayList<>(appList);
         this.iconManager = IconManager.getInstance(context);
         setHasStableIds(true);
+    }
+    /**
+     * 获取当前item宽度
+     */
+    public int getItemWidth() {
+        return itemWidth;
+    }
+
+    /**
+     * 获取当前item高度
+     */
+    public int getItemHeight() {
+        return itemHeight;
+    }
+    /**
+     * 设置item尺寸
+     */
+    private void setItemSize(int width, int height) {
+        if (width != itemWidth || height != itemHeight) {
+            this.itemWidth = width;
+            this.itemHeight = height;
+
+            // 通知item尺寸变化
+            if (sizeListener != null) {
+                sizeListener.onItemSizeCalculated(width, height);
+            }
+        }
+    }
+
+    /**
+     * 更新布局间距
+     */
+    public void updateSpacing(int leftSpacing, int topSpacing) {
+        this.currentLeftSpacing = leftSpacing;
+        this.currentTopSpacing = topSpacing;
+
+        // 通知数据变化，触发重新布局
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     public void setOnItemSizeCalculatedListener(OnItemSizeCalculatedListener listener) {
@@ -120,7 +162,7 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         holder.itemView.setOnLongClickListener(longClickListener);
 
         // 在 View 布局完成后获取尺寸
-        if (!hasCalculatedSize && holder.itemView.getWidth() == 0) {
+        if (!hasCalculatedSize && holder.itemView.getWidth() <= 0) {
             holder.itemView.getViewTreeObserver().addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
@@ -132,7 +174,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
 
                             if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
                                 hasCalculatedSize = true;
-                                sizeListener.onItemSizeCalculated(itemWidth, itemHeight);
+                                //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
+                                setItemSize(itemWidth,itemHeight);
                             }
                         }
                     });
@@ -143,7 +186,8 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
 
             if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
                 hasCalculatedSize = true;
-                sizeListener.onItemSizeCalculated(itemWidth, itemHeight);
+                //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
+                setItemSize(itemWidth,itemHeight);
             }
         }
     }

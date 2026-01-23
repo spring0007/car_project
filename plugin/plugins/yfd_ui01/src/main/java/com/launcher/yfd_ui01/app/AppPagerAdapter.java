@@ -1,11 +1,12 @@
 package com.launcher.yfd_ui01.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.ViewParent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -15,7 +16,6 @@ import androidx.viewpager.widget.PagerAdapter;
 
 
 import com.awell.addapp.AppInfo;
-import com.launcher.yfd_ui01.R;
 import com.launcher.yfd_ui01.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -123,8 +123,6 @@ public class AppPagerAdapter extends PagerAdapter {
 
         // 设置适配器
         AppGridRecyclerAdapter adapter = new AppGridRecyclerAdapter(context, pages.get(position));
-        int maxLeftSpacing =  context.getResources().getDimensionPixelSize(R.dimen.menu_max_left_space);
-        int maxTopSpacing = context.getResources().getDimensionPixelSize(R.dimen.menu_max_top_space);
 
         // 设置尺寸计算监听器 - 优化版本
         adapter.setOnItemSizeCalculatedListener(new AppGridRecyclerAdapter.OnItemSizeCalculatedListener() {
@@ -138,14 +136,15 @@ public class AppPagerAdapter extends PagerAdapter {
                 }
 
                 // 检查视图是否还可用
-                if (!recyclerView.isAttachedToWindow() || recyclerView.getAdapter() == null) {
+                if (!recyclerView.isAttachedToWindow() || recyclerView.getAdapter() == null ||
+                        recyclerView.getHeight()==0 || recyclerView.getWidth()==0) {
                     return;
                 }
                 //LogUtil.i("itemWidth= "+itemWidth+",itemHeight="+itemHeight);
                 // 计算间距720:54,40 800: 54,57
 
-                int leftSpacing = Math.max(maxLeftSpacing, (width - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
-                int topSpacing = Math.max(maxTopSpacing, (height - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
+                int leftSpacing = Math.max(10, (width - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
+                int topSpacing = Math.max(10, (height - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
                 //LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
 
                 // 添加 ItemDecoration（确保只添加一次）
@@ -183,24 +182,24 @@ public class AppPagerAdapter extends PagerAdapter {
         });
 
         // 移除旧的全局布局监听器，使用更安全的方式
-        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            boolean isFirstLayout = true;
-
-            @Override
-            public void onGlobalLayout() {
-                if (isFirstLayout) {
-                    isFirstLayout = false;
-                    recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                    // 延迟重置尺寸计算
-                    recyclerView.postDelayed(() -> {
-                        if (adapter != null && recyclerView.getAdapter() == adapter) {
-                            adapter.resetSizeCalculation();
-                        }
-                    }, 50);
-                }
-            }
-        });
+//        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            boolean isFirstLayout = true;
+//
+//            @Override
+//            public void onGlobalLayout() {
+//                if (isFirstLayout) {
+//                    isFirstLayout = false;
+//                    recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//
+//                    // 延迟重置尺寸计算
+//                    recyclerView.postDelayed(() -> {
+//                        if (recyclerView.getAdapter() == adapter) {
+//                            adapter.resetSizeCalculation();
+//                        }
+//                    }, 50);
+//                }
+//            }
+//        });
 
 
     }
@@ -221,6 +220,7 @@ public class AppPagerAdapter extends PagerAdapter {
     /**
      * 数据更新方法
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<List<AppInfo>> newPages) {
         // 确保在主线程执行
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
@@ -335,5 +335,99 @@ public class AppPagerAdapter extends PagerAdapter {
     public int getItemPosition(@NonNull Object object) {
         // 默认不强制重建页面，避免由于 notifyDataSetChanged 导致的页面闪烁
         return POSITION_UNCHANGED;
+    }
+
+    /**
+     * 更新所有页面的布局间距
+     * @param containerWidth ViewPager的当前宽度
+     * @param containerHeight ViewPager的当前高度
+     */
+    public void updateAllPageLayouts(int containerWidth, int containerHeight) {
+        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+            new Handler(Looper.getMainLooper()).post(() ->
+                    updateAllPageLayouts(containerWidth, containerHeight));
+            return;
+        }
+
+        for (int i = 0; i < pageViews.size(); i++) {
+            int position = pageViews.keyAt(i);
+            RecyclerView recyclerView = pageViews.valueAt(i);
+            updatePageLayout(recyclerView, position, containerWidth, containerHeight);
+        }
+    }
+
+    /**
+     * 更新单个页面的布局
+     */
+    private void updatePageLayout(RecyclerView recyclerView, int position,
+                                  int containerWidth, int containerHeight) {
+        if (recyclerView == null) return;
+
+        // 计算新间距
+        int itemWidth = 134;
+        int itemHeight = 152;
+
+        // 尝试从适配器获取item尺寸
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if (adapter instanceof AppGridRecyclerAdapter) {
+            AppGridRecyclerAdapter gridAdapter = (AppGridRecyclerAdapter) adapter;
+            // 假设AppGridRecyclerAdapter有获取item尺寸的方法
+            itemWidth = gridAdapter.getItemWidth();
+            itemHeight = gridAdapter.getItemHeight();
+        }
+       // LogUtil.i("containerWidth= "+containerWidth+",containerHeight="+containerHeight+
+       //         ", itemWidth= "+itemWidth+", itemHeight="+itemHeight);
+
+        int leftSpacing = Math.max(10, (containerWidth - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
+        int topSpacing = Math.max(10, (containerHeight - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
+        //LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
+        // 更新ItemDecoration
+        updateItemDecoration(recyclerView, leftSpacing, topSpacing);
+
+        // 请求重新布局
+        recyclerView.post(() -> {
+            if (recyclerView.getLayoutManager() != null) {
+                recyclerView.getLayoutManager().requestLayout();
+            }
+        });
+    }
+
+    /**
+     * 更新ItemDecoration
+     */
+    private void updateItemDecoration(RecyclerView recyclerView,
+                                      int leftSpacing, int topSpacing) {
+        // 移除旧的ItemDecoration
+        while (recyclerView.getItemDecorationCount() > 0) {
+            recyclerView.removeItemDecorationAt(0);
+        }
+
+        // 添加新的ItemDecoration
+        recyclerView.addItemDecoration(
+                AppGridRecyclerAdapter.createGridSpacingItemDecoration(
+                        6,
+                        leftSpacing,
+                        topSpacing,
+                        true
+                )
+        );
+    }
+
+    /**
+     * 重新计算并更新指定页面的布局
+     */
+    public void recalculatePageLayout(int position) {
+        if (position < 0 || position >= getCount()) return;
+
+        RecyclerView recyclerView = pageViews.get(position);
+        if (recyclerView == null) return;
+
+        // 获取当前尺寸
+        ViewParent parent = recyclerView.getParent();
+        if (parent instanceof ViewGroup) {
+            ViewGroup container = (ViewGroup) parent;
+            updatePageLayout(recyclerView, position,
+                    container.getWidth(), container.getHeight());
+        }
     }
 }
