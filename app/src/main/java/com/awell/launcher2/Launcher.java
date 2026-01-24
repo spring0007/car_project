@@ -76,6 +76,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.media.MediaBrowserCompat;
@@ -3148,7 +3149,19 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         } else if (id == R.id.hotset_bluetooth) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (id == R.id.hotset_navi || id == R.id.rl_car || id == R.id.iv_main_xiaodeng) {
-            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
+            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
+                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            else{
+                Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                }
+            }
         } else if (id == R.id.hotset_allapp) { // allapp
 
             canbus_set_dis = getCanBusState();
@@ -5300,6 +5313,16 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     public int getCanBusState() {
         return Settings.System.getInt(this.getContentResolver(), "canbus_set_dis", 1);
+    }
+    public boolean getNaviApps(String appName) {
+        try {
+            android.content.pm.ApplicationInfo appinfo = this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+            Log.i(TAG,"Exception = " + e.toString());
+        }
+        return false;
     }
 }
 

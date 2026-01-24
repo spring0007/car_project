@@ -20,4 +20,7 @@
     <string name="radio">收音机</string>
     <string name="add_app">添加</string>
 
+    <string name="click_play_music">点击播放</string>
+    <string name="music_artist">歌手</string>
+
 </resources>
