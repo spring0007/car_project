@@ -412,6 +412,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
         } else if (v.getId() == binding.layoutDialWidget.analogClockView.getId()) {
             Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }

@@ -8,10 +8,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -187,7 +190,20 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         if (v.getId() == binding.bottomLayout.radioIv.getId() || v.getId() == binding.bottomLayout.radioTv.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         } else if (v.getId() == binding.bottomLayout.naviIv.getId() || v.getId() == binding.bottomLayout.naviTv.getId()) {
-            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            //startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
+            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
+                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            else{
+                Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                }
+            }
         } else if (v.getId() == binding.bottomLayout.allIv.getId() || v.getId() == binding.bottomLayout.allTv.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == binding.bottomLayout.phoneIv.getId() || v.getId() == binding.bottomLayout.phoneTv.getId()) {
@@ -196,6 +212,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         } else if (v.getId() == binding.dateLayout.time.getId() || v.getId() == binding.dateLayout.date.getId() || v.getId() == binding.dateLayout.weekday.getId()) {
             Intent intent = new Intent(android.provider.Settings.ACTION_DATE_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
     }
@@ -384,5 +401,16 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
 
     private void handleLongPressAction() {
         startWallpaper();
+    }
+
+    public boolean getNaviApps(String appName) {
+        try {
+            ApplicationInfo appinfo = this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+            Log.i(TAG,"Exception = " + e.toString());
+        }
+        return false;
     }
 }

@@ -4,9 +4,12 @@ import static com.awell.utils.Utils.startWallpaper;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -126,7 +129,21 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
         if (v.getId() == R.id.music_iv){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         } else if (v.getId() == R.id.navi_iv) {
-            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+
+            String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
+            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
+                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            else{
+                Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                }
+            }
+
         }else if (v.getId() == R.id.all_iv) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == R.id.radio_iv) {
@@ -328,5 +345,16 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
 
     private void handleLongPressAction() {
         startWallpaper();
+    }
+
+    public boolean getNaviApps(String appName) {
+        try {
+            ApplicationInfo appinfo = this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+            Log.i(TAG,"Exception = " + e.toString());
+        }
+        return false;
     }
 }
