@@ -20,13 +20,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/video"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/video_iv"
         app:layout_constraintEnd_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="@+id/video_iv"
         app:layout_constraintBottom_toBottomOf="@+id/video_iv"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top"/>
 
     <ImageView
         android:id="@+id/setting_iv"
@@ -44,13 +44,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/setting"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/setting_iv"
         app:layout_constraintEnd_toEndOf="@+id/setting_iv"
         app:layout_constraintTop_toTopOf="@+id/setting_iv"
         app:layout_constraintBottom_toBottomOf="@+id/setting_iv"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
     <ImageView
         android:id="@+id/radio_iv"
@@ -68,13 +68,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/radio"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/radio_iv"
         app:layout_constraintEnd_toEndOf="@+id/radio_iv"
         app:layout_constraintTop_toTopOf="@+id/radio_iv"
         app:layout_constraintBottom_toBottomOf="@+id/radio_iv"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
     <ImageView
         android:id="@+id/all_iv"
@@ -92,12 +92,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/App"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/all_iv"
         app:layout_constraintEnd_toEndOf="@+id/all_iv"
         app:layout_constraintTop_toTopOf="@+id/all_iv"
         app:layout_constraintBottom_toBottomOf="@+id/all_iv"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

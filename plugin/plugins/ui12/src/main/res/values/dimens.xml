@@ -4,5 +4,7 @@
     <dimen name="app_icon_bg_size">80dp</dimen>
     <dimen name="recycle_app_icon_size">100dp</dimen>
     <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="tv_margin_top">0.05</dimen>
+    <dimen name="text_size">28sp</dimen>
 
 </resources>

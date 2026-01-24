@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
@@ -403,7 +405,19 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         } else if (v.getId() == binding.hotsetBtapp.getId()) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == binding.hotsetNavApp.getId()) {
-            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
+            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
+                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+            else{
+                Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else {
+                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                }
+            }
         } else if (v.getId() == binding.hotsetSettingsApp.getId()) {
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
         } else if (v.getId() == binding.hotsetRadioApp.getId()) {
@@ -600,5 +614,14 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         startWallpaper();
     }
 
-
+    public boolean getNaviApps(String appName) {
+        try {
+            ApplicationInfo appinfo = this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            //e.printStackTrace();
+            Log.i(TAG,"Exception = " + e.toString());
+        }
+        return false;
+    }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -21,13 +22,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/time"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/time_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_iv"
         app:layout_constraintTop_toTopOf="@+id/time_iv"
         app:layout_constraintBottom_toBottomOf="@+id/time_iv"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top"/>
 
     <TextClock
         android:id="@+id/time"
@@ -88,13 +89,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/music"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/music_iv"
         app:layout_constraintEnd_toEndOf="@+id/music_iv"
         app:layout_constraintTop_toTopOf="@+id/music_iv"
         app:layout_constraintBottom_toBottomOf="@+id/music_iv"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
     <include layout = "@layout/music_widget"
         android:id="@+id/music_widget_layout"
@@ -122,13 +123,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bt"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/bt_iv"
         app:layout_constraintEnd_toEndOf="@+id/bt_iv"
         app:layout_constraintTop_toTopOf="@+id/bt_iv"
         app:layout_constraintBottom_toBottomOf="@+id/bt_iv"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -168,12 +169,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/navigation"
-        android:textSize="28sp"
+        android:textSize="@dimen/text_size"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/navi_iv"
         app:layout_constraintEnd_toEndOf="@+id/navi_iv"
         app:layout_constraintTop_toTopOf="@+id/navi_iv"
         app:layout_constraintBottom_toBottomOf="@+id/navi_iv"
-        app:layout_constraintVertical_bias="0.05" />
+        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

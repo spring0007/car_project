@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -544,10 +546,19 @@ class UI2Activity : Activity() {
     private fun clickStartApp() {
 
         mViewBinding.hotsetNavi.setOnClickListener {
-            startActivity(
-                "com.awell.navigation",
-                "com.awell.navigation.MainActivity"
-            )
+            val navPkg = SystemProperties.get("persist.sys.navi.packagename", "")
+            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+            if (TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg!!))
+                startActivity( "com.awell.navigation",  "com.awell.navigation.MainActivity")
+            else {
+                val intent = this.getPackageManager().getLaunchIntentForPackage(navPkg)
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else {
+                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity")
+                }
+            }
         }
 
         mViewBinding.hotsetVideo.setOnClickListener {
@@ -580,6 +591,21 @@ class UI2Activity : Activity() {
                 "com.awell.bluetooth",
                 "com.awell.bluetooth.MainActivity"
             )
+        }
+        mViewBinding.time.setOnClickListener {
+            val intent = Intent(Settings.ACTION_DATE_SETTINGS)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        mViewBinding.ampm.setOnClickListener {
+            val intent = Intent(Settings.ACTION_DATE_SETTINGS)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        mViewBinding.page2DateM.setOnClickListener {
+            val intent = Intent(Settings.ACTION_DATE_SETTINGS)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
     }
 
@@ -684,6 +710,17 @@ class UI2Activity : Activity() {
     private fun handleLongPressAction() {
         //Utils.setPluginApkFilePath(mediaControl.getLoadPluginApkFilePath())
         startWallpaper()
+    }
+    fun getNaviApps(appName: String): Boolean {
+        try {
+            val appinfo =
+                this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA)
+            return true
+        } catch (e: PackageManager.NameNotFoundException) {
+            //e.printStackTrace();
+            Log.i(TAG, "Exception = $e")
+        }
+        return false
     }
 
 }

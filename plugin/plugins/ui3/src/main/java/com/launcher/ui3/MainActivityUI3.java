@@ -357,6 +357,9 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     private void clickApp() {
         binding.hotsetAllapp.setOnClickListener(this);
         binding.radioIv.setOnClickListener(this);
+        binding.time.setOnClickListener(this);
+        binding.page2DateM.setOnClickListener(this);
+        binding.ampm.setOnClickListener(this);
         binding.radioLayout.ivRadioPre.setOnClickListener(v -> {
             if (ClickUtils.isFastClick()) {
                 return;
@@ -378,6 +381,10 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == binding.radioIv.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
+        }else if(v.getId() == binding.time.getId()|| v.getId() == binding.page2DateM.getId() ||v.getId() == binding.ampm.getId()){
+            Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
