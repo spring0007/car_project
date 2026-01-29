@@ -8,6 +8,7 @@
 
     <com.launcher.yfd_ui01.view.AnalogClockView
         android:id="@+id/analogClockView"
+        android:layout_gravity="center_horizontal"
         android:layout_width="@dimen/dial_width"
         android:layout_height="@dimen/dial_width"
         tools:ignore="MissingConstraints" />

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
@@ -37,7 +38,7 @@ import com.launcher.yfd_ui01.R;
 import com.launcher.yfd_ui01.utils.LogUtil;
 
 
-public class MusicWidget extends RelativeLayout implements OnClickListener {
+public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
 
     private Context mContext;
@@ -58,7 +59,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     private String currentPlayingPackage = null;
 
     private LinearLayout ll_control_layout_music;
-    private RelativeLayout ll_name_layout_music;
+    private ConstraintLayout ll_name_layout_music;
 
     private AwellMediaControl mediaControl;
 //    private ObjectAnimator mObjectAnimator = null;

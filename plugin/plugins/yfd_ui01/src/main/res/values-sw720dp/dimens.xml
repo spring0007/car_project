@@ -11,5 +11,13 @@
     <dimen name="app_gird_icon_width">60dp</dimen>
     <dimen name="car_icon_width">160dp</dimen>
     <dimen name="car_icon_height">88dp</dimen>
+    <dimen name="car_speed_point_hor_bias">0.04</dimen>
+    <dimen name="car_icon_linear_ver_bias">0.30</dimen>
+    <dimen name="car_speed_parcent_height">0.38</dimen>
+    <dimen name="car_speed_point_ver_bias">0.92</dimen>
+    <dimen name="dial_widget_ver_bias">0.15</dimen>
+    <dimen name="dial_widget_hor_bias">0.95</dimen>
+    <dimen name="car_icon_linear_hor_bias">0.03</dimen>
+    <dimen name="music_widget_ver_bias">0.91</dimen>
 
 </resources>

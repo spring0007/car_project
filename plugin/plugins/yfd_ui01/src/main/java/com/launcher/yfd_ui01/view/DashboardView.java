@@ -36,6 +36,7 @@ public class DashboardView extends View {
     private static final float END_ANGLE = 120f;
     
     // 位图资源
+	private Bitmap clockBackground;
     private Bitmap hourHand;
     
     // 视图参数
@@ -93,6 +94,7 @@ public class DashboardView extends View {
             options.inPreferredConfig = Bitmap.Config.RGB_565; // 减少内存占用
             options.inSampleSize = 1; // 可根据需要调整采样率
             
+			clockBackground = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_car_peed_bg, options);
             hourHand = BitmapFactory.decodeResource(getResources(), R.drawable.ui7_car_speed_point, options);
             
             if (hourHand == null) {
@@ -105,8 +107,8 @@ public class DashboardView extends View {
 
     private void preCalculateHandCenter() {
         if (hourHand != null) {
-            handCenterX = (float) -hourHand.getWidth() / 2;
-            handCenterY = (float) -hourHand.getHeight() - 30;
+            handCenterX =  -hourHand.getWidth() / 2.0f;
+            handCenterY =  -hourHand.getHeight();
         }
     }
 
@@ -117,12 +119,22 @@ public class DashboardView extends View {
         centerX = w / 2;
         centerY = h / 2;
 
-        // 计算合适的缩放因子
-       // int minSize = Math.min(w, h);
-        //if (hourHand != null) {
-        //    float handSize = Math.max(hourHand.getWidth(), hourHand.getHeight());
-       //     scaleFactor = (minSize * 1.0f) / handSize; // 调整缩放比例
-        //}
+        if (clockBackground != null) {
+            // 计算缩放因子，让表盘背景适应视图大小
+            float viewAspect = (float) w / h;
+            float bgAspect = (float) clockBackground.getWidth() / clockBackground.getHeight();
+
+            if (viewAspect > bgAspect) {
+                // 视图更宽，以高度为基准缩放
+                scaleFactor = (float) h / clockBackground.getHeight();
+            } else {
+                // 视图更高，以宽度为基准缩放
+                scaleFactor = (float) w / clockBackground.getWidth();
+            }
+
+            // 留出5%的边距
+            scaleFactor *= 0.95f;
+        }
     }
 
     @Override
@@ -130,17 +142,19 @@ public class DashboardView extends View {
         super.onDraw(canvas);
         
         // 检查位图是否有效
-        if (hourHand == null || hourHand.isRecycled()) {
+        if (clockBackground == null || hourHand == null || hourHand.isRecycled()) {
             return;
         }
 
         // 保存画布状态
         canvas.save();
         
-        try {
+        
             // 移动到中心点并缩放
             canvas.translate(centerX, centerY);
             canvas.scale(scaleFactor, scaleFactor);
+		try {
+            drawBitmapCentered(canvas, clockBackground, 0, 0, 0);
             
             // 绘制指针
             drawBitmapCenteredPoint(canvas, hourHand, 0, 0, handCenterX, handCenterY, currentDegree);
@@ -150,6 +164,20 @@ public class DashboardView extends View {
             // 恢复画布状态
             canvas.restore();
         }
+    }
+	
+	    private void drawBitmapCentered(Canvas canvas, Bitmap bitmap, float x, float y, float rotation) {
+        if (bitmap == null || bitmap.isRecycled()) return;
+        
+        matrix.reset();
+        matrix.postTranslate(-bitmap.getWidth() / 2.0f, -bitmap.getHeight() / 2.0f);
+        matrix.postRotate(rotation);
+
+        // 移动到指定位置
+        matrix.postTranslate(x, y);
+
+        // 绘制位图
+        canvas.drawBitmap(bitmap, matrix, paint);
     }
 
     private void drawBitmapCenteredPoint(Canvas canvas, Bitmap bitmap, float x, float y, float dx, float dy, float rotation) {
@@ -277,7 +305,7 @@ public class DashboardView extends View {
         super.onDetachedFromWindow();
         isAttachedToWindow = false;
         closeAnimation();
-        recycleBitmap();
+        recycleBitmaps();
     }
 
     /**
@@ -290,9 +318,15 @@ public class DashboardView extends View {
     /**
      * 回收位图资源
      */
-    private void recycleBitmap() {
-        if (hourHand != null && !hourHand.isRecycled()) {
-            hourHand.recycle();
+    private void recycleBitmaps() {
+	
+		recycleBitmap(clockBackground);
+        recycleBitmap(hourHand);
+    }
+
+    private void recycleBitmap(Bitmap bitmap) {
+        if (bitmap != null && !bitmap.isRecycled()) {
+            bitmap.recycle();
             hourHand = null;
         }
     }
