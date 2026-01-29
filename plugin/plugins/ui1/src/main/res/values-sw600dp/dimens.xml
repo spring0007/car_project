@@ -4,4 +4,5 @@
     <dimen name="car_height">248dp</dimen>
     <dimen name="bottom_icon_width">56dp</dimen>
     <dimen name="car_speed_hor_ratio">0.68</dimen>
+    <dimen name="guideline_bottom_bias">0.85</dimen>
 </resources>

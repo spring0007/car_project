@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91"/>
+        app:layout_constraintGuide_percent="@dimen/guideline_bottom_bias"/>
 
     <ImageView
         android:id="@+id/hotset_bg"
@@ -72,7 +72,6 @@
         android:src="@drawable/hotseat_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <!-- 链头 -->

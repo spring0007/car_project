@@ -18,6 +18,7 @@
         <activity
             android:name=".UIActivity"
             android:exported="true"
+            android:enabled="true"
             android:launchMode="singleTask"
             android:theme="@style/PluginTheme">
 
