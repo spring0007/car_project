@@ -20,5 +20,7 @@
     <dimen name="weatherTemp_marginEnd">10dp</dimen>
     <dimen name="weatherImage_marginEnd">10dp</dimen>
     <dimen name="clockViewWidth_size">190dp</dimen>
+    <dimen name="rv_margin_bottom">0dp</dimen>
+    <dimen name="rv_margin_end">36dp</dimen>
 
 </resources>
