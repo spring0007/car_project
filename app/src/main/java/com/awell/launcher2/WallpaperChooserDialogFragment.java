@@ -204,7 +204,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             int mScreenHeight = metrics.heightPixels;
 
             //根据分辨率，设置壁纸大小
-            Bitmap bitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Config.ARGB_8888);
+            /*Bitmap bitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             Bitmap parper = null;
             int resourcesId = mImages.get(position);
@@ -217,7 +217,7 @@ public class WallpaperChooserDialogFragment extends DialogFragment implements
             }
 
 
-            canvas.drawBitmap(parper, 88, 100, null);
+            canvas.drawBitmap(parper, 88, 100, null);*/
             wpm.suggestDesiredDimensions(mScreenWidth, mScreenHeight);
             wpm.setBitmap(mBitmap);
 

@@ -42,7 +42,7 @@ public class NewCalendar extends LinearLayout {
 
     private Calendar calendar = Calendar.getInstance();  //日历控件初始化
 
-    private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {           //监听日期改变
+    /*private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {           //监听日期改变
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent == null) return;
@@ -57,7 +57,7 @@ public class NewCalendar extends LinearLayout {
                 renderCalendar();
             }
         }
-    };
+    };*/
 
     //重写三个构造方法
     public NewCalendar(Context context) {
@@ -78,14 +78,14 @@ public class NewCalendar extends LinearLayout {
     private void initControl(Context context) {
         bindControl(context);  //绑定控件
         bindControlEvent();   //绑定控件事件
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_DATE_CHANGED);
-        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        //IntentFilter filter = new IntentFilter();
+        //filter.addAction(Intent.ACTION_DATE_CHANGED);
+        //filter.addAction(Intent.ACTION_TIME_CHANGED);
         //context.registerReceiver(mBroadcastReceiver, filter);
     }
 
     public void unRegisterReceiver() {
-        getContext().unregisterReceiver(mBroadcastReceiver);
+        //getContext().unregisterReceiver(mBroadcastReceiver);
     }
 
 
