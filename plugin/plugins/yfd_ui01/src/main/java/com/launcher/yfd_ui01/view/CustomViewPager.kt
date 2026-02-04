@@ -40,8 +40,8 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
 
     // 触摸滑动的阈值
     private var touchSlop = viewConfiguration.scaledTouchSlop
-    private val verticalThreshold = 150f // 垂直滑动阈值150dp，需要转换为px
-    private var verticalThresholdPx = 0f
+    //private val verticalThreshold = resources.displayMetrics.heightPixels /2.0f // 250f // 垂直滑动阈值150dp，需要转换为px
+    private var verticalThresholdPx = resources.displayMetrics.heightPixels /2.0f  //屏幕高度的一半
 
     private val overScroller = OverScroller(context)
 
@@ -69,7 +69,7 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         // 将阈值转换为像素
-        verticalThresholdPx = verticalThreshold * resources.displayMetrics.density
+        //verticalThresholdPx =  verticalThreshold * resources.displayMetrics.density
     }
 
     // 获取真实页面总数的方法
@@ -127,10 +127,10 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 val moveY = ev.y
                 val distanceX = kotlin.math.abs(moveX - downX)
                 val distanceY = kotlin.math.abs(moveY - downY)
-                // LogUtil.i("滑动距离: distanceX=$distanceX, distanceY=$distanceY, 阈值: touchSlop=$touchSlop, verticalThreshold=$verticalThresholdPx")
+                 LogUtil.i("滑动距离: distanceX=$distanceX, distanceY=$distanceY, 阈值: touchSlop=$touchSlop, verticalThresholdPx=$verticalThresholdPx")
                 // 检查是否为垂直滑动
                 if (distanceY > verticalThresholdPx && distanceY > distanceX) {
-                    //LogUtil.i("检测到垂直滑动，距离: $distanceY, 阈值: $verticalThresholdPx")
+                    LogUtil.i("检测到垂直滑动，距离: $distanceY, 阈值: $verticalThresholdPx")
                     val direction = if (moveY > downY) DIRECTION_DOWN else DIRECTION_UP
                     val handledByListener = verticalSwipeListener?.onVerticalSwipe(
                         direction,
