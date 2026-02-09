@@ -1253,7 +1253,12 @@ public class LauncherModel extends BroadcastReceiver {
             final boolean isSafeMode = manager.isSafeMode();
 
             // Make sure the default workspace is loaded, if needed
-            mApp.getLauncherProvider().loadDefaultFavoritesIfNecessary(0);
+            LauncherProvider launcherProvider = mApp.getLauncherProvider();
+            if (launcherProvider != null) {
+                launcherProvider.loadDefaultFavoritesIfNecessary(0);
+            } else {
+                Log.e(TAG, "LauncherProvider is null, cannot load default favorites");
+            }
 
             synchronized (sBgLock) {
                 sBgWorkspaceItems.clear();

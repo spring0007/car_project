@@ -61,7 +61,7 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     private static float sScreenDensity;
     private static final int sLongPressTimeout = 300;
     private static final String sSharedPreferencesKey = "com.awell.launcher2.prefs";
-    WeakReference<LauncherProvider> mLauncherProvider;
+    private WeakReference<LauncherProvider> mLauncherProvider;
 
     private final ViewModelStore store = new ViewModelStore();
 
@@ -250,6 +250,10 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
     }
 
     LauncherProvider getLauncherProvider() {
+        if (mLauncherProvider == null) {
+            Log.e(TAG, "getLauncherProvider: mLauncherProvider is null");
+            return null;
+        }
         return mLauncherProvider.get();
     }
 

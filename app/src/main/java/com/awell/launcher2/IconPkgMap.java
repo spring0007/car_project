@@ -38,7 +38,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_DEFAULT.put("com.awell.canbus", R.drawable.sf_yuanche);
         PACKAGE_ICON_MAP_DEFAULT.put("com.awell.canbus2", R.drawable.sf_yuanche);
         PACKAGE_ICON_MAP_DEFAULT.put("com.autonavi.amapauto", R.drawable.sf_gaode);
-        PACKAGE_ICON_MAP_DEFAULT.put("com.tima.carnet.vt", R.drawable.sf_zlink);
+       // PACKAGE_ICON_MAP_DEFAULT.put("com.tima.carnet.vt", R.drawable.sf_zlink);
         PACKAGE_ICON_MAP_DEFAULT.put("net.easyconn", R.drawable.sf_zlink);
         PACKAGE_ICON_MAP_DEFAULT.put("com.zjinnova.zlink", R.drawable.sf_zlink);
         PACKAGE_ICON_MAP_DEFAULT.put("com.awell.awellmanual", R.drawable.sf_manual);
@@ -73,7 +73,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_DARK.put("com.awell.canbus", R.drawable.sf_yuanche_dark);
         PACKAGE_ICON_MAP_DARK.put("com.awell.canbus2", R.drawable.sf_yuanche_dark);
         PACKAGE_ICON_MAP_DARK.put("com.autonavi.amapauto", R.drawable.sf_gaode_dark);
-        PACKAGE_ICON_MAP_DARK.put("com.tima.carnet.vt", R.drawable.sf_zlink_dark);
+       // PACKAGE_ICON_MAP_DARK.put("com.tima.carnet.vt", R.drawable.sf_zlink_dark);
         PACKAGE_ICON_MAP_DARK.put("net.easyconn", R.drawable.sf_zlink_dark);
         PACKAGE_ICON_MAP_DARK.put("com.zjinnova.zlink", R.drawable.sf_zlink_dark);
         PACKAGE_ICON_MAP_DARK.put("com.awell.awellmanual", R.drawable.sf_manual_dark);
@@ -108,7 +108,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_YELLOW.put("com.awell.canbus", R.drawable.sf_yuanche_yellow);
         PACKAGE_ICON_MAP_YELLOW.put("com.awell.canbus2", R.drawable.sf_yuanche_yellow);
         PACKAGE_ICON_MAP_YELLOW.put("com.autonavi.amapauto", R.drawable.sf_gaode_yellow);
-        PACKAGE_ICON_MAP_YELLOW.put("com.tima.carnet.vt", R.drawable.sf_zlink_yellow);
+       // PACKAGE_ICON_MAP_YELLOW.put("com.tima.carnet.vt", R.drawable.sf_zlink_yellow);
         PACKAGE_ICON_MAP_YELLOW.put("net.easyconn", R.drawable.sf_zlink_yellow);
         PACKAGE_ICON_MAP_YELLOW.put("com.zjinnova.zlink", R.drawable.sf_zlink_yellow);
         PACKAGE_ICON_MAP_YELLOW.put("com.awell.awellmanual", R.drawable.sf_manual_yellow);
@@ -143,7 +143,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_YFD_2.put("com.awell.canbus", R.drawable.sf_yuanche_yfd_2);
         PACKAGE_ICON_MAP_YFD_2.put("com.awell.canbus2", R.drawable.sf_yuanche_yfd_2);
         PACKAGE_ICON_MAP_YFD_2.put("com.autonavi.amapauto", R.drawable.sf_gaode);
-        PACKAGE_ICON_MAP_YFD_2.put("com.tima.carnet.vt", R.drawable.sf_zlink_yfd_2);
+       // PACKAGE_ICON_MAP_YFD_2.put("com.tima.carnet.vt", R.drawable.sf_zlink_yfd_2);
         PACKAGE_ICON_MAP_YFD_2.put("net.easyconn", R.drawable.sf_zlink_yfd_2);
         PACKAGE_ICON_MAP_YFD_2.put("com.zjinnova.zlink", R.drawable.sf_zlink_yfd_2);
         PACKAGE_ICON_MAP_YFD_2.put("com.awell.awellmanual", R.drawable.sf_manual_yfd_2);
