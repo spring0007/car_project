@@ -306,7 +306,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     private val handlerFreeform = Handler(Looper.getMainLooper())
     private val hideFreeformRunnable = Runnable {
-        imageUpdateJob?.cancel()
         if (systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM ) {
             systemUIClient.hideFreeform()
             /*Settings.System.putString( swipeActivity.contentResolver,"freeform_launcher_idle",
@@ -800,7 +799,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         if (checkTopAppLollipop(swipeActivity)) {
 
             // 启动新的协程任务
-            imageUpdateJob = lifecycleScope.launch {
+            imageUpdateJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main.immediate) {
                 delay(150)
                 LogUtil.i("lqq,onResume ,isVisibleOnScreen="+freeformBg.isVisibleOnScreen())
                 if (freeformBg.isVisibleOnScreen()) {
@@ -862,7 +861,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onStop() {
         super.onStop()
         LogUtil.i("freeform_launcher_idle,0")
-        imageUpdateJob?.cancel()
+        //imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
             Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
