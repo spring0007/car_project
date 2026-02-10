@@ -861,7 +861,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onStop() {
         super.onStop()
         LogUtil.i("freeform_launcher_idle,0")
-        //imageUpdateJob?.cancel()
+        imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
             Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
