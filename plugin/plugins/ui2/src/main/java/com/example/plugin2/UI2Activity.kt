@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
@@ -526,21 +527,22 @@ class UI2Activity : Activity() {
         }
     }
 
-    val mLocationListener by lazy {
-        LocationListener { location ->
-            location.run {
-                if (hasSpeed()) {
-                    val speedKm = speed * 3.6
-                    val speedMild = speedKm / 1.6093
-                    val msg = mHandle.obtainMessage().apply {
-                        what = MSG_UPDATE_SPEED
-                        arg1 = speedKm.toInt()
-                        arg2 = speedMild.toInt()
-                    }
-                    mHandle.sendMessage(msg)
+    val mLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            if (location.hasSpeed()) {
+                val speedKm = location.speed * 3.6
+                val speedMild = speedKm / 1.6093
+                val msg = mHandle.obtainMessage().apply {
+                    what = MSG_UPDATE_SPEED
+                    arg1 = speedKm.toInt()
+                    arg2 = speedMild.toInt()
                 }
+                mHandle.sendMessage(msg)
             }
         }
+        override fun onProviderDisabled(provider: String) { }
+        override fun onProviderEnabled(provider: String) {}
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     private fun clickStartApp() {
