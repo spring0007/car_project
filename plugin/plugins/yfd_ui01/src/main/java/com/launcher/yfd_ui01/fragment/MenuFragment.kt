@@ -585,7 +585,7 @@ class MenuFragment : Fragment() {
     private fun registerPackageReceiver() {
         homeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                if (!isVisible) return
+                if (!isResumed) return
                 LogUtil.i("action=" + intent.action)
                 when (intent.action) {
                     Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
@@ -601,7 +601,7 @@ class MenuFragment : Fragment() {
 
         packageReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                //if(!isVisible)return
+                //if(!isResumed)return
                 LogUtil.i("pkg,action="+intent.action)
                 //val packageName = intent.data?.schemeSpecificPart ?: return
                 val packageName = intent.data!!.schemeSpecificPart

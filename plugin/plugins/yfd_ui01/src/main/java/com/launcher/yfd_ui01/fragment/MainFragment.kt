@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.graphics.Rect
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
@@ -230,6 +231,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         //filter.addAction(Intent.ACTION_TIME_TICK)
         //filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+        filter.addAction("awellauto.backcar.on")
+        //filter.addAction("awellauto.backcar.off")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
@@ -241,7 +244,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
-            if(!isVisible)return
+            if (!isResumed) {
+                LogUtil.d("Fragment not resumed, ignoring broadcast: ${intent?.action}")
+                return
+            }
             LogUtil.i( "onReceive:huang action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
@@ -298,6 +304,13 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
                     }else if (reason == "homekey") {//多任务；recent：最近 ,home键
                         canclePopupWindow()
+                    }
+                }
+                "awellauto.backcar.on" -> {
+                    val freePkg = Settings.System.getString(requireContext().contentResolver,"freeform_app_package_name")
+                    if("cn.cardoor.zt360".equals(freePkg)) {
+                        canclePopupWindow()
+                        systemUIClient.fullScreenFreeform()
                     }
                 }
             }
@@ -449,22 +462,22 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         override fun handleOriginBundle(bundle: Bundle) {}
     }
 
-    val locationListener by lazy {
-        LocationListener { location ->
-            location.run {
-                if (hasSpeed()) {
-                    val speed = (location.speed * 3.6).toInt() // m/s ---> km/h
-                    val speedMile = (speed / 1.6093).toInt() // km/h  ---> miles/h
-                    dashboardView.udDataSpeed(speed)
-                    val msg = mHandle.obtainMessage().apply {
-                        what = MSG_UPDATE_SPEED
-                        arg1 = speed
-                        arg2 = speedMile
-                    }
-                    mHandle.sendMessage(msg)
+    val mLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            if (location.hasSpeed()) {
+                val speedKm = location.speed * 3.6
+                val speedMild = speedKm / 1.6093
+                val msg = mHandle.obtainMessage().apply {
+                    what = MSG_UPDATE_SPEED
+                    arg1 = speedKm.toInt()
+                    arg2 = speedMild.toInt()
                 }
+                mHandle.sendMessage(msg)
             }
         }
+        override fun onProviderDisabled(provider: String) { }
+        override fun onProviderEnabled(provider: String) {}
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     private fun clickStartApp() {

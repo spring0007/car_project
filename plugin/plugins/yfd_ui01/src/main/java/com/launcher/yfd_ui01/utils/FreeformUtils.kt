@@ -87,7 +87,13 @@ object FreeformUtils {
             val cmp = ComponentName(pkg, clazz)
             intentFreeform.setComponent(cmp)
         }
-        context.startActivity(intentFreeform, options.toBundle())
+        try {
+            context.startActivity(intentFreeform, options.toBundle())
+        } catch (e: Exception) {
+            LogUtil.e("Failed to start freeform app")
+            // 可以在此处清理无效的系统设置，避免下次再错
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME, null)
+        }
 
     }
 
@@ -130,9 +136,40 @@ object FreeformUtils {
     private fun isAppInstalled(context: Context, packageName: String): Boolean {
         try {
             val pm = context.packageManager
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+
+            // 1.Check if the application exists
+            val packageInfo =
+                pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES) ?: return false
+
+            // 2. Check if the application is available (non disabled state)
+            if (!packageInfo.applicationInfo.enabled) {
+                return false
+            }
+
+            // 3. Get Startup Intent
+            val launchIntent = pm.getLaunchIntentForPackage(packageName) ?: return false
+
+            // 4. Check if the target activity exists
+            val resolveInfo = pm.resolveActivity(launchIntent, 0) ?: return false
+
+            // 5.Check if you have permission to start
+            val requiredPermission = resolveInfo.activityInfo.permission
+            if (requiredPermission != null) {
+                if (context.checkCallingOrSelfPermission(requiredPermission) !== PackageManager.PERMISSION_GRANTED) {
+                    // Request permission
+                    //ActivityCompat.requestPermissions((Activity) context,
+                    //	new String[]{requiredPermission},
+                    //	1001);
+                    return false
+                }
+            }
+
             return true
-        } catch (e: PackageManager.NameNotFoundException) {
+
+
+            /*PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            return packageInfo != null;*/
+        } catch (e: java.lang.Exception) {
             return false
         }
     }
