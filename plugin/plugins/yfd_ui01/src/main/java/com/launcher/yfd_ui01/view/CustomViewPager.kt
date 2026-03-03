@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui01.view
+ package com.launcher.yfd_ui01.view
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -40,8 +40,8 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
 
     // 触摸滑动的阈值
     private var touchSlop = viewConfiguration.scaledTouchSlop
-    //private val verticalThreshold = resources.displayMetrics.heightPixels /2.0f // 250f // 垂直滑动阈值150dp，需要转换为px
-    private var verticalThresholdPx = resources.displayMetrics.heightPixels /2.0f  //屏幕高度的一半
+    // 垂直滑动阈值 - 优化为更合理的值
+    private var verticalThresholdPx = resources.displayMetrics.heightPixels / 3.0f  // 屏幕高度的1/3，更容易触发
 
     private val overScroller = OverScroller(context)
 
@@ -128,21 +128,26 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 val distanceX = kotlin.math.abs(moveX - downX)
                 val distanceY = kotlin.math.abs(moveY - downY)
                  LogUtil.i("滑动距离: distanceX=$distanceX, distanceY=$distanceY, 阈值: touchSlop=$touchSlop, verticalThresholdPx=$verticalThresholdPx")
-                // 检查是否为垂直滑动
+                // 检查是否为垂直滑动 - 优化检测逻辑
                 if (distanceY > verticalThresholdPx && distanceY > distanceX) {
-                    LogUtil.i("检测到垂直滑动，距离: $distanceY, 阈值: $verticalThresholdPx")
+                    LogUtil.i("检测到垂直滑动，距离: $distanceY, 阈值: $verticalThresholdPx, 当前页面: $currentPageIndex")
                     val direction = if (moveY > downY) DIRECTION_DOWN else DIRECTION_UP
-                    val handledByListener = verticalSwipeListener?.onVerticalSwipe(
-                        direction,
-                        currentPageIndex,
-                        distanceY
-                    ) ?: false
+                    
+                    // 只有在第一页向下滑动时才触发切换
+                    if (direction == DIRECTION_DOWN && currentPageIndex == 0) {
 
-                    if (handledByListener) {
-                        isVerticalSwipeHandled = true
+                        val handledByListener = verticalSwipeListener?.onVerticalSwipe(
+                            direction,
+                            currentPageIndex,
+                            distanceY
+                        ) ?: false
 
-                        // 拦截事件，防止子View处理
-                        return true
+                        if (handledByListener) {
+                            isVerticalSwipeHandled = true
+                            LogUtil.i("垂直滑动已处理，切换到主页面")
+                            // 拦截事件，防止子View处理
+                            return true
+                        }
                     }
                 }
 
@@ -201,26 +206,28 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 val moveX = event.x
                 val moveY = event.y
                 val distanceY = kotlin.math.abs(moveY - downY)
-                // 检查是否为垂直滑动
+                // 检查是否为垂直滑动 - 优化处理逻辑
                 if (distanceY > verticalThresholdPx) {
-
                     // LogUtil.i("onTouchEvent: 检测到垂直滑动，距离: $distanceY")
                     // 计算滑动方向
                     val direction = if (moveY > downY) DIRECTION_DOWN else DIRECTION_UP
 
-                    // 通知监听器
-                    val handledByListener = verticalSwipeListener?.onVerticalSwipe(
-                        direction,
-                        currentPageIndex,
-                        distanceY
-                    ) ?: false
+                    // 只有在第一页向下滑动时才触发切换
+                    if (direction == DIRECTION_DOWN && currentPageIndex == 0) {
+                        
+                        // 通知监听器
+                        val handledByListener = verticalSwipeListener?.onVerticalSwipe(
+                            direction,
+                            currentPageIndex,
+                            distanceY
+                        ) ?: false
 
-                    if (handledByListener) {
-                        //LogUtil.i("onTouchEvent, handledByListener=$handledByListener")
-                        isVerticalSwipeHandled = true
-                        // 立即回到原始页面位置
-                        scrollToOriginalPage()
-                        return true
+                        if (handledByListener) {
+                            //LogUtil.i("onTouchEvent, handledByListener=$handledByListener")
+                            // 立即回到原始页面位置
+                            scrollToOriginalPage()
+                            return true
+                        }
                     }
                 }
 
@@ -255,11 +262,16 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                         else -> targetScrollX.coerceIn(minScrollX, maxScrollX)
                     }
 
-                    // 计算当前页面
-                    //val targetPage = (finalScrollX / pageWidth).toInt().coerceIn(0, pageCount - 1)
-
-                    // 滚动到目标位置
+                    // 滚动到目标位置（允许正常滑动）
                     scrollTo(finalScrollX.toInt(), 0)
+                    
+                    // 实时更新当前页面索引
+                    val newPageIndex = (finalScrollX / pageWidth).toInt().coerceIn(0, pageCount - 1)
+                    if (newPageIndex != currentPageIndex) {
+                        currentPageIndex = newPageIndex
+                        // 只在页面真正改变时通知监听器
+                        dispatchOnPageChanged(newPageIndex)
+                    }
 
                     // 如果页面发生变化，更新状态
                     /*if (targetPage != currentPageIndex) {
@@ -302,10 +314,10 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
 
                 //LogUtil.i("抬手判断: deltaX=$deltaX, scrollDelta=$scrollDelta, xVelocity=$xVelocity, minVelocity=$minVelocity, currentScrollX=$currentScrollX, pageWidth=$pageWidth")
 
-                // 决定目标页面（原始逻辑）：速度优先，其次基于手指移动距离超过页面宽度的10% 翻页
-                val targetPage = when {
-                    // 有足够速度时翻页
-                    kotlin.math.abs(xVelocity) > minVelocity -> {
+                // 决定目标页面（平衡策略）：正常滑动允许，极端情况限制
+                val calculatedTargetPage = when {
+                    // 高速滑动时正常翻页
+                    kotlin.math.abs(xVelocity) > minVelocity * 2 -> {
                         if (xVelocity < 0) {
                             // 向左滑动，下一页
                             (currentPage + 1).coerceAtMost(pageCount - 1)
@@ -314,8 +326,20 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                             (currentPage - 1).coerceAtLeast(0)
                         }
                     }
-                    // 滑动距离超过页面宽度10%时翻页（原始阈值）
-                    kotlin.math.abs(scrollDelta) > pageWidth / 2 -> {
+                    // 中等速度滑动需要更大距离才翻页
+                    kotlin.math.abs(xVelocity) > minVelocity -> {
+                        if (kotlin.math.abs(scrollDelta) > pageWidth * 0.3) {
+                            if (xVelocity < 0) {
+                                (currentPage + 1).coerceAtMost(pageCount - 1)
+                            } else {
+                                (currentPage - 1).coerceAtLeast(0)
+                            }
+                        } else {
+                            currentPage
+                        }
+                    }
+                    // 滑动距离较大时翻页（适度阈值）
+                    kotlin.math.abs(scrollDelta) > pageWidth * 0.2 -> {
                         if (scrollDelta > 0) {
                             // 内容向左滚动，目标是下一页
                             (currentPage + 1).coerceAtMost(pageCount - 1)
@@ -327,6 +351,19 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                     // 否则回到当前页面
                     else -> currentPage
                 }
+                
+                // 极端保护：超大滑动距离时限制跳页
+                val targetPage = if (kotlin.math.abs(scrollDelta) > pageWidth * 1.2) {
+                    // 超大滑动时最多只跳转一页
+                    calculatedTargetPage.coerceIn(
+                        (currentPage - 1).coerceAtLeast(0),
+                        (currentPage + 1).coerceAtMost(pageCount - 1)
+                    )
+                } else {
+                    calculatedTargetPage
+                }
+                
+                LogUtil.i("滑动结束判断: 当前页=$currentPage, 目标页=$targetPage, 速度=$xVelocity, 滑动距离=$scrollDelta, 页面宽度=$pageWidth")
 
             // 平滑滚动到目标页面
             setCurrentItem(targetPage, true)
@@ -400,12 +437,22 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
      * 设置当前页面（重写以更新内部状态）
      */
     override fun setCurrentItem(item: Int, smoothScroll: Boolean) {
-        super.setCurrentItem(item, smoothScroll)
+        val pageCount = getRealPageCount()
+        if (pageCount == 0) return
+        
+        // 正常的页面设置（允许相邻页面切换）
+        val targetItem = item.coerceIn(0, pageCount - 1)
+        
+        // 只有当目标页面与当前页面相差超过1页时才记录警告
+        if (kotlin.math.abs(targetItem - currentPageIndex) > 1) {
+            LogUtil.w("检测到大跨度页面切换: 当前页=$currentPageIndex, 目标页=$targetItem")
+        }
+        
+        super.setCurrentItem(targetItem, smoothScroll)
         //LogUtil.i("setCurrentItem,item=$item")
-        smoothScrollToX(item*width)
-        currentPageIndex = item
-        dispatchOnPageChanged(item)
-
+        smoothScrollToX(targetItem * width)
+        currentPageIndex = targetItem
+        dispatchOnPageChanged(targetItem)
     }
 
 //    override fun setCurrentItem(item: Int) {

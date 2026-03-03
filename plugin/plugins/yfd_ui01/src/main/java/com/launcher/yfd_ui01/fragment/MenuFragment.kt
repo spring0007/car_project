@@ -585,7 +585,7 @@ class MenuFragment : Fragment() {
     private fun registerPackageReceiver() {
         homeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                if (!isResumed) return
+                if (!isVisible) return
                 LogUtil.i("action=" + intent.action)
                 when (intent.action) {
                     Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {

@@ -86,7 +86,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     //    private val BIN_DATA_SPEED_UNIT = 0x84
     private var accRecor: Boolean? = null
     lateinit var systemUIClient: SystemUIClient
-    var viewAddNeedToStartFreeform: Boolean = false
  //   private lateinit var imagePreferences: ImagePreferences
 //    private lateinit var appScope: AppCoroutineScope
 //    private var imagePopupWindow: PopupWindow? = null
@@ -167,8 +166,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         var pkg = Settings.System.getString(requireContext().contentResolver,"launcher_app_icon_$appNumber")
         if (TextUtils.isEmpty(pkg))
             pkg = defaultPackage
-        var info = IconManager.getAppIcon(requireContext(),pkg)
-        view.setAppName(info.label)
+        val info = IconManager.getAppIcon(requireContext(),pkg)
+        view.appName = info.label
         view.setAppIcon(info.icon)
 
     }
@@ -244,7 +243,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action
-            if (!isResumed) {
+            // 只有当 Fragment 处于活跃且可见状态时才处理广播
+            if (!isResumed || !isVisible ) {
                 LogUtil.d("Fragment not resumed, ignoring broadcast: ${intent?.action}")
                 return
             }
@@ -792,7 +792,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun initTouchAndSpeedListener() {
         locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, locationListener, mHandle.looper)
+        locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
     }
 
     override fun onStart() {
