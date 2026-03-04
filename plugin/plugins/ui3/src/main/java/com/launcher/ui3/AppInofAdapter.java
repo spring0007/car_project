@@ -67,8 +67,11 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         });
 
         holder.iv_app_layout.setOnClickListener(vie -> {
+            if (appInfo == null || appInfo.package_name == null) return;
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
-            mContext.startActivity(intent);
+            if (intent != null) {
+                mContext.startActivity(intent);
+            }
         });
 
         if (position == contentList.size() - 1) {
