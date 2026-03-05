@@ -85,7 +85,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         clickApp();
 
         initAddAppView();
-
+		registerPackageReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
     }
@@ -376,6 +376,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+		unregisterPackageReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
         try {
@@ -667,7 +668,6 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        registerPackageReceiver();
         // Verify all apps in the list are still installed
         verifyInstalledApps();
     }
@@ -774,10 +774,5 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     }
 
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterPackageReceiver();
-    }
 
 }
