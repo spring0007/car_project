@@ -30,11 +30,11 @@ object FreeformUtils {
     const val NAVI_GOOGLE_PKG: String = "com.google.android.apps.maps"
     const val NAVI_GOOGLE_CLAZZ: String = "com.google.android.maps.MapsActivity"
     const val NAVI_GAODE_PKG: String = "com.autonavi.amapauto"
-    const val MUSIC_PKG: String = "com.awell.localmusic"
+    //const val MUSIC_PKG: String = "com.awell.localmusic"
     const val NAVI_GAODE_CLAZZ: String = "com.autonavi.amapauto.MainMapActivity"
 
     val MUSIC_KUWO_PKG: String = "cn.kuwo.kwmusiccar"
-    val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.MainActivity"
+    //val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.MainActivity"
 
     //val MUSIC_KUWO_CLAZZ: String = "cn.kuwo.kwmusiccar.ui.WelcomeActivity"
     private var top_Activity: String? = null
@@ -49,37 +49,34 @@ object FreeformUtils {
 
         var pkg =
             Settings.System.getString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-        var clazz = Settings.System.getString(
-            context.contentResolver,
-            SETTINGS_FREEFORM_APP_CLAZZ_NAME
-        )
+        var clazz: String? = null
+            //Settings.System.getString( context.contentResolver, SETTINGS_FREEFORM_APP_CLAZZ_NAME)
 
-        if (TextUtils.isEmpty(pkg) || TextUtils.isEmpty(clazz)) {
+        if (TextUtils.isEmpty(pkg) || !isAppInstalled(context, pkg)) {
             pkg = NAVI_GOOGLE_PKG
-            clazz = NAVI_GOOGLE_PKG
+            clazz = NAVI_GOOGLE_CLAZZ
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME, pkg)
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_CLAZZ_NAME, NAVI_GOOGLE_CLAZZ)
         }
 
-        if (!isAppInstalled(context, pkg)) {
-            pkg = NAVI_GOOGLE_PKG
-            clazz = NAVI_GOOGLE_PKG
-        }
 
-        val isRun = isAppRunning(context, pkg)
-        if (isRun && top_Activity != null && (!clazz.equals(top_Activity)))
+        val isRun = isAppRunning(context,pkg)
+        if(isRun && top_Activity!=null &&  (!clazz.equals(top_Activity)))
             clazz = top_Activity
 
-        if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
+        /*if (isAppInstalled(context, pkg) && isKuWoMusic(context, pkg)) {
             clazz = MUSIC_KUWO_CLAZZ
-        }
-
+        }*/
         if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {
             clazz = NAVI_GAODE_CLAZZ
         }
 
         val options: ActivityOptions = makeLaunchOptions(context, rect)
         var intentFreeform = context.packageManager.getLaunchIntentForPackage(pkg)
-        if (intentFreeform == null)
-            intentFreeform = Intent()
+        if (intentFreeform==null) {
+            intentFreeform = Intent(Intent.ACTION_MAIN);
+	        intentFreeform.setPackage(pkg)
+        }
 
         intentFreeform.addFlags(
             Intent.FLAG_ACTIVITY_NEW_TASK or
@@ -90,13 +87,19 @@ object FreeformUtils {
         )
 
         intentFreeform.addCategory(Intent.CATEGORY_LAUNCHER)
-        intentFreeform.setPackage(pkg)
+        
 
         if (clazz != null) {
             val cmp = ComponentName(pkg, clazz)
             intentFreeform.setComponent(cmp)
         }
-        context.startActivity(intentFreeform, options.toBundle())
+        try {
+            context.startActivity(intentFreeform, options.toBundle())
+        } catch (e: Exception) {
+            LogUtil.e("Failed to start freeform app")
+            // 可以在此处清理无效的系统设置，避免下次再错
+            Settings.System.putString(context.contentResolver, SETTINGS_FREEFORM_APP_PACKAGE_NAME, null)
+        }
 
     }
 
@@ -139,9 +142,40 @@ object FreeformUtils {
     private fun isAppInstalled(context: Context, packageName: String): Boolean {
         try {
             val pm = context.packageManager
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES)
+
+            // 1.Check if the application exists
+            val packageInfo =
+                pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES) ?: return false
+
+            // 2. Check if the application is available (non disabled state)
+            if (!packageInfo.applicationInfo.enabled) {
+                return false
+            }
+
+            // 3. Get Startup Intent
+            val launchIntent = pm.getLaunchIntentForPackage(packageName) ?: return false
+
+            // 4. Check if the target activity exists
+            val resolveInfo = pm.resolveActivity(launchIntent, 0) ?: return false
+
+            // 5.Check if you have permission to start
+            val requiredPermission = resolveInfo.activityInfo.permission
+            if (requiredPermission != null) {
+                if (context.checkCallingOrSelfPermission(requiredPermission) !== PackageManager.PERMISSION_GRANTED) {
+                    // Request permission
+                    //ActivityCompat.requestPermissions((Activity) context,
+                    //	new String[]{requiredPermission},
+                    //	1001);
+                    return false
+                }
+            }
+
             return true
-        } catch (e: PackageManager.NameNotFoundException) {
+
+
+            /*PackageInfo packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
+            return packageInfo != null;*/
+        } catch (e: java.lang.Exception) {
             return false
         }
     }

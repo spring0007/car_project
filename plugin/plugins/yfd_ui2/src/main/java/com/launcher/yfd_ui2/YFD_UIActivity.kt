@@ -17,6 +17,7 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Rect
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
@@ -26,10 +27,8 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -63,8 +62,6 @@ import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui2.adapter.AppInofAdapter
 import com.launcher.yfd_ui2.adapter.AppPopAdapter
 import com.launcher.yfd_ui2.databinding.UiActivityBinding
-import com.launcher.yfd_ui2.utils.BootStateManager
-import com.launcher.yfd_ui2.utils.FreeformUtils
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.launcher.yfd_ui2.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
@@ -116,6 +113,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     // 跟踪事件消费状态
     private var isEventConsumedByChild = false
     private var isLongPressPossible = false
+    private var isResumed = false
 
     private var roadFrames: IntArray = intArrayOf(
         R.drawable.car_effect_driving_1,
@@ -178,6 +176,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         LogUtil.i("onResume")
+        isResumed = true
         /*findViewById<ImageView>(R.id.freeform_image).postDelayed({
             if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
                 updateImagePosition(findViewById(R.id.freeform_image), "onResume")
@@ -192,6 +191,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             handler?.postDelayed(weatherRefreshRunnable, 0)
             isWeatherTimerRunning = true
         }
+        // Verify all apps in the list are still installed
+        verifyInstalledApps()
 
     }
 
@@ -213,6 +214,15 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        LogUtil.i("onPause")
+        isResumed = false
+        handler?.removeCallbacks(weatherRefreshRunnable)
+        handlerFreeform.removeCallbacks(freeformRunnable)
+        isWeatherTimerRunning = false
+    }
+
     override fun onStop() {
         super.onStop()
         LogUtil.i("onStop")
@@ -224,14 +234,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }else
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        LogUtil.i("onPause")
-        handler?.removeCallbacks(weatherRefreshRunnable)
-        handlerFreeform.removeCallbacks(freeformRunnable)
-        isWeatherTimerRunning = false
     }
 
     private fun initFreeformControl() {
@@ -342,7 +344,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         viewConfiguration = ViewConfiguration.get(this)
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, locationListener, mHandle.looper)
+        locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -368,9 +370,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         showAppInfoList = ArrayList<AppInfo>()
         allAppInfoList = ArrayList<AppInfo>()
 
-        placehodlerInfo = AppInfo()
-        placehodlerInfo.setIcon(getDrawable(R.drawable.sf_app_add_icon))
-        placehodlerInfo.setLabel(getString(R.string.add_app))
+        placehodlerInfo = createMismatchPlaceholder();
         // 获取已保存需要显示的app包名，如果没有，则显示默认
         myDbHelper = MyDbHelper(this, "show_app", null, 1)
         sqLiteDatabase = myDbHelper.writableDatabase
@@ -390,52 +390,83 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun showHostApp() {
-        val storageAppList: MutableList<String> = ArrayList()
-
-        allAppInfoList = getAllAppInfo(this, false)
-
-        val cursor: Cursor =
-            myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null)
-        while (cursor.moveToNext()) {
-            @SuppressLint("Range") val packageName =
-                cursor.getString(cursor.getColumnIndex("packagename"))
-            storageAppList.add(packageName)
-            // 删除记录
-            sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String>(packageName))
-        }
-        for (packageName in storageAppList) {
-            val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
-            if (app != null) {
-                showAppInfoList.add(
-                    Utils.getAppInfoFromPackage(packageName, allAppInfoList)
-                )
-            }
-        }
-        cursor.close()
-
-        // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoList.isEmpty()) {
-            for (packName in Utils.defaultShowApp) {
-                val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
-                if (appInfo != null) {
-                    showAppInfoList.add(Utils.getAppInfoFromPackage(packName, allAppInfoList))
-                }
-            }
-        }
-
-        // 添加到数据库
-        for (storagePac in showAppInfoList) {
-            val contentValues = ContentValues()
-            contentValues.put("packagename", storagePac.package_name)
-            sqLiteDatabase.insert("showapp", null, contentValues)
-        }
-        showAppInfoList.add(placehodlerInfo)
+        // 刷新应用列表
+        refreshAppList()
 
         runOnUiThread {
             appInfoAdapter.setContentList(showAppInfoList)
             appInfoAdapter.notifyDataSetChanged()
         }
+    }
 
+    private fun refreshAppList() {
+        // 获取所有已安装应用
+        allAppInfoList = getAllAppInfo(this, false)
+        // 清空当前显示列表
+        showAppInfoList = ArrayList()
+
+        // 从数据库加载保存的应用
+        val storageAppList = loadAppListFromDatabase()
+
+        // 添加保存的应用到显示列表
+        for (packageName in storageAppList) {
+            val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
+            if (app != null) {
+                showAppInfoList.add(app)
+            }
+        }
+
+        // 如果没有保存的应用，加载默认应用
+        if (showAppInfoList.isEmpty()) {
+            loadDefaultApps()
+        }
+
+        // 保存应用到数据库
+        saveAppListToDatabase()
+
+        // 添加占位符
+        addAppPlaceholder()
+    }
+
+    private fun loadAppListFromDatabase(): List<String> {
+        val storageAppList = ArrayList<String>()
+        val cursor = myDbHelper.writableDatabase.query("showapp", null, null, null, null, null, null)
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                @SuppressLint("Range")
+                val packageName = cursor.getString(cursor.getColumnIndex("packagename"))
+                storageAppList.add(packageName)
+                // 删除记录
+                sqLiteDatabase.delete("showapp", "packagename=?", arrayOf(packageName))
+            }
+            cursor.close()
+        }
+        return storageAppList
+    }
+
+    private fun loadDefaultApps() {
+        for (packName in Utils.defaultShowApp) {
+            val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
+            if (appInfo != null) {
+                showAppInfoList.add(appInfo)
+            }
+        }
+    }
+
+    private fun saveAppListToDatabase() {
+        for (storagePac in showAppInfoList) {
+            if (storagePac != null) {
+                val contentValues = ContentValues().apply {
+                    put("packagename", storagePac.package_name)
+                }
+                sqLiteDatabase.insert("showapp", null, contentValues)
+            }
+        }
+    }
+
+    private fun addAppPlaceholder() {
+        // 使用统一的占位符更新方法
+        updateAppPlaceholder(false)
     }
 
     private fun initCarView() {
@@ -573,8 +604,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initBroadcastReceiver() {
+        // 注册不需要 dataScheme 的广播
         val filter = IntentFilter()
-
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH)
         filter.addAction(CommonData.ACTION_ACC_ON)
         filter.addAction(CommonData.ACTION_ACC_OFF)
@@ -583,11 +614,23 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
         filter.addAction("CANBUS_CHANGE_SPEED_Unit")
         filter.addAction("top_session_package_change")
+        filter.addAction("awellauto.backcar.on")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(receiver, filter)
+        }
+        
+        // 单独注册需要 dataScheme 的广播
+        val packageFilter = IntentFilter()
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+        packageFilter.addDataScheme("package")
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, packageFilter, RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(receiver, packageFilter)
         }
     }
 
@@ -608,7 +651,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun unregisterCustomerListener() {
-        locationManager.removeUpdates(locationListener)
+        locationManager.removeUpdates(mLocationListener)
     }
 
     /**
@@ -628,7 +671,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            if(!isResumed){
+                LogUtil.i("onReceive,The current interface is not visible")
+                return
+            }
             val action = intent?.action
+            LogUtil.i("action=$action")
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {
                     if (intent.getIntExtra("lamplet_state", 0) == 1) {
@@ -691,6 +739,27 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 "top_session_package_change" -> {
                     val sessionTopPkg = intent.getStringExtra("top_package")
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
+                }
+		        "awellauto.backcar.on" -> {
+                    val freePkg = Settings.System.getString(contentResolver,"freeform_app_package_name")
+                    if("cn.cardoor.zt360".equals(freePkg)) {
+                        // 检查 popupWindow 是否已初始化
+                        if (::popupWindow.isInitialized && popupWindow.isShowing) {
+                            popupWindow.dismiss()
+                        }
+                        systemUIClient.fullScreenFreeform()
+                    }
+                }
+                Intent.ACTION_PACKAGE_REMOVED -> {
+                    if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
+                        var packageName = intent.getDataString()
+                        if (packageName != null) {
+                            // Remove the package scheme prefix
+                            packageName = packageName.replace("package:", "")
+                            // Update the app list to remove the uninstalled app
+                            updateAppListAfterUninstall(packageName)
+                        }
+                    }
                 }
             }
         }
@@ -881,21 +950,22 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    val locationListener by lazy {
-        LocationListener { location ->
-            location.run {
-                if (hasSpeed()) {
-                    val speedKm = speed * 3.6
-                    val speedMild = speedKm / 1.6093
-                    val msg = mHandle.obtainMessage().apply {
-                        what = MSG_UPDATE_SPEED
-                        arg1 = speedKm.toInt()
-                        arg2 = speedMild.toInt()
-                    }
-                    mHandle.sendMessage(msg)
+    val mLocationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            if (location.hasSpeed()) {
+                val speedKm = location.speed * 3.6
+                val speedMild = speedKm / 1.6093
+                val msg = mHandle.obtainMessage().apply {
+                    what = MSG_UPDATE_SPEED
+                    arg1 = speedKm.toInt()
+                    arg2 = speedMild.toInt()
                 }
+                mHandle.sendMessage(msg)
             }
         }
+        override fun onProviderDisabled(provider: String) { }
+        override fun onProviderEnabled(provider: String) {}
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     private fun clickStartApp() {
@@ -1160,6 +1230,144 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun updateAppListAfterUninstall(packageName: String) {
+        // Remove from showAppInfoList
+        val iterator: MutableIterator<AppInfo?> = showAppInfoList.iterator()
+        while (iterator.hasNext()) {
+            val appInfo = iterator.next()
+            if (appInfo != null && packageName == appInfo.package_name) {
+                iterator.remove()
+                break
+            }
+        }
+
+        // Remove from database
+        sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String?>(packageName))
+
+        // Refresh the adapter
+        runOnUiThread(object : Runnable {
+            override fun run() {
+                if (appInfoAdapter != null) {
+                    appInfoAdapter.setContentList(showAppInfoList)
+                }
+            }
+        })
+    }
+
+
+
+    private fun verifyInstalledApps() {
+        if (showAppInfoList == null || showAppInfoList.isEmpty()) return
+
+
+        // 刷新应用列表
+        refreshAppList()
+
+
+        // 检查应用数量是否匹配
+        checkAppCountMatch()
+
+
+        // 刷新适配器
+        if (appInfoAdapter != null) {
+            appInfoAdapter.setContentList(showAppInfoList)
+        }
+    }
+
+    private fun checkAppCountMatch() {
+        // 获取系统中实际应用列表
+        val actualAppList: ArrayList<AppInfo> = getAllAppInfo(this, false)
+        // 获取系统中实际应用数量
+        val actualAppCount = actualAppList.size
+        // 获取当前应用列表中的应用数量
+        val currentAppCount = if (allAppInfoList != null) allAppInfoList.size else 0
+
+
+        // 检查数量是否匹配
+        val countMatches = actualAppCount == currentAppCount
+        // 检查包名是否匹配
+        val packageNamesMatch = countMatches && comparePackageNames(actualAppList as java.util.ArrayList<AppInfo?>?,
+            allAppInfoList as MutableList<AppInfo?>?
+        )
+
+
+        // 检查是否完全匹配
+        if (!countMatches || !packageNamesMatch) {
+            // 数量或包名不匹配，显示不匹配占位符
+            updateAppPlaceholder(true)
+        } else {
+            // 数量和包名都匹配，显示正常占位符
+            updateAppPlaceholder(false)
+        }
+    }
+
+    private fun comparePackageNames(
+        actualAppList: java.util.ArrayList<AppInfo?>?,
+        currentAppList: MutableList<AppInfo?>?
+    ): Boolean {
+        if (actualAppList == null || currentAppList == null) {
+            return false
+        }
+
+
+        // 创建包名集合进行比较
+        val actualPackages: MutableSet<String?> = HashSet<String?>()
+        for (appInfo in actualAppList) {
+            if (appInfo != null && appInfo.package_name != null) {
+                actualPackages.add(appInfo.package_name)
+            }
+        }
+
+        val currentPackages: MutableSet<String?> = HashSet<String?>()
+        for (appInfo in currentAppList) {
+            if (appInfo != null && appInfo.package_name != null) {
+                currentPackages.add(appInfo.package_name)
+            }
+        }
+
+
+        // 检查两个集合是否相等
+        return actualPackages == currentPackages
+    }
+
+    private fun updateAppPlaceholder(isMismatch: Boolean) {
+        // 移除所有占位符
+        removeAllPlaceholders()
+
+
+        // 添加相应的占位符
+        if (isMismatch) {
+            // 添加不匹配占位符
+            val mismatchPlaceholder = createMismatchPlaceholder()
+            showAppInfoList.add(mismatchPlaceholder)
+        } else {
+            // 添加正常占位符
+            showAppInfoList.add(placehodlerInfo)
+        }
+    }
+
+    private fun removeAllPlaceholders() {
+        for (i in showAppInfoList.indices.reversed()) {
+            val appInfo: AppInfo? = showAppInfoList.get(i)
+            if (appInfo != null) {
+                // 移除正常占位符
+                if (appInfo.getLabel() != null && appInfo.getLabel() == getString(R.string.add_app)) {
+                    showAppInfoList.removeAt(i)
+                } else if ("placeholder_mismatch" == appInfo.package_name) {
+                    showAppInfoList.removeAt(i)
+                }
+            }
+        }
+    }
+
+    private fun createMismatchPlaceholder(): AppInfo {
+        val mismatchPlaceholder = AppInfo()
+        mismatchPlaceholder.setIcon(getDrawable(R.drawable.sf_app_add_icon))
+        mismatchPlaceholder.setLabel(getString(R.string.add_app))
+        mismatchPlaceholder.package_name = "placeholder_mismatch"
+        return mismatchPlaceholder
     }
 
 }

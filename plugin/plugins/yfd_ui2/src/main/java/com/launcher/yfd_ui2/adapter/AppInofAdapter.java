@@ -79,13 +79,16 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         });
 
         holder.iv_app_layout.setOnClickListener(vie -> {
+            if (appInfo == null || appInfo.package_name == null) return;
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
             String pkg = Settings.System.getString(mContext.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
 
             if (pkg != null && appInfo.package_name.contains(pkg)) {
                 systemUIClient.fullScreenFreeform();
             } else {
-                mContext.startActivity(intent);
+				if (intent != null) {
+                	mContext.startActivity(intent);
+				}
             }
 
         });
@@ -110,7 +113,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         return contentList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private RelativeLayout iv_app_layout;
         private LinearLayout ll_item;

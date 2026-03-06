@@ -19,7 +19,6 @@ import java.util.List;
 
 public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder> {
 
-    private Context mContext;
     private List<AppInfo> contentList;
 
     public void setContentList(List<AppInfo> contentList) {
@@ -31,7 +30,6 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
 
     public AppPopAdapter(Context context, List<AppInfo> contentList, AddSelectAppCallback addSelectAppCallback) {
         this.contentList = contentList;
-        this.mContext = context;
         this.addSelectAppCallback = addSelectAppCallback;
     }
 
@@ -39,8 +37,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item2, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -50,7 +47,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
         holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
         holder.tv_app_name.setText(appInfo.getLabel());
 
-        String pckName = appInfo.getPackage_name();
+        //String pckName = appInfo.getPackage_name();
 
          /*int r = new Random().nextInt(4);
         holder.iv_app_icon_bg.setImageResource(Utils.iconBg[r]);
