@@ -14,9 +14,7 @@
 -->
 
 <resources>
-    <dimen name="app_icon_size">125dp</dimen>
-    <dimen name="app_icon_size_with">135dp</dimen>
-    <dimen name="app_icon_size_height">135dp</dimen>
+    <dimen name="app_icon_size">105dp</dimen>
     <dimen name="reveal_radius">64dp</dimen>
     <dimen name="app_icon_drawable_padding">3dp</dimen>
     <dimen name="app_icon_padding_top">4dp</dimen>
