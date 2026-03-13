@@ -5,5 +5,7 @@
     <dimen name="bottom_icon_width">56dp</dimen>
     <dimen name="car_speed_hor_ratio">0.68</dimen>
     <dimen name="guideline_bottom_bias">0.91</dimen>
+    <dimen name="music_widget_iv_size">60dp</dimen>
+    <dimen name="iv_radio_iv_size">48dp</dimen>
 
 </resources>

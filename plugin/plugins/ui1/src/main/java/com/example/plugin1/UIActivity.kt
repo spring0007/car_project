@@ -96,7 +96,12 @@ class UIActivity : Activity(), View.OnClickListener {
         updateSpeedUnitText()
 
         mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+
+        if (mLocationManager != null) {
+            mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+        } else {
+            Log.e(TAG, "LocationManager is null, cannot request location updates");
+        }
 
         handler = Handler(Looper.getMainLooper())
         viewConfiguration = ViewConfiguration.get(this)

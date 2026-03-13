@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="bottom_image_style">
+        <item name="android:layout_width">@dimen/bottom_image_width</item>
+        <item name="android:layout_height">@dimen/bottom_image_height</item>
+    </style>
+    <style name="bottom_image_text_style">
+        <item name="android:maxWidth">@dimen/bottom_image_width</item>
+        <item name="android:textSize">@dimen/bottom_tv_size</item>
+    </style>
+</resources>

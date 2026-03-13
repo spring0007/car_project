@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="app_icon_bg_size">80dp</dimen>
+    <dimen name="recycle_app_icon_size">100dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="time_tc_size">46sp</dimen>
+    <dimen name="date_tc_size">28sp</dimen>
+    <dimen name="viewpager_item_width">238dp</dimen>
+    <dimen name="viewpager_item_height">372dp</dimen>
+    <dimen name="tv_font_size">36sp</dimen>
+    <dimen name="music_iv_size">32dp</dimen>
+
+</resources>

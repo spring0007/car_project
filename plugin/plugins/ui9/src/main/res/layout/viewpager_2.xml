@@ -4,104 +4,98 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/video_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_video"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_video"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/folder_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/video_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/video"
-        android:textSize="33sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/video_iv"
-        app:layout_constraintEnd_toEndOf="@+id/video_iv"
-        app:layout_constraintTop_toTopOf="@+id/video_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/video_iv"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/video_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/video"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_font_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/folder_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_folder"
-        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_folder"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setting_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/folder_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/folder"
-        android:textSize="33sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/folder_iv"
-        app:layout_constraintEnd_toEndOf="@+id/folder_iv"
-        app:layout_constraintTop_toTopOf="@+id/folder_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/folder_iv"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/folder_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/folder"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_font_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1" />
 
-    <ImageView
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/setting_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_setting"
-        app:layout_constraintStart_toEndOf="@+id/folder_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_setting"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/all_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/folder_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/setting_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setting"
-        android:textSize="33sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/setting_iv"
-        app:layout_constraintEnd_toEndOf="@+id/setting_iv"
-        app:layout_constraintTop_toTopOf="@+id/setting_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/setting_iv"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/setting_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/setting"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_font_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/all_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_all"
-        app:layout_constraintStart_toEndOf="@+id/setting_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_all"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/setting_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/all_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/App"
-        android:textSize="33sp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/all_iv"
-        app:layout_constraintEnd_toEndOf="@+id/all_iv"
-        app:layout_constraintTop_toTopOf="@+id/all_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/all_iv"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/all_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/App"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_font_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

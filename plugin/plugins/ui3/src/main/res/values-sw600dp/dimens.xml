@@ -10,4 +10,11 @@
     <dimen name="bottom_frame_height">154dp</dimen>
 
     <dimen name="time_start_radio">0.98</dimen>
+    <dimen name="hotset_allapp_size">48dp</dimen>
+    <dimen name="time_font_size1">64sp</dimen>
+    <dimen name="date_font_size1">24sp</dimen>
+    <dimen name="music_name_text_size">24sp</dimen>
+    <dimen name="music_play_size">30dp</dimen>
+    <dimen name="radio_iv_width">244dp</dimen>
+    <dimen name="radio_iv_height">69dp</dimen>
 </resources>

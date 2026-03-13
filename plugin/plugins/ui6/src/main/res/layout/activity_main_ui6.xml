@@ -6,153 +6,192 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivityUI6">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/wallpaper_00"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <!-- analog clock -->
-    <include layout="@layout/dial_widget"
+    <include
         android:id="@+id/layout_dial_widget"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="78dp"
+        layout="@layout/dial_widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="105dp"
+        android:layout_marginEnd="78dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
     <!-- 嵌入式活动容器 -->
-<!--    <android.app.ActivityView-->
-<!--        android:id="@+id/activity_container"-->
-<!--        android:layout_width="400dp"-->
-<!--        android:layout_height="400dp"-->
-<!--        android:layout_marginTop="50dp"-->
-<!--        android:layout_marginEnd="832dp"-->
-<!--        android:background="@color/black"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.214" />-->
+    <!--    <android.app.ActivityView-->
+    <!--        android:id="@+id/activity_container"-->
+    <!--        android:layout_width="400dp"-->
+    <!--        android:layout_height="400dp"-->
+    <!--        android:layout_marginTop="50dp"-->
+    <!--        android:layout_marginEnd="832dp"-->
+    <!--        android:background="@color/black"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.214" />-->
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/activity_view_container"-->
-<!--        android:layout_width="400dp"-->
-<!--        android:layout_height="400dp"-->
-<!--        android:layout_marginStart="50dp"-->
-<!--        android:layout_marginTop="50dp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:background="@color/black"-->
-<!--         />-->
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/activity_view_container"-->
+    <!--        android:layout_width="400dp"-->
+    <!--        android:layout_height="400dp"-->
+    <!--        android:layout_marginStart="50dp"-->
+    <!--        android:layout_marginTop="50dp"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        android:background="@color/black"-->
+    <!--         />-->
 
     <!-- music layout -->
-    <include layout="@layout/music_widget"
+    <include
         android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="105dp"
         android:layout_marginStart="80dp"
-        />
+        android:layout_marginTop="105dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <!-- car speed -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_marginTop="110dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/car_speed_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:text="0"
             android:textColor="@color/white"
-            android:textSize="75sp"
-             />
+            android:textSize="75sp" />
 
         <TextView
             android:id="@+id/car_speed_unit_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/car_speed_unit_top"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:text="KM/H"
             android:textColor="@color/half_white"
-            android:fontFamily="@font/harmonyos_sans_sc_regular"
-            android:textSize="30sp"
-            android:layout_marginTop="@dimen/car_speed_unit_top"
-             />
+            android:textSize="30sp" />
     </LinearLayout>
 
-    <!-- bottom app -->
+    <!-- bottom app - 使用两个 ConstraintLayout 实现，第三个与第四个间隔更大 -->
     <LinearLayout
-        android:id="@+id/host_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|bottom"
-        android:orientation="horizontal"
+       android:id="@+id/host_linear"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.95">
 
-        <ImageView
-            android:id="@+id/hotset_nav_app"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:src="@drawable/hotset_nav_app" />
+        <!-- 第一个 ConstraintLayout：包含前 3 个图标 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/hotset_video_app"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:layout_marginStart="@dimen/main_app_margin_start"
-            android:src="@drawable/hotset_video_app" />
+            <ImageView
+               android:id="@+id/hotset_nav_app"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:src="@drawable/hotset_nav_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/hotset_video_app"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/hotset_settings_app"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:layout_marginStart="@dimen/main_app_margin_start"
-            android:layout_marginEnd="@dimen/main_app_margin_end"
-            android:src="@drawable/hotset_settings_app" />
+            <ImageView
+               android:id="@+id/hotset_video_app"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:src="@drawable/hotset_video_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/hotset_settings_app"
+                app:layout_constraintStart_toEndOf="@id/hotset_nav_app"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/hotset_allapp"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:layout_marginStart="@dimen/main_app_margin_end"
-            android:importantForAccessibility="no"
-            android:src="@drawable/hotset_all_app" />
-        <ImageView
-            android:id="@+id/hotset_radio_app"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:layout_marginStart="115dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/hotset_radio_app" />
+            <ImageView
+               android:id="@+id/hotset_settings_app"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:src="@drawable/hotset_settings_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/hotset_video_app"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/hotset_btapp"
-            android:layout_width="@dimen/hotset_app_size"
-            android:layout_height="@dimen/hotset_app_size"
-            android:layout_marginStart="115dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/hotset_bt_app" />
+        <!-- 间隔区域：宽度是其他间隔的两倍 -->
+        <View
+           android:layout_width="32dp"
+           android:layout_height="match_parent" />
+
+        <!-- 第二个 ConstraintLayout：包含后 3 个图标 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1">
+
+            <ImageView
+               android:id="@+id/hotset_allapp"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:importantForAccessibility="no"
+               android:src="@drawable/hotset_all_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/hotset_radio_app"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+               android:id="@+id/hotset_radio_app"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:importantForAccessibility="no"
+               android:src="@drawable/hotset_radio_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/hotset_btapp"
+                app:layout_constraintStart_toEndOf="@id/hotset_allapp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+               android:id="@+id/hotset_btapp"
+               android:layout_width="@dimen/hotset_app_size"
+               android:layout_height="@dimen/hotset_app_size"
+               android:importantForAccessibility="no"
+               android:src="@drawable/hotset_bt_app"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/hotset_radio_app"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 

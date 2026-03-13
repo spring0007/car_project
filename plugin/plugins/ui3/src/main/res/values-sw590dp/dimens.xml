@@ -5,4 +5,5 @@
     <dimen name="recycle_ver_ratio">0.93</dimen>
     <dimen name="bottom_frame_width">1230dp</dimen>
     <dimen name="bottom_frame_height">144dp</dimen>
+    <dimen name="iv_radio_size">50dp</dimen>
 </resources>

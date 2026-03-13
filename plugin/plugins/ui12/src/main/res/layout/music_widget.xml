@@ -160,13 +160,13 @@
             android:singleLine="true"
             android:text="@string/click_play_music"
             android:textColor="@android:color/white"
-            android:textSize="28sp"
+            android:textSize="@dimen/music_name_tv_size"
             tools:ignore="MissingConstraints" />
 
         <!-- 音乐控制 -->
         <LinearLayout
             android:id="@+id/ll_control_layout_music"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints"
@@ -179,10 +179,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:src="@drawable/sf_music_pre"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -192,10 +191,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:src="@drawable/sf_music_bofang"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -205,10 +203,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:src="@drawable/sf_music_next"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View

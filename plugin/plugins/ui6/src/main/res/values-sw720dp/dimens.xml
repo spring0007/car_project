@@ -5,4 +5,5 @@
     <dimen name="music_control_size">60dp</dimen>
     <dimen name="dial_date_top">55dp</dimen>
     <dimen name="car_speed_unit_top">0dp</dimen>
+    <dimen name="analog_clock_view_size">230dp</dimen>
 </resources>

@@ -40,20 +40,20 @@
             android:gravity="center">
             <ImageView
                 android:id="@+id/iv_radio_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/iv_radio_size"
+                android:layout_height="@dimen/iv_radio_size"
                 android:background="@drawable/sf_radio_pre1"
-                android:padding="10dp"/>
+                />
             <ImageView
                 android:id="@+id/iv_radio_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/iv_radio_size"
+                android:layout_height="@dimen/iv_radio_size"
                 android:background="@drawable/sf_radio_next1"
                 android:layout_marginStart="25dp"
-                android:padding="10dp"/>
+                />
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/rel_size"
+                android:layout_height="@dimen/rel_size"
                 android:background="@drawable/grey_circle"
                 android:layout_marginStart="15dp">
                 <TextView

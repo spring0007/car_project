@@ -12,6 +12,7 @@
     <dimen name="radio_iv_height">202dp</dimen>
     <dimen name="music_play_size">155dp</dimen>
     <dimen name="music_next_end">0dp</dimen>
-    <dimen name="guideline_left1">0.18</dimen>
+    <dimen name="guideline_left1">0.13</dimen>
+    <dimen name="hotset_image_size">80dp</dimen>
 
 </resources>

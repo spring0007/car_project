@@ -17,17 +17,16 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/time_bg_iv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/time_bg"
-        android:scaleType="fitXY"
+        android:background="@drawable/time_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.13"/>
+        app:layout_constraintVertical_bias="0.13">
 
     <TextClock
         android:id="@+id/time"
@@ -37,13 +36,13 @@
         android:format24Hour="HH:mm"
         android:text="00:00"
         android:textColor="@color/white"
-        android:textSize="57sp"
+        android:textSize="@dimen/time_tc_size"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextClock
         android:id="@+id/date"
@@ -54,24 +53,25 @@
         android:format12Hour="yyyy.MM.dd"
         android:text="2025.11.1"
         android:textColor="@color/white"
-        android:textSize="36sp"
-        app:layout_constraintStart_toStartOf="@+id/time_bg_iv"
+        android:textSize="@dimen/date_tc_size"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/linear_indicator" />
 
     <LinearLayout
+        android:id="@+id/linear_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

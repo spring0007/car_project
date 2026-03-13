@@ -2,14 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
     android:id="@+id/radio_layout">
+
+    <ImageView
+        android:id="@+id/radio_iv"
+        android:layout_width="@dimen/radio_iv_width"
+        android:layout_height="@dimen/radio_iv_height"
+        android:src="@drawable/radio_icon"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+
         <ImageView
             android:id="@+id/iv_radio_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_radio_size"
+            android:layout_height="@dimen/iv_radio_size"
             android:src="@drawable/sf_radio_pre1"
-            android:padding="10dp"
             android:layout_gravity="center"/>
         <com.awell.ctrlview.FrequencyTextView
             android:id="@+id/tv_radio_freq"
@@ -29,9 +42,9 @@
             android:layout_centerInParent="true"/>
         <ImageView
             android:id="@+id/iv_radio_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_radio_size"
+            android:layout_height="@dimen/iv_radio_size"
             android:src="@drawable/sf_radio_next1"
-            android:padding="10dp"
             android:layout_gravity="center"/>
+    </LinearLayout>
 </LinearLayout>

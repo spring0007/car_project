@@ -4,8 +4,7 @@
     android:id="@+id/music_widget_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".MainActivityUI5"
-    tools:ignore="MissingDefaultResource">
+   >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/music_constra_layout"
@@ -56,7 +55,7 @@
                 android:text="@string/click_play_music"
                 android:maxWidth="200dp"
                 android:textColor="@android:color/white"
-                android:textSize="28sp" />
+                android:textSize="@dimen/music_name_tv_size" />
 
             <com.awell.launcher2.EarqueeTextView
                 android:id="@+id/music_artist"
@@ -72,7 +71,7 @@
                 android:singleLine="true"
                 android:text="@string/music_artist"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="@dimen/music_artist_tv_size" />
             <!--            &lt;!&ndash; 进度条  style="@style/volume_SeekBar"  &ndash;&gt;-->
             <!--            <RelativeLayout-->
             <!--                android:id="@+id/ll_time_layout_music"-->
@@ -130,16 +129,16 @@
             <!-- 专辑图背景 -->
             <ImageView
                 android:id="@+id/img_song_art_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/img_song_art_bg_size"
+                android:layout_height="@dimen/img_song_art_bg_size"
                 android:layout_marginTop="10dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ui5_music_bg" />
             <!-- 播放指针 -->
             <ImageView
                 android:id="@+id/img_song_point"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/img_song_point_width"
+                android:layout_height="@dimen/img_song_point_height"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ui5_music_point" />
 
@@ -147,8 +146,8 @@
         <!-- 进度条 -->
         <SeekBar
             android:id="@+id/music_widget_seekbars"
-            android:layout_width="147dp"
-            android:layout_height="3dp"
+            android:layout_width="@dimen/music_widget_seekbars_width"
+            android:layout_height="@dimen/music_widget_seekbars_height"
             android:layout_marginTop="39dp"
             android:layout_marginRight="17dp"
             android:progressDrawable="@drawable/custom_progress_drawable"
@@ -171,8 +170,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:src="@drawable/sf_music_pre"
@@ -181,8 +180,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:padding="10dp"
@@ -192,8 +191,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:padding="10dp"
                 android:src="@drawable/sf_music_next"
                 tools:ignore="ContentDescription" />

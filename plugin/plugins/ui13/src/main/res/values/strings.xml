@@ -12,7 +12,7 @@
     <string name="radio">Radio</string>
     <string name="navi">Navigation</string>
     <string name="all_app">Apps</string>
-    <string name="phone">Bluetooth Phone</string>
+    <string name="phone">Bluetooth</string>
     <string name="video">Video</string>
 
     <string-array name="wallpapers" translatable="false">

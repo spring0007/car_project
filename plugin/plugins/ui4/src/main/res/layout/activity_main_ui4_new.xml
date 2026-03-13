@@ -125,7 +125,7 @@
         app:layout_constraintTop_toTopOf="@id/car_speed_tv"
         app:layout_constraintVertical_bias="0.8"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rv_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -135,29 +135,36 @@
         app:layout_constraintEnd_toEndOf="@id/guideline_left3"
         app:layout_constraintTop_toTopOf="@id/guideline_top2"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="@dimen/car_iv_start">
         <ImageView
             android:id="@+id/hotset_allapp"
             android:layout_width="@dimen/hotset_allapp_width"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
+            android:layout_height="@dimen/hotset_allapp_width"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.06"
             android:src="@drawable/hotset_all_app"
-            android:layout_gravity="center" />
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
-            android:layout_width="@dimen/rv_width"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            app:layout_constraintStart_toEndOf="@+id/hotset_allapp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include
         android:id="@+id/layout_radio_widget"
         layout="@layout/radio_widget"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="@dimen/car_iv_start"
+        android:layout_marginTop="@dimen/car_iv_start"
         app:layout_constraintTop_toTopOf="@id/guideline_top2"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintStart_toStartOf="@id/guideline_left3"

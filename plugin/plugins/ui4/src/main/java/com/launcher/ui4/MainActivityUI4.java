@@ -249,7 +249,11 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+        if (mLocationManager != null) {
+            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+        } else {
+            Log.e(TAG, "LocationManager is null, cannot request location updates");
+        }
     }
 
     private void updateSpeedUnitText() {

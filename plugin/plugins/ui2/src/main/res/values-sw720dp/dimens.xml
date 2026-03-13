@@ -4,5 +4,9 @@
     <dimen name="time_week_size">48sp</dimen>
     <dimen name="music_iv_size">160dp</dimen>
     <dimen name="music_bg_size">260dp</dimen>
+    <dimen name="music_widget_iv_size">30dp</dimen>
+    <dimen name="music_widget_play_iv_width">29dp</dimen>
+    <dimen name="music_widget_play_iv_height">34dp</dimen>
+    <dimen name="hotset_app_size">53dp</dimen>
 
 </resources>

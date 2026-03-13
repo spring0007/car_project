@@ -6,4 +6,17 @@
     <dimen name="music_widget_top">110dp</dimen>
     <dimen name="music_widget_end">60dp</dimen>
     <dimen name="car_top">-20dp</dimen>
+
+    <dimen name="iv_radio_image_size">60dp</dimen>
+    <dimen name="hotset_iv_size">70dp</dimen>
+    <dimen name="music_name_tv_size">22sp</dimen>
+    <dimen name="music_artist_tv_size">13sp</dimen>
+    <dimen name="music_widget_iv_size">50dp</dimen>
+    <dimen name="img_song_art_bg_size">86dp</dimen>
+    <dimen name="img_song_point_width">30dp</dimen>
+    <dimen name="img_song_point_height">86dp</dimen>
+    <dimen name="music_widget_seekbars_width">147dp</dimen>
+    <dimen name="music_widget_seekbars_height">3dp</dimen>
+    <dimen name="iv_radio_top_width">244dp</dimen>
+    <dimen name="iv_radio_top_height">69dp</dimen>
 </resources>

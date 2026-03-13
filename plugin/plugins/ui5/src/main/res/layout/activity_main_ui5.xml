@@ -5,113 +5,147 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivityUI5"
-    android:background="@drawable/ui5_bg_new1">
+    android:background="@drawable/ui5_bg_new1"
+    tools:context=".MainActivityUI5">
 
 
     <!-- radio layout -->
 
-    <include layout="@layout/radio_widget"
+    <include
         android:id="@+id/layout_radio_widget"
+        layout="@layout/radio_widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@+id/main"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="@dimen/radio_widget_top"
-        android:layout_marginStart="@dimen/radio_widget_start"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.28" />
 
     <!-- music layout -->
-    <include layout="@layout/music_widget"
+
+    <include
         android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.92"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/music_widget_top"
-        android:layout_marginEnd="@dimen/music_widget_end"
-        />
+        app:layout_constraintVertical_bias="0.276" />
 
     <!-- car speed -->
-    <LinearLayout
-        android:id="@+id/car_speed_layout"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_speed_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.21" />
+
+    <LinearLayout
+        android:id="@+id/car_speed_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="142dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="horizontal">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_speed_top">
 
         <TextView
             android:id="@+id/car_speed_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:fontFamily="@font/harmonyos_sans_sc_medium"
+            android:text="0"
             android:textColor="@color/grey_9494"
-            android:textSize="75sp"
-             />
+            android:textSize="75sp" />
 
         <TextView
             android:id="@+id/car_speed_unit_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:text="km/h"
             android:textColor="@color/grey_9494"
-            android:fontFamily="@font/harmonyos_sans_sc_regular"
-            android:layout_marginStart="18dp"
             android:textSize="30sp" />
     </LinearLayout>
 
+
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ui5_car"
-        app:layout_constraintTop_toBottomOf="@+id/car_speed_layout"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/car_top"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car_speed_layout"
+        app:layout_constraintVertical_bias="0.48" />
+
 
     <!-- bottom app -->
-    <LinearLayout
-        android:id="@+id/host_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ui5_line_bg"
-        android:gravity="center_horizontal|bottom"
-        android:orientation="horizontal"
+    <ImageView
+        android:id="@+id/ui5_line_bg_iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ui5_line_bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintHeight_percent="0.295"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.82" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/host_linear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        app:layout_constraintWidth_percent="0.37">
 
         <ImageView
             android:id="@+id/hotset_daohangapp"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/hotset_daohang_app" />
+            android:layout_width="@dimen/hotset_iv_size"
+            android:layout_height="@dimen/hotset_iv_size"
+            android:src="@drawable/hotset_daohang_app"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/hotset_allapp"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/hotset_allapp"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="62dp"
-            android:layout_marginRight="62dp"
-            android:layout_marginBottom="20dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/hotset_all_app" />
+            android:layout_width="@dimen/hotset_iv_size"
+            android:layout_height="@dimen/hotset_iv_size"
+            android:src="@drawable/hotset_all_app"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hotset_daohangapp"
+            app:layout_constraintEnd_toStartOf="@id/hotset_btapp"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/hotset_btapp"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="20dp"
+            android:layout_width="@dimen/hotset_iv_size"
+            android:layout_height="@dimen/hotset_iv_size"
             android:importantForAccessibility="no"
-            android:src="@drawable/hotset_bt_app" />
-    </LinearLayout>
+            android:src="@drawable/hotset_bt_app"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/hotset_allapp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,8 +4,7 @@
     android:id="@+id/music_widget_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".MainActivityUI3"
-    tools:ignore="MissingDefaultResource">
+    android:background="@drawable/bg_music_widget">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,7 +46,7 @@
             <com.awell.launcher2.EarqueeTextView
                 android:id="@+id/music_widget_music_name"
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:fontFamily="@font/harmonyos_sans_sc_bold"
@@ -56,7 +55,7 @@
                 android:singleLine="true"
                 android:text="@string/click_play_music"
                 android:textColor="@android:color/white"
-                android:textSize="32sp" />
+                android:textSize="@dimen/music_name_text_size" />
             <!-- 歌手名 -->
             <com.awell.launcher2.EarqueeTextView
                 android:id="@+id/music_artist"
@@ -176,10 +175,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
                 android:src="@drawable/sf_music_pre"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -189,10 +187,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
                 android:src="@drawable/sf_music_bofang"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -202,10 +199,9 @@
 
             <ImageView
                 android:id="@+id/music_widget_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
                 android:src="@drawable/sf_music_next"
-                android:padding="10dp"
                 tools:ignore="ContentDescription" />
 
             <View

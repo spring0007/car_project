@@ -203,8 +203,9 @@
         <!-- 音乐控制 -->
         <LinearLayout
             android:id="@+id/ll_control_layout_music"
-            android:layout_width="350dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
             <View
@@ -214,9 +215,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_pre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:src="@drawable/sf_music_pre" />
 
             <View
@@ -226,9 +226,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_width="@dimen/music_widget_play_iv_width"
+                android:layout_height="@dimen/music_widget_play_iv_height"
                 android:src="@drawable/sf_music_bofang" />
 
             <View
@@ -238,9 +237,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
                 android:src="@drawable/sf_music_next" />
 
             <View

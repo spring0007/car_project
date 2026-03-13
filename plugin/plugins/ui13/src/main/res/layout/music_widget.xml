@@ -174,8 +174,8 @@
 
         <ImageView
             android:id="@+id/music_widget_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/music_widget_size"
+            android:layout_height="@dimen/music_widget_size"
             android:src="@drawable/sf_music_pre"
             android:padding="10dp"
             android:layout_gravity="center"
@@ -187,8 +187,8 @@
 
         <ImageView
             android:id="@+id/music_bg_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/music_bg_width"
+            android:layout_height="@dimen/music_bg_height"
             android:src="@drawable/sf_music_bg"
             android:layout_gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -198,8 +198,8 @@
 
         <ImageView
             android:id="@+id/music_widget_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/music_play_width"
+            android:layout_height="@dimen/music_play_height"
             android:src="@drawable/sf_music_bofang"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
@@ -210,8 +210,8 @@
 
         <ImageView
             android:id="@+id/music_widget_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/music_widget_size"
+            android:layout_height="@dimen/music_widget_size"
             android:src="@drawable/sf_music_next"
             android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/music_bg_iv"

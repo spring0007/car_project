@@ -7,8 +7,7 @@
 
     <ImageView
         android:id="@+id/navi_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/bottom_image_style"
         android:src="@drawable/sf_navi1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/video_iv"
@@ -20,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/navi"
-        android:textSize="24sp"
+        style="@style/bottom_image_text_style"
         app:layout_constraintStart_toStartOf="@+id/navi_iv"
         app:layout_constraintEnd_toEndOf="@+id/navi_iv"
         app:layout_constraintTop_toTopOf="@+id/navi_iv"
@@ -29,8 +28,7 @@
 
     <ImageView
         android:id="@+id/video_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/bottom_image_style"
         android:src="@drawable/sf_video1"
         app:layout_constraintStart_toEndOf="@+id/navi_iv"
         app:layout_constraintEnd_toStartOf="@+id/all_iv"
@@ -42,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/video"
-        android:textSize="24sp"
+        style="@style/bottom_image_text_style"
         app:layout_constraintStart_toStartOf="@+id/video_iv"
         app:layout_constraintEnd_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="@+id/video_iv"
@@ -51,9 +49,9 @@
 
     <ImageView
         android:id="@+id/all_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/bottom_image_style"
         android:src="@drawable/sf_all1"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toEndOf="@+id/video_iv"
         app:layout_constraintEnd_toStartOf="@+id/radio_iv"
         app:layout_constraintTop_toTopOf="parent"
@@ -64,7 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/all_app"
-        android:textSize="24sp"
+        style="@style/bottom_image_text_style"
         app:layout_constraintStart_toStartOf="@+id/all_iv"
         app:layout_constraintEnd_toEndOf="@+id/all_iv"
         app:layout_constraintTop_toTopOf="@+id/all_iv"
@@ -73,8 +71,7 @@
 
     <ImageView
         android:id="@+id/radio_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/bottom_image_style"
         android:src="@drawable/sf_radio1"
         app:layout_constraintStart_toEndOf="@+id/all_iv"
         app:layout_constraintEnd_toStartOf="@+id/bt_iv"
@@ -86,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/radio"
-        android:textSize="24sp"
+        style="@style/bottom_image_text_style"
         app:layout_constraintStart_toStartOf="@+id/radio_iv"
         app:layout_constraintEnd_toEndOf="@+id/radio_iv"
         app:layout_constraintTop_toTopOf="@+id/radio_iv"
@@ -95,8 +92,7 @@
 
     <ImageView
         android:id="@+id/bt_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/bottom_image_style"
         android:src="@drawable/sf_phone1"
         app:layout_constraintStart_toEndOf="@+id/radio_iv"
         app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +104,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/phone"
-        android:textSize="24sp"
+        style="@style/bottom_image_text_style"
         app:layout_constraintStart_toStartOf="@+id/bt_iv"
         app:layout_constraintEnd_toEndOf="@+id/bt_iv"
         app:layout_constraintTop_toTopOf="parent"

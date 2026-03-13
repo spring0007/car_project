@@ -1,180 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--时间-->
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/time_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_time"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_time"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/music_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/time_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/time"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/time_iv"
-        app:layout_constraintEnd_toEndOf="@+id/time_iv"
-        app:layout_constraintTop_toTopOf="@+id/time_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_iv"
-        app:layout_constraintVertical_bias="@dimen/tv_margin_top"/>
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/time"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
-    <TextClock
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:format12Hour="h:mm"
-        android:format24Hour="HH:mm"
-        android:text="00:00"
-        android:textSize="80sp"
-        app:layout_constraintStart_toStartOf="@+id/time_iv"
-        app:layout_constraintEnd_toEndOf="@+id/time_iv"
-        app:layout_constraintTop_toTopOf="@+id/time_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_iv"
-        app:layout_constraintVertical_bias="0.4"/>
+        <TextClock
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="h:mm"
+            android:format24Hour="HH:mm"
+            android:text="00:00"
+            android:textSize="@dimen/time_tv_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
 
-    <TextClock
-        android:id="@+id/am_pm_tc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:format12Hour="a"
-        android:format24Hour="a"
-        android:text="上午"
-        android:textColor="@android:color/white"
-        android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="@+id/time_iv"
-        app:layout_constraintEnd_toEndOf="@+id/time_iv"
-        app:layout_constraintTop_toBottomOf="@+id/time"
-        android:layout_marginTop="20dp"/>
+        <TextClock
+            android:id="@+id/am_pm_tc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="a"
+            android:format24Hour="a"
+            android:text="上午"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/am_tc_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/time" />
 
-    <TextClock
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:format12Hour="yyyy/MM/dd"
-        android:format24Hour="yyyy/MM/dd"
-        android:text="2020年5月18日"
-        android:textColor="@android:color/white"
-        android:textSize="32sp"
-        app:layout_constraintStart_toStartOf="@+id/time_iv"
-        app:layout_constraintEnd_toEndOf="@+id/time_iv"
-        app:layout_constraintTop_toBottomOf="@+id/am_pm_tc"
-        android:layout_marginTop="20dp"/>
-
+        <TextClock
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="yyyy/MM/dd"
+            android:format24Hour="yyyy/MM/dd"
+            android:text="2020年5月18日"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/date_tc_size"
+            app:layout_constraintEnd_toEndOf="@+id/time_iv"
+            app:layout_constraintStart_toStartOf="@+id/time_iv"
+            app:layout_constraintTop_toBottomOf="@+id/am_pm_tc" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!--音乐-->
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/music_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_music"
-        app:layout_constraintStart_toEndOf="@+id/time_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_music"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/bt_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/time_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/music_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/music"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/music_iv"
-        app:layout_constraintEnd_toEndOf="@+id/music_iv"
-        app:layout_constraintTop_toTopOf="@+id/music_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/music_iv"
-        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
+        <TextView
+            android:id="@+id/music_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/music"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
-    <include layout = "@layout/music_widget"
-        android:id="@+id/music_widget_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/music_iv"
-        app:layout_constraintEnd_toEndOf="@+id/music_iv"
-        app:layout_constraintTop_toTopOf="@+id/music_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/music_iv"
-        app:layout_constraintVertical_bias="0.9"/>
+        <include
+            android:id="@+id/music_widget_layout"
+            layout="@layout/music_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.85" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bt_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_bt"
-        app:layout_constraintStart_toEndOf="@+id/music_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_bt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/navi_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/music_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/bt_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/bt"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/bt_iv"
-        app:layout_constraintEnd_toEndOf="@+id/bt_iv"
-        app:layout_constraintTop_toTopOf="@+id/bt_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_iv"
-        app:layout_constraintVertical_bias="@dimen/tv_margin_top"/>
+        <TextView
+            android:id="@+id/bt_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bt"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bt_connect_icon"
-        app:layout_constraintStart_toStartOf="@+id/bt_iv"
-        app:layout_constraintEnd_toEndOf="@+id/bt_iv"
-        app:layout_constraintTop_toTopOf="@+id/bt_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_iv"
-        app:layout_constraintVertical_bias="0.8"/>
+        <ImageView
+            android:layout_width="@dimen/iv_bt_con_width"
+            android:layout_height="@dimen/iv_bt_con_height"
+            android:src="@drawable/bt_connect_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
 
-    <ImageView
-        android:id="@+id/bt_no_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bt_not_connect"
-        app:layout_constraintStart_toStartOf="@+id/bt_iv"
-        app:layout_constraintEnd_toEndOf="@+id/bt_iv"
-        app:layout_constraintTop_toTopOf="@+id/bt_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_iv"
-        app:layout_constraintVertical_bias="0.78"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/bt_no_iv"
+            android:layout_width="@dimen/iv_bt_no_con_size"
+            android:layout_height="@dimen/iv_bt_no_con_size"
+            android:src="@drawable/bt_not_connect"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.78" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/navi_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_navi"
-        app:layout_constraintStart_toEndOf="@+id/bt_iv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_navi"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bt_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/navi_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/navigation"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@+id/navi_iv"
-        app:layout_constraintEnd_toEndOf="@+id/navi_iv"
-        app:layout_constraintTop_toTopOf="@+id/navi_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/navi_iv"
-        app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
+        <TextView
+            android:id="@+id/navi_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

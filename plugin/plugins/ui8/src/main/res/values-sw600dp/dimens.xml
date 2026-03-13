@@ -2,12 +2,14 @@
 <resources>
     <dimen name="time_widget_width">366dp</dimen>
     <dimen name="time_widget_height">292dp</dimen>
-    <dimen name="car_width">202dp</dimen>
-    <dimen name="car_height">131dp</dimen>
+    <dimen name="car_width">184dp</dimen>
+    <dimen name="car_height">128dp</dimen>
     <dimen name="time_start_radio">0.07</dimen>
     <dimen name="music_start_radio">0.07</dimen>
-    <dimen name="time_font_size">62sp</dimen>
+    <dimen name="time_font_size">57sp</dimen>
     <dimen name="time_bg_hor_radio">0</dimen>
     <dimen name="time_bg_ver_radio">0.5</dimen>
     <dimen name="music_bg_hor_radio">1</dimen>
+    <dimen name="bottom_iv_size">53dp</dimen>
+    <dimen name="music_iv_size">48dp</dimen>
 </resources>

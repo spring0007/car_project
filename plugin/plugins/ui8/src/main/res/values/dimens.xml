@@ -15,5 +15,7 @@
     <dimen name="music_bg_hor_radio">1</dimen>
     <dimen name="music_start_radio">0.1</dimen>
     <dimen name="time_font_size">72sp</dimen>
+    <dimen name="bottom_iv_size">66dp</dimen>
+    <dimen name="music_iv_size">60dp</dimen>
 
 </resources>

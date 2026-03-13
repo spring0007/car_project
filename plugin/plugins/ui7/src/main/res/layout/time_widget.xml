@@ -17,7 +17,7 @@
             android:format24Hour="HH:mm"
             android:text="00:00"
             android:textColor="@color/yellow_fdb4"
-            android:textSize="36sp"
+            android:textSize="@dimen/time_tc_size"
             android:textStyle="bold" />
         <TextClock
             android:id="@+id/date_weekday"
@@ -28,7 +28,7 @@
             android:format24Hour="EEEE"
             android:text="星期五"
             android:textColor="@color/yellow_fdb4"
-            android:textSize="36sp"
+            android:textSize="@dimen/time_tc_size"
             android:layout_marginStart="20dp"/>
     </LinearLayout>
     <TextClock
@@ -40,5 +40,5 @@
         android:format12Hour="yyyy.MM.dd"
         android:text="2025.11.11"
         android:textColor="@color/yellow_fdb4"
-        android:textSize="36sp" />
+        android:textSize="@dimen/time_tc_size" />
 </LinearLayout>

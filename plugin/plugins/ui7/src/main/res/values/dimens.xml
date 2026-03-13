@@ -6,5 +6,9 @@
     <dimen name="recycle_app_width">160dp</dimen>
 
     <dimen name="text_size">30sp</dimen>
+    <dimen name="time_tc_size">36sp</dimen>
+    <dimen name="viewpager_item_width">220dp</dimen>
+    <dimen name="viewpager_item_height">360dp</dimen>
 
+    <item name="tv_ver_bias" type="dimen" format="float">0.7</item>
 </resources>

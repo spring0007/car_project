@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityUI11">
 
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.12" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left1"
         android:layout_width="wrap_content"
@@ -30,19 +38,19 @@
 
     <ImageView
         android:id="@+id/hotseat_bg_iv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/sf_hotseat_bg"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/guideline_left1"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_left"
         app:layout_constraintTop_toTopOf="@id/guideline_top1"
         app:layout_constraintBottom_toBottomOf="@id/guideline_top2" />
 
     <ImageView
         android:id="@+id/hotset_nav_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hotset_image_size"
+        android:layout_height="@dimen/hotset_image_size"
         android:src="@drawable/sf_navi"
         app:layout_constraintStart_toStartOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/hotseat_bg_iv"
@@ -51,8 +59,8 @@
 
     <ImageView
         android:id="@+id/hotset_video_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hotset_image_size"
+        android:layout_height="@dimen/hotset_image_size"
         android:src="@drawable/sf_video"
         app:layout_constraintStart_toStartOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/hotseat_bg_iv"
@@ -61,8 +69,8 @@
 
     <ImageView
         android:id="@+id/hotset_allapp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hotset_image_size"
+        android:layout_height="@dimen/hotset_image_size"
         android:src="@drawable/sf_all"
         app:layout_constraintStart_toStartOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/hotseat_bg_iv"
@@ -71,8 +79,8 @@
 
     <ImageView
         android:id="@+id/hotset_music_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hotset_image_size"
+        android:layout_height="@dimen/hotset_image_size"
         android:src="@drawable/sf_music"
         app:layout_constraintStart_toStartOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/hotseat_bg_iv"
@@ -81,8 +89,8 @@
 
     <ImageView
         android:id="@+id/hotset_setting_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hotset_image_size"
+        android:layout_height="@dimen/hotset_image_size"
         android:src="@drawable/sf_setting"
         app:layout_constraintStart_toStartOf="@+id/hotseat_bg_iv"
         app:layout_constraintEnd_toEndOf="@+id/hotseat_bg_iv"
@@ -118,7 +126,7 @@
         android:id="@+id/time_hour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:format12Hour="h:mm"
+        android:format12Hour="hh:mm"
         android:format24Hour="HH:mm"
         android:text="00:00"
         android:textColor="@android:color/white"

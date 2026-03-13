@@ -4,19 +4,24 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/sf_bottom_bg"
-    android:paddingStart="100dp"
-    android:paddingEnd="100dp">
+    android:background="@drawable/sf_bottom_bg">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_percent="0.9" >
     <ImageView
         android:id="@+id/radio_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_iv_size"
+        android:layout_height="@dimen/bottom_iv_size"
         android:src="@drawable/sf_radio1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/navi_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/radio_tv"
@@ -27,17 +32,17 @@
         app:layout_constraintStart_toStartOf="@+id/radio_iv"
         app:layout_constraintEnd_toEndOf="@+id/radio_iv"
         app:layout_constraintTop_toBottomOf="@+id/radio_iv"
-        app:layout_constraintBottom_toBottomOf="parent" />
+         />
 
     <ImageView
         android:id="@+id/navi_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_iv_size"
+        android:layout_height="@dimen/bottom_iv_size"
         android:src="@drawable/sf_navi1"
         app:layout_constraintStart_toEndOf="@+id/radio_iv"
         app:layout_constraintEnd_toStartOf="@+id/all_iv"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+         />
 
     <TextView
         android:id="@+id/navi_tv"
@@ -48,17 +53,17 @@
         app:layout_constraintStart_toStartOf="@+id/navi_iv"
         app:layout_constraintEnd_toEndOf="@+id/navi_iv"
         app:layout_constraintTop_toBottomOf="@+id/navi_iv"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        />
 
     <ImageView
         android:id="@+id/all_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_iv_size"
+        android:layout_height="@dimen/bottom_iv_size"
         android:src="@drawable/sf_all1"
         app:layout_constraintStart_toEndOf="@+id/navi_iv"
         app:layout_constraintEnd_toStartOf="@+id/phone_iv"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        />
 
     <TextView
         android:id="@+id/all_tv"
@@ -69,17 +74,17 @@
         app:layout_constraintStart_toStartOf="@+id/all_iv"
         app:layout_constraintEnd_toEndOf="@+id/all_iv"
         app:layout_constraintTop_toBottomOf="@+id/all_iv"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        />
 
     <ImageView
         android:id="@+id/phone_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_iv_size"
+        android:layout_height="@dimen/bottom_iv_size"
         android:src="@drawable/sf_phone1"
         app:layout_constraintStart_toEndOf="@+id/all_iv"
         app:layout_constraintEnd_toStartOf="@+id/music_iv"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+         />
 
     <TextView
         android:id="@+id/phone_tv"
@@ -90,17 +95,17 @@
         app:layout_constraintStart_toStartOf="@+id/phone_iv"
         app:layout_constraintEnd_toEndOf="@+id/phone_iv"
         app:layout_constraintTop_toBottomOf="@+id/phone_iv"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        />
 
     <ImageView
         android:id="@+id/music_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bottom_iv_size"
+        android:layout_height="@dimen/bottom_iv_size"
         android:src="@drawable/sf_music1"
         app:layout_constraintStart_toEndOf="@+id/phone_iv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+         />
 
     <TextView
         android:id="@+id/music_tv"
@@ -111,5 +116,6 @@
         app:layout_constraintStart_toStartOf="@+id/music_iv"
         app:layout_constraintEnd_toEndOf="@+id/music_iv"
         app:layout_constraintTop_toBottomOf="@+id/music_iv"
-        app:layout_constraintBottom_toBottomOf="parent" />
+         />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

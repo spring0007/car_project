@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/iv_radio_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_radio_iv_size"
+            android:layout_height="@dimen/iv_radio_iv_size"
             android:layout_marginEnd="10dp"
             android:src="@drawable/sf_radio_pre" />
 
@@ -82,8 +82,8 @@
 
         <ImageView
             android:id="@+id/iv_radio_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/iv_radio_iv_size"
+            android:layout_height="@dimen/iv_radio_iv_size"
             android:layout_marginStart="20dp"
             android:src="@drawable/sf_radio_next" />
 

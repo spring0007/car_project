@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="app_icon_bg_size">80dp</dimen>
+    <dimen name="recycle_app_icon_size">100dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+
+    <dimen name="bottom_image_width">152dp</dimen>
+    <dimen name="bottom_image_height">162dp</dimen>
+
+    <dimen name="bottom_app_width">182dp</dimen>
+    <dimen name="bottom_app_height">189dp</dimen>
+    <dimen name="bottom_tv_size">20sp</dimen>
+
+    <dimen name="music_widget_size">60dp</dimen>
+    <dimen name="music_bg_width">170dp</dimen>
+    <dimen name="music_bg_height">121dp</dimen>
+    <dimen name="music_play_width">89dp</dimen>
+    <dimen name="music_play_height">85dp</dimen>
+
+</resources>

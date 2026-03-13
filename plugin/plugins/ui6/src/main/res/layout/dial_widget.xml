@@ -19,8 +19,8 @@
     <com.launcher.ui6.view.AnalogClockView
         android:id="@+id/analogClockView"
         android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/analog_clock_view_size"
+        android:layout_height="@dimen/analog_clock_view_size"
         android:layout_gravity="center"
         tools:ignore="MissingConstraints" />
 

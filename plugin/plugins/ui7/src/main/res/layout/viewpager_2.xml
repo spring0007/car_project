@@ -4,124 +4,127 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/video_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_video"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_video"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setting_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/video_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/video"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/video_iv"
-        app:layout_constraintEnd_toEndOf="@+id/video_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/video_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf ="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            android:text="@string/video"
+            android:textColor="@color/yellow_fdb4"
+            android:textSize="@dimen/text_size" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/setting_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_setting"
-        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_setting"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/browser_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/video_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/setting_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/setting"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/setting_iv"
-        app:layout_constraintEnd_toEndOf="@+id/setting_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/setting_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf ="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            android:text="@string/setting"
+            android:textColor="@color/yellow_fdb4"
+            android:textSize="@dimen/text_size" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/browser_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_browser"
-        app:layout_constraintStart_toEndOf="@+id/setting_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_browser"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dsp_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/setting_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/browser_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/browser"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/browser_iv"
-        app:layout_constraintEnd_toEndOf="@+id/browser_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/browser_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf ="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            android:text="@string/browser"
+            android:textColor="@color/yellow_fdb4"
+            android:textSize="@dimen/text_size" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dsp_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_dsp"
-        app:layout_constraintStart_toEndOf="@+id/browser_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_dsp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/aux_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/browser_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/dsp_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/equalizer"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/dsp_iv"
-        app:layout_constraintEnd_toEndOf="@+id/dsp_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/dsp_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf ="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            android:text="@string/equalizer"
+            android:textColor="@color/yellow_fdb4"
+            android:textSize="@dimen/text_size" />
+     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/aux_iv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sf_aux"
-        app:layout_constraintStart_toEndOf="@+id/dsp_iv"
+        android:layout_width="@dimen/viewpager_item_width"
+        android:layout_height="@dimen/viewpager_item_height"
+        android:background="@drawable/sf_aux"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        app:layout_constraintStart_toEndOf="@+id/dsp_iv"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/aux_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/aux"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/yellow_fdb4"
-        app:layout_constraintStart_toStartOf="@+id/aux_iv"
-        app:layout_constraintEnd_toEndOf="@+id/aux_iv"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1" />
+        <TextView
+            android:id="@+id/aux_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf ="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            android:text="@string/aux"
+            android:textColor="@color/yellow_fdb4"
+            android:textSize="@dimen/text_size" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
