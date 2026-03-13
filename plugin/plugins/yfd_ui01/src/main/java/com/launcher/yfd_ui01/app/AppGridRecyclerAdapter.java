@@ -162,32 +162,38 @@ public class AppGridRecyclerAdapter extends RecyclerView.Adapter<AppGridRecycler
         holder.itemView.setOnLongClickListener(longClickListener);
 
         // 在 View 布局完成后获取尺寸
-        if (!hasCalculatedSize && holder.itemView.getWidth() <= 0) {
-            holder.itemView.getViewTreeObserver().addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-                            holder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if (!hasCalculatedSize) {
+            if (holder.itemView.getWidth() > 0 && holder.itemView.getHeight() > 0) {
+                // 如果已经有尺寸，直接使用
+                int itemWidth = holder.itemView.getWidth();
+                int itemHeight = holder.itemView.getHeight();
 
-                            int itemWidth = holder.itemView.getWidth();
-                            int itemHeight = holder.itemView.getHeight();
+                if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
+                    hasCalculatedSize = true;
+                    //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
+                    setItemSize(itemWidth,itemHeight);
+                }
+            } else {
+                // 添加布局监听器等待尺寸计算
+                holder.itemView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                // 移除监听器以避免重复调用
+                                if (holder.itemView.getViewTreeObserver().isAlive()) {
+                                    holder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                }
 
-                            if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
-                                hasCalculatedSize = true;
-                                //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
-                                setItemSize(itemWidth,itemHeight);
+                                int itemWidth = holder.itemView.getWidth();
+                                int itemHeight = holder.itemView.getHeight();
+
+                                if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
+                                    hasCalculatedSize = true;
+                                    //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
+                                    setItemSize(itemWidth,itemHeight);
+                                }
                             }
-                        }
-                    });
-        } else if (!hasCalculatedSize && holder.itemView.getWidth() > 0) {
-            // 如果已经有尺寸，直接使用
-            int itemWidth = holder.itemView.getWidth();
-            int itemHeight = holder.itemView.getHeight();
-
-            if (itemWidth > 0 && itemHeight > 0 && sizeListener != null) {
-                hasCalculatedSize = true;
-                //LogUtil.i("itemWidth="+itemWidth+",itemHeight="+itemHeight+",position="+position);
-                setItemSize(itemWidth,itemHeight);
+                        });
             }
         }
     }

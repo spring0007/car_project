@@ -61,9 +61,10 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
     private val onPageChangeListeners = mutableListOf<OnPageChangeListener>()
 
     companion object {
-        private const val OVERSCROLL_DAMPING_FACTOR = 0.3f
+        private const val OVERSCROLL_DAMPING_FACTOR = 0.2f // 减小阻尼，使回弹更自然
         private const val DIRECTION_DOWN = 1
         private const val DIRECTION_UP = -1
+        private const val SCROLL_DURATION_FACTOR = 0.3f // 滚动动画时间因子
     }
 
     override fun onAttachedToWindow() {
@@ -243,26 +244,24 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                     // 滚动边界
                     val minScrollX = 0f
                     val maxScrollX = (pageCount - 1) * pageWidth.toFloat()
-//
-//                LogUtil.i("滑动边界: minScrollX=$minScrollX, maxScrollX=$maxScrollX, pageCount=$pageCount")
 
                     val finalScrollX = when {
                         targetScrollX < minScrollX -> {
-                            val dampedOverscroll =
+                            val dampedOverscroll = 
                                 (targetScrollX - minScrollX) * OVERSCROLL_DAMPING_FACTOR
                             minScrollX + dampedOverscroll
                         }
 
                         targetScrollX > maxScrollX -> {
-                            val dampedOverscroll =
+                            val dampedOverscroll = 
                                 (targetScrollX - maxScrollX) * OVERSCROLL_DAMPING_FACTOR
                             maxScrollX + dampedOverscroll
                         }
 
-                        else -> targetScrollX.coerceIn(minScrollX, maxScrollX)
+                        else -> targetScrollX
                     }
 
-                    // 滚动到目标位置（允许正常滑动）
+                    // 直接滚动到目标位置，不进行额外的边界检查，提高响应速度
                     scrollTo(finalScrollX.toInt(), 0)
                     
                     // 实时更新当前页面索引
@@ -272,13 +271,6 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                         // 只在页面真正改变时通知监听器
                         dispatchOnPageChanged(newPageIndex)
                     }
-
-                    // 如果页面发生变化，更新状态
-                    /*if (targetPage != currentPageIndex) {
-                        currentPageIndex = targetPage
-                        LogUtil.i("dispatchOnPageChanged,273")
-                        dispatchOnPageChanged(targetPage)
-                    }*/
                 }
             }
 
@@ -294,7 +286,6 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 velocityTracker.computeCurrentVelocity(1000, maxVelocity.toFloat())
                 val xVelocity = velocityTracker.xVelocity
 
-
                 // 获取当前滚动位置
                 val currentScrollX = scrollX
                 // 获取页面宽度和总数
@@ -304,7 +295,7 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 if (pageCount == 0 || pageWidth == 0) return true
 
                 // 计算当前页面（基于滚动位置）
-                val currentPage =
+                val currentPage = 
                     ((currentScrollX + pageWidth/2 ) / pageWidth).coerceIn(0, pageCount - 1)
 
                 // 计算从按下位置到抬手位置的水平滑动距离（基于手指移动）
@@ -312,12 +303,10 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                 val deltaX = downX - moveX
                 val scrollDelta = deltaX // 使用实际的手指移动距离
 
-                //LogUtil.i("抬手判断: deltaX=$deltaX, scrollDelta=$scrollDelta, xVelocity=$xVelocity, minVelocity=$minVelocity, currentScrollX=$currentScrollX, pageWidth=$pageWidth")
-
-                // 决定目标页面（平衡策略）：正常滑动允许，极端情况限制
+                // 决定目标页面（优化策略）：更灵敏的滑动判断
                 val calculatedTargetPage = when {
                     // 高速滑动时正常翻页
-                    kotlin.math.abs(xVelocity) > minVelocity * 2 -> {
+                    kotlin.math.abs(xVelocity) > minVelocity * 1.5 -> { // 降低速度阈值，提高灵敏度
                         if (xVelocity < 0) {
                             // 向左滑动，下一页
                             (currentPage + 1).coerceAtMost(pageCount - 1)
@@ -326,9 +315,9 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                             (currentPage - 1).coerceAtLeast(0)
                         }
                     }
-                    // 中等速度滑动需要更大距离才翻页
-                    kotlin.math.abs(xVelocity) > minVelocity -> {
-                        if (kotlin.math.abs(scrollDelta) > pageWidth * 0.3) {
+                    // 中等速度滑动需要更小距离才翻页
+                    kotlin.math.abs(xVelocity) > minVelocity * 0.8 -> {
+                        if (kotlin.math.abs(scrollDelta) > pageWidth * 0.25) { // 降低距离阈值
                             if (xVelocity < 0) {
                                 (currentPage + 1).coerceAtMost(pageCount - 1)
                             } else {
@@ -338,8 +327,8 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                             currentPage
                         }
                     }
-                    // 滑动距离较大时翻页（适度阈值）
-                    kotlin.math.abs(scrollDelta) > pageWidth * 0.2 -> {
+                    // 滑动距离较小时也能翻页
+                    kotlin.math.abs(scrollDelta) > pageWidth * 0.15 -> { // 降低距离阈值
                         if (scrollDelta > 0) {
                             // 内容向左滚动，目标是下一页
                             (currentPage + 1).coerceAtMost(pageCount - 1)
@@ -363,12 +352,12 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
                     calculatedTargetPage
                 }
                 
-                LogUtil.i("滑动结束判断: 当前页=$currentPage, 目标页=$targetPage, 速度=$xVelocity, 滑动距离=$scrollDelta, 页面宽度=$pageWidth")
+                //LogUtil.i("滑动结束判断: 当前页=$currentPage, 目标页=$targetPage, 速度=$xVelocity, 滑动距离=$scrollDelta, 页面宽度=$pageWidth")
 
-            // 平滑滚动到目标页面
-            setCurrentItem(targetPage, true)
-            return true
-        }
+                // 平滑滚动到目标页面
+                setCurrentItem(targetPage, true)
+                return true
+            }
         }
         return true
     }
@@ -383,9 +372,13 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
         if (dx == 0) return
 
         try {
-            //LogUtil.i("smoothScrollToX targetX=$targetX")
+            // 基于滚动距离计算动画时间，使滑动更自然
+            val distance = Math.abs(dx)
+            val duration = (distance * SCROLL_DURATION_FACTOR).coerceIn(150F, 300F).toInt() // 限制动画时间在150-300ms之间
+            
+            //LogUtil.i("smoothScrollToX targetX=$targetX, distance=$distance, duration=$duration")
             overScroller.forceFinished(true)
-            overScroller.startScroll(startX, 0, dx, 0)
+            overScroller.startScroll(startX, 0, dx, 0, duration)
             postInvalidateOnAnimation()
         } catch (e: Exception) {
             LogUtil.e("smoothScrollToX error", e)
@@ -479,7 +472,7 @@ class CustomViewPager(context: Context, attrs: AttributeSet?) : ViewPager(contex
 
     // 通知页面变化
     private fun dispatchOnPageChanged(position: Int) {
-        //LogUtil.i("dispatchOnPageChanged,position=$position")
+        LogUtil.i("dispatchOnPageChanged,position=$position")
         onPageChangeListeners.forEach { listener ->
             listener.onPageSelected(position)
         }

@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemProperties
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,6 +62,10 @@ class MenuFragment : Fragment() {
     private var isDataInitialized = false
     private var shouldLoadDataOnResume = false
 
+    // 导航栏位置相关
+    private var currentNavbarPosition = -1 // -1表示未初始化
+    private val NAVBAR_POSITION_PROPERTY = "persist.sys.awell.navbar.position"
+
     // 新增：用于等待视图布局完成的Handler
     private val handler = Handler(Looper.getMainLooper())
     private var layoutCheckRunnable: Runnable? = null
@@ -72,12 +77,6 @@ class MenuFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        LogUtil.i("onCreate called")
-        // 确保Fragment不会被重建时重复添加
-        retainInstance = false
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,38 +95,57 @@ class MenuFragment : Fragment() {
         pageIndicator = view.findViewById(R.id.pageIndicator)
         iconManager = IconManager.getInstance(swipeActivity.applicationContext)
         isViewCreated = true
-
+    
         // 先设置默认视图
         setupDefaultViews()
-
-        // 监听ViewPager的尺寸变化
+    
+        // 监听 ViewPager 的尺寸变化
         setupViewPagerSizeListener();
         // 检查视图是否已经布局完成
         checkViewLayoutAndInitData()
+
+        // 初始化导航栏位置
+        updateNavbarPosition()
 
         setupViewPagerListener()
         registerPackageReceiver()
     }
 
     private fun setupViewPagerSizeListener() {
-
+            
         // 添加布局变化监听器
         viewPager.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             val newWidth = right - left
             val newHeight = bottom - top
             val oldWidth = oldRight - oldLeft
             val oldHeight = oldBottom - oldTop
-
+    
             if (newWidth != oldWidth || newHeight != oldHeight) {
-                LogUtil.i("ViewPager尺寸变化: ${newWidth}x${newHeight} (之前: ${oldWidth}x${oldHeight})")
-
-                // 尺寸变化后重新设置适配器
-                if (newWidth > 0 && newHeight > 0 && oldHeight>0 && oldWidth> 0 && currentAdapter != null) {
+                LogUtil.i("ViewPager 尺寸变化：${newWidth}x${newHeight} (之前：${oldWidth}x${oldHeight})")
+    
+                // 尺寸变化后重新设置适配器（优化版本，不强制重置到第一页）
+                if (newWidth > 0 && newHeight > 0 && currentAdapter != null) {
                     viewPager.postDelayed(Runnable {
+                        // 保存当前页面索引
+                        val currentItem = viewPager.currentItem
+                        LogUtil.i("ViewPager 尺寸变化，当前页面：$currentItem")
+                            
+                        // 更新所有页面布局
                         currentAdapter!!.updateAllPageLayouts(newWidth, newHeight)
+                            
+                        // 延迟恢复页面状态
+                        viewPager.postDelayed({
+                            if (isAdded && view != null) {
+                                // 重新设置页面指示器
+                                setupPageIndicator()
+                                // 确保页面索引正确
+                                if (viewPager.currentItem != currentItem) {
+                                    viewPager.setCurrentItem(currentItem, false)
+                                }
+                                LogUtil.i("ViewPager 尺寸变化后布局更新完成，保持在第 $currentItem 页")
+                            }
+                        }, 50)
                     }, 100)
-                    LogUtil.i("ViewPager尺寸变化后重新布局完成")
-
                 }
             }
         }
@@ -294,12 +312,28 @@ class MenuFragment : Fragment() {
                 }
 
                 // 等待ViewPager完成测量
-                if (viewPager.height <= 0) {
-                    LogUtil.i("ViewPager高度为0，等待测量完成")
-                    viewPager.post {
-                        setAdapterAndIndicator()
-                    }
+                if (viewPager.height <= 0 || viewPager.width <= 0) {
+                    LogUtil.i("ViewPager尺寸未就绪，等待测量完成")
+                    // 使用ViewTreeObserver确保视图完全布局
+                    val viewTreeObserver = viewPager.viewTreeObserver
+                    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                        override fun onGlobalLayout() {
+                            // 移除监听器以避免重复调用
+                            viewPager.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                            // 再次检查尺寸
+                            if (viewPager.height > 0 && viewPager.width > 0) {
+                                LogUtil.i("ViewPager尺寸就绪：${viewPager.width}x${viewPager.height}")
+                                setAdapterAndIndicator()
+                            } else {
+                                // 如果仍然未就绪，使用post延迟
+                                viewPager.post {
+                                    setAdapterAndIndicator()
+                                }
+                            }
+                        }
+                    })
                 } else {
+                    LogUtil.i("ViewPager尺寸就绪：${viewPager.width}x${viewPager.height}")
                     setAdapterAndIndicator()
                 }
 
@@ -315,13 +349,19 @@ class MenuFragment : Fragment() {
      * 设置适配器和指示器（在视图测量完成后调用）
      */
     private fun setAdapterAndIndicator() {
-        LogUtil.i("setAdapterAndIndicator, ViewPager高度=${viewPager.height}")
+        LogUtil.i("setAdapterAndIndicator, ViewPager尺寸=${viewPager.width}x${viewPager.height}")
 
         try {
             if (viewPager.adapter != currentAdapter) {
                 viewPager.adapter = currentAdapter
             }
             setupPageIndicator()
+
+            // 立即更新所有页面布局，确保获得正确的尺寸
+            if (currentAdapter != null && viewPager.width > 0 && viewPager.height > 0) {
+                currentAdapter!!.updateAllPageLayouts(viewPager.width, viewPager.height)
+                LogUtil.i("ViewPager布局更新完成")
+            }
 
             // 预加载常用图标
            // viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
@@ -753,6 +793,15 @@ class MenuFragment : Fragment() {
         super.onResume()
         LogUtil.i("onResume called, viewCreated=$isViewCreated, dataInitialized=$isDataInitialized")
 
+        // 检查导航栏位置是否变化
+        val newPosition = getNavbarPosition()
+        if (newPosition != currentNavbarPosition) {
+            LogUtil.i("导航栏位置变化：$currentNavbarPosition -> $newPosition")
+            currentNavbarPosition = newPosition
+            // 导航栏位置变化，更新布局（但不重置页面）
+            updateLayoutForNavbarPosition()
+        }
+
         // 如果需要加载数据，现在执行
         if (shouldLoadDataOnResume) {
             shouldLoadDataOnResume = false
@@ -761,8 +810,77 @@ class MenuFragment : Fragment() {
             // 视图已创建但数据未初始化，重新初始化
             checkViewLayoutAndInitData()
         }
+    }
 
+    /**
+     * 检查导航栏位置是否变化（已优化，直接在 onResume 中处理）
+     */
+    private fun checkNavbarPositionChange() {
+        val newPosition = getNavbarPosition()
+        if (newPosition != currentNavbarPosition) {
+            LogUtil.i("导航栏位置变化：$currentNavbarPosition -> $newPosition")
+            currentNavbarPosition = newPosition
+            // 导航栏位置变化，更新布局
+            updateLayoutForNavbarPosition()
+        }
+    }
 
+    /**
+     * 获取当前导航栏位置
+     * @return 0=隐藏, 1=左侧, 2=右侧, 3=底部(默认)
+     */
+    private fun getNavbarPosition(): Int {
+        return try {
+            SystemProperties.get(NAVBAR_POSITION_PROPERTY, "3").toInt()
+        } catch (e: Exception) {
+            LogUtil.e("获取导航栏位置失败", e)
+            3 // 默认底部
+        }
+    }
+
+    /**
+     * 更新导航栏位置
+     */
+    private fun updateNavbarPosition() {
+        currentNavbarPosition = getNavbarPosition()
+        LogUtil.i("当前导航栏位置: $currentNavbarPosition")
+        updateLayoutForNavbarPosition()
+    }
+
+    /**
+     * 根据导航栏位置更新布局
+     */
+    private fun updateLayoutForNavbarPosition() {
+        if (!isViewCreated || view == null) return
+    
+        LogUtil.i("根据导航栏位置更新布局：$currentNavbarPosition")
+            
+        // 延迟执行，确保视图已经布局完成
+        view?.postDelayed(Runnable {
+            if (viewPager.width > 0 && viewPager.height > 0 && currentAdapter != null) {
+                LogUtil.i("开始更新布局，ViewPager 尺寸=${viewPager.width}x${viewPager.height}")
+                    
+                // 关键修复：先保存当前页面索引，避免重置导致的状态丢失
+                val currentItem = viewPager.currentItem
+                LogUtil.i("更新前当前页面：$currentItem")
+                    
+                // 更新所有页面布局（不重置到第 0 页）
+                currentAdapter?.updateAllPageLayouts(viewPager.width, viewPager.height)
+                    
+                // 延迟恢复页面指示器和状态
+                viewPager.postDelayed({
+                    if (isAdded && view != null) {
+                        // 同步页面指示器
+                        setupPageIndicator()
+                        // 确保页面索引正确（保持在原页面）
+                        if (viewPager.currentItem != currentItem) {
+                            viewPager.setCurrentItem(currentItem, false)
+                        }
+                        LogUtil.i("布局更新完成，恢复到第 $currentItem 页")
+                    }
+                }, 50) // 短暂延迟确保布局完成
+            }
+        }, 100)
     }
 
     override fun onPause() {

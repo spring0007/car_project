@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
+
     <dimen name="text_50sp">50sp</dimen>
 
     <dimen name="app_icon_bg_size">80dp</dimen>
@@ -20,7 +23,7 @@
     <dimen name="clockViewWidth_size">160dp</dimen>
     <dimen name="rv_margin_bottom">8dp</dimen>
     <dimen name="rv_margin_end">20dp</dimen>
-    <dimen name="freeform_full_width">112dp</dimen>
-    <dimen name="freeform_full_height">119dp</dimen>
+    <dimen name="freeform_full_width">90dp</dimen>
+    <dimen name="freeform_full_height">95dp</dimen>
 
 </resources>

@@ -11,8 +11,8 @@ android {
         applicationId "com.launcher.yfd_ui01"
         minSdk 26
         targetSdk 34
-        versionCode 2
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
 
     }
     // 修改 APK 名称

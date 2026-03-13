@@ -22,8 +22,18 @@
             android:name=".MainActivity_YFD_UI01"
             android:enabled="true"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden|navigation|uiMode">
         </activity>
+        <!--不能删除,否则会影响1.17号版本OTA升级报错-->
+        <receiver
+            android:name=".utils.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

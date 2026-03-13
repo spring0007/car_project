@@ -111,7 +111,7 @@ public class AppPagerAdapter extends PagerAdapter {
     }
 
     /**
-     * 配置RecyclerView
+     * 配置 RecyclerView
      */
     private void setupRecyclerView(RecyclerView recyclerView, int position ,int width, int height) {
         if (pages == null || position < 0 || position >= pages.size()) return;
@@ -140,12 +140,10 @@ public class AppPagerAdapter extends PagerAdapter {
                         recyclerView.getHeight()==0 || recyclerView.getWidth()==0) {
                     return;
                 }
-                //LogUtil.i("itemWidth= "+itemWidth+",itemHeight="+itemHeight);
-                // 计算间距720:54,40 800: 54,57
-
+                
+                // 计算间距
                 int leftSpacing = Math.max(10, (width - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
                 int topSpacing = Math.max(10, (height - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
-                //LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
 
                 // 添加 ItemDecoration（确保只添加一次）
                 if (recyclerView.getItemDecorationCount() == 0) {
@@ -180,28 +178,6 @@ public class AppPagerAdapter extends PagerAdapter {
                 recyclerView.setItemAnimator(animator);
             }
         });
-
-        // 移除旧的全局布局监听器，使用更安全的方式
-//        recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            boolean isFirstLayout = true;
-//
-//            @Override
-//            public void onGlobalLayout() {
-//                if (isFirstLayout) {
-//                    isFirstLayout = false;
-//                    recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//
-//                    // 延迟重置尺寸计算
-//                    recyclerView.postDelayed(() -> {
-//                        if (recyclerView.getAdapter() == adapter) {
-//                            adapter.resetSizeCalculation();
-//                        }
-//                    }, 50);
-//                }
-//            }
-//        });
-
-
     }
 
     /**
@@ -333,14 +309,15 @@ public class AppPagerAdapter extends PagerAdapter {
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        // 默认不强制重建页面，避免由于 notifyDataSetChanged 导致的页面闪烁
+        // 返回 POSITION_UNCHANGED 以保持现有页面实例，避免频繁重建导致的状态丢失
+        // 只有在真正需要重建页面时才返回 POSITION_NONE
         return POSITION_UNCHANGED;
     }
 
     /**
      * 更新所有页面的布局间距
-     * @param containerWidth ViewPager的当前宽度
-     * @param containerHeight ViewPager的当前高度
+     * @param containerWidth ViewPager 的当前宽度
+     * @param containerHeight ViewPager 的当前高度
      */
     public void updateAllPageLayouts(int containerWidth, int containerHeight) {
         if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
@@ -348,7 +325,7 @@ public class AppPagerAdapter extends PagerAdapter {
                     updateAllPageLayouts(containerWidth, containerHeight));
             return;
         }
-
+    
         for (int i = 0; i < pageViews.size(); i++) {
             int position = pageViews.keyAt(i);
             RecyclerView recyclerView = pageViews.valueAt(i);
@@ -363,24 +340,29 @@ public class AppPagerAdapter extends PagerAdapter {
                                   int containerWidth, int containerHeight) {
         if (recyclerView == null) return;
 
-        // 计算新间距
-        int itemWidth = 134;
-        int itemHeight = 152;
+        // 获取屏幕密度
+        float density = recyclerView.getContext().getResources().getDisplayMetrics().density;
+        
+        // 基于屏幕密度和容器尺寸动态计算item尺寸
+        int itemWidth = calculateItemWidth(containerWidth, density);
+        int itemHeight = calculateItemHeight(containerHeight, density);
 
         // 尝试从适配器获取item尺寸
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
         if (adapter instanceof AppGridRecyclerAdapter) {
             AppGridRecyclerAdapter gridAdapter = (AppGridRecyclerAdapter) adapter;
-            // 假设AppGridRecyclerAdapter有获取item尺寸的方法
-            itemWidth = gridAdapter.getItemWidth();
-            itemHeight = gridAdapter.getItemHeight();
+            // 优先使用实际测量的item尺寸
+            int measuredWidth = gridAdapter.getItemWidth();
+            int measuredHeight = gridAdapter.getItemHeight();
+            if (measuredWidth > 0) itemWidth = measuredWidth;
+            if (measuredHeight > 0) itemHeight = measuredHeight;
         }
-       // LogUtil.i("containerWidth= "+containerWidth+",containerHeight="+containerHeight+
-       //         ", itemWidth= "+itemWidth+", itemHeight="+itemHeight);
+        LogUtil.i("containerWidth= "+containerWidth+",containerHeight="+containerHeight+
+                ", itemWidth= "+itemWidth+", itemHeight="+itemHeight+", density="+density);
 
-        int leftSpacing = Math.max(10, (containerWidth - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
-        int topSpacing = Math.max(10, (containerHeight - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
-        //LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
+        int leftSpacing = Math.max((int)(10 * density), (containerWidth - itemWidth * ITEMS_VER) / (ITEMS_VER + 1));
+        int topSpacing = Math.max((int)(10 * density), (containerHeight - itemHeight * ITEMS_HOR) / (ITEMS_HOR + 1));
+        LogUtil.i("leftSpacing= "+leftSpacing+",topSpacing="+topSpacing);
         // 更新ItemDecoration
         updateItemDecoration(recyclerView, leftSpacing, topSpacing);
 
@@ -390,6 +372,30 @@ public class AppPagerAdapter extends PagerAdapter {
                 recyclerView.getLayoutManager().requestLayout();
             }
         });
+    }
+    
+    /**
+     * 基于容器宽度和屏幕密度计算item宽度
+     */
+    private int calculateItemWidth(int containerWidth, float density) {
+        // 基于屏幕密度和容器宽度动态计算
+        int baseWidth = (int)(134 * density);
+        // 确保在不同分辨率下都能适应
+        int maxWidth = containerWidth / (ITEMS_VER + 1);
+        int minWidth = (int)(80 * density);
+        return Math.min(Math.max(baseWidth, minWidth), maxWidth);
+    }
+    
+    /**
+     * 基于容器高度和屏幕密度计算item高度
+     */
+    private int calculateItemHeight(int containerHeight, float density) {
+        // 基于屏幕密度和容器高度动态计算
+        int baseHeight = (int)(152 * density);
+        // 确保在不同分辨率下都能适应
+        int maxHeight = containerHeight / (ITEMS_HOR + 1);
+        int minHeight = (int)(100 * density);
+        return Math.min(Math.max(baseHeight, minHeight), maxHeight);
     }
 
     /**

@@ -31,6 +31,7 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresPermission
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.awell.addapp.AppInfo
@@ -817,6 +818,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 LogUtil.i("lqq,onResume ,isVisibleOnScreen="+freeformBg.isVisibleOnScreen())
                 if (freeformBg.isVisibleOnScreen()) {
                     updateImagePosition(freeformBg, "onResume")
+                } else {
+                    // 如果第一次检查失败，使用重试机制
+                    LogUtil.w("onResume: freeformBg 不可见，启动重试机制")
+                    retryCheckVisibility(3)
                 }
             }
         }
@@ -843,31 +848,63 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
 
     /**
-     * 使用show/hide方式切换Fragment时，会调用此方法
+     * 使用show/hide方式切换 Fragment 时，会调用此方法
      */
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         LogUtil.i( "onHiddenChanged: hidden=$hidden")
-
+    
         if (hidden) {
-            // Fragment被隐藏，隐藏自由窗口
+            // Fragment 被隐藏，隐藏自由窗口
             imageUpdateJob?.cancel()
             systemUIClient.hideFreeform()
             Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
             systemUIClient.fullScreenFreeform()
             LogUtil.i("freeform_launcher_idle,0")
-
+    
         } else {
-            // Fragment被显示，显示自由窗口
-            freeformBg.post {
+            // Fragment 被显示，显示自由窗口
+            // 使用 postDelayed 确保视图已经完成布局和测量
+            freeformBg.postDelayed({
+                LogUtil.i("freeformBg.isVisibleOnScreen()="+freeformBg.isVisibleOnScreen())
                 if (freeformBg.isVisibleOnScreen()) {
-
-                    //freeformBg.focusable = View.FOCUSABLE
                     updateImagePosition(freeformBg ,"hidden")
+                } else {
+                    // 如果第一次检查失败，再次延迟重试（最多重试 3 次）
+                    retryCheckVisibility(3)
                 }
-
+            }, 150)
+        }
+    }
+    
+    /**
+     * 重试检查视图可见性
+     * @param maxRetries 最大重试次数
+     */
+    private fun retryCheckVisibility(maxRetries: Int) {
+        var retryCount = 0
+            
+        val checkRunnable = object : Runnable {
+            override fun run() {
+                if (retryCount >= maxRetries) {
+                    LogUtil.w("达到最大重试次数，放弃检查")
+                    return
+                }
+                    
+                retryCount++
+                LogUtil.i("第${retryCount}次重试检查 freeformBg 可见性")
+                    
+                if (freeformBg.isVisibleOnScreen()) {
+                    LogUtil.i("重试成功，freeformBg 已可见")
+                    updateImagePosition(freeformBg ,"retry_$retryCount")
+                } else {
+                    // 继续重试
+                    freeformBg.postDelayed(this, 100)
+                }
             }
         }
+            
+        freeformBg.postDelayed(checkRunnable, 100)
     }
 
 
@@ -905,7 +942,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             }
         }
         LogUtil.i("lqq,onDestroy")
-
+        unregisterCustomerListener()
         // 取消所有协程
    //     appScope.cancelAll()
         //canclePopupWindow()
@@ -925,7 +962,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         //speedSimulator?.stopSimulation()
     }
 
+    private fun unregisterCustomerListener() {
+        try {
+            locationManager.removeUpdates(mLocationListener)
+        } catch (e: Exception) {
+            LogUtil.e( "unregisterCustomerListener: removeGpsStatusListener error=>${e.message}")
+        }
 
+    }
     //*************************PopupWindow************************************
 
 

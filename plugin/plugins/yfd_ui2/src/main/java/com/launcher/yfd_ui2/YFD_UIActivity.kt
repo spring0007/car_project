@@ -344,7 +344,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         viewConfiguration = ViewConfiguration.get(this)
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+        if(locationManager!= null)
+            locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -651,7 +652,11 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun unregisterCustomerListener() {
-        locationManager.removeUpdates(mLocationListener)
+         try {
+             locationManager.removeUpdates(mLocationListener)
+         } catch (e: Exception) {
+            LogUtil.e("unregisterCustomerListener: removeGpsStatusListener error=>${e.message}")
+        }
     }
 
     /**

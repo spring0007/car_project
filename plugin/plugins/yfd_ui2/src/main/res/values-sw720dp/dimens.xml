@@ -22,5 +22,7 @@
     <dimen name="clockViewWidth_size">190dp</dimen>
     <dimen name="rv_margin_bottom">0dp</dimen>
     <dimen name="rv_margin_end">36dp</dimen>
+    <dimen name="freeform_full_width">112dp</dimen>
+    <dimen name="freeform_full_height">119dp</dimen>
 
 </resources>

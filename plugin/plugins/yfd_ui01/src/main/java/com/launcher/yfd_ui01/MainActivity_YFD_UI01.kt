@@ -140,7 +140,7 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        LogUtil.d( "onResume: Activity回到前台")
+        LogUtil.d("onResume: Activity 回到前台")
         fragmentStackManager.onActivityResumed()
 
     }
