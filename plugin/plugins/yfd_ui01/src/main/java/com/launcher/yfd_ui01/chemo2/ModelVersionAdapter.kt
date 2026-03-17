@@ -2,7 +2,6 @@ package com.launcher.yfd_ui01.chemo2
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.launcher.yfd_ui01.R
+import com.launcher.yfd_ui01.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,7 +64,7 @@ class ModelVersionAdapter(
                     }
                 }
             } catch (e: Exception) {
-                Log.e("ModelVersionAdapter", "加载缩略图失败", e)
+                LogUtil.e( "加载缩略图失败", e)
             }
         }
     }

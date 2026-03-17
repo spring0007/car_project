@@ -2,7 +2,6 @@ package com.launcher.yfd_ui01.chemo2
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.launcher.yfd_ui01.R
+import com.launcher.yfd_ui01.utils.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ class CarModelPopupAdapter(
         
         holder.tvModelName.text = model.displayName
 
-        Log.i("CarModelPopupAdapter","ivModelImage="+(holder.ivModelImage.width))
+        LogUtil.i("ivModelImage="+(holder.ivModelImage.width))
 	// 简化图片加载，不使用占位图
         holder.ivModelImage.post {
             loadImageAsync(holder.itemView.context, model.imagePath, holder.ivModelImage)
@@ -104,7 +104,7 @@ class CarModelPopupAdapter(
                 withContext(Dispatchers.Main) {
                     imageView.setImageResource(android.R.drawable.ic_menu_gallery)
                 }
-                Log.e("CarModelPopupAdapter", "加载图片失败: $imagePath", e)
+                LogUtil.e( "加载图片失败: $imagePath", e)
             }
         }
     }

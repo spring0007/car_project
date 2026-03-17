@@ -2,10 +2,10 @@ package com.launcher.yfd_ui01.chemo2
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.launcher.yfd_ui01.R
+import com.launcher.yfd_ui01.utils.LogUtil
 import java.io.File
 
 object ImageLoader {
@@ -25,7 +25,7 @@ object ImageLoader {
             } catch (e: Exception) {
                 // 如果加载失败，设置一个简单的占位图
                 imageView.setImageResource(R.drawable.a3_2008_2012)
-                Log.e("ImageLoader", "从assets加载图片失败: $imagePath", e)
+                LogUtil.e( "从assets加载图片失败: $imagePath", e)
             }
         } else {
             // 普通文件路径
@@ -51,7 +51,7 @@ object ImageLoader {
                 imageView.setImageBitmap(bitmap)
             } catch (e: Exception) {
                 imageView.setImageResource(R.drawable.a3_2008_2012)
-                Log.e("ImageLoader", "加载缩略图失败: $imagePath", e)
+                LogUtil.e( "加载缩略图失败: $imagePath", e)
             }
         } else {
             Glide.with(context)
@@ -74,7 +74,7 @@ object ImageLoader {
                 imageView.setImageBitmap(bitmap)
             } catch (e: Exception) {
                 imageView.setImageResource(R.drawable.a3_2008_2012)
-                Log.e("ImageLoader", "加载大图失败: $imagePath", e)
+                LogUtil.e( "加载大图失败: $imagePath", e)
             }
         } else {
             Glide.with(context.applicationContext)

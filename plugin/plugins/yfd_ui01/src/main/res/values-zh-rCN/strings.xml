@@ -39,4 +39,9 @@
     <string name="unable_uninstall_system_applications">无法卸载系统应用</string>
     <string name="unable_uninstall_current_desktop_application">无法卸载当前桌面应用</string>
     <string name="error_uninstalling_application">卸载应用时出错</string>
+    <string name="custom_carmodel">自定义车模</string>
+    <string name="select_car_model">选择车模图片</string>
+    <string name="sd_">SD卡</string>
+    <string name="usb_">U盘</string>
+    <string name="custom_">自定义</string>
 </resources>

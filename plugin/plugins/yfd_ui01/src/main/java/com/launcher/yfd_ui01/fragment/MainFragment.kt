@@ -10,6 +10,7 @@ import android.content.Context.LOCATION_SERVICE
 import android.content.Context.RECEIVER_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.location.Location
@@ -31,7 +32,6 @@ import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresPermission
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.awell.addapp.AppInfo
@@ -43,6 +43,7 @@ import com.launcher.yfd_ui01.MainActivity_YFD_UI01
 import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.IconManager
 import com.launcher.yfd_ui01.chemo2.CarDataScanner
+import com.launcher.yfd_ui01.chemo2.CarModelSource
 import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
@@ -62,7 +63,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import kotlin.math.abs
+import androidx.core.net.toUri
 
 class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUpdateListener {
 
@@ -232,7 +235,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         //filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
         filter.addAction("awellauto.backcar.on")
-        //filter.addAction("awellauto.backcar.off")
+        filter.addAction("awellservice.360floatview.fullscreen")
+        // 添加 U 盘插拔监听
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED)
+        filter.addAction(Intent.ACTION_MEDIA_EJECT)
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED)
+        filter.addDataScheme("file")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
@@ -307,11 +315,32 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                         canclePopupWindow()
                     }
                 }
+				"awellservice.360floatview.fullscreen",
                 "awellauto.backcar.on" -> {
                     val freePkg = Settings.System.getString(requireContext().contentResolver,"freeform_app_package_name")
                     if("cn.cardoor.zt360".equals(freePkg)) {
                         canclePopupWindow()
                         systemUIClient.fullScreenFreeform()
+                    }
+                }
+                
+                // U 盘插拔事件处理
+                Intent.ACTION_MEDIA_MOUNTED -> {
+                    LogUtil.i("U 盘已插入：${intent.data}")
+                    // 如果 carPopupWindow 正在显示，隐藏它
+                    if (carPopupWindow != null && carPopupWindow!!.isShowing) {
+                        carPopupWindow?.dismiss()
+                        LogUtil.d("U 盘插入，隐藏 carPopupWindow")
+                    }
+                }
+                
+                Intent.ACTION_MEDIA_EJECT,
+                Intent.ACTION_MEDIA_REMOVED -> {
+                    LogUtil.i("U 盘已拔出：${intent.data}")
+                    // 如果 carPopupWindow 正在显示，隐藏它
+                    if (carPopupWindow != null && carPopupWindow!!.isShowing) {
+                        carPopupWindow?.dismiss()
+                        LogUtil.d("U 盘拔出，隐藏 carPopupWindow")
                     }
                 }
             }
@@ -594,20 +623,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
 
     }
-    private fun getDisplayName(version: CarModelVersion): String {
-        // 从路径中提取品牌和车型信息
-        val parts = version.imagePath.split("/")
-        if (parts.size >= 3) {
-            val brand = formatBrandName(parts[1])
-            val fileName = parts[2].substringBeforeLast(".")
-            val modelGroup = fileName.substringBefore("_")
-            return "$brand ${modelGroup.replaceFirstChar { it.uppercase() }} (${version.displayName})"
-        }
-        return version.displayName
-    }
-    private fun formatBrandName(folderName: String): String {
-        return folderName.replaceFirstChar { it.uppercase() }
-    }
+
 
     private fun saveCarVersion(version: CarModelVersion) {
         // 复制图片到应用私有目录
@@ -618,20 +634,102 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         sharedPrefs.edit().apply {
             putString("car_version_name", version.displayName)
             putString("car_brand_folder", version.brandFolder)
-            putString("car_image_path", version.imagePath)
-            putString("car_asset_path", version.imagePath)
+            putString("car_asset_path", version.imagePath)//保存图片的assets路径
+            putString("car_url_path", version.urlPath) // 保存图片的URL路径,用于显示SD卡或者U盘的图片
+            putString("car_source", version.carSource.name)
             putString("saved_image_path", savedPath)
             //putString("car_full_display_name", getDisplayName(version))
+            LogUtil.d("保存信息到 SharedPreferences: $sharedPrefs.getAll()")
             apply()
         }
     }
     private fun copyCarImageToStorage(version: CarModelVersion): String? {
-        if (version.imagePath.startsWith("chemo/")) {
-            // 从assets复制到私有目录
-            val fileName = "${version.brandFolder}_${version.name}.png"
-            return CarDataScanner.copyImageToPrivateStorage(requireContext(), version.imagePath, fileName)
+        return when (version.carSource) {
+            CarModelSource.SDCARD -> {
+                // 从 SD 卡复制图片到私有目录
+                copyImageFromContentUri(version.imagePath, version.name)
+            }
+            CarModelSource.USB -> {
+                // 从 U 盘复制图片到私有目录
+                copyImageFromFileUri(version.urlPath?: "", version.name)
+            }
+            CarModelSource.CUSTOM -> {
+                if (version.imagePath.startsWith("chemo/")) {
+                    // 从 assets 复制到私有目录
+                    val fileName = "${version.brandFolder}_${version.name}.png"
+                    CarDataScanner.copyImageToPrivateStorage(requireContext(), version.imagePath, fileName)
+                } else {
+                    null
+                }
+            }
         }
-        return null
+    }
+
+    /**
+     * 从 SD 卡的 Content URI 复制图片到私有目录
+     */
+    private fun copyImageFromContentUri(contentUri: String, imageName: String): String? {
+        return try {
+            val uri = android.net.Uri.parse(contentUri)
+            val inputStream = requireContext().contentResolver.openInputStream(uri) ?: return null
+
+            // 创建目标目录
+            val destDir = File(requireContext().filesDir, "saved_cars")
+            if (!destDir.exists()) {
+                destDir.mkdirs()
+            }
+
+            // 生成目标文件名
+            val fileName = "sdcard_${imageName}"
+            val destFile = File(destDir, fileName)
+
+            // 复制文件
+            val outputStream = FileOutputStream(destFile)
+            inputStream.copyTo(outputStream)
+
+            inputStream.close()
+            outputStream.close()
+
+            LogUtil.i("从 SD 卡复制图片到私有目录：$fileName")
+            destFile.absolutePath
+        } catch (e: Exception) {
+            LogUtil.e("从 SD 卡复制图片失败：$contentUri", e)
+            null
+        }
+    }
+
+    /**
+     * 从 U 盘的文件 URI 复制图片到私有目录
+     */
+    private fun copyImageFromFileUri(fileUri: String, imageName: String): String? {
+        return try {
+            val uri = fileUri.toUri()
+            val sourceFile = File(uri.path ?: return null)
+
+            if (!sourceFile.exists()) {
+                LogUtil.e("源文件不存在：$fileUri")
+                return null
+            }
+
+            // 创建目标目录
+            val destDir = File(requireContext().filesDir, "saved_cars")
+            if (!destDir.exists()) {
+                destDir.mkdirs()
+            }
+
+            // 生成目标文件名
+            val fileName = "usb_${imageName}"
+            val destFile = File(destDir, fileName)
+
+            // 复制文件
+            sourceFile.copyTo(destFile, overwrite = true)
+
+            LogUtil.i("从 U 盘复制图片到私有目录：$fileName")
+            destFile.absolutePath
+        } catch (e: Exception) {
+            LogUtil.e("从 U 盘复制图片失败：$fileUri", e)
+            null
+        }
     }
 
     private fun setCarImageToImageView(version: CarModelVersion) {
@@ -645,67 +743,166 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 val bitmap = BitmapFactory.decodeFile(savedPath)
                 carIcon.setImageBitmap(bitmap)
             } catch (e: Exception) {
-                // 如果文件加载失败，从assets加载
-                loadImageFromAssets(version.imagePath)
+                // 如果文件加载失败，重新加载
+                loadImageFromAllSources(version)
             }
         } else {
-            // 从assets加载
-            loadImageFromAssets(version.imagePath)
+            // 重新加载
+            loadImageFromAllSources(version)
         }
 
         //carIcon.contentDescription = getDisplayName(version)
     }
 
-    private fun loadImageFromAssets(assetPath: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val inputStream = swipeActivity.assets.open(assetPath)
-                val bitmap = BitmapFactory.decodeStream(inputStream)
-                inputStream.close()
+    /**
+     * 根据保存的 carSource 类型加载图片
+     */
+    private fun loadImageFromAllSources(version: CarModelVersion) {
 
-                withContext(Dispatchers.Main) {
-                    bitmap?.let {
-                        carIcon.setImageBitmap(it)
-                    } ?: run {
-                        carIcon.setImageResource(R.drawable.a3_2008_2012)
-                    }
+        val source = try {
+            version.carSource
+        } catch (e: Exception) {
+            CarModelSource.CUSTOM
+        }
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            val bitmap = when (source) {
+                CarModelSource.SDCARD -> {
+                    // 从 SD 卡保存图片加载
+                    loadBitmapFromSdCard(version.imagePath)
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
+                CarModelSource.USB -> {
+                    // 从 U 盘保存图片加载
+                    loadBitmapFromUsb(version.urlPath?: "")
+                }
+                CarModelSource.CUSTOM -> {
+                    // 从 assets 加载内置车模
+                    loadBitmapFromAssets(version.imagePath)
+                }
+            }
+                
+            withContext(Dispatchers.Main) {
+                bitmap?.let {
+                    carIcon.setImageBitmap(it)
+                } ?: run {
+                    // 加载失败，使用默认背景
+                    LogUtil.w("根据来源 $source 加载图片失败，使用默认背景：${version.imagePath}")
                     carIcon.setImageResource(R.drawable.a3_2008_2012)
                 }
-                LogUtil.e("加载图片失败: $assetPath", e)
             }
+        }
+    }
+    
+    /**
+     * 从 assets 加载 Bitmap
+     */
+    private fun loadBitmapFromAssets(assetPath: String): Bitmap? {
+        return try {
+            if (!assetPath.startsWith("chemo/")) {
+                return null
+            }
+            val inputStream = swipeActivity.assets.open(assetPath)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream.close()
+            bitmap
+        } catch (e: Exception) {
+            LogUtil.e("从 assets 加载图片失败：$assetPath", e)
+            null
+        }
+    }
+    
+    /**
+     * 从 SD 卡加载图片
+     */
+    private fun loadBitmapFromSdCard(imagePath: String): Bitmap? {
+        return try {
+            // 检查私有目录中是否有保存的 SD 卡图片
+            val savedCarsDir = File(requireContext().filesDir, "saved_cars")
+            if (!savedCarsDir.exists()) {
+                return null
+            }
+                
+            // 查找以 "sdcard_" 开头的图片文件
+            val sdcardFiles = savedCarsDir.listFiles { file ->
+                file.isFile && file.name.startsWith("sdcard_")
+            }?.sortedByDescending { it.lastModified() }
+                
+            if (!sdcardFiles.isNullOrEmpty()) {
+                val targetFile = sdcardFiles.first()
+                val bitmap = BitmapFactory.decodeFile(targetFile.absolutePath)
+                if (bitmap != null) {
+                    LogUtil.i("从 SD 卡保存图片加载成功：${targetFile.name}")
+                    return bitmap
+                }
+            }
+            null
+        } catch (e: Exception) {
+            LogUtil.e("从 SD 卡加载图片失败", e)
+            null
+        }
+    }
+    
+    /**
+     * 从 U 盘加载图片
+     */
+    private fun loadBitmapFromUsb(imagePath: String): Bitmap? {
+        return try {
+            // 检查私有目录中是否有保存的 U 盘图片
+            val savedCarsDir = File(requireContext().filesDir, "saved_cars")
+            if (!savedCarsDir.exists()) {
+                return null
+            }
+                
+            // 查找以 "usb_" 开头的图片文件
+            val usbFiles = savedCarsDir.listFiles { file ->
+                file.isFile && file.name.startsWith("usb_")
+            }?.sortedByDescending { it.lastModified() }
+                
+            if (!usbFiles.isNullOrEmpty()) {
+                val targetFile = usbFiles.first()
+                val bitmap = BitmapFactory.decodeFile(targetFile.absolutePath)
+                if (bitmap != null) {
+                    LogUtil.i("从 U 盘保存图片加载成功：${targetFile.name}")
+                    return bitmap
+                }
+            }
+            null
+        } catch (e: Exception) {
+            LogUtil.e("从 U 盘加载图片失败", e)
+            null
         }
     }
 
 
     private fun restoreCarModel() {
-        val sharedPrefs =  requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
+        val sharedPrefs = requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
         val savedPath = sharedPrefs.getString("saved_image_path", null)
-        val assetPath = sharedPrefs.getString("car_asset_path", null)
-        //val displayName = sharedPrefs.getString("car_full_display_name", null)
+        //val brandFolder = sharedPrefs.getString("car_brand_folder", null)
 
-        if (savedPath != null /*&& displayName != null*/) {
+        
+        // 尝试从保存的路径恢复图片
+        if (savedPath != null) {
             val file = File(savedPath)
             if (file.exists()) {
                 try {
                     val bitmap = BitmapFactory.decodeFile(savedPath)
-                    if(bitmap!=null) {
+                    if (bitmap != null) {
                         carIcon.setImageBitmap(bitmap)
-                        // carIcon.contentDescription = displayName
                         return
                     }
                 } catch (e: Exception) {
-                    LogUtil.e( "恢复图片失败，尝试从assets加载", e)
+                    LogUtil.e("恢复图片失败", e)
                 }
             }
         }
 
-        // 尝试从assets恢复
-        if (assetPath != null/* && displayName != null*/) {
-            loadImageFromAssets(assetPath)
-            //carIcon.contentDescription = displayName
+        // 根据保存的 car_source 类型加载图片
+        val assetPath = sharedPrefs.getString("car_asset_path", null)
+        val urlPath = sharedPrefs.getString("car_url_path", null)
+        val carSource = sharedPrefs.getString("car_source", "CUSTOM")
+        if (assetPath != null) {
+            loadImageFromAllSources(CarModelVersion(imagePath = assetPath, name = "car_model_name",
+                displayName = "car_model_display_name", urlPath = urlPath, brandFolder = null, carSource = CarModelSource.valueOf(carSource!!)))
         }
     }
 

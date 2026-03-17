@@ -1,9 +1,7 @@
 package com.launcher.yfd_ui01.chemo2
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
+import com.launcher.yfd_ui01.utils.LogUtil
 import java.io.File
 import java.io.FileOutputStream
 
@@ -23,7 +21,7 @@ object CarDataScanner {
             val brandFolders = assetManager.list(ASSETS_FOLDER)
             
             if (brandFolders.isNullOrEmpty()) {
-                Log.e("CarDataScanner", "assets/chemo 文件夹为空或不存在")
+                LogUtil.e( "assets/chemo 文件夹为空或不存在")
                 return emptyMap()
             }
             
@@ -52,7 +50,7 @@ object CarDataScanner {
                         }
                     }
                 } catch (e: Exception) {
-                    Log.e("CarDataScanner", "扫描车企文件夹失败: $brandFolderName", e)
+                    LogUtil.e( "扫描车企文件夹失败: $brandFolderName", e)
                 }
             }
             
@@ -62,7 +60,7 @@ object CarDataScanner {
             }
             
         } catch (e: Exception) {
-            Log.e("CarDataScanner", "扫描assets数据失败", e)
+            LogUtil.e( "扫描assets数据失败", e)
         }
         
         return brandMap
@@ -110,7 +108,9 @@ object CarDataScanner {
             name = fileName,
             displayName = displayName,
             imagePath = assetPath,
-            brandFolder = brandFolder
+            urlPath = null,
+            brandFolder = brandFolder,
+
            // assetPath = assetPath,
             // 新增字段，专门保存 assets 路径
         )
@@ -156,7 +156,7 @@ object CarDataScanner {
             
             destFile.absolutePath
         } catch (e: Exception) {
-            Log.e("CarDataScanner", "复制图片到私有目录失败", e)
+            LogUtil.e( "复制图片到私有目录失败", e)
             null
         }
     }

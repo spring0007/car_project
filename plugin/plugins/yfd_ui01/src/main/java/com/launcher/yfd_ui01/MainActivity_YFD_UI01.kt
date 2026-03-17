@@ -142,6 +142,8 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
         super.onResume()
         LogUtil.d("onResume: Activity 回到前台")
         fragmentStackManager.onActivityResumed()
+        val log = Settings.System.getInt(contentResolver, "persist.sys.awell.logswitch", -1)
+        LogUtil.setIsDebuggable(log == 1)
 
     }
 

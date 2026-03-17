@@ -4,6 +4,8 @@ package com.launcher.yfd_ui01.utils;
 import android.os.SystemProperties;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Logging utility
  */
@@ -19,6 +21,11 @@ public class LogUtil {
 	private LogUtil() {
 		return;
 	}
+
+
+    public static void setIsDebuggable(boolean isDebuggable) {
+        LogUtil.isDebuggable = isDebuggable;
+    }
 
 	public static void i(final String message) {
 		if (!isDebuggable) return;
