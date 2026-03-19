@@ -235,7 +235,15 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         //filter.addAction(Intent.ACTION_DATE_CHANGED)
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
         filter.addAction("awellauto.backcar.on")
-        filter.addAction("awellservice.360floatview.fullscreen")
+
+        filter.addAction("com.awell.360floatview.fullscreen")
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+        } else {
+            requireContext().registerReceiver(receiver, filter)
+        }
+
         // 添加 U 盘插拔监听
         filter.addAction(Intent.ACTION_MEDIA_MOUNTED)
         filter.addAction(Intent.ACTION_MEDIA_EJECT)
@@ -315,7 +323,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                         canclePopupWindow()
                     }
                 }
-				"awellservice.360floatview.fullscreen",
+                "com.awell.360floatview.fullscreen",
                 "awellauto.backcar.on" -> {
                     val freePkg = Settings.System.getString(requireContext().contentResolver,"freeform_app_package_name")
                     if("cn.cardoor.zt360".equals(freePkg)) {

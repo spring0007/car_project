@@ -3,6 +3,7 @@ package com.launcher.yfd_ui01
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemProperties
 import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
@@ -140,9 +141,9 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
 
     override fun onResume() {
         super.onResume()
-        LogUtil.d("onResume: Activity 回到前台")
         fragmentStackManager.onActivityResumed()
-        val log = Settings.System.getInt(contentResolver, "persist.sys.awell.logswitch", -1)
+        val log = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch","1"));
+        Log.d( "YFD_UI01","onResume: Activity 回到前台,log=$log")
         LogUtil.setIsDebuggable(log == 1)
 
     }
