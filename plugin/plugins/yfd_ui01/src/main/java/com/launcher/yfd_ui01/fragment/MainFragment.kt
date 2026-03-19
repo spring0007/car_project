@@ -643,7 +643,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             putString("car_version_name", version.displayName)
             putString("car_brand_folder", version.brandFolder)
             putString("car_asset_path", version.imagePath)//保存图片的assets路径
-            putString("car_url_path", version.urlPath) // 保存图片的URL路径,用于显示SD卡或者U盘的图片
             putString("car_source", version.carSource.name)
             putString("saved_image_path", savedPath)
             //putString("car_full_display_name", getDisplayName(version))
@@ -653,13 +652,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
     private fun copyCarImageToStorage(version: CarModelVersion): String? {
         return when (version.carSource) {
+            CarModelSource.USB,
             CarModelSource.SDCARD -> {
                 // 从 SD 卡复制图片到私有目录
                 copyImageFromContentUri(version.imagePath, version.name)
-            }
-            CarModelSource.USB -> {
-                // 从 U 盘复制图片到私有目录
-                copyImageFromFileUri(version.urlPath?: "", version.name)
             }
             CarModelSource.CUSTOM -> {
                 if (version.imagePath.startsWith("chemo/")) {
@@ -775,13 +771,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         
         CoroutineScope(Dispatchers.IO).launch {
             val bitmap = when (source) {
+                CarModelSource.USB,
                 CarModelSource.SDCARD -> {
                     // 从 SD 卡保存图片加载
                     loadBitmapFromSdCard(version.imagePath)
-                }
-                CarModelSource.USB -> {
-                    // 从 U 盘保存图片加载
-                    loadBitmapFromUsb(version.urlPath?: "")
                 }
                 CarModelSource.CUSTOM -> {
                     // 从 assets 加载内置车模
@@ -906,11 +899,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         // 根据保存的 car_source 类型加载图片
         val assetPath = sharedPrefs.getString("car_asset_path", null)
-        val urlPath = sharedPrefs.getString("car_url_path", null)
         val carSource = sharedPrefs.getString("car_source", "CUSTOM")
         if (assetPath != null) {
             loadImageFromAllSources(CarModelVersion(imagePath = assetPath, name = "car_model_name",
-                displayName = "car_model_display_name", urlPath = urlPath, brandFolder = null, carSource = CarModelSource.valueOf(carSource!!)))
+                displayName = "car_model_display_name", brandFolder = null, carSource = CarModelSource.valueOf(carSource!!)))
         }
     }
 

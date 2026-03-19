@@ -108,7 +108,6 @@ object CarDataScanner {
             name = fileName,
             displayName = displayName,
             imagePath = assetPath,
-            urlPath = null,
             brandFolder = brandFolder,
 
            // assetPath = assetPath,

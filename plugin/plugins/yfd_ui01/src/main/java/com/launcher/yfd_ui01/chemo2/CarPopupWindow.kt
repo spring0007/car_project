@@ -157,22 +157,6 @@ class CarPopupWindow(
         }
     }
     
-    private fun createCloseButton(): View {
-        return TextView(activity).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                dpToPx(48)
-            )
-            text = context.getString(android.R.string.cancel)// "取消"
-            gravity = Gravity.CENTER
-            setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary))
-            textSize = 16f
-           // typeface = Typeface.DEFAULT_BOLD
-            setBackgroundColor(Color.parseColor("#F5F5F5"))
-            setOnClickListener { dismiss() }
-        }
-    }
-    
     private fun loadData() {
         showLoadingView()
         
@@ -564,7 +548,7 @@ class CarPopupWindow(
             }
             
             // 优化的文件扩展名过滤
-            val imageExtensions = setOf("jpg", "jpeg", "png", "webp", "bmp")
+            val imageExtensions = setOf("jpg", "jpeg", "png", "bmp")
             var count = 0
             val startTime = System.currentTimeMillis()
             
@@ -585,13 +569,12 @@ class CarPopupWindow(
                     try {
                         val uri = Uri.fromFile(file)
                         val displayName = file.nameWithoutExtension
-                        val relativePath = file.absolutePath.substringAfter(directoryPath).trimStart('/')
-                        
+                        //val relativePath = file.absolutePath.substringAfter(directoryPath).trimStart('/')
+                       // LogUtil.i("扫描到图片： source：$source, 显示名称：$displayName,绝对对路径：${file.absolutePath}, uri：$uri")
                         images.add(CarModelVersion(
                             file.name, 
-                            displayName, 
-                            uri.toString(), 
-                            file.absolutePath, 
+                            displayName,
+                            uri.toString(),
                             null, 
                             source
                         ))
@@ -622,23 +605,6 @@ class CarPopupWindow(
         }
     }
 
-    // 加载已保存的自定义车模图片
-    private fun loadSavedCustomCarImages(images: MutableList<CarModelVersion>) {
-        try {
-            val customDir = File(activity.filesDir, "user_cars")
-            if (!customDir.exists()) return
-            
-            customDir.listFiles()?.sortedByDescending { it.lastModified() }
-                ?.take(10) // 最多显示10个已保存的
-                ?.forEach { file ->
-                    val uri = Uri.fromFile(file)
-                    images.add(0, CarModelVersion(file.name,file.name,uri.toString(),   file.absolutePath, null,CarModelSource.CUSTOM))
-                    LogUtil.i("加载自定义车模图片: ${file.name}, $uri, ${file.absolutePath}")
-                }
-        } catch (e: Exception) {
-            Log.e("CarPopupWindow", "加载自定义车模图片失败", e)
-        }
-    }
 
     // 更新图片列表
     private fun updateImageList(images: List<CarModelVersion>) {
@@ -677,23 +643,6 @@ class CarPopupWindow(
         }
     }
 
-//    // 保存选中的图片
-//    private fun saveSelectedImage() {
-//        selectedImageUri?.let { uri ->
-//            copySelectedImageToPrivateStorage(uri)
-//        }
-//    }
-
-    // 检查外部存储是否可用
-    private fun isExternalStorageAvailable(): Boolean {
-        return try {
-            val externalStorageState = android.os.Environment.getExternalStorageState()
-            (externalStorageState == android.os.Environment.MEDIA_MOUNTED ||
-                    externalStorageState == android.os.Environment.MEDIA_MOUNTED_READ_ONLY)
-        } catch (e: Exception) {
-            false
-        }
-    }
 
     /**
      * 检查存储权限
