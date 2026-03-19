@@ -20,6 +20,7 @@ import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_DARK;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_DEFAULT;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YELLOW;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YFD_2;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_CIRCLE;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -373,31 +374,39 @@ public class IconCache {
                 if (model != null) {
                     // 强制重置加载状态，确保重新加载所有应用
                     model.resetLoadedState(true, false);
-                    // 触发重新加载所有应用图标
+                    // 触发重新加载所有应用图标（只调用一次，避免重复）
                     model.startLoader(true, -1);
                 }
             }
         }
     }
 
-    private int getIconResource(String pkg) {
+    private Integer getIconResource(String pkg) {
 
         // return themeMode == 0 ? mHomePackageIcon_116_lehang_2_dark[index] : mHomePackageIcon_116_lehang_2[index];
-        if (themeMode == 0) {
-            return PACKAGE_ICON_MAP_DARK.get(pkg);
-            //return mHomePackageIcon_116_lehang_2_dark[index];
-        } else if (themeMode == 1) {
-            return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
-            //return mHomePackageIcon_116_lehang_2[index];
-        } else if (themeMode == 2) {
-            return PACKAGE_ICON_MAP_YELLOW.get(pkg);
-            //return mHomePackageIcon_116_lehang_2_yellow[index];
-        } else if (themeMode == 100) {
-//            getPluginDrawable();
-            return PACKAGE_ICON_MAP_YFD_2.get(pkg);
+        if (pkg == null || pkg.isEmpty()) {
+            return null;
         }
-        return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
-        //return mHomePackageIcon_116_lehang_2[index];
+        
+        switch (themeMode) {
+            case 0:
+                return PACKAGE_ICON_MAP_DARK.get(pkg);
+                //return mHomePackageIcon_116_lehang_2_dark[index];
+            case 1:
+                return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
+                //return mHomePackageIcon_116_lehang_2[index];
+            case 2:
+                return PACKAGE_ICON_MAP_YELLOW.get(pkg);
+                //return mHomePackageIcon_116_lehang_2_yellow[index];
+            case 3:
+                return PACKAGE_ICON_MAP_CIRCLE.get(pkg);
+            case 100:
+//            getPluginDrawable();
+                return PACKAGE_ICON_MAP_YFD_2.get(pkg);
+            default:
+                return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
+                //return mHomePackageIcon_116_lehang_2[index];
+        }
     }
 
     private void getPluginDrawable() {
@@ -519,9 +528,10 @@ public class IconCache {
             application.title = entry.title;
             boolean customIconSet = false;
 
-            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
+            Integer iconResId = getIconResource(packageName);
+            if (iconResId != null) {
                 Utilities.FLAG = false;
-                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+                bmp = getFullResIcon(mContext.getResources(), iconResId);
                 application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
                 entry.icon = application.iconBitmap;
                 customIconSet = true;
@@ -561,8 +571,9 @@ public class IconCache {
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
 
 
-            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
-                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+            Integer iconResId = getIconResource(packageName);
+            if (iconResId != null) {
+                bmp = getFullResIcon(mContext.getResources(), iconResId);
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
 
@@ -590,8 +601,9 @@ public class IconCache {
             CacheEntry entry = cacheLocked(component, resolveInfo, labelCache);
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
 
-            if (PACKAGE_ICON_MAP_DEFAULT.get(packageName) != null) {
-                bmp = getFullResIcon(mContext.getResources(), getIconResource(packageName));
+            Integer iconResId = getIconResource(packageName);
+            if (iconResId != null) {
+                bmp = getFullResIcon(mContext.getResources(), iconResId);
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
 

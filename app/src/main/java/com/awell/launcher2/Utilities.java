@@ -109,32 +109,23 @@ public final class Utilities {
     public static void setPluginThemeMode(int themeMode,Context context) {
         if (sThemeMode != themeMode) {
             sThemeMode = themeMode;
-            Log.d(TAG, "setPluginThemeMode: themeMode changed to " + sThemeMode);
-
-            // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
-            if (context instanceof LauncherApplication) {
-                LauncherApplication app = (LauncherApplication) context;
-                LauncherModel model = app.getModel();
-                if (model != null) {
-                    // 强制重置加载状态，确保重新加载所有应用
-                    model.resetLoadedState(true, false);
-                    // 触发重新加载所有应用图标
-                    model.startLoader(true, -1);
-                }
-            }
+            // 注意：不在这里触发刷新，由 IconCache.setPluginThemeMode 统一处理，避免重复加载
         }
-
     }
 
     private static int getIconResource(int sThemeMode) {
-        if (sThemeMode == 0){
-            return R.drawable.sf_other_app3_dark;
-        } else if (sThemeMode == 1){
-            return R.drawable.sf_other_app3;
-        } else if (sThemeMode == 2){
-            return R.drawable.sf_other_app3_yellow;
+        switch (sThemeMode) {
+            case 0:
+                return R.drawable.sf_other_app3_dark;
+            case 1:
+                return R.drawable.sf_other_app3;
+            case 2:
+                return R.drawable.sf_other_app3_yellow;
+            case 3:
+                return R.drawable.sf_other_app3_circle;
+            default:
+                return R.drawable.sf_other_app3;
         }
-        return R.drawable.sf_other_app3;
     }
 
     /**
@@ -223,19 +214,27 @@ public final class Utilities {
             }
 
 
-            //增加图标背景图片 OWL
+            //增加图标背景图片 OWL - 仅在需要时加载当前主题的图片
             if (true) {
-                Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(),
-                        getIconResource(sThemeMode));//sfOtherBG[(new Random()).nextInt(5)]
-                int backWidth = backBitmap.getWidth();
-                int backHeight = backBitmap.getHeight();
-                if (backWidth != sIconWidth || backHeight != sIconHeight) {
-                    Matrix matrix = new Matrix();
-                    matrix.postScale((float) sIconWidth / backWidth, (float) sIconHeight / backHeight);
-                    canvas.drawBitmap(Bitmap.createBitmap(backBitmap, 0, 0, backWidth, backHeight, matrix, true),
-                            0.0f, 0.0f, null);
-                } else {
-                    canvas.drawBitmap(backBitmap, 0.0f, 0.0f, null);
+                int iconResId = getIconResource(sThemeMode);
+                if (iconResId != 0) {
+                    Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(), iconResId);
+                    if (backBitmap != null) {
+                        int backWidth = backBitmap.getWidth();
+                        int backHeight = backBitmap.getHeight();
+                        if (backWidth != sIconWidth || backHeight != sIconHeight) {
+                            Matrix matrix = new Matrix();
+                            matrix.postScale((float) sIconWidth / backWidth, (float) sIconHeight / backHeight);
+                            canvas.drawBitmap(Bitmap.createBitmap(backBitmap, 0, 0, backWidth, backHeight, matrix, true),
+                                    0.0f, 0.0f, null);
+                        } else {
+                            canvas.drawBitmap(backBitmap, 0.0f, 0.0f, null);
+                        }
+                        // 及时回收不需要的 bitmap 内存
+                        if (!backBitmap.isRecycled()) {
+                            backBitmap.recycle();
+                        }
+                    }
                 }
             }
 
