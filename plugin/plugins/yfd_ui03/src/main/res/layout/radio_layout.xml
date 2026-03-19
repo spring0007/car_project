@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_radio_am_fm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="FM"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.09" />
+
+    <TextView
+        android:id="@+id/tv_radio_freq"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="108.6"
+        android:textColor="@color/white"
+        android:textSize="33sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_radio_am_fm"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29" />
+
+    <com.launcher.yfd_ui3.view.FMScaleView
+        android:id="@+id/fmScaleView"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        app:centerLineColor="@android:color/holo_red_light"
+        app:centerLineHeight="60dp"
+        app:centerLineWidth="4dp"
+        app:currentFrequency="980"
+        app:isFM="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_radio_freq"
+        app:layout_constraintVertical_bias="0.64"
+        app:layout_constraintWidth_percent="0.9"
+        app:maxFrequency="1080"
+        app:minFrequency="870"
+        app:scaleColor="@android:color/white"
+        app:scaleHeight="40dp"
+        app:scaleWidth="2dp"
+        app:textColor="@android:color/white"
+        app:textSize="16sp" />
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fmScaleView"
+        app:layout_constraintVertical_bias="0.82"
+        app:layout_constraintWidth_percent="0.7">
+
+        <ImageView
+            android:id="@+id/iv_radio_pre"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:padding="10dp"
+            android:src="@drawable/sf_radio_pre" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/sf_radio_play"
+            tools:ignore="ContentDescription" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_radio_next"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:padding="10dp"
+            android:src="@drawable/sf_radio_next"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_50sp">50sp</dimen>
+
+    <dimen name="app_icon_bg_size">150dp</dimen>
+    <dimen name="recycle_app_icon_size">104dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="clockTime_size">116sp</dimen>
+    <dimen name="clockData_size">32sp</dimen>
+    <dimen name="gpsSpeed_size">46sp</dimen>
+    <dimen name="gpsSpeedUnit_size">26sp</dimen>
+    <dimen name="iv_radio_image_size">40dp</dimen>
+
+</resources>

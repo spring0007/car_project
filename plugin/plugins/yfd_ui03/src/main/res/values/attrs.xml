@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FMScaleView">
+        <!-- 刻度相关属性 -->
+        <attr name="scaleColor" format="color" />
+        <attr name="scaleWidth" format="dimension" />
+        <attr name="scaleHeight" format="dimension" />
+        
+        <!-- 文本相关属性 -->
+        <attr name="textColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        
+        <!-- 中心线相关属性 -->
+        <attr name="centerLineColor" format="color" />
+        <attr name="centerLineWidth" format="dimension" />
+        <attr name="centerLineHeight" format="dimension" />
+        
+        <!-- 频段相关属性 -->
+        <attr name="isFM" format="boolean" />
+        <attr name="minFrequency" format="integer" />
+        <attr name="maxFrequency" format="integer" />
+        <attr name="currentFrequency" format="integer" />
+    </declare-styleable>
+</resources>
