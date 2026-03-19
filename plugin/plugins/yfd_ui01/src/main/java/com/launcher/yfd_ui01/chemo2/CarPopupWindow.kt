@@ -2,12 +2,13 @@ package com.launcher.yfd_ui01.chemo2
 
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.storage.StorageManager
-import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -434,131 +435,181 @@ class CarPopupWindow(
         }
     }
 
-    // 从存储设备加载图片
+    // 从存储设备加载图片 - 优化版本
     private fun loadImagesFromStorage() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val images = mutableListOf<CarModelVersion>()
-            
-            // 加载 SD 卡图片 --这里可以加载U盘和SD 卡的图片,故屏蔽下一行代码
-            loadImagesFromExternalStorage(images)
-            
-            // 加载 U 盘图片
-            //loadImagesFromUsbStorage(images)
-            
-            // 加载已保存的自定义车模
-            //loadSavedCustomCarImages(images)
-            
-            withContext(Dispatchers.Main) {
-                updateImageList(images)
-            }
+        // 先检查权限
+        if (!checkStoragePermission()) {
+            LogUtil.e("没有存储权限，无法加载外部存储图片")
+            showEmptyView("没有存储权限，无法加载图片")
+            return
         }
-    }
-
-    // 加载外部存储（SD卡）图片
-    private fun loadImagesFromExternalStorage(images: MutableList<CarModelVersion>) {
-        try {
-            if (!isExternalStorageAvailable()) return
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            val sdCardImages = mutableListOf<CarModelVersion>()
+            val usbImages = mutableListOf<CarModelVersion>()
             
-            val projection = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATA
-            )
+            // 1. 先快速加载 SD 卡（优先级高，通常更快）
+            loadSDCardImages(sdCardImages)
             
-            val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL)
-            } else {
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            // 2. 立即更新 UI，显示 SD 卡图片
+            withContext(Dispatchers.Main) {
+                updateImageList(sdCardImages)
             }
             
-            activity.contentResolver.query(
-                collection,
-                projection,
-                null,
-                null,
-                "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
-            )?.use { cursor ->
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                
-                while (cursor.moveToNext() && images.size < 50) { // 限制最多加载 50 张
-                    val id = cursor.getLong(idColumn)
-                    val name = cursor.getString(nameColumn)
-                    val path = cursor.getString(dataColumn)
-                    val displayName = name.replace("\\.[^.]+$".toRegex(), "")
-                    val contentUri = android.content.ContentUris.withAppendedId(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        id
-                    )
-                                    
-                    // 根据路径判断是 SD 卡还是 U 盘
-                    val source = if (path.startsWith("/storage/emulated/0/")) {
-                        // 内部存储/SD 卡
-                        CarModelSource.SDCARD
-                    } else if (path.startsWith("/storage/") && !path.startsWith("/storage/emulated/")) {
-                        // U 盘或其他外部存储设备（如：/storage/7B52-1410/）
-                        CarModelSource.USB
-                    } else {
-                        // 其他情况默认当作 SD 卡
-                        CarModelSource.SDCARD
-                    }
-                                    
-                    images.add(CarModelVersion(name, displayName, contentUri.toString(), path, null,source))
-                    //LogUtil.i("加载${if (source == CarModelSource.SDCARD) "SD 卡" else "U 盘"}图片：$displayName, uri:$contentUri, path: $path")
-                
+            // 3. 异步加载 U 盘图片（不阻塞界面）
+            loadUsbImages(usbImages)
+            
+            // 4. 合并结果并更新 UI
+            val allImages = sdCardImages + usbImages
+            withContext(Dispatchers.Main) {
+                if (usbImages.isNotEmpty()) {
+                    updateImageList(allImages)
+                } else if (allImages.isEmpty()) {
+                    // 如果没有任何图片，显示空视图
+                    showEmptyView()
                 }
             }
-        } catch (e: Exception) {
-            Log.e("CarPopupWindow", "加载SD卡图片失败", e)
         }
     }
 
-    // 加载 U 盘图片
-    private fun loadImagesFromUsbStorage(images: MutableList<CarModelVersion>) {
+    /**
+     * 加载 SD 卡图片（优先加载）
+     */
+    private fun loadSDCardImages(images: MutableList<CarModelVersion>) {
         try {
             val storageManager = activity.getSystemService(Context.STORAGE_SERVICE) as StorageManager
             val storageVolumes = storageManager.storageVolumes
-                
-            LogUtil.d("存储卷数量：${storageVolumes.size}")
-                
+            
+            LogUtil.d("开始扫描 SD 卡，存储卷数量：${storageVolumes.size}")
+            
             storageVolumes.forEach { volume ->
                 val volumeState = volume.state
-                val volumeDesc = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    "路径=${volume.directory?.absolutePath}, 状态=$volumeState, 可移动=${volume.isRemovable}"
-                } else {
-                    "状态=$volumeState, 可移动=${volume.isRemovable}"
-                }
-                LogUtil.d("存储卷信息：$volumeDesc")
-                    
-                // 检查是否为已挂载的外部存储（包括 U 盘和 SD 卡）
-                if (volumeState == android.os.Environment.MEDIA_MOUNTED) {
+                
+                // 只处理已挂载的 SD 卡
+                if ((volumeState == android.os.Environment.MEDIA_MOUNTED || 
+                     volumeState == android.os.Environment.MEDIA_MOUNTED_READ_ONLY)) {
                     val volumePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         volume.directory?.absolutePath
                     } else {
-                        // Android 10 及以下版本使用反射获取路径
                         getVolumePath(volume)
                     }
-                        
-                    if (!volumePath.isNullOrEmpty()) {
-                        // 排除内部存储路径
-                        if (!volumePath.startsWith("/storage/emulated/") && 
-                            !volumePath.contains("emulated")) {
-                            LogUtil.i("发现外部存储设备：$volumePath")
-                            scanDirectoryForImages(images, volumePath)
-                        } else {
-                            LogUtil.d("跳过内部存储：$volumePath")
-                        }
-                    } else {
-                        LogUtil.w("无法获取存储卷路径")
+                    
+                    // 只扫描 SD 卡路径（以 /storage/emulated/ 开头）
+                    if (!volumePath.isNullOrEmpty() && 
+                        volumePath.startsWith("/storage/emulated/")) {
+                        LogUtil.i("发现 SD 卡：$volumePath")
+                        scanDirectoryForImagesOptimized(images, volumePath, CarModelSource.SDCARD, 3)
                     }
                 }
             }
+            
+            LogUtil.i("SD 卡扫描完成，共找到 ${images.size} 张图片")
         } catch (e: Exception) {
-            Log.e("CarPopupWindow", "加载 U 盘图片失败", e)
+            Log.e("CarPopupWindow", "扫描 SD 卡失败", e)
         }
     }
-        
+    
+    /**
+     * 加载 U 盘图片（后台加载）
+     */
+    private fun loadUsbImages(images: MutableList<CarModelVersion>) {
+        try {
+            val storageManager = activity.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+            val storageVolumes = storageManager.storageVolumes
+            
+            LogUtil.d("开始扫描 U 盘，存储卷数量：${storageVolumes.size}")
+            
+            storageVolumes.forEach { volume ->
+                val volumeState = volume.state
+                
+                // 只处理已挂载的 U 盘（非内置存储）
+                if ((volumeState == android.os.Environment.MEDIA_MOUNTED || 
+                     volumeState == android.os.Environment.MEDIA_MOUNTED_READ_ONLY)) {
+                    val volumePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        volume.directory?.absolutePath
+                    } else {
+                        getVolumePath(volume)
+                    }
+                    
+                    // 只扫描 U 盘路径（不以 /storage/emulated/ 开头）
+                    if (!volumePath.isNullOrEmpty() && 
+                        !volumePath.startsWith("/storage/emulated/")) {
+                        LogUtil.i("发现 U 盘：$volumePath")
+                        scanDirectoryForImagesOptimized(images, volumePath, CarModelSource.USB, 2)
+                    }
+                }
+            }
+            
+            LogUtil.i("U 盘扫描完成，共找到 ${images.size} 张图片")
+        } catch (e: Exception) {
+            Log.e("CarPopupWindow", "扫描 U 盘失败", e)
+        }
+    }
+    
+    /**
+     * 优化后的目录扫描方法
+     * @param maxDepth 最大扫描深度（SD 卡=3, U 盘=2）
+     */
+    private fun scanDirectoryForImagesOptimized(
+        images: MutableList<CarModelVersion>, 
+        directoryPath: String, 
+        source: CarModelSource,
+        maxDepth: Int = 3
+    ) {
+        try {
+            val directory = File(directoryPath)
+            if (!directory.exists() || !directory.isDirectory) {
+                LogUtil.w("目录不存在或不是目录：$directoryPath")
+                return
+            }
+            
+            // 优化的文件扩展名过滤
+            val imageExtensions = setOf("jpg", "jpeg", "png", "webp", "bmp")
+            var count = 0
+            val startTime = System.currentTimeMillis()
+            
+            // 使用序列优化过滤性能
+            directory.walkTopDown()
+                .maxDepth(maxDepth)
+                .asSequence()
+                .filter { it.isFile }
+                .filter { file ->
+                    // 快速文件名过滤
+                    val ext = file.extension.lowercase()
+                    ext in imageExtensions && 
+                    !file.name.startsWith(".") &&
+                    file.parentFile?.absolutePath?.contains(".thumbnails") != true
+                }
+                .take(50 - images.size) // 限制总数
+                .forEach { file ->
+                    try {
+                        val uri = Uri.fromFile(file)
+                        val displayName = file.nameWithoutExtension
+                        val relativePath = file.absolutePath.substringAfter(directoryPath).trimStart('/')
+                        
+                        images.add(CarModelVersion(
+                            file.name, 
+                            displayName, 
+                            uri.toString(), 
+                            file.absolutePath, 
+                            null, 
+                            source
+                        ))
+                        count++
+                    } catch (e: Exception) {
+                        LogUtil.e("处理文件失败：${file.absolutePath}", e)
+                    }
+                }
+            
+            val elapsedTime = System.currentTimeMillis() - startTime
+            LogUtil.i("扫描完成 [${if (source == CarModelSource.SDCARD) "SD 卡" else "U 盘"}] " +
+                      "$directoryPath, 找到 $count 张图片，耗时 ${elapsedTime}ms")
+        } catch (e: Exception) {
+            Log.e("CarPopupWindow", "扫描目录失败：$directoryPath", e)
+        }
+    }
+
+
     // Android 10 及以下版本通过反射获取 StorageVolume 的路径
     @Suppress("DEPRECATION")
     private fun getVolumePath(volume: Any): String? {
@@ -568,30 +619,6 @@ class CarPopupWindow(
         } catch (e: Exception) {
             Log.e("CarPopupWindow", "获取存储卷路径失败", e)
             null
-        }
-    }
-
-    // 扫描目录中的图片
-    private fun scanDirectoryForImages(images: MutableList<CarModelVersion>, directoryPath: String) {
-        try {
-            val directory = File(directoryPath)
-            if (!directory.exists() || !directory.isDirectory) return
-            
-            val imageExtensions = listOf("jpg", "jpeg", "png", "webp", "bmp")
-            
-            directory.walkTopDown()
-                .maxDepth(3) // 限制扫描深度
-                .filter { it.isFile && imageExtensions.any { ext -> it.extension.equals(ext, true) } }
-                .take(50 - images.size) // 限制总数
-                .forEach { file ->
-                    val uri = Uri.fromFile(file)
-                    val displayName = file.name.toString().replace("\\.[^.]+$", "")
-
-                    images.add(CarModelVersion(file.name,displayName,uri.toString(), file.absolutePath, null,CarModelSource.USB))
-                    LogUtil.i("加载U盘图片: ${file.name}, displayName: $displayName, $uri, ${file.absolutePath}")
-                }
-        } catch (e: Exception) {
-            Log.e("CarPopupWindow", "扫描目录失败: $directoryPath", e)
         }
     }
 
@@ -617,8 +644,37 @@ class CarPopupWindow(
     private fun updateImageList(images: List<CarModelVersion>) {
         val currentView = viewStack.peek()
         val rvImages = currentView?.findViewById<RecyclerView>(R.id.rv_images)
+        val emptyView = currentView?.findViewById<View>(R.id.empty_view)
         val adapter = rvImages?.adapter as? ImagePickerAdapter
-        adapter?.updateImages(images)
+        
+        // 根据是否有图片来显示/隐藏空视图
+        if (images.isEmpty()) {
+            rvImages?.visibility = View.GONE
+            emptyView?.visibility = View.VISIBLE
+            LogUtil.d("显示空视图：暂无图片")
+        } else {
+            rvImages?.visibility = View.VISIBLE
+            emptyView?.visibility = View.GONE
+            adapter?.updateImages(images)
+            LogUtil.d("更新图片列表：${images.size} 张")
+        }
+    }
+    
+    /**
+     * 显示空视图
+     * @param message 可选的提示消息
+     */
+    private fun showEmptyView(message: String? = null) {
+        val currentView = viewStack.peek()
+        val rvImages = currentView?.findViewById<RecyclerView>(R.id.rv_images)
+        val emptyView = currentView?.findViewById<View>(R.id.empty_view)
+        
+        rvImages?.visibility = View.GONE
+        emptyView?.visibility = View.VISIBLE
+        
+        message?.let {
+            LogUtil.d("显示空视图：$message")
+        }
     }
 
 //    // 保存选中的图片
@@ -635,6 +691,43 @@ class CarPopupWindow(
             (externalStorageState == android.os.Environment.MEDIA_MOUNTED ||
                     externalStorageState == android.os.Environment.MEDIA_MOUNTED_READ_ONLY)
         } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
+     * 检查存储权限
+     */
+    private fun checkStoragePermission(): Boolean {
+        return try {
+            when {
+                // Android 11+ (API 30+) 需要 MANAGE_EXTERNAL_STORAGE 权限
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                    if (Environment.isExternalStorageManager()) {
+                        true
+                    } else {
+                        LogUtil.w("需要所有文件管理权限，请在设置中授予")
+                        // 可以在这里引导用户到设置页面授予权限
+                        false
+                    }
+                }
+                // Android 6.0-10 (API 23-29) 需要 READ_EXTERNAL_STORAGE 权限
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                    val hasReadPermission = ContextCompat.checkSelfPermission(
+                        activity,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED
+                    
+                    if (!hasReadPermission) {
+                        LogUtil.w("需要读取外部存储权限")
+                    }
+                    hasReadPermission
+                }
+                // Android 5.x 及以下不需要运行时权限
+                else -> true
+            }
+        } catch (e: Exception) {
+            LogUtil.e("检查权限失败", e)
             false
         }
     }

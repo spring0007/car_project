@@ -35,6 +35,7 @@
     <string name="sd_">SD card</string>
     <string name="usb_">U-disk</string>
     <string name="custom_">Custom</string>
+    <string name="no_image_available">No image available</string>
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
         <item>wallpaper_01</item>

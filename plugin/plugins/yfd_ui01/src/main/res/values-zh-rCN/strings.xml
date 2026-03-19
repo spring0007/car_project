@@ -44,4 +44,5 @@
     <string name="sd_">SD卡</string>
     <string name="usb_">U盘</string>
     <string name="custom_">自定义</string>
+    <string name="no_image_available">暂无图片</string>
 </resources>
