@@ -176,6 +176,10 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
+        } else if (v.getId() == R.id.iv_time) {
+            Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         } else if (v.getId() == R.id.iv_home) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == R.id.iv_radio) {
@@ -249,15 +253,18 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
-
+            if (musicText != null) {
+                if (!TextUtils.isEmpty(songName)) {
+                    musicText.setText(songName);
+                } else {
+                    musicText.setText(getResources().getString(R.string.click_play_music));
+                }
+            }
             if (MusicWidget.OTHER_MUSIC == type) {
                 if (!TextUtils.isEmpty(songName)) {
                     musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
                 } else {
                     musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
-                }
-                if (musicText != null && !TextUtils.isEmpty(songName)) {
-                    musicText.setText(songName);
                 }
                 if (!TextUtils.isEmpty(singerName)) {
                     musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
