@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="15dp">
+
+    <ImageView
+        android:id="@+id/iv_navi"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_gaode"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/layout_music"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="地图导航"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_navi"
+        app:layout_constraintEnd_toEndOf="@+id/iv_navi"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_music"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_music_bg"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_radio"
+        app:layout_constraintStart_toEndOf="@+id/iv_navi"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/music_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/music"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_font_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6" />
+
+        <include
+            layout="@layout/music_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_radio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_radio_bg"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
+        app:layout_constraintStart_toEndOf="@+id/layout_music"
+        app:layout_constraintEnd_toStartOf="@+id/iv_bluetooth" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="收音机"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_radio"
+        app:layout_constraintEnd_toEndOf="@+id/iv_radio"
+        app:layout_constraintTop_toTopOf="@+id/iv_radio"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_radio" />
+
+    <ImageView
+        android:id="@+id/iv_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_bluetooth"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
+        app:layout_constraintStart_toEndOf="@+id/iv_radio"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蓝牙"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_bluetooth"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bluetooth"
+        app:layout_constraintTop_toTopOf="@+id/iv_bluetooth"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bluetooth" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,7 @@ import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_DEFAULT;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YELLOW;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YFD_2;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_CIRCLE;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_1;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -366,9 +367,10 @@ public class IconCache {
 
             // 清除缓存，这样下次获取图标时会重新加载
             flush();
-
+            Log.d(TAG, "setPluginThemeMode 1 -->");
             // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
             if (mContext instanceof LauncherApplication) {
+                Log.d(TAG, "setPluginThemeMode 2 -->");
                 LauncherApplication app = (LauncherApplication) mContext;
                 LauncherModel model = app.getModel();
                 if (model != null) {
@@ -387,7 +389,7 @@ public class IconCache {
         if (pkg == null || pkg.isEmpty()) {
             return null;
         }
-        
+        Log.i(TAG,"theme="+themeMode);
         switch (themeMode) {
             case 0:
                 return PACKAGE_ICON_MAP_DARK.get(pkg);
@@ -400,6 +402,8 @@ public class IconCache {
                 //return mHomePackageIcon_116_lehang_2_yellow[index];
             case 3:
                 return PACKAGE_ICON_MAP_CIRCLE.get(pkg);
+            case 4:
+                return PACKAGE_ICON_MAP_ZY_1.get(pkg);
             case 100:
 //            getPluginDrawable();
                 return PACKAGE_ICON_MAP_YFD_2.get(pkg);
@@ -522,6 +526,7 @@ public class IconCache {
      */
     public void getTitleAndIcon(ApplicationInfo application, ResolveInfo info,
                                 HashMap<Object, CharSequence> labelCache) {
+        Log.d(TAG, "getTitleAndIcon");
         synchronized (mCache) {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;

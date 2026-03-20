@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="15dp">
+
+    <ImageView
+        android:id="@+id/iv_video"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_video"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_time"
+        app:layout_constraintHorizontal_chainStyle="spread" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="视频"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_video"
+        app:layout_constraintEnd_toEndOf="@+id/iv_video"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+
+    <ImageView
+        android:id="@+id/iv_time"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_datetime_bg"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintStart_toEndOf="@+id/iv_video"
+        app:layout_constraintEnd_toStartOf="@+id/iv_album" />
+
+    <ImageView
+        android:id="@+id/iv_album"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_album"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintStart_toEndOf="@+id/iv_time"
+        app:layout_constraintEnd_toStartOf="@+id/iv_interconnect" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图片浏览"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_album"
+        app:layout_constraintEnd_toEndOf="@+id/iv_album"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+
+    <ImageView
+        android:id="@+id/iv_interconnect"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_interconnect"
+        app:layout_constraintWidth_percent="0.21"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintStart_toEndOf="@+id/iv_album"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="连接手机"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_interconnect"
+        app:layout_constraintEnd_toEndOf="@+id/iv_interconnect"
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+
+    <TextClock
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format12Hour="aa h:mm"
+        android:format24Hour="HH:mm"
+        android:text="00:00"
+        android:textColor="#ffffffff"
+        android:textSize="36sp"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintTop_toTopOf="@+id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_time"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintEnd_toEndOf="@+id/iv_time" />
+
+    <TextClock
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format24Hour="yyyy年MM月dd日"
+        android:format12Hour="yyyy年MM月dd日"
+        tools:text="2025年3月19日"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintEnd_toEndOf="@+id/iv_time"
+        app:layout_constraintTop_toTopOf="@+id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_time" />
+
+    <TextClock
+        android:id="@+id/tv_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:format24Hour="EEE"
+        android:format12Hour="EEEE"
+        tools:text="周四"
+        android:textColor="#ffffffff"
+        android:textSize="25sp"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintEnd_toEndOf="@+id/iv_time"
+        app:layout_constraintTop_toTopOf="@+id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

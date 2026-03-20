@@ -22,6 +22,8 @@ public class IconPkgMap {
 
     static public final Map<String, Integer> PACKAGE_ICON_MAP_CIRCLE = new HashMap<>();
 
+    static public final Map<String, Integer> PACKAGE_ICON_MAP_ZY_1  = new HashMap<>();
+
 
     static {
         // 默认主题图标映射
@@ -200,6 +202,41 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_CIRCLE.put("com.awell.themesetting", R.drawable.sf_theme_circle);
         PACKAGE_ICON_MAP_CIRCLE.put("com.ms.ms2160", R.drawable.sf_usb_video_output_circle);
         PACKAGE_ICON_MAP_CIRCLE.put("com.awell.weather", R.drawable.sf_weather_circle);
+
+        // ZY1
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.localvideo", R.drawable.ic_video_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.localmusic", R.drawable.ic_music_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.radio", R.drawable.ic_radio_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.bluetooth", R.drawable.ic_bluetooth_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.navigation", R.drawable.ic_navi_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.android.browser", R.drawable.ic_browser_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.mediatek.filemanager", R.drawable.ic_file_manager_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.android.documentsui", R.drawable.ic_file_manager_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.carsetting", R.drawable.ic_car_setting);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.backcar", R.drawable.ic_usb_app);
+        PACKAGE_ICON_MAP_ZY_1.put("cn.kuwo.kwmusiccar", R.drawable.ic_kw_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.eqselect", R.drawable.ic_jhq_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.canbus", R.drawable.ic_car_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.canbus2", R.drawable.ic_car_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.autonavi.amapauto", R.drawable.ic_navi_app);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.tima.carnet.vt", R.drawable.sf_zlink_circle);
+//        PACKAGE_ICON_MAP_ZY_1.put("net.easyconn", R.drawable.sf_zlink_circle);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.zjinnova.zlink", R.drawable.sf_zlink_circle);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.awellmanual", R.drawable.ic_manual_app);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.google.android.apps.maps", R.drawable.sf_googlemap_circle);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.google.android.youtube", R.drawable.sf_youtube_circle);
+        PACKAGE_ICON_MAP_ZY_1.put("com.android.vending", R.drawable.ic_app_store);
+        PACKAGE_ICON_MAP_ZY_1.put("com.android.chrome", R.drawable.ic_browser_app);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.google.android.googlequicksearchbox", R.drawable.sf_gg_circle);
+        PACKAGE_ICON_MAP_ZY_1.put("com.android.gallery3d", R.drawable.ic_gallery_app);
+        PACKAGE_ICON_MAP_ZY_1.put("org.chromium.chrome", R.drawable.ic_browser_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.electricfan", R.drawable.ic_fan_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.frontvideo", R.drawable.ic_forwardview_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.keylight", R.drawable.ic_color_light_app);
+//        PACKAGE_ICON_MAP_ZY_1.put("com.awell.keystudy", R.drawable.sf_training_circle);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.themesetting", R.drawable.ic_theme_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.ms.ms2160", R.drawable.ic_video_output_app);
+        PACKAGE_ICON_MAP_ZY_1.put("com.awell.weather", R.drawable.ic_weather_app);
 
     }
 
