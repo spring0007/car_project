@@ -105,16 +105,16 @@ public class AnalogClockView extends View {
         
         float scaleFactor;
         
-        if (screenWidth == 1024 && screenHeight == 600) {
+        if (screenWidth <= 1024 && screenHeight <= 600) {
             scaleFactor = 0.75f;
             Log.d("AnalogClockView", "1024x600分辨率，使用缩放因子: " + scaleFactor);
-        } else if (screenWidth == 1280 && screenHeight == 720) {
+        } else if (screenWidth <= 1280 && screenHeight <= 720) {
             scaleFactor = 1.0f;
             Log.d("AnalogClockView", "1280x720分辨率，使用缩放因子: " + scaleFactor);
-        }  else if (screenWidth == 2400 && screenHeight == 896) {
+        }  else if (screenWidth <= 2400 && screenHeight <= 896) {
             scaleFactor = 1.5f;
             Log.d("AnalogClockView", "2400x896分辨率，使用缩放因子: " + scaleFactor);
-        }else if (screenWidth == 2000 && screenHeight == 1200) {
+        }else if (screenWidth <= 2000 && screenHeight <= 1200) {
                 scaleFactor = 1.5f;
                 Log.d("AnalogClockView", "2000x1200分辨率，使用缩放因子: " + scaleFactor);
 

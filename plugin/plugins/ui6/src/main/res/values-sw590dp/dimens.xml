@@ -2,4 +2,9 @@
 <resources>
     <dimen name="car_speed_unit_top">-10dp</dimen>
     <dimen name="dial_date_top">20dp</dimen>
+
+    <dimen name="dial_widget_size">184dp</dimen>
+    <dimen name="hotset_app_size">60dp</dimen>
+    <dimen name="music_control_size">55dp</dimen>
+    <dimen name="analog_clock_view_size">184dp</dimen>
 </resources>

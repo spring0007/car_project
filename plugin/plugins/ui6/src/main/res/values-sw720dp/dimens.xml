@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="dial_widget_size">230dp</dimen>
-    <dimen name="hotset_app_size">80dp</dimen>
+    <dimen name="hotset_app_size">60dp</dimen>
     <dimen name="music_control_size">60dp</dimen>
     <dimen name="dial_date_top">55dp</dimen>
     <dimen name="car_speed_unit_top">0dp</dimen>
