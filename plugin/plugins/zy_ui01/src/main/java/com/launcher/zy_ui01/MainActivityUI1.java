@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -38,7 +39,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI1.class.getSimpleName();
     private ActivityMainUi1Binding binding;
     private List<PageData> pageDataList;
-
+    private TextView musicText;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
 
@@ -55,7 +56,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         initLongTouch();
 
         setUpViewPager();
-        updateTimeZoneByLocale();
+//        updateTimeZoneByLocale();
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
@@ -71,6 +72,10 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             this.musicWidget.setMediaLibrary(mediaControl);
             this.musicWidget.setActivity(this, this.musicWidget);
         }
+    }
+
+    public void setMusicText(TextView musicText) {
+        this.musicText = musicText;
     }
 
     public void updateTimeZoneByLocale() {
@@ -101,8 +106,8 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     private void setUpViewPager() {
         pageDataList = new ArrayList<>();
-        pageDataList.add(new PageData(R.layout.viewpager_1));
         pageDataList.add(new PageData(R.layout.viewpager_2));
+        pageDataList.add(new PageData(R.layout.viewpager_1));
         ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
         binding.viewpager.setAdapter(adapter);
         binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -250,6 +255,13 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                     musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
                 } else {
                     musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
+                }
+                if (musicText != null) {
+                    if (!TextUtils.isEmpty(songName)) {
+                        musicText.setText(songName);
+                    } else {
+                        musicText.setText(getResources().getString(R.string.click_play_music));
+                    }
                 }
                 if (!TextUtils.isEmpty(singerName)) {
                     musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);

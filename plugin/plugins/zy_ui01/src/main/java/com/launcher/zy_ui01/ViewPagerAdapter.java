@@ -3,6 +3,7 @@ package com.launcher.zy_ui01;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,6 +44,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             setListener(holder.itemView, R.id.iv_time);
             setListener(holder.itemView, R.id.iv_album);
             setListener(holder.itemView, R.id.iv_interconnect);
+            TextView textView = holder.itemView.findViewById(R.id.tv_music);
+            activity.setMusicText(textView);
         } else if (position == 1) {
             // 第二页的控件
             setListener(holder.itemView, R.id.iv_navi);
