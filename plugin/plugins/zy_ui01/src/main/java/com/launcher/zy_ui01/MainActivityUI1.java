@@ -256,12 +256,8 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 } else {
                     musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
                 }
-                if (musicText != null) {
-                    if (!TextUtils.isEmpty(songName)) {
-                        musicText.setText(songName);
-                    } else {
-                        musicText.setText(getResources().getString(R.string.click_play_music));
-                    }
+                if (musicText != null && !TextUtils.isEmpty(songName)) {
+                    musicText.setText(songName);
                 }
                 if (!TextUtils.isEmpty(singerName)) {
                     musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);

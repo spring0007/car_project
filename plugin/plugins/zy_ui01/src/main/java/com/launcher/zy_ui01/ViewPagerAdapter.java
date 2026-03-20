@@ -39,21 +39,21 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
         // 根据位置设置不同页面的控件监听器
         if (position == 0) {
-            // 第一页的控件
-            setListener(holder.itemView, R.id.iv_video);
-            setListener(holder.itemView, R.id.iv_time);
-            setListener(holder.itemView, R.id.iv_album);
-            setListener(holder.itemView, R.id.iv_interconnect);
-            TextView textView = holder.itemView.findViewById(R.id.tv_music);
-            activity.setMusicText(textView);
-        } else if (position == 1) {
             // 第二页的控件
             setListener(holder.itemView, R.id.iv_navi);
             setListener(holder.itemView, R.id.layout_music);
             setListener(holder.itemView, R.id.iv_radio);
             setListener(holder.itemView, R.id.iv_bluetooth);
+            TextView textView = holder.itemView.findViewById(R.id.tv_music);
+            activity.setMusicText(textView);
             MusicWidget musicWidget = holder.itemView.findViewById(R.id.music_widget_layout);
             activity.setMusicWidget(musicWidget);
+        } else if (position == 1) {
+            // 第一页的控件
+            setListener(holder.itemView, R.id.iv_video);
+            setListener(holder.itemView, R.id.iv_time);
+            setListener(holder.itemView, R.id.iv_album);
+            setListener(holder.itemView, R.id.iv_interconnect);
         }
     }
 
