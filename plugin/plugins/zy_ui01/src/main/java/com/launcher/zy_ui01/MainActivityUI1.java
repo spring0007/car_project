@@ -184,7 +184,13 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == R.id.iv_radio) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-        } else if (v.getId() == R.id.iv_interconnect || v.getId() == R.id.iv_bluetooth) {
+        } else if (v.getId() == R.id.iv_interconnect) {
+            try {
+                startActivity("com.zjinnova.zlink", "com.zjinnova.android.zlink.features.settings.SettingsActivity");
+            } catch (Exception e) {
+                startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+            }
+        } else if (v.getId() == R.id.iv_bluetooth) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == R.id.iv_video) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
