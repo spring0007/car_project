@@ -164,8 +164,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         }
     }
 
-    int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang};
-    int[] sf_music_zantingId = {R.drawable.sf_music_zanting, R.drawable.sf_music_zanting};
+    int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
+    int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
 
 
     @Override

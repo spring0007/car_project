@@ -9,6 +9,6 @@
     <dimen name="viewpager_item_width">238dp</dimen>
     <dimen name="viewpager_item_height">372dp</dimen>
     <dimen name="tv_font_size">36sp</dimen>
-    <dimen name="music_iv_size">32dp</dimen>
+    <dimen name="music_iv_size">35dp</dimen>
 
 </resources>

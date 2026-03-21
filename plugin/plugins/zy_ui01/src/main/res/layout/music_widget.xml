@@ -177,7 +177,7 @@
                 android:id="@+id/music_widget_pre"
                 android:layout_width="@dimen/music_iv_size"
                 android:layout_height="@dimen/music_iv_size"
-                android:src="@drawable/sf_music_pre"
+                android:src="@drawable/selector_pre"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -189,7 +189,7 @@
                 android:id="@+id/music_widget_play"
                 android:layout_width="@dimen/music_iv_size"
                 android:layout_height="@dimen/music_iv_size"
-                android:src="@drawable/sf_music_bofang"
+                android:src="@drawable/selector_play"
                 tools:ignore="ContentDescription" />
 
             <View
@@ -201,7 +201,7 @@
                 android:id="@+id/music_widget_next"
                 android:layout_width="@dimen/music_iv_size"
                 android:layout_height="@dimen/music_iv_size"
-                android:src="@drawable/sf_music_next"
+                android:src="@drawable/selector_next"
                 tools:ignore="ContentDescription" />
 
             <View
