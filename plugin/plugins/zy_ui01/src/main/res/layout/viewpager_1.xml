@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="视频"
+        android:text="@string/video"
         android:textColor="#ffffffff"
         android:textSize="25sp"
         app:layout_constraintVertical_bias="0.85"
@@ -61,7 +61,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="图片浏览"
+        android:text="@string/image_album"
         android:textColor="#ffffffff"
         android:textSize="25sp"
         app:layout_constraintVertical_bias="0.85"
@@ -86,7 +86,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="连接手机"
+        android:text="@string/phone_connect"
         android:textColor="#ffffffff"
         android:textSize="25sp"
         app:layout_constraintVertical_bias="0.85"

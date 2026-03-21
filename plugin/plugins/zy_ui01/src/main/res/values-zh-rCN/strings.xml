@@ -31,5 +31,9 @@
     <string name="equalizer">均衡器</string>
     <string name="video">视 频</string>
     <string name="aux">外接输入</string>
+    <string name="navi">地图导航</string>
+    <string name="image_album">图片浏览</string>
+    <string name="phone_connect">连接手机</string>
+    <string name="blueth">蓝牙</string>
 
 </resources>

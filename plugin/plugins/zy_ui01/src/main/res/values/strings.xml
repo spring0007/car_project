@@ -18,6 +18,10 @@
     <string name="equalizer">Dsp</string>
     <string name="video">Video</string>
     <string name="aux">Aux</string>
+    <string name="navi">Map Navigation</string>
+    <string name="image_album">Image browsing</string>
+    <string name="phone_connect">Connect to phone</string>
+    <string name="blueth">Bluetooth</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
