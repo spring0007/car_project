@@ -18,7 +18,7 @@ android {
     // 修改 APK 名称
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            output.outputFileName = "LauncherUI1.apk"
+            output.outputFileName = "LauncherUI_C1.apk"
         }
     }
     buildFeatures {
