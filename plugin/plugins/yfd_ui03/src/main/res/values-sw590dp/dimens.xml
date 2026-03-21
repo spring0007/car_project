@@ -2,7 +2,7 @@
 <resources>
     <dimen name="text_50sp">50sp</dimen>
 
-    <dimen name="app_icon_bg_size">150dp</dimen>
+    <dimen name="app_icon_bg_size">124dp</dimen>
     <dimen name="recycle_app_icon_size">88dp</dimen>
     <dimen name="recycle_app_width">160dp</dimen>
     <dimen name="clockTime_size">116sp</dimen>
