@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/music_widget_layout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context="com.launcher.zy_ui01.MainActivityUI1"
     tools:ignore="MissingDefaultResource">
@@ -163,7 +163,7 @@
         <!-- 音乐控制 -->
         <LinearLayout
             android:id="@+id/ll_control_layout_music"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             tools:ignore="MissingConstraints">
