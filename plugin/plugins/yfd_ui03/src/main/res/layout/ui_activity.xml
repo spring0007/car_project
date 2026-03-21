@@ -24,7 +24,6 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/clockTime_size"
         android:lineSpacingExtra="-40sp"
-        app:layout_constraintBottom_toTopOf="@+id/clock_minute"
         app:layout_constraintStart_toEndOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top1" />
 
@@ -70,7 +69,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline_top2" />
 
     <include layout="@layout/radio_layout"
-        android:id="@+id/radio_layout"
+        android:id="@+id/layout_radio_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="@+id/iv_radio_bg"
@@ -233,11 +232,11 @@
         android:textSize="@dimen/gpsSpeed_size"
         android:textStyle="bold"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/home_navi_bg"
-        app:layout_constraintEnd_toEndOf="@+id/home_navi_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_month"
+        app:layout_constraintEnd_toEndOf="@+id/clock_month"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@+id/home_navi_bg"
-        app:layout_constraintTop_toTopOf="@+id/home_navi_bg"
+        app:layout_constraintStart_toStartOf="@+id/clock_month"
+        app:layout_constraintTop_toTopOf="@+id/clock_month"
         app:layout_constraintVertical_bias="0.1" />
 
     <TextView

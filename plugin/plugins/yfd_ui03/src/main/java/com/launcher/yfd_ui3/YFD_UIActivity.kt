@@ -1,12 +1,10 @@
 package com.launcher.yfd_ui3
 
 import android.Manifest
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -35,13 +33,9 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.PopupWindow
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,18 +54,20 @@ import com.awell.utils.Utils.startWallpaper
 import com.launcher.yfd_ui3.adapter.AppInofAdapter
 import com.launcher.yfd_ui3.adapter.AppPopAdapter
 import com.launcher.yfd_ui3.databinding.UiActivityBinding
+import com.launcher.yfd_ui3.utils.ClickUtils
 import com.launcher.yfd_ui3.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.launcher.yfd_ui3.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.launcher.yfd_ui3.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
 import com.launcher.yfd_ui3.utils.FreeformUtils.startFreeformApp
+import com.launcher.yfd_ui3.utils.IconManager
 import com.launcher.yfd_ui3.utils.LogUtil
 import com.launcher.yfd_ui3.utils.SystemUIClient
 import com.launcher.yfd_ui3.utils.SystemUIClient.MUSIC_PKG
+import com.launcher.yfd_ui3.view.FMMarkView
+import kotlinx.coroutines.Runnable
 import java.io.File
 import kotlin.concurrent.thread
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 class YFD_UIActivity : Activity(), View.OnClickListener {
 
@@ -119,6 +115,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
         mViewBinding = UiActivityBinding.inflate(layoutInflater)
         setContentView(mViewBinding.root)
+        LogUtil.setIsDebuggable()
 
         initView()
 
@@ -135,13 +132,16 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         initFreeformControl()
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
+        // 设置主题模式，并同步到 IconManager
         AppsCustomizeControl.setPluginThemeMode(3)
+
+        // 初始化 IconManager，预加载资源
+        IconManager.initialize(this)
 
     }
 
     private val handlerFreeform = Handler(Looper.getMainLooper())
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private val freeformRunnable = Runnable {
         if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
             /*Log.i(
@@ -154,7 +154,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onResume() {
         super.onResume()
         LogUtil.i("onResume")
@@ -279,10 +278,10 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun initFMScaleView() {
-        val fmScaleView = findViewById<com.launcher.yfd_ui3.view.FMScaleView>(R.id.fmScaleView)
-        fmScaleView.setOnFrequencyChangedListener { frequency, isFM ->
+        val fmScaleView = findViewById<FMMarkView>(R.id.fmScaleView)
+       /* fmScaleView.setOnFrequencyChangedListener { frequency, isFM ->
             LogUtil.i("Frequency changed: ${frequency / 10f} ${if (isFM) "FM" else "AM"}")
-        }
+        }*/
         // 可以根据需要设置初始频率
         // fmScaleView.setCurrentFrequency(980) // 98.0 FM
     }
@@ -513,7 +512,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-//        mMediaListener.cleanup()
+        //        mMediaListener.cleanup()
         unregisterReceiver(receiver)
         systemUIClient.unbindService(this)
         AppsCustomizeControl.setActivity(null)
@@ -767,11 +766,13 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
             }
 
-            override fun updateViewRadioFreq(
-                bundle: Bundle, fmOrAm: String, freq: String, unit: String
-            ) {
+            override fun updateViewRadioFreq(bundle: Bundle, fmOrAm: String, freq: String, unit: String ) {
                 runOnUiThread {
-
+                    runOnUiThread(java.lang.Runnable {
+                        mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq
+                        mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
+                        //mViewBinding.layoutRadioLayout.tvRadioUnit.setText(unit)
+                    })
                 }
             }
 
@@ -911,6 +912,11 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         mViewBinding.clockHour.setOnClickListener(this)
         mViewBinding.clockMonth.setOnClickListener(this)
         mViewBinding.clockData.setOnClickListener(this)
+        mViewBinding.layoutRadioLayout.radioLayout.setOnClickListener(this)
+        mViewBinding.layoutRadioLayout.ivRadioNext.setOnClickListener(this)
+        mViewBinding.layoutRadioLayout.ivRadioPre.setOnClickListener(this)
+        mViewBinding.layoutRadioLayout.ivRadioPlayPause.setOnClickListener(this)
+        mViewBinding.layoutRadioLayout.tvRadioAmFm.setOnClickListener(this)
 
     }
 
@@ -968,31 +974,50 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             }
         }.distinctBy { it.packageName }
 
+        LogUtil.w("appList size: ${appList.size}")
+
+        // 预计算过滤条件，避免重复计算
+        val needToShowSystemApps = Utils.needToShowPackageName
+        val filterApps = Utils.filterAppPackageName
+        val otherNeedToShow = Utils.otherNeedToShowPackageName
+
+        // 先过滤出需要显示的应用包名列表
+        val needShowPackages = mutableListOf<String>()
+        val packageInfoMap = mutableMapOf<String, PackageInfo>()
 
         for (p in appList) {
-            val bean = AppInfo()
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager))
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
-            val pack = p.applicationInfo.packageName
-            bean.setPackage_name(pack)
+            val packageName = p.applicationInfo.packageName
             val flags = p.applicationInfo.flags
-            bean.setFlags(flags)
-            if ((flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                && Utils.needToShowPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
-            } else if ((flags and ApplicationInfo.FLAG_SYSTEM) == 0
-                && !Utils.filterAppPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
-            } else if ((flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                && Utils.otherNeedToShowPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
+
+            val shouldShow = when {
+                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in needToShowSystemApps -> true
+                (flags and ApplicationInfo.FLAG_SYSTEM) == 0 && packageName !in filterApps -> true
+                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in otherNeedToShow -> true
+                else -> false
             }
 
+            if (shouldShow) {
+                needShowPackages.add(packageName)
+                packageInfoMap[packageName] = p
+            }
         }
 
+        LogUtil.w("needShowPackages size: ${needShowPackages.size}")
+
+        // 临时使用普通加载方式 (规避协程问题)
+        for (packageName in needShowPackages) {
+            val bean = AppInfo()
+            bean.setIcon(IconManager.getAppIcon(context, packageName))
+            val p = packageInfoMap[packageName]
+            if (p != null) {
+                bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
+                bean.setPackage_name(packageName)
+                bean.setFlags(p.applicationInfo.flags)
+                appBeanList.add(bean)
+            }
+        }
+
+        LogUtil.w("appBeanList size: ${appBeanList.size}")
         return appBeanList
     }
 
@@ -1072,6 +1097,27 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 //            mViewBinding.freeformFullScreen.id -> {
 //                systemUIClient.fullScreenFreeform()
 //            }
+            mViewBinding.layoutRadioLayout.radioLayout.id -> {
+                startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity")
+            }
+            mViewBinding.layoutRadioLayout.ivRadioNext.id -> {
+                if (ClickUtils.isFastClick()) {
+                    return
+                }
+                mediaControl.sendStrToHost(AwellTool.RADIO.NEXT)
+
+            }
+            mViewBinding.layoutRadioLayout.ivRadioPre.id -> {
+                if (ClickUtils.isFastClick()) {
+                    return
+                }
+                mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS)
+            }
+            mViewBinding.layoutRadioLayout.ivRadioPlayPause.id -> {}
+            mViewBinding.layoutRadioLayout.tvRadioAmFm.id -> {
+                mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
+            }
+
 
             mViewBinding.clockHour.id,
             mViewBinding.clockMonth.id,

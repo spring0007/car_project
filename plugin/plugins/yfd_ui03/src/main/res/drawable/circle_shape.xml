@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    
+    <!-- 圆形背景颜色，半透明白色 -->
+    <solid android:color="#40FFFFFF" />
+    
+    <!-- 可选：添加边框 -->
+    <stroke
+        android:width="2dp"
+        android:color="#60FFFFFF" />
+    
+    <!-- 内边距，让图标有一些留白 -->
+    <padding
+        android:left="8dp"
+        android:top="8dp"
+        android:right="8dp"
+        android:bottom="8dp" />
+    
+    <!-- 尺寸，与应用图标大小匹配 -->
+    <size
+        android:width="48dp"
+        android:height="48dp" />
+        
+</shape>

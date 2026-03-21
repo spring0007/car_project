@@ -20,6 +20,10 @@ public class LogUtil {
 		return;
 	}
 
+    public static void setIsDebuggable() {
+
+        LogUtil.isDebuggable = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch", "1")) == 1;
+    }
 	public static void i(final String message) {
 		if (!isDebuggable) return;
 
