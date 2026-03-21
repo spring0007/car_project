@@ -197,7 +197,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         } else if (v.getId() == R.id.iv_album) {
             startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
         } else if (v.getId() == R.id.iv_eq) {
-            startActivity("com.awell.dspeffect", "com.awell.dspeffect.DspActivity");
+            startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
         }
     }
 
