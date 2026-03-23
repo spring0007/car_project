@@ -34,32 +34,86 @@ public class FMMarkView extends View {
     private Paint guideLinePaint;
     // 画刻度值
     private Paint numberPaint;
+    //当前频率默认值
+    private double currentFrequency ;
+
     // 每刻度间隔
     private static int defaultMark = 6;
+    // 指示器高度
+    private static final int GUIDE_LINE_HEIGHT = 40;
+    // 指示器宽度
+    private static final int GUIDE_LINE_WIDTH = 4;
+    // FM频段起始频率
+    private static final double FM_BAND_START = 87;
+    // FM频段结束频率
+    private static final double FM_BAND_END = 108;
+    // FM频段刻度间隔（MHz）
+    private static final double FM_MARK_INTERVAL = 0.1;
+    // FM总刻度数
+    private static final int FM_MARK_COUNT = (int) ((FM_BAND_END - FM_BAND_START) / FM_MARK_INTERVAL);
     // 总刻度数
-    private static int markCount = 210;
+    private static int markCount = FM_MARK_COUNT;
+    // AM 频段起始频率
+    private static final double AM_BAND_START = 530;
+    // AM频段结束频率
+    private static final double AM_BAND_END = 1730;
+    // AM频段刻度间隔（kHz）
+    private static final int AM_MARK_INTERVAL = 10;
+    // AM总刻度数
+    private static final int AM_MARK_COUNT = (int) ((AM_BAND_END - AM_BAND_START) / AM_MARK_INTERVAL);
     // 短刻度线长度
     private static int shortLineLength = 16;
     // 长刻度线长度
     private static int longLineLength = 32;
     // 所有刻度总长度（+2，前后各留一个间隙）
     private static int contentTotalLength;
-    // 刻度值保留一位小数
-    private DecimalFormat numFormat = new DecimalFormat("0.0");
+    // 频道数字颜色
+    private int numLineColor = Color.parseColor("#FFFFFF"); // 白色
+    // 指针颜色
+    private int guideLineColor = Color.parseColor("#FFFF0000"); // 红色
+    // FM刻度值保留一位小数
+    private DecimalFormat fmNumFormat = new DecimalFormat("0.0");
+    // AM刻度值格式化，精确到个位
+    private DecimalFormat amNumFormat = new DecimalFormat("0");
     // 上一次滑动事件x值
     private float lastX;
     // 内容滑动的左边界
     private int leftBorder = 0;
     // 内容滑动的右边界
     private int rightBorder = 0;
-    // 中心三角形指针
-    private Path guidePath;
-    // 刻度线及刻度值颜色
-    private int markLineColor = Color.parseColor("#FF000000");
-    // 三角形指针颜色
-    private int guideLineColor = Color.parseColor("#FFF10404");
 
-    private OnFMChangeListener mOnFMChangeListener;
+    // 刻度线及刻度值颜色
+    private int markLineColor = Color.parseColor("#FFFFFFFF");
+    // 渐变色起始颜色（灰色）
+    private int gradientStartColor = Color.parseColor("#FF888888");
+    // 刻度值字体大小
+    private float numberTextSize = dipToPx(18);
+    // 当前值字体大小
+    private float currentNumberTextSize = dipToPx(25);
+
+    /**
+     * 设置当前频率数字字体大小
+     * @param size 字体大小（px）
+     */
+    public void setCurrentNumberTextSize(float size) {
+        this.currentNumberTextSize = size;
+        invalidate();
+    }
+
+    /**
+     * 设置当前频率数字颜色
+     * @param color 颜色值
+     */
+    public void setCurrentNumberColor(@ColorRes int color) {
+        this.numLineColor = getResources().getColor(color);
+        invalidate();
+    }
+    // 单位字体大小
+    private float unitTextSize = dipToPx(12);
+
+
+
+    private OnRadioChangeListener mOnRadioChangeListener;
 
     private VelocityTracker mVelocityTracker = VelocityTracker.obtain();
     private Scroller mScroller = new Scroller(getContext());
@@ -74,10 +128,7 @@ public class FMMarkView extends View {
 
     public FMMarkView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, defStyleAttr);
-    }
-
-    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+        
         linePaint = new Paint();
         linePaint.setColor(markLineColor);
         linePaint.setAntiAlias(true);
@@ -94,10 +145,13 @@ public class FMMarkView extends View {
         numberPaint.setColor(markLineColor);
         numberPaint.setAntiAlias(true);
         numberPaint.setDither(true);
-        numberPaint.setTextSize(dipToPx(22));
+        numberPaint.setTextSize(numberTextSize);
         numberPaint.setStrokeWidth(1);
 
-        contentTotalLength = (markCount + 2) * defaultMark;
+        // 初始化时根据当前模式设置正确的总刻度数和内容长度
+        updateContentLength();
+        //setRadioMode(RadioMode.FM);//设置默认模式
+        //setBandFrequency(98.5);//设置默认频率
     }
 
     /**
@@ -109,6 +163,8 @@ public class FMMarkView extends View {
         this.markLineColor = getResources().getColor(color);
         if (linePaint != null)
             linePaint.setColor(markLineColor);
+        if (numberPaint != null)
+            numberPaint.setColor(markLineColor);
     }
 
     /**
@@ -123,44 +179,93 @@ public class FMMarkView extends View {
     }
 
     /**
-     * 设置频段
+     * 设置刻度值字体颜色
      *
-     * @param mHZ 频段
+     * @param color 字体颜色
      */
-    public void setFM(float mHZ) {
-        if ((mHZ < 87) || (mHZ > 108)) return;
-        double destMarks = (mHZ - 87) * 10;
+    public void setNumberTextColor(@ColorRes int color) {
+        this.markLineColor = getResources().getColor(color);
+        if (numberPaint != null)
+            numberPaint.setColor(markLineColor);
+    }
+
+    /**
+     * 设置当前值字体颜色
+     *
+     * @param color 字体颜色
+     */
+    public void setCurrentNumberTextColor(@ColorRes int color) {
+        this.guideLineColor = getResources().getColor(color);
+        if (numberPaint != null)
+            numberPaint.setColor(guideLineColor);
+    }
+
+    /**
+     * 设置频道
+     *
+     * @param frequency 频率值
+     */
+    public void setBandFrequency(double frequency) {
+        double destMarks;
+        currentFrequency = frequency;
+        // 根据当前模式计算目标刻度位置
+        if (radioMode == RadioMode.FM) {
+            if ((frequency < FM_BAND_START) || (frequency > FM_BAND_END)) return;
+            destMarks = (frequency - FM_BAND_START) / FM_MARK_INTERVAL;
+        } else {
+            if ((frequency < AM_BAND_START) || (frequency > AM_BAND_END)) return;
+            destMarks = (frequency - AM_BAND_START) / AM_MARK_INTERVAL;
+        }
+        // 计算当前刻度位置
         int currentMaks = calculateCurrentMarks(null);
         LogUtil.d( "destMarks = " + destMarks + "--currentMaks = " + currentMaks);
         scrollBy((int) ((destMarks - currentMaks) * dipToPx(defaultMark)), 0);
     }
 
     /**
-     * 获取当前频段
+     * 获取当前FM频段
      *
      * @return 当前频段
      */
     public double getFM() {
         int currentMaks = calculateCurrentMarks(null);
-        double currentFM = 87 + currentMaks * 1.0 / 10;
+        double currentFM = FM_BAND_START + currentMaks * FM_MARK_INTERVAL;
         LogUtil.d( "currentFM = " + currentFM);
         return currentFM;
     }
 
-    public interface OnFMChangeListener {
-        void onChang(double currentFM);
+    /**
+     * 获取当前AM频段
+     *
+     * @return 当前AM频段
+     */
+    public double getAM() {
+        int currentMaks = calculateCurrentMarks(null);
+        double currentAM = AM_BAND_START + currentMaks * AM_MARK_INTERVAL;
+        LogUtil.d("currentAM = " + currentAM);
+        return currentAM;
     }
 
-    public void setOnFMChangeListener(OnFMChangeListener onFMChangeListener) {
-        this.mOnFMChangeListener = onFMChangeListener;
+    public interface OnRadioChangeListener {
+        void onFMChang(double currentFM);
+        void onAMChange(double currentAM);
+    }
+
+    public void setOnRadioChangeListener(OnRadioChangeListener onRadioChangeListener) {
+        this.mOnRadioChangeListener = onRadioChangeListener;
     }
 
     /**
      * 回调当前FM
      */
     private void onFMChange() {
-        if (this.mOnFMChangeListener == null) return;
-        this.mOnFMChangeListener.onChang(getFM());
+        if (this.mOnRadioChangeListener == null) return;
+        this.mOnRadioChangeListener.onFMChang(getFM());
+    }
+
+    private void onAMChange() {
+        if (this.mOnRadioChangeListener == null) return;
+        this.mOnRadioChangeListener.onAMChange(getAM());
     }
 
     @Override
@@ -188,47 +293,49 @@ public class FMMarkView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 画底部直线
-        float baseStartX = dipToPx(defaultMark);
-        float baseStartY = getHeight() - dipToPx(defaultMark);
-        float baseEndX = dipToPx(contentTotalLength - defaultMark);
-        canvas.drawLine(baseStartX, baseStartY, baseEndX, baseStartY, linePaint);
+
+        // 画当前频率数字在view顶部
+        //drawCurrentNumber(canvas);
+
+        // 先画底部数字
+        for (int i = 0; i <= markCount; i++) {
+            if (i % 10 == 0) {
+                drawNumbers(canvas, i);
+            }
+        }
+        
+        // 往上间隔20dp画刻度线
+        float spacing = dipToPx(20);
+        float centerY = getHeight() / 2 + spacing;
+        
         // 画所有刻度线
         for (int i = 0; i <= markCount; i++) {
             float markStartX = dipToPx(defaultMark * (i + 1));
-            float markStarY = getHeight() - dipToPx(defaultMark);
             float markEndX = dipToPx(defaultMark * (i + 1));
+            float markStartY;
             float markEndY;
+            
             if (i % 10 == 0) {
-                markEndY = getHeight() - dipToPx(defaultMark + longLineLength);// 长刻度
-                drawNumbers(canvas, i);
+                // 长刻度线
+                markStartY = centerY - dipToPx(longLineLength / 2);
+                markEndY = centerY + dipToPx(longLineLength / 2);
             } else {
-                markEndY = getHeight() - dipToPx(defaultMark + shortLineLength);
+                // 短刻度线
+                markStartY = centerY - dipToPx(shortLineLength / 2);
+                markEndY = centerY + dipToPx(shortLineLength / 2);
             }
-            canvas.drawLine(markStartX, markStarY, markEndX, markEndY, linePaint);
+            canvas.drawLine(markStartX, markStartY, markEndX, markEndY, linePaint);
         }
-        // 画中心三角形指针
-        Path guidePath = getGuidePath();
-        canvas.drawPath(guidePath, guideLinePaint);
-        // 画当前刻度值
-        drawCurrentNumber(canvas);
-    }
-
-    /**
-     * @return 三角形指针
-     */
-    private Path getGuidePath() {
-        if (guidePath == null) guidePath = new Path();
-        guidePath.reset();
+        
+        // 画中心指示线（长条）
         float centerX = getWidth() / 2 + getScrollX();
-        float bottomY = getHeight() - dipToPx(defaultMark);
-        float topY = getHeight() - dipToPx(defaultMark + longLineLength * 2);
+        float indicatorTopY = centerY - dipToPx(GUIDE_LINE_HEIGHT / 2);
+        float indicatorBottomY = centerY + dipToPx(GUIDE_LINE_HEIGHT / 2);
+        float leftX = centerX - dipToPx(GUIDE_LINE_WIDTH / 2);
+        float rightX = centerX + dipToPx(GUIDE_LINE_WIDTH / 2);
+        canvas.drawRect(leftX, indicatorTopY, rightX, indicatorBottomY, guideLinePaint);
+        
 
-        guidePath.moveTo(centerX, bottomY);
-        guidePath.lineTo(centerX - dipToPx(3), topY);
-        guidePath.lineTo(centerX + dipToPx(3), topY);
-        guidePath.close();
-        return guidePath;
     }
 
     /**
@@ -238,31 +345,45 @@ public class FMMarkView extends View {
      */
     private void drawCurrentNumber(Canvas canvas) {
         float centerX = getWidth() / 2 + getScrollX();
-        float guideLineTopY = getHeight() - dipToPx(defaultMark + longLineLength * 2);
 
         int currentMaks = calculateCurrentMarks(null);
-        // 从 87MHZ开始，0.1每刻度
-        double contentNum = 87 + currentMaks * 1.0 / 10;
-        String currentNumber = numFormat.format(contentNum);
+        String currentNumber ;
+        String unit;
+        //double contentNum;
+        if (radioMode == RadioMode.FM) {
+            //contentNum = FM_BAND_START + currentMaks * FM_MARK_INTERVAL;
+            currentNumber = fmNumFormat.format(currentFrequency);
+            unit = "MHz"; // 统一单位为小写
+            onFMChange();
+        } else {
+            // 使用Math.round进行四舍五入，确保精确到个位
+            //contentNum = AM_BAND_START + currentMaks * AM_MARK_INTERVAL;
+            currentNumber = String.valueOf((int)Math.round(currentFrequency));
+            unit = "kHz";
+            onAMChange();
+        }
 
-        LogUtil.d("currentNumber = " + currentNumber + "--" + currentMaks + "--contentNum = " + contentNum);
+        LogUtil.d("currentNumber = " + currentNumber + "--" + currentMaks );
         Rect textRect = getTextRect(numberPaint, currentNumber);
         float textWidth = textRect.width();
         float textHeight = textRect.height();
 
+        // 设置为view顶部
+        //float topPadding = dipToPx((int) currentNumberTextSize); // 距离顶部40dp
+
         int x = (int) (centerX - textWidth / 2);
-        int baseY = (int) (guideLineTopY - textHeight * 3 / 4);
+        int currentBaseY = (int) textHeight*2;
 
+        // 绘制当前频率数字
         numberPaint.setFakeBoldText(true);
-        numberPaint.setTextSize(dipToPx(25));
-        numberPaint.setColor(guideLineColor);
-        canvas.drawText(currentNumber, x, baseY, numberPaint);
+        numberPaint.setTextSize(currentNumberTextSize);
+        numberPaint.setColor(numLineColor);
+        canvas.drawText(currentNumber, x, currentBaseY, numberPaint);
 
-        numberPaint.setTextSize(dipToPx(12));
-        int unitX = (int) (centerX + textWidth * 3 / 4);
-        canvas.drawText("MHZ", unitX, baseY, numberPaint);
-        // 回调当前FM
-        onFMChange();
+        // 绘制单位
+        //numberPaint.setTextSize(dipToPx(12));
+        //int unitX = (int) (centerX + textWidth * 3 / 4);
+        //canvas.drawText(unit, unitX, currentBaseY, numberPaint);
     }
 
     /**
@@ -272,15 +393,29 @@ public class FMMarkView extends View {
      * @param number 长刻度线的位置
      */
     private void drawNumbers(Canvas canvas, int number) {
-        String text = String.valueOf(number / 10 + 87);
+        double frequency;
+        String text;
+        if (radioMode == RadioMode.FM) {
+            // FM模式，刻度间隔为0.1MHz
+            frequency = FM_BAND_START + number * FM_MARK_INTERVAL;
+            // 当每10个刻度（即1MHz）时才绘制数字
+            if (number % 10 != 0) return;
+            text = fmNumFormat.format(frequency);
+        } else {
+            // AM模式，刻度间隔为10kHz
+            frequency = AM_BAND_START + number * AM_MARK_INTERVAL;
+            // AM模式下每10个刻度（即100kHz）才绘制数字
+            if (number % 10 != 0) return;
+            text = amNumFormat.format(frequency);
+        }
         Rect textRect = getTextRect(numberPaint, text);
         float textWidth = textRect.width();
         float textHeight = textRect.height();
         numberPaint.setFakeBoldText(false);
-        numberPaint.setTextSize(dipToPx(22));
+        numberPaint.setTextSize(numberTextSize);
         numberPaint.setColor(markLineColor);
         canvas.drawText(text, dipToPx(defaultMark * (number + 1)) - textWidth / 2,
-                getHeight() - dipToPx(defaultMark + longLineLength) - textHeight / 2, numberPaint);
+                getHeight() - dipToPx(shortLineLength) + textHeight, numberPaint);
     }
 
     private Rect getTextRect(Paint textPaint, String text) {
@@ -305,7 +440,7 @@ public class FMMarkView extends View {
      * @param event
      * @return
      */
-    @Override
+    /*@Override
     public boolean onTouchEvent(MotionEvent event) {
         mVelocityTracker.addMovement(event);
         switch (event.getAction()) {
@@ -336,7 +471,7 @@ public class FMMarkView extends View {
         }
         calculateCurrentMarks(event);
         return true;
-    }
+    }*/
 
     /**
      * 计算滑动速度
@@ -390,6 +525,30 @@ public class FMMarkView extends View {
      * @param event
      * @return
      */
+    // 收音机模式
+    private RadioMode radioMode = RadioMode.FM;
+
+    public enum RadioMode {
+        FM, AM
+    }
+
+    private void updateContentLength() {
+        // 根据当前radioMode动态计算总刻度数和内容长度
+        markCount = (radioMode == RadioMode.FM) ? FM_MARK_COUNT : AM_MARK_COUNT;
+        contentTotalLength = (markCount + 2) * defaultMark;
+    }
+
+    public void setRadioMode(RadioMode mode) {
+        this.radioMode = mode;
+        // 切换模式时，更新总刻度数和内容长度
+        updateContentLength();
+        invalidate();
+    }
+
+    public RadioMode getRadioMode() {
+        return radioMode;
+    }
+
     private int calculateCurrentMarks(MotionEvent event) {
         float guideLineX = getWidth() / 2;
         float contentX = getScrollX() + guideLineX - dipToPx(defaultMark);
