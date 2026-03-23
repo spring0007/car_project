@@ -617,6 +617,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         filter.addAction("top_session_package_change")
         filter.addAction("awellauto.backcar.on")
 
+        filter.addAction("com.awell.360floatview.fullscreen")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
@@ -745,6 +746,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     val sessionTopPkg = intent.getStringExtra("top_package")
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
+                "com.awell.360floatview.fullscreen",
 		        "awellauto.backcar.on" -> {
                     val freePkg = Settings.System.getString(contentResolver,"freeform_app_package_name")
                     if("cn.cardoor.zt360".equals(freePkg)) {
