@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -100,14 +98,14 @@ public class FMMarkView extends View {
         invalidate();
     }
 
-    /**
-     * 设置当前频率数字颜色
-     * @param color 颜色值
-     */
-    public void setCurrentNumberColor(@ColorRes int color) {
-        this.numLineColor = getResources().getColor(color);
-        invalidate();
-    }
+//    /**
+//     * 设置当前频率数字颜色
+//     * @param color 颜色值
+//     */
+//    public void setCurrentNumberColor(@ColorRes int color) {
+//        this.numLineColor = getResources().getColor(color);
+//        invalidate();
+//    }
 
 
     private OnRadioChangeListener mOnRadioChangeListener;
@@ -151,51 +149,51 @@ public class FMMarkView extends View {
         //setBandFrequency(98.5);//设置默认频率
     }
 
-    /**
-     * 刻度及刻度值颜色
-     *
-     * @param color
-     */
-    public void setMarkLineColor(@ColorRes int color) {
-        this.markLineColor = getResources().getColor(color);
-        if (linePaint != null)
-            linePaint.setColor(markLineColor);
-        if (numberPaint != null)
-            numberPaint.setColor(markLineColor);
-    }
+//    /**
+//     * 刻度及刻度值颜色
+//     *
+//     * @param color
+//     */
+//    public void setMarkLineColor(@ColorRes int color) {
+//        this.markLineColor = getResources().getColor(color);
+//        if (linePaint != null)
+//            linePaint.setColor(markLineColor);
+//        if (numberPaint != null)
+//            numberPaint.setColor(markLineColor);
+//    }
 
-    /**
-     * 指针及当前刻度值颜色
-     *
-     * @param color
-     */
-    public void setGuideLineColor(@ColorRes int color) {
-        this.guideLineColor = getResources().getColor(color);
-        if (guideLinePaint != null)
-            guideLinePaint.setColor(guideLineColor);
-    }
+//    /**
+//     * 指针及当前刻度值颜色
+//     *
+//     * @param color
+//     */
+//    public void setGuideLineColor(@ColorRes int color) {
+//        this.guideLineColor = getResources().getColor(color);
+//        if (guideLinePaint != null)
+//            guideLinePaint.setColor(guideLineColor);
+//    }
 
-    /**
-     * 设置刻度值字体颜色
-     *
-     * @param color 字体颜色
-     */
-    public void setNumberTextColor(@ColorRes int color) {
-        this.markLineColor = getResources().getColor(color);
-        if (numberPaint != null)
-            numberPaint.setColor(markLineColor);
-    }
+//    /**
+//     * 设置刻度值字体颜色
+//     *
+//     * @param color 字体颜色
+//     */
+//    public void setNumberTextColor(@ColorRes int color) {
+//        this.markLineColor = getResources().getColor(color);
+//        if (numberPaint != null)
+//            numberPaint.setColor(markLineColor);
+//    }
 
-    /**
-     * 设置当前值字体颜色
-     *
-     * @param color 字体颜色
-     */
-    public void setCurrentNumberTextColor(@ColorRes int color) {
-        this.guideLineColor = getResources().getColor(color);
-        if (numberPaint != null)
-            numberPaint.setColor(guideLineColor);
-    }
+//    /**
+//     * 设置当前值字体颜色
+//     *
+//     * @param color 字体颜色
+//     */
+//    public void setCurrentNumberTextColor(@ColorRes int color) {
+//        this.guideLineColor = getResources().getColor(color);
+//        if (numberPaint != null)
+//            numberPaint.setColor(guideLineColor);
+//    }
 
     /**
      * 设置频道
