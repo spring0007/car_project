@@ -403,7 +403,8 @@ public class IconCache {
             case 3:
                 return PACKAGE_ICON_MAP_CIRCLE.get(pkg);
             case 4:
-                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.equals(IconPkgMap.AIR_NAME)) {
+                //Log.i(TAG, "pak=>" + pkg + "----->className=>"+className);
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)) {
                     return PACKAGE_ICON_MAP_ZY_1.get(IconPkgMap.AIR_NAME);
                 }
                 return PACKAGE_ICON_MAP_ZY_1.get(pkg);
