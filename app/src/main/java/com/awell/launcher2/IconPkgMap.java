@@ -24,6 +24,8 @@ public class IconPkgMap {
 
     static public final Map<String, Integer> PACKAGE_ICON_MAP_ZY_1  = new HashMap<>();
 
+    static final String AIR_NAME = "com.awell.air";
+    static final String CANBUS_NAME = "com.awell.canbus";
 
     static {
         // 默认主题图标映射
@@ -216,7 +218,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_ZY_1.put("com.awell.backcar", R.drawable.ic_usb_app);
         PACKAGE_ICON_MAP_ZY_1.put("cn.kuwo.kwmusiccar", R.drawable.ic_kw_app);
         PACKAGE_ICON_MAP_ZY_1.put("com.awell.eqselect", R.drawable.ic_jhq_app);
-        PACKAGE_ICON_MAP_ZY_1.put("com.awell.canbus", R.drawable.ic_car_app);
+        PACKAGE_ICON_MAP_ZY_1.put(CANBUS_NAME, R.drawable.ic_car_app);
         PACKAGE_ICON_MAP_ZY_1.put("com.awell.canbus2", R.drawable.ic_car_app);
         PACKAGE_ICON_MAP_ZY_1.put("com.autonavi.amapauto", R.drawable.ic_navi_app);
 //        PACKAGE_ICON_MAP_ZY_1.put("com.tima.carnet.vt", R.drawable.sf_zlink_circle);
@@ -237,7 +239,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_ZY_1.put("com.awell.themesetting", R.drawable.ic_theme_app);
         PACKAGE_ICON_MAP_ZY_1.put("com.ms.ms2160", R.drawable.ic_video_output_app);
         PACKAGE_ICON_MAP_ZY_1.put("com.awell.weather", R.drawable.ic_weather_app);
-
+        PACKAGE_ICON_MAP_ZY_1.put(AIR_NAME, R.drawable.ic_air_app);
     }
 
 

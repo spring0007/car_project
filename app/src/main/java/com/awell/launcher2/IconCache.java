@@ -383,7 +383,7 @@ public class IconCache {
         }
     }
 
-    private Integer getIconResource(String pkg) {
+    private Integer getIconResource(String pkg, String className) {
 
         // return themeMode == 0 ? mHomePackageIcon_116_lehang_2_dark[index] : mHomePackageIcon_116_lehang_2[index];
         if (pkg == null || pkg.isEmpty()) {
@@ -403,6 +403,9 @@ public class IconCache {
             case 3:
                 return PACKAGE_ICON_MAP_CIRCLE.get(pkg);
             case 4:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.equals(IconPkgMap.AIR_NAME)) {
+                    return PACKAGE_ICON_MAP_ZY_1.get(IconPkgMap.AIR_NAME);
+                }
                 return PACKAGE_ICON_MAP_ZY_1.get(pkg);
             case 100:
 //            getPluginDrawable();
@@ -530,10 +533,11 @@ public class IconCache {
         synchronized (mCache) {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;
+            String className = info.activityInfo.name;
             application.title = entry.title;
             boolean customIconSet = false;
 
-            Integer iconResId = getIconResource(packageName);
+            Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null) {
                 Utilities.FLAG = false;
                 bmp = getFullResIcon(mContext.getResources(), iconResId);
@@ -574,9 +578,9 @@ public class IconCache {
 
             CacheEntry entry = cacheLocked(component, resolveInfo, null);
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
+            String className = resolveInfo.activityInfo.name;
 
-
-            Integer iconResId = getIconResource(packageName);
+            Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null) {
                 bmp = getFullResIcon(mContext.getResources(), iconResId);
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
@@ -605,8 +609,9 @@ public class IconCache {
 
             CacheEntry entry = cacheLocked(component, resolveInfo, labelCache);
             String packageName = resolveInfo.activityInfo.applicationInfo.packageName;
+            String className = resolveInfo.activityInfo.name;
 
-            Integer iconResId = getIconResource(packageName);
+            Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null) {
                 bmp = getFullResIcon(mContext.getResources(), iconResId);
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
