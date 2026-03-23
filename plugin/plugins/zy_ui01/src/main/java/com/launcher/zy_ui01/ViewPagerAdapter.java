@@ -1,17 +1,23 @@
 package com.launcher.zy_ui01;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.launcher.zy_ui01.utils.WeatherIconLoader;
+import com.launcher.zy_ui01.utils.WeatherTextMapper;
+
 import java.util.List;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder> {
-
     private List<PageData> pageDataList;
 
     private View.OnClickListener listener;
@@ -19,19 +25,39 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private MainActivityUI1 activity;
 
 
-
-    public ViewPagerAdapter(List<PageData> pageDataList, View.OnClickListener listener,MainActivityUI1 activity) {
+    public ViewPagerAdapter(List<PageData> pageDataList, View.OnClickListener listener, MainActivityUI1 activity) {
         this.pageDataList = pageDataList;
         this.listener = listener;
         this.activity = activity;
     }
 
+    @SuppressLint("SetTextI18n")
     @NonNull
     @Override
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(viewType, parent, false);
-        return new ViewPagerViewHolder(view);
+        if (viewType == R.layout.viewpager_1) {
+            TextView tvTemper = itemView.findViewById(R.id.tv_temper);
+            TextView tvTemperScope = itemView.findViewById(R.id.tv_temper_scope);
+            ImageView ivWeather = itemView.findViewById(R.id.iv_weather);
+            activity.setOnWeatherListener(weatherInfo -> {
+                if (weatherInfo != null) {
+                    tvTemper.setText(weatherInfo.temperature + " ℃");
+                    String weather = (WeatherTextMapper.description(
+                            itemView.getContext(),
+                            weatherInfo.condCode
+                    ));
+                    tvTemperScope.setText(weather + " " + weatherInfo.tempMax + "/" + weatherInfo.tempMin + "℃");
+                    WeatherIconLoader.load(ivWeather, weatherInfo.condCode);
+                } else {
+                    tvTemper.setText("");
+                    tvTemperScope.setText("");
+                    ivWeather.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+                }
+            });
+        }
+        return new ViewPagerViewHolder(itemView);
 
     }
 

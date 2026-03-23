@@ -96,6 +96,9 @@ dependencies {
             exclude group: 'androidx.fragment'
         }
 
+        implementation libs.gson
+        implementation libs.androidsvg
+
     } else {
 
 
@@ -122,6 +125,9 @@ dependencies {
             exclude group: 'org.jetbrains.kotlin'
             exclude group: 'org.jetbrains.kotlinx'
         }
+
+        implementation libs.gson
+        implementation libs.androidsvg
     }
 }
 

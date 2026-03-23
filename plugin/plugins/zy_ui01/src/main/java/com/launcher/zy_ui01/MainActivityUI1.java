@@ -21,12 +21,16 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.launcher.zy_ui01.databinding.ActivityMainUi1Binding;
+import com.launcher.zy_ui01.utils.WeatherHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,26 +46,39 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private TextView musicText;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
+    private int PERMISSION_REQUEST_CODE = 100;
+    private OnWeatherListener onWeatherListener;
+    private Boolean isWeatherTimerRunning = false;
+    private Runnable  weatherRefreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadWeatherData();
+            handler.postDelayed(this, (60 * 1000));
+        }
+    };
+
+    public void setOnWeatherListener(OnWeatherListener onWeatherListener) {
+        this.onWeatherListener = onWeatherListener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainUi1Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initLongTouch();
+        setUpViewPager();
         binding.ivNavi.setOnClickListener(this);
         binding.ivHome.setOnClickListener(this);
         binding.ivMusic.setOnClickListener(this);
         binding.ivRadio.setOnClickListener(this);
         binding.ivEq.setOnClickListener(this);
-        initLongTouch();
-
-        setUpViewPager();
-//        updateTimeZoneByLocale();
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
+        binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {
@@ -76,32 +93,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     public void setMusicText(TextView musicText) {
         this.musicText = musicText;
-    }
-
-    public void updateTimeZoneByLocale() {
-        // 1. 获取当前系统的 Locale（语言+国家）
-        Locale currentLocale = getResources().getConfiguration().locale;
-        String country = currentLocale.getCountry(); // 例如 "CN", "US"
-
-        // 2. 根据国家码获取对应的默认时区 ID
-        // 注意：一个国家可能有多个时区（如美国），但我们可以取其核心时区
-        if ("CN".equalsIgnoreCase(country)) {
-            // 中国统一使用上海/北京时区
-            setTimeZone("Asia/Shanghai");
-        } else if ("US".equalsIgnoreCase(country)) {
-            setTimeZone("America/New_York"); // 默认东部时间，或者根据业务逻辑细分
-        }
-    }
-
-    private void setTimeZone(String timeZoneId) {
-        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        try {
-            // 需要 android.permission.SET_TIME_ZONE 权限
-            am.setTimeZone(timeZoneId);
-            Log.i(TAG, "已同步时区至: " + timeZoneId);
-        } catch (Exception e) {
-            Log.e(TAG, "权限不足或设置失败: " + e.getMessage());
-        }
     }
 
     private void setUpViewPager() {
@@ -119,7 +110,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         updateIndicators(0);
     }
 
-
     private void updateIndicators(int position) {
         // 更新第一个指示点
         if (position == 0) {
@@ -132,6 +122,63 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         }
     }
 
+    private void loadWeatherData() {
+        Log.i(TAG, "loadWeatherData: huang info=>");
+        new Thread(() -> {
+            WeatherHelper.WeatherInfo info = WeatherHelper.getCurrentWeather(MainActivityUI1.this);
+            Log.i(TAG, "loadWeatherData: huang info=>" + info);
+            handler.post(() -> {
+                if (onWeatherListener != null) {
+                    onWeatherListener.onUpdate(info);
+                }
+            });
+        }).start();
+    }
+
+    private void checkAndRequestPermission() {
+        if (ContextCompat.checkSelfPermission(this, "com.awell.weather.permission.READ_WEATHER")
+                != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{"com.awell.weather.permission.READ_WEATHER"},
+                    PERMISSION_REQUEST_CODE
+            );
+        } else {
+            // 权限已授予，开始查询
+            loadWeatherData();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadWeatherData();
+            } else {
+                // 处理权限被拒绝
+                //showPermissionDeniedMessage()
+                Log.e(TAG, "onRequestPermissionsResult: not have permission==>");
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isWeatherTimerRunning) {
+            handler.postDelayed(weatherRefreshRunnable, 0);
+            isWeatherTimerRunning = true;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(weatherRefreshRunnable);
+        isWeatherTimerRunning = false;
+    }
 
     private void initLongTouch() {
         handler = new Handler(Looper.getMainLooper());
@@ -402,4 +449,9 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         }
         return false;
     }
+
+    public interface OnWeatherListener {
+        void onUpdate(WeatherHelper.WeatherInfo weatherInfo);
+    }
+
 }

@@ -40,4 +40,5 @@ include ':plugin:plugins:ui12'
 include ':plugin:plugins:ui13'
 include ':plugin:plugins:yfd_ui03'
 include ':plugin:plugins:zy_ui01'
+include ':plugin:plugins:zy_ui02'
 
