@@ -15,6 +15,7 @@
         android:text="FM"
         android:textColor="@color/white"
         android:textSize="20sp"
+        android:fontFamily="@font/venera_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.10"
@@ -70,23 +71,23 @@
             android:padding="10dp"
             android:background="@drawable/sf_radio_pre" />
 
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="0.5" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_radio_play_pause"-->
+<!--            android:layout_width="@dimen/iv_radio_image_size"-->
+<!--            android:layout_height="@dimen/iv_radio_image_size"-->
+<!--            android:padding="10dp"-->
+<!--            android:background="@drawable/sf_radio_play"-->
+<!--            tools:ignore="ContentDescription" />-->
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.5" />
-
-        <ImageView
-            android:id="@+id/iv_radio_play_pause"
-            android:layout_width="@dimen/iv_radio_image_size"
-            android:layout_height="@dimen/iv_radio_image_size"
-            android:padding="10dp"
-            android:background="@drawable/sf_radio_play"
-            tools:ignore="ContentDescription" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="0.5" />
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/iv_radio_next"

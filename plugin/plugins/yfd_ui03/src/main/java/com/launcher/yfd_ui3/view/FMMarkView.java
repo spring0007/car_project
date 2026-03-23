@@ -35,7 +35,7 @@ public class FMMarkView extends View {
     // 画刻度值
     private Paint numberPaint;
     //当前频率默认值
-    private double currentFrequency ;
+    private float currentFrequency ;
 
     // 每刻度间隔
     private static int defaultMark = 6;
@@ -44,21 +44,21 @@ public class FMMarkView extends View {
     // 指示器宽度
     private static final int GUIDE_LINE_WIDTH = 4;
     // FM频段起始频率
-    private static final double FM_BAND_START = 87;
+    private static final float FM_BAND_START = 87f;
     // FM频段结束频率
-    private static final double FM_BAND_END = 108;
+    private static final float FM_BAND_END = 108f;
     // FM频段刻度间隔（MHz）
-    private static final double FM_MARK_INTERVAL = 0.1;
+    private static final float FM_MARK_INTERVAL = 0.2f;
     // FM总刻度数
     private static final int FM_MARK_COUNT = (int) ((FM_BAND_END - FM_BAND_START) / FM_MARK_INTERVAL);
     // 总刻度数
     private static int markCount = FM_MARK_COUNT;
     // AM 频段起始频率
-    private static final double AM_BAND_START = 530;
+    private static final float AM_BAND_START = 530f;
     // AM频段结束频率
-    private static final double AM_BAND_END = 1730;
+    private static final float AM_BAND_END = 1730f;
     // AM频段刻度间隔（kHz）
-    private static final int AM_MARK_INTERVAL = 10;
+    private static final float AM_MARK_INTERVAL = 10f;
     // AM总刻度数
     private static final int AM_MARK_COUNT = (int) ((AM_BAND_END - AM_BAND_START) / AM_MARK_INTERVAL);
     // 短刻度线长度
@@ -72,7 +72,7 @@ public class FMMarkView extends View {
     // 指针颜色
     private int guideLineColor = Color.parseColor("#FFFF0000"); // 红色
     // FM刻度值保留一位小数
-    private DecimalFormat fmNumFormat = new DecimalFormat("0.0");
+    private DecimalFormat fmNumFormat = new DecimalFormat("0");
     // AM刻度值格式化，精确到个位
     private DecimalFormat amNumFormat = new DecimalFormat("0");
     // 上一次滑动事件x值
@@ -108,9 +108,6 @@ public class FMMarkView extends View {
         this.numLineColor = getResources().getColor(color);
         invalidate();
     }
-    // 单位字体大小
-    private float unitTextSize = dipToPx(12);
-
 
 
     private OnRadioChangeListener mOnRadioChangeListener;
@@ -128,7 +125,7 @@ public class FMMarkView extends View {
 
     public FMMarkView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        
+
         linePaint = new Paint();
         linePaint.setColor(markLineColor);
         linePaint.setAntiAlias(true);
@@ -205,21 +202,47 @@ public class FMMarkView extends View {
      *
      * @param frequency 频率值
      */
-    public void setBandFrequency(double frequency) {
-        double destMarks;
-        currentFrequency = frequency;
-        // 根据当前模式计算目标刻度位置
-        if (radioMode == RadioMode.FM) {
-            if ((frequency < FM_BAND_START) || (frequency > FM_BAND_END)) return;
-            destMarks = (frequency - FM_BAND_START) / FM_MARK_INTERVAL;
-        } else {
-            if ((frequency < AM_BAND_START) || (frequency > AM_BAND_END)) return;
-            destMarks = (frequency - AM_BAND_START) / AM_MARK_INTERVAL;
+    public void setBandFrequency(float frequency) {
+        // 保护：等待布局完成
+        if (getWidth() == 0) {
+            post(() -> setBandFrequency(frequency));
+            return;
         }
-        // 计算当前刻度位置
-        int currentMaks = calculateCurrentMarks(null);
-        LogUtil.d( "destMarks = " + destMarks + "--currentMaks = " + currentMaks);
-        scrollBy((int) ((destMarks - currentMaks) * dipToPx(defaultMark)), 0);
+
+        // 频率值对齐到刻度间隔
+        float interval = radioMode == RadioMode.FM ? FM_MARK_INTERVAL : AM_MARK_INTERVAL;
+        float alignedFreq = Math.round(frequency / interval) * interval;
+        if (radioMode == RadioMode.FM) {
+            if (alignedFreq < FM_BAND_START || alignedFreq > FM_BAND_END) return;
+        } else {
+            if (alignedFreq < AM_BAND_START || alignedFreq > AM_BAND_END) return;
+        }
+        currentFrequency = alignedFreq;
+
+        float destMarks;
+        if (radioMode == RadioMode.FM) {
+            destMarks = (alignedFreq - FM_BAND_START) / FM_MARK_INTERVAL;
+        } else {
+            destMarks = (alignedFreq - AM_BAND_START) / AM_MARK_INTERVAL;
+        }
+
+        int currentMarks = calculateCurrentMarks(null);
+        scrollBy((int) ((destMarks - currentMarks) * dipToPx(defaultMark)), 0);
+
+        // 对齐到最近刻度
+        MotionEvent upEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_UP, 0, 0, 0);
+        calculateCurrentMarks(upEvent);
+        upEvent.recycle();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        // 回收 VelocityTracker，防止内存泄漏
+        if (mVelocityTracker != null) {
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
+        }
     }
 
     /**
@@ -227,9 +250,9 @@ public class FMMarkView extends View {
      *
      * @return 当前频段
      */
-    public double getFM() {
+    public float getFM() {
         int currentMaks = calculateCurrentMarks(null);
-        double currentFM = FM_BAND_START + currentMaks * FM_MARK_INTERVAL;
+        float currentFM = FM_BAND_START + currentMaks * FM_MARK_INTERVAL;
         LogUtil.d( "currentFM = " + currentFM);
         return currentFM;
     }
@@ -239,16 +262,17 @@ public class FMMarkView extends View {
      *
      * @return 当前AM频段
      */
-    public double getAM() {
+    public float getAM() {
         int currentMaks = calculateCurrentMarks(null);
-        double currentAM = AM_BAND_START + currentMaks * AM_MARK_INTERVAL;
+        float currentAM = AM_BAND_START + currentMaks * AM_MARK_INTERVAL;
         LogUtil.d("currentAM = " + currentAM);
         return currentAM;
     }
 
     public interface OnRadioChangeListener {
-        void onFMChang(double currentFM);
-        void onAMChange(double currentAM);
+        void onFMChang(float currentFM);
+
+        void onAMChange(float currentAM);
     }
 
     public void setOnRadioChangeListener(OnRadioChangeListener onRadioChangeListener) {
@@ -409,12 +433,12 @@ public class FMMarkView extends View {
             text = amNumFormat.format(frequency);
         }
         Rect textRect = getTextRect(numberPaint, text);
-        float textWidth = textRect.width();
-        float textHeight = textRect.height();
+        int textWidth = textRect.width();
+        int textHeight = textRect.height();
         numberPaint.setFakeBoldText(false);
         numberPaint.setTextSize(numberTextSize);
         numberPaint.setColor(markLineColor);
-        canvas.drawText(text, dipToPx(defaultMark * (number + 1)) - textWidth / 2,
+        canvas.drawText(text, (dipToPx(defaultMark * (number + 1)) - textWidth / 2),
                 getHeight() - dipToPx(shortLineLength) + textHeight, numberPaint);
     }
 
@@ -477,15 +501,17 @@ public class FMMarkView extends View {
      * 计算滑动速度
      */
     private void computeVelocity() {
+        if (mVelocityTracker == null) return;
         mVelocityTracker.computeCurrentVelocity(1000);
         float velocityX = mVelocityTracker.getXVelocity();
-        LogUtil.d( "velocityX = " + velocityX);
+        LogUtil.d("velocityX = " + velocityX);
         // 初始化 Scroller
         setFling((int) velocityX);
     }
 
     private void setFling(int vx) {
-        fling(getScrollX(), 0, -vx, 0, leftBorder, rightBorder, 0, 0);
+        if (mScroller == null) return;
+        fling(mScroller.getCurrX(), 0, -vx, 0, leftBorder, rightBorder, 0, 0);
     }
 
     /**
@@ -509,13 +535,17 @@ public class FMMarkView extends View {
      */
     @Override
     public void computeScroll() {
-        LogUtil.d( "computeScroll = " + mScroller.isFinished());
+        LogUtil.d("computeScroll = " + (mScroller != null && !mScroller.isFinished()));
         if (mScroller == null) return;
         if (mScroller.computeScrollOffset()) {
             scrollTo(mScroller.getCurrX(), 0);
         } else {
             MotionEvent event = MotionEvent.obtain(0, 0, MotionEvent.ACTION_UP, 0, 0, 0);
-            calculateCurrentMarks(event);
+            try {
+                calculateCurrentMarks(event);
+            } finally {
+                event.recycle();
+            }
         }
     }
 
@@ -550,25 +580,40 @@ public class FMMarkView extends View {
     }
 
     private int calculateCurrentMarks(MotionEvent event) {
-        float guideLineX = getWidth() / 2;
-        float contentX = getScrollX() + guideLineX - dipToPx(defaultMark);
-        int marks = (int) (contentX / dipToPx(defaultMark));
-        if (contentX % dipToPx(defaultMark) > dipToPx(defaultMark / 2)) {
+        float guideLineX = getWidth() / 2.0f;
+        float markSpacingPx = dipToPx(defaultMark);
+        float contentX = getScrollX() + guideLineX - markSpacingPx;
+        int marks = (int) (contentX / markSpacingPx);
+        if (contentX % markSpacingPx > dipToPx((int) (defaultMark / 2.0f))) {
             marks += 1;
             if ((event != null) && (event.getAction() == MotionEvent.ACTION_UP)) {
-                scrollBy((int) (dipToPx(defaultMark) - (contentX % dipToPx(defaultMark))), 0); //五入,ACTION_UP时跳到刻度线
+                scrollBy((int) (markSpacingPx - (contentX % markSpacingPx)), 0); //五入，ACTION_UP 时跳到刻度线
             }
         } else {
             if ((event != null) && (event.getAction() == MotionEvent.ACTION_UP)) {
-                scrollBy((int) (-contentX % dipToPx(defaultMark)), 0); // 四舍,ACTION_UP时跳到刻度线
+                scrollBy((int) (-contentX % markSpacingPx), 0); // 四舍，ACTION_UP 时跳到刻度线
             }
         }
-        LogUtil.d( "marks = " + marks);
+        LogUtil.d("marks = " + marks);
         return marks;
     }
 
     private float dipToPx(int dip) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
+    }
+
+    /**
+     * 清理资源，建议在 Activity/Fragment 销毁时调用
+     */
+    public void release() {
+        if (mVelocityTracker != null) {
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
+        }
+        if (mScroller != null) {
+            mScroller.forceFinished(true);
+        }
+        mOnRadioChangeListener = null;
     }
 }
 

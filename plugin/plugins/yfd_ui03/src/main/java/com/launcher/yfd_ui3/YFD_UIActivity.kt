@@ -278,12 +278,21 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun initFMScaleView() {
-        val fmScaleView = findViewById<FMMarkView>(R.id.fmScaleView)
-       /* fmScaleView.setOnFrequencyChangedListener { frequency, isFM ->
-            LogUtil.i("Frequency changed: ${frequency / 10f} ${if (isFM) "FM" else "AM"}")
-        }*/
-        // 可以根据需要设置初始频率
-        // fmScaleView.setCurrentFrequency(980) // 98.0 FM
+        // 初始化频率和 AM/FM
+        val freq = "96.5"  // 默认 AM 频率 1143 kHz
+        val fmOrAm = "FM"   // 默认 AM 模式
+        mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq.toString()
+        mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
+        // 先设置模式，再设置频率，确保刻度计算正确
+        mViewBinding.layoutRadioLayout.fmScaleView.post({
+            if ("FM".equals(fmOrAm)) {
+                mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.FM)
+            } else {
+                mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.AM)
+            }
+            mViewBinding.layoutRadioLayout.fmScaleView.setBandFrequency(freq.toFloat())
+        })
+
     }
 
 
@@ -492,6 +501,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         filter.addAction("top_session_package_change")
         filter.addAction("awellauto.backcar.on")
 
+        filter.addAction("com.awell.360floatview.fullscreen")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
         } else {
@@ -519,6 +529,9 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
         unregisterCustomerListener()
+        if (mViewBinding.layoutRadioLayout.fmScaleView != null) {
+            mViewBinding.layoutRadioLayout.fmScaleView.release();
+        }
         try {
             mediaControl.unBindDataService(this)
         } catch (e: Exception) {
@@ -620,6 +633,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     val sessionTopPkg = intent.getStringExtra("top_package")
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
+                "com.awell.360floatview.fullscreen",
 		        "awellauto.backcar.on" -> {
                     val freePkg = Settings.System.getString(contentResolver,"freeform_app_package_name")
                     if("cn.cardoor.zt360".equals(freePkg)) {
@@ -771,6 +785,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     runOnUiThread(java.lang.Runnable {
                         mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq
                         mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
+                        if (fmOrAm == "FM") {
+                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.FM)
+                        } else {
+                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.AM)
+                        }
+                        mViewBinding.layoutRadioLayout.fmScaleView.setBandFrequency(freq.toFloat())
                         //mViewBinding.layoutRadioLayout.tvRadioUnit.setText(unit)
                     })
                 }
@@ -915,7 +935,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         mViewBinding.layoutRadioLayout.radioLayout.setOnClickListener(this)
         mViewBinding.layoutRadioLayout.ivRadioNext.setOnClickListener(this)
         mViewBinding.layoutRadioLayout.ivRadioPre.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.ivRadioPlayPause.setOnClickListener(this)
+       // mViewBinding.layoutRadioLayout.ivRadioPlayPause.setOnClickListener(this)
         mViewBinding.layoutRadioLayout.tvRadioAmFm.setOnClickListener(this)
 
     }
@@ -1113,7 +1133,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
                 mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS)
             }
-            mViewBinding.layoutRadioLayout.ivRadioPlayPause.id -> {}
+//            mViewBinding.layoutRadioLayout.ivRadioPlayPause.id -> {
+//            }
             mViewBinding.layoutRadioLayout.tvRadioAmFm.id -> {
                 mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
             }
