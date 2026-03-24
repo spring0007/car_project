@@ -39,8 +39,7 @@ import java.util.List;
 public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI1.class.getSimpleName();
     private ActivityMainUi1Binding binding;
-    private List<PageData> pageDataList;
-    private TextView musicText;
+//    private List<PageData> pageDataList;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
     private int PERMISSION_REQUEST_CODE = 100;
@@ -67,15 +66,24 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         setUpViewPager();
         binding.ivNavi.setOnClickListener(this);
         binding.ivHome.setOnClickListener(this);
-        binding.ivMusic.setOnClickListener(this);
-        binding.ivRadio.setOnClickListener(this);
         binding.ivEq.setOnClickListener(this);
+        binding.ivCar.setOnClickListener(this);
+        binding.ivPhone.setOnClickListener(this);
+        binding.ivCardMusic.setOnClickListener(this);
+        binding.ivBluetoothPhone.setOnClickListener(this);
+        binding.ivVideo.setOnClickListener(this);
+        binding.ivRadio.setOnClickListener(this);
+        binding.ivCardEq.setOnClickListener(this);
+        binding.ivCardNavi.setOnClickListener(this);
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
+        binding.ivBluetoothPhone.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
+        musicWidget = findViewById(R.id.music_widget_layout);
+        setMusicWidget(musicWidget);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {
@@ -88,35 +96,31 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         }
     }
 
-    public void setMusicText(TextView musicText) {
-        this.musicText = musicText;
-    }
-
     private void setUpViewPager() {
-        pageDataList = new ArrayList<>();
-        pageDataList.add(new PageData(R.layout.viewpager_2));
-        pageDataList.add(new PageData(R.layout.viewpager_1));
-        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
-        binding.viewpager.setAdapter(adapter);
-        binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                updateIndicators(position);
-            }
-        });
-        updateIndicators(0);
+//        pageDataList = new ArrayList<>();
+//        pageDataList.add(new PageData(R.layout.viewpager_2));
+//        pageDataList.add(new PageData(R.layout.viewpager_1));
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
+//        binding.viewpager.setAdapter(adapter);
+//        binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageSelected(int position) {
+//                updateIndicators(position);
+//            }
+//        });
+//        updateIndicators(0);
     }
 
     private void updateIndicators(int position) {
-        // 更新第一个指示点
-        if (position == 0) {
-            binding.indicator1.setBackgroundResource(R.drawable.indicator_selected);
-            binding.indicator2.setBackgroundResource(R.drawable.indicator_unselect);
-        } else {
-            binding.indicator1.setBackgroundResource(R.drawable.indicator_unselect);
-            binding.indicator2.setBackgroundResource(R.drawable.indicator_selected);
-
-        }
+//        // 更新第一个指示点
+//        if (position == 0) {
+//            binding.indicator1.setBackgroundResource(R.drawable.indicator_selected);
+//            binding.indicator2.setBackgroundResource(R.drawable.indicator_unselect);
+//        } else {
+//            binding.indicator1.setBackgroundResource(R.drawable.indicator_unselect);
+//            binding.indicator2.setBackgroundResource(R.drawable.indicator_selected);
+//
+//        }
     }
 
     private void loadWeatherData() {
@@ -204,9 +208,9 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_music || v.getId() == R.id.layout_music){
+        if (v.getId() == R.id.iv_music || v.getId() == R.id.iv_card_music){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else if (v.getId() == R.id.iv_navi) {
+        } else if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -234,14 +238,16 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             } catch (Exception e) {
                 startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
             }
-        } else if (v.getId() == R.id.iv_bluetooth) {
+        } else if (v.getId() == R.id.iv_phone || v.getId() == R.id.iv_bluetooth_phone) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == R.id.iv_video) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
         } else if (v.getId() == R.id.iv_album) {
             startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
-        } else if (v.getId() == R.id.iv_eq) {
+        } else if (v.getId() == R.id.iv_eq || v.getId() == R.id.iv_card_eq) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
+        } else if (v.getId() == R.id.iv_car) {
+            startActivity("com.awell.canbus", "com.awell.canbus.carsettings.gac.Gs4SetOriginal");
         }
     }
 
@@ -303,23 +309,21 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
-            if (musicText != null) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicText.setText(songName);
-                } else {
-                    musicText.setText(getResources().getString(R.string.click_play_music));
-                }
+            if (!TextUtils.isEmpty(songName)) {
+                binding.tvMusic.setText(songName);
+            } else {
+                binding.tvMusic.setText("");
+            }
+            if (!TextUtils.isEmpty(singerName)) {
+                binding.tvArtistName.setText(singerName);
+            } else {
+                binding.tvArtistName.setText(getResources().getString(R.string.music_artist));
             }
             if (MusicWidget.OTHER_MUSIC == type) {
                 if (!TextUtils.isEmpty(songName)) {
-                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
+                    binding.tvMusic.setText(songName);
                 } else {
-                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
-                }
-                if (!TextUtils.isEmpty(singerName)) {
-                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
+                    binding.tvMusic.setText(getResources().getString(R.string.click_play_music));
                 }
             }
         }

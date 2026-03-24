@@ -68,8 +68,6 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             setListener(holder.itemView, R.id.layout_music);
             setListener(holder.itemView, R.id.iv_radio);
             setListener(holder.itemView, R.id.iv_bluetooth);
-            TextView textView = holder.itemView.findViewById(R.id.tv_music);
-            activity.setMusicText(textView);
             MusicWidget musicWidget = holder.itemView.findViewById(R.id.music_widget_layout);
             activity.setMusicWidget(musicWidget);
         } else if (position == 1) {

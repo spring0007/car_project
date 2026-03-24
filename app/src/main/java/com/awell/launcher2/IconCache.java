@@ -22,6 +22,7 @@ import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YELLOW;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YFD_2;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_CIRCLE;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_1;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_2;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -408,6 +409,12 @@ public class IconCache {
                     return PACKAGE_ICON_MAP_ZY_1.get(IconPkgMap.AIR_NAME);
                 }
                 return PACKAGE_ICON_MAP_ZY_1.get(pkg);
+            case 5:
+                //Log.i(TAG, "pak=>" + pkg + "----->className=>"+className);
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)) {
+                    return PACKAGE_ICON_MAP_ZY_2.get(IconPkgMap.AIR_NAME);
+                }
+                return PACKAGE_ICON_MAP_ZY_2.get(pkg);
             case 100:
 //            getPluginDrawable();
                 return PACKAGE_ICON_MAP_YFD_2.get(pkg);

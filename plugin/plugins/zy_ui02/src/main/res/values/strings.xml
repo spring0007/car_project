@@ -58,6 +58,9 @@
     <string name="weather_desc_507">Sandstorm</string>
     <string name="weather_desc_508">Heavy sandstorm</string>
     <string name="weather_desc_unknown">UNK</string>
+    <string name="unknow">Unknown</string>
+    <string name="eq">Sound Effects</string>
+    <string name="blue_phone">Bluetooth Phone</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
