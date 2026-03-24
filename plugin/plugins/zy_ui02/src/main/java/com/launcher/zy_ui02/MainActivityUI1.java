@@ -39,23 +39,9 @@ import java.util.List;
 public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI1.class.getSimpleName();
     private ActivityMainUi1Binding binding;
-//    private List<PageData> pageDataList;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
     private int PERMISSION_REQUEST_CODE = 100;
-    private OnWeatherListener onWeatherListener;
-    private Boolean isWeatherTimerRunning = false;
-    private Runnable  weatherRefreshRunnable = new Runnable() {
-        @Override
-        public void run() {
-            loadWeatherData();
-            handler.postDelayed(this, (60 * 1000));
-        }
-    };
-
-    public void setOnWeatherListener(OnWeatherListener onWeatherListener) {
-        this.onWeatherListener = onWeatherListener;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +49,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         binding = ActivityMainUi1Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initLongTouch();
-        setUpViewPager();
         binding.ivNavi.setOnClickListener(this);
         binding.ivHome.setOnClickListener(this);
         binding.ivEq.setOnClickListener(this);
@@ -81,7 +66,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         binding.ivBluetoothPhone.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
-        binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
         musicWidget = findViewById(R.id.music_widget_layout);
         setMusicWidget(musicWidget);
     }
@@ -94,91 +78,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             this.musicWidget.setMediaLibrary(mediaControl);
             this.musicWidget.setActivity(this, this.musicWidget);
         }
-    }
-
-    private void setUpViewPager() {
-//        pageDataList = new ArrayList<>();
-//        pageDataList.add(new PageData(R.layout.viewpager_2));
-//        pageDataList.add(new PageData(R.layout.viewpager_1));
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
-//        binding.viewpager.setAdapter(adapter);
-//        binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                updateIndicators(position);
-//            }
-//        });
-//        updateIndicators(0);
-    }
-
-    private void updateIndicators(int position) {
-//        // 更新第一个指示点
-//        if (position == 0) {
-//            binding.indicator1.setBackgroundResource(R.drawable.indicator_selected);
-//            binding.indicator2.setBackgroundResource(R.drawable.indicator_unselect);
-//        } else {
-//            binding.indicator1.setBackgroundResource(R.drawable.indicator_unselect);
-//            binding.indicator2.setBackgroundResource(R.drawable.indicator_selected);
-//
-//        }
-    }
-
-    private void loadWeatherData() {
-        Log.i(TAG, "loadWeatherData: huang info=>");
-        new Thread(() -> {
-            WeatherHelper.WeatherInfo info = WeatherHelper.getCurrentWeather(MainActivityUI1.this);
-            Log.i(TAG, "loadWeatherData: huang info=>" + info);
-            handler.post(() -> {
-                if (onWeatherListener != null) {
-                    onWeatherListener.onUpdate(info);
-                }
-            });
-        }).start();
-    }
-
-    private void checkAndRequestPermission() {
-        if (ContextCompat.checkSelfPermission(this, "com.awell.weather.permission.READ_WEATHER")
-                != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{"com.awell.weather.permission.READ_WEATHER"},
-                    PERMISSION_REQUEST_CODE
-            );
-        } else {
-            // 权限已授予，开始查询
-            loadWeatherData();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                loadWeatherData();
-            } else {
-                // 处理权限被拒绝
-                //showPermissionDeniedMessage()
-                Log.e(TAG, "onRequestPermissionsResult: not have permission==>");
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isWeatherTimerRunning) {
-            handler.postDelayed(weatherRefreshRunnable, 0);
-            isWeatherTimerRunning = true;
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        handler.removeCallbacks(weatherRefreshRunnable);
-        isWeatherTimerRunning = false;
     }
 
     private void initLongTouch() {
@@ -208,7 +107,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_music || v.getId() == R.id.iv_card_music){
+        if (v.getId() == R.id.iv_card_music){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         } else if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
@@ -224,26 +123,14 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        } else if (v.getId() == R.id.iv_time) {
-            Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         } else if (v.getId() == R.id.iv_home) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == R.id.iv_radio) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-        } else if (v.getId() == R.id.iv_interconnect) {
-            try {
-                startActivity("com.zjinnova.zlink", "com.zjinnova.android.zlink.features.settings.SettingsActivity");
-            } catch (Exception e) {
-                startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-            }
         } else if (v.getId() == R.id.iv_phone || v.getId() == R.id.iv_bluetooth_phone) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == R.id.iv_video) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        } else if (v.getId() == R.id.iv_album) {
-            startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
         } else if (v.getId() == R.id.iv_eq || v.getId() == R.id.iv_card_eq) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
         } else if (v.getId() == R.id.iv_car) {
@@ -430,11 +317,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             longPressRunnable = null;
         }
     }
-    private void backgroundAlpha(float alpha) {
-        WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.alpha = alpha; //0.0-1.0
-        getWindow().setAttributes(lp);
-    }
 
     private void handleLongPressAction() {
         startWallpaper();
@@ -449,10 +331,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             Log.i(TAG,"Exception = " + e.toString());
         }
         return false;
-    }
-
-    public interface OnWeatherListener {
-        void onUpdate(WeatherHelper.WeatherInfo weatherInfo);
     }
 
 }
