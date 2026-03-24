@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="guideline_left1">0.13</dimen>
+    <dimen name="time_tv_size">90sp</dimen>
+    <dimen name="radio_start">13dp</dimen>
+    <dimen name="radio_iv_width">148dp</dimen>
+    <dimen name="radio_progress_radio">0.1</dimen>
+    <dimen name="radio_progress_width">257dp</dimen>
+    <dimen name="radio_iv_height">152dp</dimen>
+    <dimen name="music_play_size">125dp</dimen>
+    <dimen name="music_next_end">45dp</dimen>
+
+    <dimen name="hotset_image_size">48dp</dimen>
+</resources>
