@@ -20,7 +20,7 @@
     <string name="aux">Aux</string>
     <string name="navi">Map Navigation</string>
     <string name="image_album">Image browsing</string>
-    <string name="phone_connect">Connect to phone</string>
+    <string name="phone_connect">AUX</string>
     <string name="blueth">Bluetooth</string>
 
     <string name="weather_desc_100">Sunny</string>
@@ -58,6 +58,8 @@
     <string name="weather_desc_507">Sandstorm</string>
     <string name="weather_desc_508">Heavy sandstorm</string>
     <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">yyyy/MM/dd</string>
+    <string name="aa_hh_mm">hh:mm a</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
