@@ -711,7 +711,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void beginDraggingApplication(View v) {
-        mLauncher.getWorkspace().setIconPadding(mAppIconPadding);
         mLauncher.getWorkspace().onDragStartedWithItem(v);
         mLauncher.getWorkspace().beginDragShared(v, this);
     }
