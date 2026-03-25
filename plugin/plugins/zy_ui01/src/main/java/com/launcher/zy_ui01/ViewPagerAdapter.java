@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.launcher.zy_ui01.utils.WeatherHelper;
 import com.launcher.zy_ui01.utils.WeatherIconLoader;
 import com.launcher.zy_ui01.utils.WeatherTextMapper;
 
@@ -24,6 +25,13 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
     private MainActivityUI1 activity;
 
+    private WeatherHelper.WeatherInfo weatherInfo;
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setWeatherInfo(WeatherHelper.WeatherInfo weatherInfo) {
+        this.weatherInfo = weatherInfo;
+        notifyDataSetChanged();
+    }
 
     public ViewPagerAdapter(List<PageData> pageDataList, View.OnClickListener listener, MainActivityUI1 activity) {
         this.pageDataList = pageDataList;
@@ -37,30 +45,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(viewType, parent, false);
-        if (viewType == R.layout.viewpager_1) {
-            TextView tvTemper = itemView.findViewById(R.id.tv_temper);
-            TextView tvTemperScope = itemView.findViewById(R.id.tv_temper_scope);
-            ImageView ivWeather = itemView.findViewById(R.id.iv_weather);
-            activity.setOnWeatherListener(weatherInfo -> {
-                if (weatherInfo != null) {
-                    tvTemper.setText(weatherInfo.temperature + " ℃");
-                    String weather = (WeatherTextMapper.description(
-                            itemView.getContext(),
-                            weatherInfo.condCode
-                    ));
-                    tvTemperScope.setText(weather + " " + weatherInfo.tempMax + "/" + weatherInfo.tempMin + "℃");
-                    WeatherIconLoader.load(ivWeather, weatherInfo.condCode);
-                } else {
-                    tvTemper.setText("");
-                    tvTemperScope.setText("");
-                    ivWeather.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
-                }
-            });
-        }
         return new ViewPagerViewHolder(itemView);
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
         // 根据位置设置不同页面的控件监听器
@@ -80,6 +69,19 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             setListener(holder.itemView, R.id.iv_time);
             setListener(holder.itemView, R.id.iv_album);
             setListener(holder.itemView, R.id.iv_interconnect);
+            TextView tvTemper = holder.itemView.findViewById(R.id.tv_temper);
+            TextView tvTemperScope = holder.itemView.findViewById(R.id.tv_temper_scope);
+            ImageView ivWeather = holder.itemView.findViewById(R.id.iv_weather);
+            if (weatherInfo != null) {
+                tvTemper.setText(weatherInfo.temperature + " ℃");
+                String weather = (WeatherTextMapper.description(holder.itemView.getContext(), weatherInfo.condCode));
+                tvTemperScope.setText(weather + " " + weatherInfo.tempMax + "/" + weatherInfo.tempMin + "℃");
+                WeatherIconLoader.load(ivWeather, weatherInfo.condCode);
+            } else {
+                tvTemper.setText("");
+                tvTemperScope.setText("");
+                ivWeather.setImageDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
     }
 

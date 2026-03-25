@@ -43,8 +43,8 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private TextView musicText;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
+    private ViewPagerAdapter adapter;
     private int PERMISSION_REQUEST_CODE = 100;
-    private OnWeatherListener onWeatherListener;
     private Boolean isWeatherTimerRunning = false;
     private Runnable  weatherRefreshRunnable = new Runnable() {
         @Override
@@ -53,10 +53,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             handler.postDelayed(this, (60 * 1000));
         }
     };
-
-    public void setOnWeatherListener(OnWeatherListener onWeatherListener) {
-        this.onWeatherListener = onWeatherListener;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +95,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         pageDataList = new ArrayList<>();
         pageDataList.add(new PageData(R.layout.viewpager_2));
         pageDataList.add(new PageData(R.layout.viewpager_1));
-        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
+        adapter = new ViewPagerAdapter(pageDataList, this, this);
         binding.viewpager.setAdapter(adapter);
         binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -128,8 +124,8 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             WeatherHelper.WeatherInfo info = WeatherHelper.getCurrentWeather(MainActivityUI1.this);
             Log.i(TAG, "loadWeatherData: huang info=>" + info);
             handler.post(() -> {
-                if (onWeatherListener != null) {
-                    onWeatherListener.onUpdate(info);
+                if (adapter != null) {
+                    adapter.setWeatherInfo(info);
                 }
             });
         }).start();
@@ -224,9 +220,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 }
             }
         } else if (v.getId() == R.id.iv_time) {
-            Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            startActivity("com.awell.weather", "com.awell.weather.MainActivity");
         } else if (v.getId() == R.id.iv_home) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == R.id.iv_radio) {
@@ -444,10 +438,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             Log.i(TAG,"Exception = " + e.toString());
         }
         return false;
-    }
-
-    public interface OnWeatherListener {
-        void onUpdate(WeatherHelper.WeatherInfo weatherInfo);
     }
 
 }
