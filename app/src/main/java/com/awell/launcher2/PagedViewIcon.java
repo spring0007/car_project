@@ -66,7 +66,7 @@ public class PagedViewIcon extends TextView {
 
     @SuppressLint("ResourceType")
     public void applyFromApplicationInfo(ApplicationInfo info, boolean scaleUp,
-                                         PagedViewIcon.PressedCallback cb) {
+                                         PagedViewIcon.PressedCallback cb, int drawablePadding) {
         mIcon = info.iconBitmap;
         mPressedCallback = cb;
         setText(info.title);
@@ -81,6 +81,7 @@ public class PagedViewIcon extends TextView {
 //        	}   
 //        }else{
         setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
+        setCompoundDrawablePadding(drawablePadding);
         setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
 //        }
         setTag(info);

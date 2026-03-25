@@ -22,6 +22,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,7 +42,7 @@ public class Hotseat extends FrameLayout {
     private int mAllAppsButtonRank;
     private int mSettingsButtonRank;
     private int mAutoNaviButtonRank;
-
+    private SparseArray<Integer> iconPaddingArray = new SparseArray<>();
     private boolean mTransposeLayoutWithOrientation;
     private boolean mIsLandscape;
 

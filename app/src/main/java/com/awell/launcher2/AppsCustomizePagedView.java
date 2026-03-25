@@ -52,6 +52,7 @@ import android.os.Process;
 import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -287,7 +288,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private PagedViewCellLayout mWidgetSpacingLayout;
     private int mNumAppsPages = 0;
     private int mNumWidgetPages;
+    
+    /**
+     * 默认每排显示的应用图标数量
+     */
+    private int mDefaultAppCountPerRow = 0;
+    // app水平间距自适应
+    private boolean mAutoAppWidthGap = false;
 
+    private int mAppIconPadding = 0;
     // Relating to the scroll and overscroll effects
     Workspace.ZInterpolator mZInterpolator = new Workspace.ZInterpolator(0.5f);
     private static float CAMERA_DISTANCE = 6500;
@@ -324,6 +333,36 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
     private static final String LAUNCHER_PLUGIN_CLAZZ = "persist.sys.launcher.clazz";
 
+    public void setAutoAppWidthGap(boolean mAutoAppWidthGap) {
+        this.mAutoAppWidthGap = mAutoAppWidthGap;
+    }
+
+    public void setAppIconPadding(int mAppIconPadding) {
+        this.mAppIconPadding = mAppIconPadding;
+    }
+
+    /**
+     * 设置每排显示的应用图标数量
+     * @param countPerRow 每排显示的应用图标数量（必须大于 0）
+     */
+    public void setAppCountPerRow(int countPerRow) {
+        if (countPerRow > 0) {
+            mDefaultAppCountPerRow = countPerRow;
+            // 重新计算布局
+            if (isDataReady()) {
+                onDataReady(getMeasuredWidth(), getMeasuredHeight());
+            }
+        }
+    }
+    
+    /**
+     * 获取当前每排显示的应用图标数量
+     * @return 每排显示的应用图标数量
+     */
+    public int getAppCountPerRow() {
+        return mDefaultAppCountPerRow;
+    }
+    
     public void setActivity(Context context) {
         mActivity = new WeakReference<>(context);
     }
@@ -489,7 +528,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         if (mMaxAppCellCountX > -1) {
             maxCellCountX = Math.min(maxCellCountX, mMaxAppCellCountX);
         }
-        maxCellCountX = 7;
+        // 如果未设置默认值，则使用 XML 配置的值
+        if (mDefaultAppCountPerRow > 0) {
+            maxCellCountX = mDefaultAppCountPerRow; // 根据提供的接口数量显示
+        }else
+            maxCellCountX = 7;
         maxCellCountY = 2;
         // Temp hack for now: only use the max cell count Y for widget layout
         int maxWidgetCellCountY = maxCellCountY;
@@ -500,6 +543,9 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         // Now that the data is ready, we can calculate the content width, the
         // number of cells to
         // use for each page
+        if (mAutoAppWidthGap) {
+            mPageLayoutWidthGap = -1;
+        }
         mWidgetSpacingLayout.setGap(mPageLayoutWidthGap, mPageLayoutHeightGap);
         mWidgetSpacingLayout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
         mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
@@ -665,6 +711,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void beginDraggingApplication(View v) {
+        mLauncher.getWorkspace().setIconPadding(mAppIconPadding);
         mLauncher.getWorkspace().onDragStartedWithItem(v);
         mLauncher.getWorkspace().beginDragShared(v, this);
     }
@@ -1101,6 +1148,9 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void setupPage(PagedViewCellLayout layout) {
+        if (mAutoAppWidthGap) {
+            mPageLayoutWidthGap = -1;
+        }
         layout.setCellCount(mCellCountX, mCellCountY);
         layout.setGap(mPageLayoutWidthGap, mPageLayoutHeightGap);
         layout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
@@ -1134,7 +1184,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (int i = startIndex; i < endIndex; ++i) {
             ApplicationInfo info = mApps.get(i);
             PagedViewIcon icon = (PagedViewIcon) mLayoutInflater.inflate(R.layout.apps_customize_application, layout, false);
-            icon.applyFromApplicationInfo(info, true, this);
+            icon.applyFromApplicationInfo(info, true, this, mAppIconPadding);
             icon.setOnClickListener(this);
             icon.setOnLongClickListener(this);
             icon.setOnTouchListener(this);

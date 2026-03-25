@@ -3,8 +3,6 @@ package com.launcher.zy_ui01;
 import static com.awell.utils.Utils.startWallpaper;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -36,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 public class MainActivityUI1 extends Activity implements View.OnClickListener {
@@ -77,7 +74,10 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setAppGap(true);
+        AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
+        AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }
 

@@ -75,6 +75,38 @@ object AppsCustomizeControl {
         mAppsCustomizeContent?.setActivity(context)
     }
 
+    fun setAppIconPadding(paddingTop: Int) {
+        if (paddingTop > 0) {
+            mAppsCustomizeContent?.setAppIconPadding(paddingTop)
+        } else {
+            Log.w(TAG, "setAppIconPadding: AppIconPadding must be greater than 0")
+        }
+    }
+
+    fun setAppGap(autoWidthGap: Boolean) {
+        mAppsCustomizeContent?.setAutoAppWidthGap(autoWidthGap)
+    }
+
+    /**
+     * 设置每排显示的应用图标数量
+     * @param countPerRow 每排显示的应用图标数量（必须大于 0）
+     */
+    fun setAppCountPerRow(countPerRow: Int) {
+        if (countPerRow > 0) {
+            mAppsCustomizeContent?.appCountPerRow = countPerRow
+        } else {
+            Log.w(TAG, "setAppCountPerRow: countPerRow must be greater than 0")
+        }
+    }
+
+    /**
+     * 获取当前每排显示的应用图标数量
+     * @return 每排显示的应用图标数量
+     */
+    fun getAppCountPerRow(): Int {
+        return mAppsCustomizeContent?.appCountPerRow ?: 6
+    }
+
     /**
      * 初始化布局View
      */

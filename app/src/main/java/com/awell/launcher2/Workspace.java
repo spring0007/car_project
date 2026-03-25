@@ -1327,6 +1327,7 @@ public class Workspace extends SmoothPagedView
     }
 
     protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         Log.e("MYlOG", "onDetachedFromWindow");
         mWindowToken = null;
     }

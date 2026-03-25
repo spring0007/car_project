@@ -65,7 +65,10 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
         binding.ivBluetoothPhone.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
+        AppsCustomizeControl.INSTANCE.setAppGap(true);
+        AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
+        AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
         musicWidget = findViewById(R.id.music_widget_layout);
         setMusicWidget(musicWidget);
     }

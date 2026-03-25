@@ -201,19 +201,24 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         int numHeightGaps = mCellCountY - 1;
 
         if (mOriginalWidthGap < 0 || mOriginalHeightGap < 0) {
-            int hSpace = widthSpecSize - getPaddingLeft() - getPaddingRight();
-            int vSpace = heightSpecSize - getPaddingTop() - getPaddingBottom();
-            int hFreeSpace = hSpace - (mCellCountX * mOriginalCellWidth);
-            int vFreeSpace = vSpace - (mCellCountY * mOriginalCellHeight);
-            mWidthGap = Math.min(mMaxGap, numWidthGaps > 0 ? (hFreeSpace / numWidthGaps) : 0);
-            mHeightGap = Math.min(mMaxGap, numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
-
+            if (mOriginalWidthGap < 0) {
+                // 因为要保证左右两边的间隔也是一样的
+                numWidthGaps = mCellCountX + 1;
+                int hSpace = widthSpecSize - getPaddingLeft() - getPaddingRight();
+                int hFreeSpace = hSpace - (mCellCountX * mOriginalCellWidth);
+                mWidthGap = Math.min(mMaxGap, numWidthGaps > 0 ? (hFreeSpace / numWidthGaps) : 0);
+            } else {
+                int vSpace = heightSpecSize - getPaddingTop() - getPaddingBottom();
+                int vFreeSpace = vSpace - (mCellCountY * mOriginalCellHeight);
+                mHeightGap = Math.min(mMaxGap, numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
+            }
+            Log.i(TAG, "mMaxGap = >" + mMaxGap + "-->mWidthGap=" + mWidthGap);
             mChildren.setGap(mWidthGap, mHeightGap);
         } else {
             mWidthGap = mOriginalWidthGap;
             mHeightGap = mOriginalHeightGap;
+            Log.i(TAG, "mOriginalWidthGap = >" + mOriginalWidthGap);
         }
-
         // Initial values correspond to widthSpecMode == MeasureSpec.EXACTLY
         int newWidth = widthSpecSize;
         int newHeight = heightSpecSize;
