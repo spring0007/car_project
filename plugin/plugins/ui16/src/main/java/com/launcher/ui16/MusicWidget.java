@@ -1,4 +1,4 @@
-package com.launcher.ui14;
+package com.launcher.ui16;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -20,12 +19,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ReactiveGuide;
 
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
@@ -37,7 +36,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.launcher.ui14.R;
+import com.launcher.ui16.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +49,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private EarqueeTextView mMusicNameTextView, mArtistNameTextView;
     private ImageView ivLoadnim;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
+    private TriImageCarouselView carouselView;
     //private KWAPI kwapi;
     private int dayNight = 0;
     private boolean musicState = false;
@@ -102,10 +102,37 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         this.mContext = context;
     //    ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
        // ll_name_layout_music = view.findViewById(R.id.music_widget_layout);
-
+    
         mMusicNameTextView = view.findViewById(R.id.music_widget_music_name);
-
+    
         mArtistNameTextView = view.findViewById(R.id.music_artist);
+    
+    
+        carouselView = view.findViewById(R.id.carousel_view);
+    
+        // 准备图片资源 (可以从资源文件或网络加载)
+        List<Bitmap> bitmaps = new ArrayList<>();
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_200));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_201));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_202));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_203));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_204));
+    
+        carouselView.setBitmaps(bitmaps);
+    
+        // 在 carouselView 布局完成后，设置 MusicWidget 的宽度
+        carouselView.post(() -> {
+            int carouselWidth = carouselView.getWidth();
+            if (carouselWidth > 0) {
+                LayoutParams params = (LayoutParams) getLayoutParams();
+                if (params != null) {
+                    params.width = carouselWidth;
+                    setLayoutParams(params);
+                }
+            }
+        });
+
+
 
         mPlayStateImageView = view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
@@ -117,7 +144,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
       //  view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
-        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
+        //ivLoadnim = view.findViewById(R.id.img_song_art_bg);
      //   ivLoadnim.setOnClickListener(this);
         //mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
         //mObjectAnimator.setInterpolator(new LinearInterpolator());
@@ -204,6 +231,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendNextToHost();
             }
+            carouselView.next();
         } else if (id == R.id.music_widget_pre) {
             if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.PREVIOUS);
@@ -216,6 +244,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendPreToHost();
             }
+            carouselView.previous();
         } else if (id == R.id.music_widget_play) {
             if (currentMedia == MUSIC) {
                 if (musicState) {
@@ -341,22 +370,22 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             return;
         }
 
-        Glide.with(this)
-                .load(uri)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .addListener(listener)
-                .circleCrop()
-                .placeholder(R.drawable.ablum_bg_default)
-                .error(R.drawable.ablum_bg_default)
-                .into(ivLoadnim);
+//        Glide.with(this)
+//                .load(uri)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
+//                .addListener(listener)
+//                .circleCrop()
+//                .placeholder(R.drawable.ablum_bg_default)
+//                .error(R.drawable.ablum_bg_default)
+//                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_bg_default));
+        //ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_bg_default));
     }
 
 
@@ -392,10 +421,20 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     private void setImageIcon(int index) {
-
-    //    ll_control_layout_music.setVisibility(VISIBLE);
-      //  ll_name_layout_music.setVisibility(VISIBLE);
-
+        // 当图片索引改变时，重新调整宽度以适应 carouselView
+        TriImageCarouselView carouselView = findViewById(R.id.carousel_view);
+        if (carouselView != null) {
+            carouselView.post(() -> {
+                int carouselWidth = carouselView.getWidth();
+                if (carouselWidth > 0) {
+                    LayoutParams params = (LayoutParams) getLayoutParams();
+                    if (params != null) {
+                        params.width = carouselWidth;
+                        setLayoutParams(params);
+                    }
+                }
+            });
+        }
     }
 
     /**

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<declare-styleable name="TriImageCarouselView">
+    <attr name="sideSize" format="dimension" />
+    <attr name="centerSize" format="dimension" />
+    <attr name="spacing" format="dimension" />
+    <attr name="cornerRadius" format="dimension" />
+</declare-styleable>
+</resources>
