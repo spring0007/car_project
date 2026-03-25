@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +30,7 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 
+import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.launcher.ui14.databinding.ActivityMainBinding;
 import com.launcher.ui14.databinding.MusicWidgetBinding;
@@ -77,6 +79,7 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
         AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(100);
 
     }
 
@@ -225,8 +228,8 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
         boolean isStartCommand = "start".equals(value2);
         boolean isStopCommand = "stop".equals(value2);
         boolean isValidPackage = !TextUtils.isEmpty(value1);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
-        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
+        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
 
 
         // 处理停止播放的情况
@@ -272,15 +275,15 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
 		binding.hotsetVideoApp.setOnClickListener(this);
         binding.hotsetAllapp.setOnClickListener(this);
         binding.radioBg.setOnClickListener(this);
-        binding.btBgIv.setOnClickListener(this);
         binding.btBg.setOnClickListener(this);
+        binding.layoutMusicWidget.musicWidgetLayout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.hotsetAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == binding.btBgIv.getId() ) {
+        }else if (v.getId() == binding.btBg.getId() ) {
             startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
         }else if (v.getId() == binding.navBg.getId()) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
@@ -296,7 +299,7 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        }else if (v.getId() == binding.hotsetMusicApp.getId() ){
+        }else if (v.getId() == binding.hotsetMusicApp.getId() || v.getId() == binding.layoutMusicWidget.musicWidgetLayout.getId() ){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         }else if(v.getId() == binding.radioBg.getId()){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
@@ -305,10 +308,6 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
         }else if (v.getId() == binding.hotsetSettingApp.getId()){
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
-        }else if(v.getId() == binding.btBg.getId()){
-            Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         }
     }
 
@@ -357,7 +356,18 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
-
+            runOnUiThread(() -> {
+                String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
+                Uri uri = null;
+                if (uriStr != null) {
+                    Uri parsedUri = Uri.parse(uriStr);
+                    if (parsedUri.getScheme() != null) {
+                        uri = parsedUri;
+                    }
+                }
+                Log.i(TAG, "updateViewMusicPlayImage: huang uri=>" + uri);
+                musicWidget.loadAlbumArtByUri(uri);
+            });
         }
 
         @Override

@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -28,7 +29,9 @@ import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
@@ -93,12 +96,11 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private void findViews(Context context, View view) {
         this.mContext = context;
     //    ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
-        ll_name_layout_music = view.findViewById(R.id.music_widget_layout);
+       // ll_name_layout_music = view.findViewById(R.id.music_widget_layout);
 
         mMusicNameTextView = view.findViewById(R.id.music_widget_music_name);
 
         mArtistNameTextView = view.findViewById(R.id.music_artist);
-
 
         mPlayStateImageView = view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
@@ -110,11 +112,11 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
       //  view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
-      //  ivLoadnim = view.findViewById(R.id.img_song_art_bg);
+        ivLoadnim = view.findViewById(R.id.img_song_art_bg);
      //   ivLoadnim.setOnClickListener(this);
-       // mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
-      //  mObjectAnimator.setInterpolator(new LinearInterpolator());
-      //  stopLoadAnim();
+        //mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
+        //mObjectAnimator.setInterpolator(new LinearInterpolator());
+        //stopLoadAnim();
 
         setImageIcon(currentMedia);
         setCurMusicState(mediaControl.sendStrToHost(AwellTool.MUSIC.GET_STATE).equals("true"), MUSIC);
@@ -334,22 +336,22 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             return;
         }
 
-//        Glide.with(this)
-//                .load(uri)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .skipMemoryCache(true)
-//                .addListener(listener)
-//                .circleCrop()
-//                .placeholder(R.drawable.ui6_music_bg)
-//                .error(R.drawable.ui6_music_bg)
-//                .into(ivLoadnim);
+        Glide.with(this)
+                .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .addListener(listener)
+                .circleCrop()
+                .placeholder(R.drawable.ablum_bg_default)
+                .error(R.drawable.ablum_bg_default)
+                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-      //  ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_bg));
+        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_bg_default));
     }
 
 
