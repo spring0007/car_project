@@ -22,15 +22,4 @@
     <string name="click_play_music">歌曲名</string>
     <string name="unknown">未知</string>
 
-    <string name="radio">收音机</string>
-    <string name="navi">导航</string>
-    <string name="all_app">应用</string>
-    <string name="phone">蓝牙电话</string>
-    <string name="add_app">添加</string>
-    <string name="video">视频</string>
-
-    <string name="bt_connected">蓝牙已连接</string>
-    <string name="bt_not_connected">蓝牙未连接</string>
-    <string name="bt_close">蓝牙已关闭</string>
-
 </resources>

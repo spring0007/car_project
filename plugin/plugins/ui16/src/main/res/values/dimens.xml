@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-
     <dimen name="hotset_image_size">60dp</dimen>
+    <dimen name="triiv_side_size">150dp</dimen>
+    <dimen name="triiv_center_size">190dp</dimen>
+    <dimen name="triiv_spacing">20dp</dimen>
+    <dimen name="triiv_corner_radius_size">20dp</dimen>
+    <dimen name="tv_am_fm_size">26sp</dimen>
+    <dimen name="tv_radio_freq_size">70sp</dimen>
+    <dimen name="tv_radio_freq_unit_size">24sp</dimen>
+    <dimen name="tv_music_artist_size">18sp</dimen>
+    <dimen name="tv_music_name_size">26sp</dimen>
+    <dimen name="radio_bg_width">359dp</dimen>
+    <dimen name="radio_bg_height">111dp</dimen>
+    <dimen name="cariv_width">260dp</dimen>
+    <dimen name="cariv_height">210dp</dimen>
 
 </resources>

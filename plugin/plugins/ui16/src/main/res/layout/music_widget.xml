@@ -13,10 +13,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:sideSize="169dp"
-        app:centerSize="190dp"
-        app:spacing="20dp"
-        app:cornerRadius="20dp"
+        app:sideSize="@dimen/triiv_side_size"
+        app:centerSize="@dimen/triiv_center_size"
+        app:spacing="@dimen/triiv_spacing"
+        app:cornerRadius="@dimen/triiv_corner_radius_size"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
@@ -36,11 +36,10 @@
             android:ellipsize="marquee"
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:paddingBottom="5dp"
             android:singleLine="true"
             android:text="@string/click_play_music"
             android:textColor="@android:color/white"
-            android:textSize="26sp" />
+            android:textSize="@dimen/tv_music_name_size" />
 
         <com.awell.launcher2.EarqueeTextView
             android:id="@+id/music_artist"
@@ -50,11 +49,10 @@
             android:ellipsize="marquee"
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:paddingTop="10dp"
             android:singleLine="true"
             android:text="@string/music_artist"
             android:textColor="@color/grey_1915"
-            android:textSize="18sp" />
+            android:textSize="@dimen/tv_music_artist_size" />
     </LinearLayout>
 
     <LinearLayout
@@ -75,8 +73,8 @@
 
         <ImageView
             android:id="@+id/music_widget_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
             android:src="@drawable/sf_music_pre" />
 
         <View
@@ -86,8 +84,8 @@
 
         <ImageView
             android:id="@+id/music_widget_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
             android:src="@drawable/sf_music_bofang" />
 
         <View
@@ -97,8 +95,8 @@
 
         <ImageView
             android:id="@+id/music_widget_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
             android:src="@drawable/sf_music_next" />
 
         <View

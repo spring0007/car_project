@@ -255,13 +255,13 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
             Log.i(TAG, "mainReceiver:" + action);
             switch (action) {
                 case CommonData.BROADCAST_LAMP_SWITCH:
-//                    if (intent.getIntExtra("lamplet_state", 0) == 1)
-//                        ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.open);
-//                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
+                    if (intent.getIntExtra("lamplet_state", 0) == 1)
+                        binding.carIv.setImageResource(R.drawable.sf_car_open);
+                    else binding.carIv.setImageResource(R.drawable.sf_car_off);
                     break;
                 case CommonData.ACTION_ACC_ON:
-//                    if (ivLampSwitchBg != null)
-//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    if (binding.carIv != null)
+                        binding.carIv.postDelayed(() -> accRecor = false, 8 * 1000);
                     break;
                 case CommonData.ACTION_ACC_OFF:
                     accRecor = true;

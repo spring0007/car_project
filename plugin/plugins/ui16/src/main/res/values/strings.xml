@@ -1,41 +1,13 @@
 <resources>
-    <string name="app_name">LauncherUI16</string><!-- app 名称 -->
+    <string name="app_name" translatable="false">LauncherUI16</string><!-- app 名称 -->
 
-    <string name="ui_key">LauncherUI16</string>
-    <string name="ui_clazz">com.launcher.ui16.MainActivityUI16</string>
+    <string name="ui_key" translatable="false">LauncherUI16</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui16.MainActivityUI16</string>
 
 
     <string name="click_play_music">Song Title</string>
     <string name="music_artist">Artist</string>
     <string name="unknown">unknown</string>
-
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday">Sunday</string>
-    <string-array name="week_str">
-        <item>@string/sunday</item>
-        <item>@string/monday</item>
-        <item>@string/tuesday</item>
-        <item>@string/wednesday</item>
-        <item>@string/thursday</item>
-        <item>@string/friday</item>
-        <item>@string/saturday</item>
-    </string-array>
-
-    <string name="radio">Radio</string>
-    <string name="navi">Navigation</string>
-    <string name="all_app">Apps</string>
-    <string name="phone">Bluetooth Phone</string>
-    <string name="music">Music</string>
-    <string name="video">Video</string>
-
-    <string name="bt_connected">Bluetooth Connected</string>
-    <string name="bt_not_connected">Bluetooth Not Connected</string>
-    <string name="bt_close">Bluetooth Closed</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
@@ -43,5 +15,6 @@
         <item>wallpaper_02</item>
         <item>wallpaper_03</item>
     </string-array>
+    <string name="music">Music</string>
 
 </resources>

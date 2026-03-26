@@ -58,8 +58,8 @@
 
     <ImageView
         android:id="@+id/car_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/cariv_width"
+        android:layout_height="@dimen/cariv_height"
         android:scaleType="fitXY"
         android:src="@drawable/sf_car_off"
         app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
@@ -69,7 +69,7 @@
     <ImageView
         android:id="@+id/bottom_bg"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:scaleType="fitXY"
         android:src="@drawable/sf_bottom_bg"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -174,14 +174,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.07" />
+        app:layout_constraintGuide_percent="0.05" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.93" />
+        app:layout_constraintGuide_percent="0.97" />
 
     <include
         android:id="@+id/layout_music_widget"

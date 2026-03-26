@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/radio_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/radio_bg_width"
+        android:layout_height="@dimen/radio_bg_height"
         android:src="@drawable/sf_radio_bg"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         app:layout_constraintTop_toBottomOf="@+id/radio_bg"
         app:layout_constraintStart_toStartOf="@+id/radio_bg"
         android:text="FM"
-        android:textSize="26sp"
+        android:textSize="@dimen/tv_am_fm_size"
         android:paddingStart="30dp"
         android:textColor="@color/white"
         />
@@ -49,7 +49,7 @@
             android:id="@+id/tv_radio_freq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="70sp"
+            android:textSize="@dimen/tv_radio_freq_size"
             android:textColor="@color/white"
             android:layout_gravity="bottom"
             android:gravity="center"
@@ -60,7 +60,7 @@
             android:id="@+id/tv_radio_freq_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:textSize="@dimen/tv_radio_freq_unit_size"
             android:textColor="@color/white"
             android:layout_gravity="center|bottom"
             android:gravity="center"
@@ -89,8 +89,8 @@
             />
         <ImageView
             android:id="@+id/iv_radio_pre"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
             android:src="@drawable/sf_music_pre"
 
             />
@@ -101,8 +101,8 @@
             />
         <ImageView
             android:id="@+id/iv_radio_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
             android:src="@drawable/sf_music_next"
             tools:ignore="ContentDescription"
             />

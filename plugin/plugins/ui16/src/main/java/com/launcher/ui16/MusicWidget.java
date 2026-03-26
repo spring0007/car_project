@@ -115,8 +115,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_200));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_201));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_202));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_203));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_204));
+       // bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_203));
+       // bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_204));
     
         carouselView.setBitmaps(bitmaps);
     
