@@ -12,13 +12,13 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_video"
-        app:layout_constraintWidth_percent="0.21"
-        app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="1:1.4"
         app:layout_constraintEnd_toStartOf="@+id/iv_time"
-        app:layout_constraintHorizontal_chainStyle="spread" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.21" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,11 +27,11 @@
         android:textColor="#ffffffff"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/iv_video"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
         app:layout_constraintEnd_toEndOf="@+id/iv_video"
+        app:layout_constraintStart_toStartOf="@+id/iv_video"
         app:layout_constraintTop_toTopOf="@+id/iv_video"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <ImageView
         android:id="@+id/iv_time"
@@ -39,12 +39,12 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_datetime_bg"
-        app:layout_constraintWidth_percent="0.21"
-        app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintTop_toTopOf="@+id/iv_video"
         app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toStartOf="@+id/iv_album"
         app:layout_constraintStart_toEndOf="@+id/iv_video"
-        app:layout_constraintEnd_toStartOf="@+id/iv_album" />
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintWidth_percent="0.21" />
 
     <ImageView
         android:id="@+id/iv_album"
@@ -52,28 +52,28 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_album"
-        app:layout_constraintWidth_percent="0.21"
-        app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintTop_toTopOf="@+id/iv_video"
         app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toStartOf="@+id/iv_interconnect"
         app:layout_constraintStart_toEndOf="@+id/iv_time"
-        app:layout_constraintEnd_toStartOf="@+id/iv_interconnect" />
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintWidth_percent="0.21" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:paddingHorizontal="3dp"
+        android:singleLine="true"
         android:text="@string/image_album"
         android:textColor="#ffffffff"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:paddingHorizontal="3dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        app:layout_constraintVertical_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/iv_album"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
         app:layout_constraintEnd_toEndOf="@+id/iv_album"
+        app:layout_constraintStart_toStartOf="@+id/iv_album"
         app:layout_constraintTop_toTopOf="@+id/iv_video"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <ImageView
         android:id="@+id/iv_interconnect"
@@ -81,70 +81,74 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_interconnect"
-        app:layout_constraintWidth_percent="0.21"
-        app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintTop_toTopOf="@+id/iv_video"
         app:layout_constraintBottom_toBottomOf="@+id/iv_video"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_album"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_video"
+        app:layout_constraintWidth_percent="0.21" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:paddingHorizontal="3dp"
+        android:singleLine="true"
         android:text="@string/phone_connect"
         android:textColor="#ffffffff"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:paddingHorizontal="3dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        app:layout_constraintVertical_bias="0.85"
-        app:layout_constraintStart_toStartOf="@+id/iv_interconnect"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_video"
         app:layout_constraintEnd_toEndOf="@+id/iv_interconnect"
+        app:layout_constraintStart_toStartOf="@+id/iv_interconnect"
         app:layout_constraintTop_toTopOf="@+id/iv_video"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_video" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <TextView
         android:id="@+id/tv_temper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="35sp"
         android:textColor="@color/white"
+        android:textSize="35sp"
         android:textStyle="bold"
-        tools:text="30"
-        app:layout_constraintTop_toTopOf="@+id/iv_time"
         app:layout_constraintBottom_toBottomOf="@+id/iv_time"
-        app:layout_constraintStart_toStartOf="@+id/iv_time"
         app:layout_constraintEnd_toEndOf="@+id/iv_time"
         app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintVertical_bias="0.12"/>
-
-    <TextView
-        android:id="@+id/tv_temper_scope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textSize="22sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        tools:text="多云 20/30"
         app:layout_constraintStart_toStartOf="@+id/iv_time"
-        app:layout_constraintEnd_toEndOf="@+id/iv_time"
+        app:layout_constraintTop_toTopOf="@+id/iv_time"
+        app:layout_constraintVertical_bias="0.12"
+        tools:text="30" />
+
+    <com.launcher.zy_ui01.AlwaysMarqueeTextView
+        android:id="@+id/tv_temper_scope"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_weather"
         app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintTop_toBottomOf="@+id/tv_temper"/>
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temper"
+        tools:text="多云 20/30" />
 
     <ImageView
         android:id="@+id/iv_weather"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:src="@mipmap/ic_launcher"
-        app:layout_constraintWidth_percent="0.065"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintTop_toTopOf="@+id/tv_temper"
         app:layout_constraintBottom_toBottomOf="@+id/tv_temper_scope"
-        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/iv_time"
-        app:layout_constraintHorizontal_bias="0.9"/>
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_temper"
+        app:layout_constraintWidth_percent="0.058"
+        tools:src="@mipmap/ic_launcher" />
 
     <TextClock
         android:id="@+id/tv_time"
@@ -156,42 +160,42 @@
         android:textColor="#ffffffff"
         android:textSize="35sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintTop_toTopOf="@+id/iv_time"
         app:layout_constraintBottom_toBottomOf="@+id/iv_time"
+        app:layout_constraintEnd_toEndOf="@+id/iv_time"
         app:layout_constraintStart_toStartOf="@+id/iv_time"
-        app:layout_constraintEnd_toEndOf="@+id/iv_time" />
+        app:layout_constraintTop_toTopOf="@+id/iv_time"
+        app:layout_constraintVertical_bias="0.5" />
 
     <TextClock
         android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:format24Hour="@string/yyyy_mm_dd"
         android:format12Hour="@string/yyyy_mm_dd"
-        tools:text="2025年3月19日"
+        android:format24Hour="@string/yyyy_mm_dd"
         android:textColor="#ffffffff"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_time"
         app:layout_constraintEnd_toEndOf="@+id/iv_time"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
         app:layout_constraintTop_toTopOf="@+id/iv_time"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_time" />
+        app:layout_constraintVertical_bias="0.75"
+        tools:text="2025年3月19日" />
 
     <TextClock
         android:id="@+id/tv_week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:format24Hour="EEE"
         android:format12Hour="EEEE"
-        tools:text="周四"
+        android:format24Hour="EEE"
         android:textColor="#ffffffff"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.86"
-        app:layout_constraintStart_toStartOf="@+id/iv_time"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_time"
         app:layout_constraintEnd_toEndOf="@+id/iv_time"
+        app:layout_constraintStart_toStartOf="@+id/iv_time"
         app:layout_constraintTop_toTopOf="@+id/iv_time"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_time" />
+        app:layout_constraintVertical_bias="0.86"
+        tools:text="周四" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
