@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">LauncherUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Klikněte pro přehrávání</string>
+    <string name="music_artist">Umělec</string>
+    <string name="add_app">Přidat</string>
+    <string name="settings">Scéna</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">Hudba</string>
+    <string name="navi">Lodě</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Zataženo</string>
+    <string name="weather_desc_102">Několik mraků</string>
+    <string name="weather_desc_103">Částečně slunečné</string>
+    <string name="weather_desc_104">Zataženo</string>
+    <string name="weather_desc_300">Přeháňky</string>
+    <string name="weather_desc_301">Silné přeháňky</string>
+    <string name="weather_desc_302">Bouřková sprcha</string>
+    <string name="weather_desc_303">Silná bouřka</string>
+    <string name="weather_desc_304">Bouřka s krupobitími</string>
+    <string name="weather_desc_305">Slabý déšť</string>
+    <string name="weather_desc_306">Mírné srážky</string>
+    <string name="weather_desc_307">Silné deště</string>
+    <string name="weather_desc_308">Extrémní déšť</string>
+    <string name="weather_desc_309">Mrholení</string>
+    <string name="weather_desc_310">Bouře</string>
+    <string name="weather_desc_311">Silná bouře</string>
+    <string name="weather_desc_312">Silná bouře</string>
+    <string name="weather_desc_313">Mrznoucí déšť</string>
+    <string name="weather_desc_400">Lehký sníh</string>
+    <string name="weather_desc_401">Mírné sněžení</string>
+    <string name="weather_desc_402">Silné sněžení</string>
+    <string name="weather_desc_403">Sněhová bouře</string>
+    <string name="weather_desc_404">Sleit</string>
+    <string name="weather_desc_405">Déšť a sníh</string>
+    <string name="weather_desc_406">Přeháňka sněhu</string>
+    <string name="weather_desc_407">Sněhová přeháňka</string>
+    <string name="weather_desc_500">Mlha</string>
+    <string name="weather_desc_501">Společné</string>
+    <string name="weather_desc_502">Mlha</string>
+    <string name="weather_desc_503">Těžká mlha</string>
+    <string name="weather_desc_504">Lehký opar</string>
+    <string name="weather_desc_507">Písečná bouře</string>
+    <string name="weather_desc_508">Silná písečná bouře</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

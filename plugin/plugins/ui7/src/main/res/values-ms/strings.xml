@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">PelancarUI7</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Klik Untuk Main</string>
+    <string name="music_artist">Artis</string>
+    <string name="add_app">Tambah</string>
+    <string name="music">Muzik</string>
+    <string name="navigation">Navigasi</string>
+    <string name="App">Aplikasi</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Telefon</string>
+    <string name="browser">Pelayar</string>
+    <string name="setting">Tetapan</string>
+    <string name="equalizer">Dsp</string>
+    <string name="video">Video</string>
+    <string name="aux">Kepada</string>
+
+    
+
+</resources>

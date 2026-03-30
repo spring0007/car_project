@@ -1,21 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-/*
-* Copyright (C) 2008 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
- -->
+<resources>
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">啟動器UI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
     <string name="click_play_music">請選擇音樂</string>
+    <string name="music_artist">藝術家</string>
+    <string name="add_app">新增</string>
+    <string name="settings">場景</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">音樂</string>
+    <string name="navi">船隻</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">桑尼</string>
+    <string name="weather_desc_101">多雲</string>
+    <string name="weather_desc_102">少雲</string>
+    <string name="weather_desc_103">部分晴朗</string>
+    <string name="weather_desc_104">陰天</string>
+    <string name="weather_desc_300">陣雨</string>
+    <string name="weather_desc_301">大陣雨</string>
+    <string name="weather_desc_302">雷陣雨</string>
+    <string name="weather_desc_303">嚴重雷陣雨</string>
+    <string name="weather_desc_304">雷陣雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中度降雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">極端降雨</string>
+    <string name="weather_desc_309">細雨</string>
+    <string name="weather_desc_310">風暴</string>
+    <string name="weather_desc_311">暴風雨</string>
+    <string name="weather_desc_312">嚴重風暴</string>
+    <string name="weather_desc_313">凍雨</string>
+    <string name="weather_desc_400">輕雪</string>
+    <string name="weather_desc_401">中度降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴風雪</string>
+    <string name="weather_desc_404">冰雹</string>
+    <string name="weather_desc_405">雨與雪</string>
+    <string name="weather_desc_406">陣雨雪</string>
+    <string name="weather_desc_407">雪花紛飛</string>
+    <string name="weather_desc_500">霧</string>
+    <string name="weather_desc_501">關節</string>
+    <string name="weather_desc_502">霧</string>
+    <string name="weather_desc_503">濃霧</string>
+    <string name="weather_desc_504">輕霧</string>
+    <string name="weather_desc_507">沙塵暴</string>
+    <string name="weather_desc_508">強烈沙塵暴</string>
+    <string name="weather_desc_unknown">UNK</string>
+
 </resources>

@@ -8,6 +8,7 @@
     <string name="click_play_music">Song Title</string>
     <string name="music_artist">Artist</string>
     <string name="unknown">unknown</string>
+    <string name="music">Music</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
@@ -15,6 +16,6 @@
         <item>wallpaper_02</item>
         <item>wallpaper_03</item>
     </string-array>
-    <string name="music">Music</string>
+
 
 </resources>

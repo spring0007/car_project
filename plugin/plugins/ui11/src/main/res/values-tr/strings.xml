@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">LauncherUI11</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Şarkı Adı</string>
+    <string name="music_artist">Sanatçı</string>
+    <string name="unknown">bilinmeyen</string>
+
+    <string name="radio">Radyo</string>
+    <string name="navi">Navigasyon</string>
+    <string name="all_app">Uygulamalar</string>
+    <string name="phone">Bluetooth Telefon</string>
+    <string name="music">Müzik</string>
+    <string name="video">Video</string>
+
+    <string name="bt_connected">Bluetooth Bağlı</string>
+    <string name="bt_not_connected">Bluetooth Bağlanmadı</string>
+    <string name="bt_close">Bluetooth Kapalı</string>
+
+    
+
+</resources>

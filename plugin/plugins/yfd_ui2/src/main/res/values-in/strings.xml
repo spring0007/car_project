@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">PeluncurUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Klik Untuk Bermain</string>
+    <string name="music_artist">Artis</string>
+    <string name="add_app">Tambahkan</string>
+    <string name="settings">Mengatur</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">Musik</string>
+    <string name="navi">Kapal</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">Cerah</string>
+    <string name="weather_desc_101">Berawan</string>
+    <string name="weather_desc_102">Beberapa awan</string>
+    <string name="weather_desc_103">Sebagian cerah</string>
+    <string name="weather_desc_104">Mendung</string>
+    <string name="weather_desc_300">Hujan hujan</string>
+    <string name="weather_desc_301">Hujan lebat</string>
+    <string name="weather_desc_302">Hujan petir</string>
+    <string name="weather_desc_303">Hujan petir yang parah</string>
+    <string name="weather_desc_304">Hujan petir dengan hujan es</string>
+    <string name="weather_desc_305">Hujan ringan</string>
+    <string name="weather_desc_306">Hujan sedang</string>
+    <string name="weather_desc_307">Hujan lebat</string>
+    <string name="weather_desc_308">Hujan ekstrem</string>
+    <string name="weather_desc_309">Hujan gerimis</string>
+    <string name="weather_desc_310">Badai</string>
+    <string name="weather_desc_311">Badai besar</string>
+    <string name="weather_desc_312">Badai parah</string>
+    <string name="weather_desc_313">Hujan beku</string>
+    <string name="weather_desc_400">Salju tipis</string>
+    <string name="weather_desc_401">Salju sedang</string>
+    <string name="weather_desc_402">Salju tebal</string>
+    <string name="weather_desc_403">Badai salju</string>
+    <string name="weather_desc_404">Hujan es</string>
+    <string name="weather_desc_405">Hujan dan salju</string>
+    <string name="weather_desc_406">Mandi salju</string>
+    <string name="weather_desc_407">Badai salju</string>
+    <string name="weather_desc_500">Kabut</string>
+    <string name="weather_desc_501">Sambungan</string>
+    <string name="weather_desc_502">Kabut</string>
+    <string name="weather_desc_503">Kabut tebal</string>
+    <string name="weather_desc_504">Kabut ringan</string>
+    <string name="weather_desc_507">Badai pasir</string>
+    <string name="weather_desc_508">Badai pasir yang berat</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

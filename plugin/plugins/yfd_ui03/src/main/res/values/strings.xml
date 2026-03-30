@@ -6,10 +6,10 @@
     <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
     <!--system/priv-app/ 目录值和apk名的值-->
     <!--主题app和系统会使用到-->
-    <string name="ui_key">LauncherUI3</string>
+    <string name="ui_key" translatable="false">LauncherUI3</string>
 
     <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
-    <string name="ui_clazz">com.launcher.yfd_ui3.YFD_UIActivity</string>
+    <string name="ui_clazz" translatable="false">com.launcher.yfd_ui3.YFD_UIActivity</string>
 
     <string name="click_play_music">Click  To Play</string>
     <string name="music_artist">Artist</string>

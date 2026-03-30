@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ランチャーUI13</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">クリックしてプレイ</string>
+    <string name="music_artist">アーティスト</string>
+    <string name="add_app">追加</string>
+
+    <string name="radio">ラジオ</string>
+    <string name="navi">ナビゲーション</string>
+    <string name="all_app">アプリ</string>
+    <string name="phone">Bluetooth</string>
+    <string name="video">ビデオ</string>
+
+    
+
+</resources>

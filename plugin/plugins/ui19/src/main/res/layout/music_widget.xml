@@ -7,11 +7,6 @@
     android:background="@drawable/sf_music_bg"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
         <ImageView
             android:id="@+id/iv_music_logo"
             android:layout_width="0dp"
@@ -109,5 +104,4 @@
                 android:layout_height="1dp"
                 android:layout_weight="1" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.launcher.ui19.MusicWidget>

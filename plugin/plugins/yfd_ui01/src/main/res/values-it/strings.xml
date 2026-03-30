@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Titolo della canzone</string>
+    <string name="music">MUSICA</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">Applicazioni</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">App Window</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="monday">Lunedì</string>
+    <string name="tuesday">Martedì</string>
+    <string name="wednesday">Mercoledì</string>
+    <string name="thursday">Giovedì</string>
+    <string name="friday">Venerdì</string>
+    <string name="saturday">Sabato</string>
+    <string name="sunday">Domenica</string>
+    <string name="unable_launch_application">Impossibile avviare l\'applicazione</string>
+    <string name="error_launching_application">Avvio dell\'applicazione tramite errore</string>
+    <string name="unable_uninstall_system_applications">Impossibile disinstallare le applicazioni di sistema</string>
+    <string name="unable_uninstall_current_desktop_application">Impossibile disinstallare l\'applicazione desktop attuale</string>
+    <string name="error_uninstalling_application">Errore nell\'installazione dell\'applicazione</string>
+    <string name="choose_brand">Scegli un marchio</string>
+    <string name="choose_model">Scegli il modello dell\'auto</string>
+    <string name="uninstall">Impossibile avviare il programma di disinstallazione</string>
+    <string name="custom_carmodel">Modello di auto personalizzata</string>
+    <string name="select_car_model">Scegli un modello di auto</string>
+    <string name="sd_">Scheda SD</string>
+    <string name="usb_">U-disk</string>
+    <string name="custom_">Consuetudine</string>
+    <string name="no_image_available">Nessuna immagine disponibile</string>
+    
+
+</resources>

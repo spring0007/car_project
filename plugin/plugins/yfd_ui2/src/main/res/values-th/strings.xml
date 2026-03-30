@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">ตัวเรียกใช้งาน UI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">คลิกเพื่อเล่น</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="add_app">เพิ่ม</string>
+    <string name="settings">เซ็ต</string>
+    <string name="bluetooth">บีที</string>
+    <string name="music">เพลง</string>
+    <string name="navi">เรือ</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">แดดจัด</string>
+    <string name="weather_desc_101">มีเมฆมาก</string>
+    <string name="weather_desc_102">มีเมฆน้อย</string>
+    <string name="weather_desc_103">แดดจัดบางส่วน</string>
+    <string name="weather_desc_104">มืดครึ้ม</string>
+    <string name="weather_desc_300">ฝนตก</string>
+    <string name="weather_desc_301">ฝนตกหนัก</string>
+    <string name="weather_desc_302">ฝักบัวฟ้าร้อง</string>
+    <string name="weather_desc_303">ฝนฟ้าคะนองรุนแรง</string>
+    <string name="weather_desc_304">ฝนฟ้าคะนองพร้อมลูกเห็บ</string>
+    <string name="weather_desc_305">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_306">ฝนปานกลาง</string>
+    <string name="weather_desc_307">ฝนตกหนัก</string>
+    <string name="weather_desc_308">ฝนตกหนัก</string>
+    <string name="weather_desc_309">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_310">พายุ</string>
+    <string name="weather_desc_311">พายุหนัก</string>
+    <string name="weather_desc_312">พายุรุนแรง</string>
+    <string name="weather_desc_313">ฝนเยือกแข็ง</string>
+    <string name="weather_desc_400">หิมะตกเล็กน้อย</string>
+    <string name="weather_desc_401">หิมะตกปานกลาง</string>
+    <string name="weather_desc_402">หิมะตกหนัก</string>
+    <string name="weather_desc_403">พายุหิมะ</string>
+    <string name="weather_desc_404">ลูกเห็บ</string>
+    <string name="weather_desc_405">ฝนและหิมะ</string>
+    <string name="weather_desc_406">ฝนหิมะตก</string>
+    <string name="weather_desc_407">หิมะตก</string>
+    <string name="weather_desc_500">หมอก</string>
+    <string name="weather_desc_501">ข้อต่อ</string>
+    <string name="weather_desc_502">หมอกควัน</string>
+    <string name="weather_desc_503">หมอกควันหนา</string>
+    <string name="weather_desc_504">หมอกควันเล็กน้อย</string>
+    <string name="weather_desc_507">พายุทราย</string>
+    <string name="weather_desc_508">พายุทรายหนัก</string>
+    <string name="weather_desc_unknown">ยูเอ็นเค</string>
+
+</resources>

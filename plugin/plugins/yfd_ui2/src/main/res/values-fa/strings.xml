@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">لانچرUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">کلیک کنید برای پخش</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="add_app">افزودن</string>
+    <string name="settings">صحنه</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">موسیقی</string>
+    <string name="navi">کشتی ها</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">سانی</string>
+    <string name="weather_desc_101">ابری</string>
+    <string name="weather_desc_102">ابرهای کم</string>
+    <string name="weather_desc_103">نیمه آفتابی</string>
+    <string name="weather_desc_104">ابری</string>
+    <string name="weather_desc_300">باران باران</string>
+    <string name="weather_desc_301">باران شدید باران</string>
+    <string name="weather_desc_302">بارش رعد و برق</string>
+    <string name="weather_desc_303">بارش شدید رعد و برق</string>
+    <string name="weather_desc_304">رعد و برق همراه با تگرگ</string>
+    <string name="weather_desc_305">باران سبک</string>
+    <string name="weather_desc_306">بارش متوسط</string>
+    <string name="weather_desc_307">باران شدید</string>
+    <string name="weather_desc_308">باران شدید</string>
+    <string name="weather_desc_309">باران نم نم</string>
+    <string name="weather_desc_310">طوفان</string>
+    <string name="weather_desc_311">طوفان شدید</string>
+    <string name="weather_desc_312">طوفان شدید</string>
+    <string name="weather_desc_313">باران یخ زده</string>
+    <string name="weather_desc_400">برف سبک</string>
+    <string name="weather_desc_401">برف متوسط</string>
+    <string name="weather_desc_402">برف سنگین</string>
+    <string name="weather_desc_403">طوفان برفی</string>
+    <string name="weather_desc_404">باران یخ زده</string>
+    <string name="weather_desc_405">باران و برف</string>
+    <string name="weather_desc_406">برف دوش</string>
+    <string name="weather_desc_407">بارش برف</string>
+    <string name="weather_desc_500">مه</string>
+    <string name="weather_desc_501">مفصل</string>
+    <string name="weather_desc_502">مه</string>
+    <string name="weather_desc_503">مه سنگین</string>
+    <string name="weather_desc_504">مه سبک</string>
+    <string name="weather_desc_507">طوفان شن</string>
+    <string name="weather_desc_508">طوفان شن شدید</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

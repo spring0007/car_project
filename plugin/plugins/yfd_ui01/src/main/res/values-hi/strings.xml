@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">लॉन्चरUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music">राग</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="unknown">अप्रसिद्घ व्यक्ति</string>
+    <string name="bluetooth">ब्लूटूथ</string>
+    <string name="apps">ऐप्स</string>
+    <string name="dsp">डीएसपी</string>
+    <string name="window_app">विंडो ऐप</string>
+    <string name="am">एएम</string>
+    <string name="pm">प्रधानमंत्री</string>
+    <string name="monday">सोमवार</string>
+    <string name="tuesday">मंगलवार</string>
+    <string name="wednesday">बुधवार</string>
+    <string name="thursday">गुरुवार</string>
+    <string name="friday">शुक्रवार</string>
+    <string name="saturday">शानिवार</string>
+    <string name="sunday">रविवार</string>
+    <string name="unable_launch_application">अनुप्रयोग लॉन्च करने में असमर्थ</string>
+    <string name="error_launching_application">अनुप्रयोग लॉन्च करने में त्रुटि</string>
+    <string name="unable_uninstall_system_applications">सिस्टम अनुप्रयोगों की स्थापना रद्द करने में असमर्थ</string>
+    <string name="unable_uninstall_current_desktop_application">वर्तमान डेस्कटॉप अनुप्रयोग की स्थापना रद्द करने में असमर्थ</string>
+    <string name="error_uninstalling_application">अनुप्रयोग की स्थापना रद्द करने में त्रुटि</string>
+    <string name="choose_brand">एक ब्रांड चुनें</string>
+    <string name="choose_model">कार मॉडल चुनें</string>
+    <string name="uninstall">स्थापना रद्द करने का प्रोग्राम प्रारंभ करने में असमर्थ</string>
+    <string name="custom_carmodel">कस्टम कार मॉडल</string>
+    <string name="select_car_model">एक कार मॉडल चुनें</string>
+    <string name="sd_">एसडी कार्ड</string>
+    <string name="usb_">यू-डिस्क</string>
+    <string name="custom_">रिवाज</string>
+    <string name="no_image_available">कोई छवि उपलब्ध नहीं है</string>
+    
+
+</resources>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ランチャーUI14</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">曲名</string>
+    <string name="music_artist">アーティスト</string>
+    <string name="unknown">不明</string>
+
+    <string name="radio">ラジオ</string>
+    <string name="navi">ナビゲーション</string>
+    <string name="all_app">アプリ</string>
+    <string name="phone">Bluetooth電話</string>
+    <string name="music">音楽</string>
+    <string name="video">ビデオ</string>
+
+    <string name="bt_connected">Bluetooth Connected(Bluetooth接続済み)</string>
+    <string name="bt_not_connected">Bluetooth接続されていません</string>
+    <string name="bt_close">Bluetooth Closed</string>
+
+    
+
+</resources>

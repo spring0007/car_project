@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">लॉन्चरUI9</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="add_app">आगे कहना</string>
+    <string name="music">राग</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="App">ऐप</string>
+    <string name="radio">रेडियो</string>
+    <string name="phone">ब्लूटूथ</string>
+    <string name="folder">फ़ोल्डर प्रबंधित करें</string>
+    <string name="setting">सेटिंग</string>
+    <string name="equalizer">डीएसपी</string>
+    <string name="video">वीडियो</string>
+    <string name="aux">को</string>
+
+    
+
+</resources>

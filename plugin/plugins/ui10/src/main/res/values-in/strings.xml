@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">PeluncurUI10</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Judul Lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">tidak diketahui</string>
+
+    <string name="radio">Radio</string>
+    <string name="navi">Navigasi</string>
+    <string name="all_app">Aplikasi</string>
+    <string name="phone">Telepon Bluetooth</string>
+    <string name="music">Musik</string>
+    <string name="video">Videonya</string>
+
+    
+
+</resources>

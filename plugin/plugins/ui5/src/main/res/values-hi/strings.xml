@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">लॉन्चरUI5</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="radio">रेडियो</string>
+    <string name="unknown">अप्रसिद्घ व्यक्ति</string>
+
+    
+
+</resources>

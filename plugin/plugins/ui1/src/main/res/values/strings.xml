@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LauncherUI1</string>
-    <string name="ui_key">LauncherUI1</string>
-    <string name="ui_clazz">com.example.plugin1.UIActivity</string>
+    <string name="ui_key" translatable="false">LauncherUI1</string>
+    <string name="ui_clazz" translatable="false">com.example.plugin1.UIActivity</string>
 
     <string name="click_play_music">Click To Play</string>
     <string name="music_artist">Artist</string>

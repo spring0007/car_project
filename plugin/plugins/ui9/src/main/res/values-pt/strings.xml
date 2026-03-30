@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LauncherUI9</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Clique para jogar</string>
+    <string name="music_artist">Artista</string>
+    <string name="add_app">Adicionar</string>
+    <string name="music">Música</string>
+    <string name="navigation">Navegação</string>
+    <string name="App">App</string>
+    <string name="radio">Rádio</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Gerenciar pastas</string>
+    <string name="setting">Configurações</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Vídeo</string>
+    <string name="aux">Para o</string>
+
+    
+
+</resources>

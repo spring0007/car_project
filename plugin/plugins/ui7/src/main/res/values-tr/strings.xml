@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LauncherUI7</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Oynamak İçin Tıklayın</string>
+    <string name="music_artist">Sanatçı</string>
+    <string name="add_app">Ekle</string>
+    <string name="music">Müzik</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="App">Uygulama</string>
+    <string name="radio">Radyo</string>
+    <string name="phone">Telefon</string>
+    <string name="browser">Tarayıcı</string>
+    <string name="setting">Ortamlar</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Video</string>
+    <string name="aux"></string>
+
+    
+
+</resources>

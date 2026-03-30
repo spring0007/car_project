@@ -55,6 +55,7 @@ public class TriImageCarouselView extends View {
     private Rect[] startRects = new Rect[3];  // 复用对象
     private Rect[] endRects = new Rect[3];
     private Rect[] currentRects = new Rect[3]; // 用于动画中临时绘制
+    private boolean isNextAnimation = false; // 记录动画方向
 
     // 倒影相关
     private Bitmap reflectionBitmap;
@@ -142,11 +143,29 @@ public class TriImageCarouselView extends View {
     }
 
     private void drawNormal(Canvas canvas) {
-        // 左右图片（带缩放效果）
+        // 左右图片（带缩放和位移效果）
         int leftIndex = (currentIndex - 1 + bitmaps.size()) % bitmaps.size();
-        drawScaledRoundBitmap(canvas, bitmaps.get(leftIndex), leftRect, leftScale);
         int rightIndex = (currentIndex + 1) % bitmaps.size();
-        drawScaledRoundBitmap(canvas, bitmaps.get(rightIndex), rightRect, rightScale);
+        
+        // 计算左侧图片的位置和缩放
+        // 向右滑动时，左侧图片向右移动（向中间靠拢）；向左滑动时，左侧图片向左移动（远离中间）
+        float leftDx = currentOffsetX * 0.5f;
+        int leftScaledWidth = (int) (sideSize * leftScale);
+        int leftScaledHeight = (int) (sideSize * leftScale);
+        int leftLeft = leftRect.left + (int) leftDx - (leftScaledWidth - sideSize) / 2;
+        int leftTop = leftRect.top - (leftScaledHeight - sideSize) / 2;
+        Rect leftDestRect = new Rect(leftLeft, leftTop, leftLeft + leftScaledWidth, leftTop + leftScaledHeight);
+        drawScaledRoundBitmap(canvas, bitmaps.get(leftIndex), leftDestRect, 1.0f);
+        
+        // 计算右侧图片的位置和缩放
+        // 向左滑动时，右侧图片向左移动（向中间靠拢）；向右滑动时，右侧图片向右移动（远离中间）
+        float rightDx = currentOffsetX * 0.5f;
+        int rightScaledWidth = (int) (sideSize * rightScale);
+        int rightScaledHeight = (int) (sideSize * rightScale);
+        int rightLeft = rightRect.left + (int) rightDx - (rightScaledWidth - sideSize) / 2;
+        int rightTop = rightRect.top - (rightScaledHeight - sideSize) / 2;
+        Rect rightDestRect = new Rect(rightLeft, rightTop, rightLeft + rightScaledWidth, rightTop + rightScaledHeight);
+        drawScaledRoundBitmap(canvas, bitmaps.get(rightIndex), rightDestRect, 1.0f);
 
         // 中心图片（带滑动偏移和缩放）
         Bitmap centerBitmap = bitmaps.get(currentIndex);
@@ -155,10 +174,10 @@ public class TriImageCarouselView extends View {
         float scale = centerScale;
         int scaledWidth = (int) (centerSize * scale);
         int scaledHeight = (int) (centerSize * scale);
-        int left = centerRect.left + (int) dx - (scaledWidth - centerSize) / 2;
-        int top = centerRect.top - (scaledHeight - centerSize) / 2;
-        Rect destRect = new Rect(left, top, left + scaledWidth, top + scaledHeight);
-        drawScaledRoundBitmap(canvas, centerBitmap, destRect, scale);
+        int centerLeft = centerRect.left + (int) dx - (scaledWidth - centerSize) / 2;
+        int centerTop = centerRect.top - (scaledHeight - centerSize) / 2;
+        Rect destRect = new Rect(centerLeft, centerTop, centerLeft + scaledWidth, centerTop + scaledHeight);
+        drawScaledRoundBitmap(canvas, centerBitmap, destRect, 1.0f);
 
         // 倒影
         drawReflection(canvas, destRect);
@@ -166,31 +185,44 @@ public class TriImageCarouselView extends View {
 
     private void drawTransition(Canvas canvas) {
         float progress = transitionProgress;
-        for (int i = 0; i < 3; i++) {
-            int idx = startIndices[i];
-            if (idx < 0 || idx >= bitmaps.size()) continue;
-            Bitmap bmp = bitmaps.get(idx);
-            if (bmp == null) continue;
-
-            Rect start = startRects[i];
-            Rect end = endRects[i];
-            Rect current = currentRects[i];
-            // 复用矩形，避免创建新对象
-            current.left = start.left + (int) ((end.left - start.left) * progress);
-            current.top = start.top + (int) ((end.top - start.top) * progress);
-            current.right = start.right + (int) ((end.right - start.right) * progress);
-            current.bottom = start.bottom + (int) ((end.bottom - start.bottom) * progress);
-            
-            // 根据位置计算缩放比例：中间位置缩放最大，两侧缩放最小
-            float positionScale;
-            if (i == 1) { // 中间位置
-                positionScale = 1.0f;
-            } else { // 两侧位置
-                positionScale = (float) sideSize / centerSize;
-            }
-            
-            drawScaledRoundBitmap(canvas, bmp, current, positionScale);
+        
+        // 根据动画方向确定绘制顺序，避免遮挡问题
+        // 绘制原则：先画在最底层的图片，后画在最上层的图片
+        if (isNextAnimation) {
+            // 下一张：右→左（底层），左→中（中层），中→右（上层）
+            // 绘制顺序：位置 2(中→右), 位置 0(左→中), 位置 1(右→左)
+            drawTransitionBitmap(canvas, 0, progress); //   中→右（最底层，最先画）
+            drawTransitionBitmap(canvas, 2, progress); // 左→中（中层）
+            drawTransitionBitmap(canvas, 1, progress); //  右→左（最底层，最先画）
+        } else {
+            // 上一张：左→右（底层），中→左（中层），右→中（上层）
+            // 绘制顺序：位置 0(中→左), 位置 2(右→中), 位置 1(左→右)
+            drawTransitionBitmap(canvas, 0, progress); // 中→左（最底层，最先画）
+            drawTransitionBitmap(canvas, 2, progress); // 右→中（中层）
+            drawTransitionBitmap(canvas, 1, progress); // 左→右（最上层，最后画）
         }
+    }
+    
+    // 绘制过渡动画中的单张图片
+    private void drawTransitionBitmap(Canvas canvas, int positionIndex, float progress) {
+        int idx = startIndices[positionIndex];
+        if (idx < 0 || idx >= bitmaps.size()) return;
+        Bitmap bmp = bitmaps.get(idx);
+        if (bmp == null) return;
+
+        Rect start = startRects[positionIndex];
+        Rect end = endRects[positionIndex];
+        Rect current = currentRects[positionIndex];
+        
+        // 计算当前矩形位置
+        current.left = start.left + (int) ((end.left - start.left) * progress);
+        current.top = start.top + (int) ((end.top - start.top) * progress);
+        current.right = start.right + (int) ((end.right - start.right) * progress);
+        current.bottom = start.bottom + (int) ((end.bottom - start.bottom) * progress);
+        
+        // 根据目标位置计算缩放比例：中间位置为 1.0，两侧位置也为 1.0（因为 bitmap 已经缩放到 centerSize）
+        // 实际绘制时使用 rect 本身的大小即可
+        drawScaledRoundBitmap(canvas, bmp, current, 1.0f);
     }
 
     // 绘制圆角图片（复用 Path，支持缩放）
@@ -288,25 +320,24 @@ public class TriImageCarouselView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 float deltaX = event.getX() - downX;
-                currentOffsetX = deltaX;
+                // 限制最大移动距离为 swipeThresholdPx
+                currentOffsetX = Math.max(-swipeThresholdPx, Math.min(swipeThresholdPx, deltaX));
                 float progress = Math.min(1.0f, Math.abs(currentOffsetX) / (float) swipeThresholdPx);
                 
                 // 根据滑动方向计算三张图片的缩放比例
-                // 向右滑动（currentOffsetX > 0）：左侧图片放大，中间图片缩小，右侧图片继续缩小
-                // 向左滑动（currentOffsetX < 0）：右侧图片放大，中间图片缩小，左侧图片继续缩小
                 float centerScaleDelta = progress * (1 - MAX_SCALE_DOWN);
                 float sideScaleDelta = progress * (1 - MAX_SCALE_DOWN) * 0.5f; // 侧边图片缩放幅度较小
                 
                 if (currentOffsetX > 0) {
-                    // 向右滑动：左->中，中->右
-                    centerScale = 1.0f - centerScaleDelta;
-                    leftScale = 1.0f + sideScaleDelta;  // 左侧图片向中间移动，放大
-                    rightScale = 1.0f - sideScaleDelta; // 右侧图片远离，缩小
+                    // 向右滑动：左->中，中->右，右->左
+                    centerScale = 1.0f - centerScaleDelta;  // 中间图片缩小
+                    leftScale = 1.0f + sideScaleDelta;      // 左侧图片向中间移动，放大
+                    rightScale = 1.0f - sideScaleDelta;     // 右侧图片远离，缩小
                 } else {
-                    // 向左滑动：右->中，中->左
-                    centerScale = 1.0f - centerScaleDelta;
-                    leftScale = 1.0f - sideScaleDelta;  // 左侧图片远离，缩小
-                    rightScale = 1.0f + sideScaleDelta; // 右侧图片向中间移动，放大
+                    // 向左滑动：右->中，中->左，左->右
+                    centerScale = 1.0f - centerScaleDelta;  // 中间图片缩小
+                    leftScale = 1.0f - sideScaleDelta;      // 左侧图片远离，缩小
+                    rightScale = 1.0f + sideScaleDelta;     // 右侧图片向中间移动，放大
                 }
                 
                 invalidate();
@@ -390,46 +421,52 @@ public class TriImageCarouselView extends View {
         performSwitch(false);
     }
 
-    private void performSwitch( boolean isNext) {
+    private void performSwitch(boolean isNext) {
         // 起始三张图片索引（左、中、右）
         int leftIdx = (currentIndex - 1 + bitmaps.size()) % bitmaps.size();
         int centerIdx = currentIndex;
         int rightIdx = (currentIndex + 1) % bitmaps.size();
-
+    
         // 结束三张图片索引
         int endLeftIdx, endCenterIdx, endRightIdx;
         if (isNext) {
-            // 下一张：整体向右滚动+1
-            endLeftIdx = (leftIdx -1+ bitmaps.size()) % bitmaps.size();
+            // 下一张：索引向前滚动
+            // 左侧图片 → 移动到中间
+            // 中间图片 → 移动到右侧  
+            // 右侧图片 → 移动到左侧（新图片进入）
+            endLeftIdx = rightIdx;
             endCenterIdx = leftIdx;
             endRightIdx = centerIdx;
         } else {
-            // 下一张：整体向左滚动-1
+            // 上一张：索引向后滚动
+            // 左侧图片 → 移动到右侧
+            // 中间图片 → 移动到左侧
+            // 右侧图片 → 移动到中间
             endLeftIdx = centerIdx;
             endCenterIdx = rightIdx;
-            endRightIdx = (rightIdx + 1 + bitmaps.size()) % bitmaps.size();
+            endRightIdx = leftIdx;
         }
-        Log.i("TriImageCarouselView", "isNext=" + isNext + " leftIdx: " + leftIdx + ", " + centerIdx + ", " + rightIdx + " endIndices: " + endLeftIdx + ", " + endCenterIdx + ", " + endRightIdx);
+        //Log.i("TriImageCarouselView", "isNext=" + isNext + " start: [" + leftIdx + "," + centerIdx + "," + rightIdx + "] end: [" + endLeftIdx + "," + endCenterIdx + "," + endRightIdx + "]");
         startIndices[0] = leftIdx;
         startIndices[1] = centerIdx;
         startIndices[2] = rightIdx;
         endIndices[0] = endLeftIdx;
         endIndices[1] = endCenterIdx;
         endIndices[2] = endRightIdx;
-
+    
         // 起始矩形（固定位置）
         startRects[0].set(leftRect);
         startRects[1].set(centerRect);
         startRects[2].set(rightRect);
-
+    
         // 结束矩形（根据目标位置）
-        // 位置0：左边
+        // 位置 0：左边
         endRects[0].set(leftRect);
-        // 位置1：中间
+        // 位置 1：中间
         endRects[1].set(centerRect);
-        // 位置2：右边
+        // 位置 2：右边
         endRects[2].set(rightRect);
-
+    
         // 重置滑动状态
         currentOffsetX = 0;
         centerScale = 1.0f;
@@ -437,15 +474,9 @@ public class TriImageCarouselView extends View {
         rightScale = 1.0f;
         isAnimating = true;
         transitionProgress = 0f;
-
+        isNextAnimation = isNext; // 记录动画方向
+    
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-        if (isNext) {
-            // next：向右滑动，progress 从 1 到 0
-            animator.setFloatValues(0f, 1f);
-        } else {
-            // previous：向左滑动，progress 从 0 到 1
-            animator.setFloatValues(1f, 0f);
-        }
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.addUpdateListener(animation -> {
@@ -488,8 +519,16 @@ public class TriImageCarouselView extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        // 回收所有 bitmap 资源
+        for (Bitmap bmp : bitmaps) {
+            if (bmp != null && !bmp.isRecycled()) {
+                bmp.recycle();
+            }
+        }
+        bitmaps.clear();
         if (reflectionBitmap != null && !reflectionBitmap.isRecycled()) {
             reflectionBitmap.recycle();
+            reflectionBitmap = null;
         }
     }
 }

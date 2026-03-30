@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">लॉन्चरUI10</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="unknown">अप्रसिद्घ व्यक्ति</string>
+
+    <string name="radio">रेडियो</string>
+    <string name="navi">नेविगेशन</string>
+    <string name="all_app">ऐप्स</string>
+    <string name="phone">ब्लूटूथ फोन</string>
+    <string name="music">राग</string>
+    <string name="video">वीडियो</string>
+
+    
+
+</resources>

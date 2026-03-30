@@ -1,0 +1,16 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">عنوان الأغنية</string>
+    <string name="music_artist">فنان</string>
+    <string name="unknown">غير معروف</string>
+    <string name="music">الموسيقى</string>
+
+    
+
+
+</resources>

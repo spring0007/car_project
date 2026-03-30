@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI5</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tên bài hát</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="unknown">Không xác định</string>
+
+    
+
+</resources>

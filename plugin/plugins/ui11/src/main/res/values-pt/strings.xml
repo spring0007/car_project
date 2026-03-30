@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">LauncherUI11</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Título da Música</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">desconhecido</string>
+
+    <string name="radio">Rádio</string>
+    <string name="navi">Navegação</string>
+    <string name="all_app">Aplicativos</string>
+    <string name="phone">Telefone Bluetooth</string>
+    <string name="music">Música</string>
+    <string name="video">Vídeo</string>
+
+    <string name="bt_connected">Conexão Bluetooth</string>
+    <string name="bt_not_connected">Bluetooth Não Conectado</string>
+    <string name="bt_close">Bluetooth Fechado</string>
+
+    
+
+</resources>

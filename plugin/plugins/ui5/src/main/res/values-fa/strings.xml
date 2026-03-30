@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">لانچرUI5</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">عنوان آهنگ</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="radio">رادیو</string>
+    <string name="unknown">نامشخص</string>
+
+    
+
+</resources>

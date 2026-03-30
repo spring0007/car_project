@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">عنوان الأغنية</string>
+    <string name="music">الموسيقى</string>
+    <string name="music_artist">فنان</string>
+    <string name="unknown">غير معروف</string>
+    <string name="bluetooth">البلوتوث</string>
+    <string name="apps">التطبيقات</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">تطبيق ويندوز</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="monday">الاثنين</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الأربعاء</string>
+    <string name="thursday">الخميس</string>
+    <string name="friday">الجمعة</string>
+    <string name="saturday">السبت</string>
+    <string name="sunday">الأحد</string>
+    <string name="unable_launch_application">غير قادر على تشغيل التطبيق</string>
+    <string name="error_launching_application">خطأ في تشغيل التطبيق</string>
+    <string name="unable_uninstall_system_applications">غير قادر على إزالة تثبيت تطبيقات النظام</string>
+    <string name="unable_uninstall_current_desktop_application">غير قادر على إزالة تثبيت تطبيق سطح المكتب الحالي</string>
+    <string name="error_uninstalling_application">خطأ في إلغاء تثبيت التطبيق</string>
+    <string name="choose_brand">اختر علامة تجارية</string>
+    <string name="choose_model">اختر طراز السيارة</string>
+    <string name="uninstall">غير قادر على بدء برنامج إزالة التثبيت</string>
+    <string name="custom_carmodel">طراز سيارة مخصصة</string>
+    <string name="select_car_model">اختر طراز سيارة</string>
+    <string name="sd_">بطاقة SD</string>
+    <string name="usb_">قرص U</string>
+    <string name="custom_">العرف</string>
+    <string name="no_image_available">لا توجد صورة متاحة</string>
+    
+
+</resources>

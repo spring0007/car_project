@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">लॉन्चरUI8</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="add_app">आगे कहना</string>
+
+    <string name="radio">रेडियो</string>
+    <string name="navi">नेविगेशन</string>
+    <string name="all_app">ऐप्स</string>
+    <string name="phone">ब्लूटूथ फोन</string>
+    <string name="music">राग</string>
+
+    
+
+</resources>

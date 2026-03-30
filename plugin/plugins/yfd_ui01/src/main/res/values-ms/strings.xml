@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">PelancarUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tajuk Lagu</string>
+    <string name="music">MUZIK</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">Tidak diketahui</string>
+    <string name="bluetooth">Bahasa Bluetooth</string>
+    <string name="apps">Apl</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Apl tetingkap</string>
+    <string name="am">SAYA</string>
+    <string name="pm">PM</string>
+    <string name="monday">Isnin</string>
+    <string name="tuesday">Selasa</string>
+    <string name="wednesday">Rabu</string>
+    <string name="thursday">Khamis</string>
+    <string name="friday">Jumaat</string>
+    <string name="saturday">Sabtu</string>
+    <string name="sunday">Ahad</string>
+    <string name="unable_launch_application">Tidak dapat melancarkan aplikasi</string>
+    <string name="error_launching_application">Ralat melancarkan aplikasi</string>
+    <string name="unable_uninstall_system_applications">Tidak dapat menyahpasang aplikasi sistem</string>
+    <string name="unable_uninstall_current_desktop_application">Tidak dapat menyahpasang aplikasi desktop semasa</string>
+    <string name="error_uninstalling_application">Ralat menyahpasang aplikasi</string>
+    <string name="choose_brand">Pilih jenama</string>
+    <string name="choose_model">Pilih model kereta</string>
+    <string name="uninstall">Tidak dapat memulakan program nyahpasang</string>
+    <string name="custom_carmodel">Model Kereta Tersuai</string>
+    <string name="select_car_model">Pilih model kereta</string>
+    <string name="sd_">Kad SD</string>
+    <string name="usb_">Cakera U</string>
+    <string name="custom_">Tersuai</string>
+    <string name="no_image_available">Tiada imej tersedia</string>
+    
+
+</resources>

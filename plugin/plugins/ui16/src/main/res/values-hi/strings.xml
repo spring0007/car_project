@@ -1,0 +1,16 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="unknown">अप्रसिद्घ व्यक्ति</string>
+    <string name="music">राग</string>
+
+    
+
+
+</resources>

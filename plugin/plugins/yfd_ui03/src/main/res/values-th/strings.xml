@@ -1,0 +1,28 @@
+<resources>
+
+
+    <string name="app_name">ตัวเรียกใช้งาน UI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">คลิกเพื่อเล่น</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="add_app">เพิ่ม</string>
+    <string name="settings">เซ็ต</string>
+    <string name="bluetooth">บีที</string>
+    <string name="music">เพลง</string>
+    <string name="navi">เรือ</string>
+
+
+    
+
+
+
+
+</resources>

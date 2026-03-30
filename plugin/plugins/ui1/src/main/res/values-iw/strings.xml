@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI1</string>
+    
+    
+
+    <string name="click_play_music">לחץ להפעלה</string>
+    <string name="music_artist">אמן</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">מיקום</string>
+    <string name="radio_save">חיפוש</string>
+    <string name="icon_add_name">הוסף ל</string>
+    <string name="unknow_song_name">שם השיר לא ידוע</string>
+    <string name="unknow_song_artist">אמן לא ידוע</string>
+
+    
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ランチャーUI1</string>
+    
+    
+
+    <string name="click_play_music">クリックしてプレイ</string>
+    <string name="music_artist">アーティスト</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">所在地</string>
+    <string name="radio_save">検索</string>
+    <string name="icon_add_name">追加</string>
+    <string name="unknow_song_name">不明の曲名</string>
+    <string name="unknow_song_artist">不明のアーティスト</string>
+
+    
+</resources>

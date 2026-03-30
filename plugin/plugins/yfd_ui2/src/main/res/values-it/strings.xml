@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">LauncherUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Clicca per riprodurre</string>
+    <string name="music_artist">Artista</string>
+    <string name="add_app">Aggiungi</string>
+    <string name="settings">Set</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">Musica</string>
+    <string name="navi">Navi</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Nuvoloso</string>
+    <string name="weather_desc_102">Poche nuvole</string>
+    <string name="weather_desc_103">Parzialmente soleggiato</string>
+    <string name="weather_desc_104">Nuvoloso</string>
+    <string name="weather_desc_300">Pioggia di pioggia</string>
+    <string name="weather_desc_301">Pioggia intensa</string>
+    <string name="weather_desc_302">Temporale</string>
+    <string name="weather_desc_303">Forte temporale</string>
+    <string name="weather_desc_304">Tuono con grandine</string>
+    <string name="weather_desc_305">Pioggia leggera</string>
+    <string name="weather_desc_306">Pioggia moderata</string>
+    <string name="weather_desc_307">Piogge intense</string>
+    <string name="weather_desc_308">Piogge estreme</string>
+    <string name="weather_desc_309">Pioggerellina</string>
+    <string name="weather_desc_310">Tempesta</string>
+    <string name="weather_desc_311">Forte tempesta</string>
+    <string name="weather_desc_312">Tempesta severa</string>
+    <string name="weather_desc_313">Pioggia gelata</string>
+    <string name="weather_desc_400">Neve leggera</string>
+    <string name="weather_desc_401">Nevicata moderata</string>
+    <string name="weather_desc_402">Nevicate abbondanti</string>
+    <string name="weather_desc_403">Tempesta di neve</string>
+    <string name="weather_desc_404">Nevischio</string>
+    <string name="weather_desc_405">Pioggia e neve</string>
+    <string name="weather_desc_406">Nevicata a pioggia</string>
+    <string name="weather_desc_407">Rivola di neve</string>
+    <string name="weather_desc_500">Nebbia</string>
+    <string name="weather_desc_501">Giunzione</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Fitta foschia</string>
+    <string name="weather_desc_504">Foschia leggera</string>
+    <string name="weather_desc_507">Tempesta di sabbia</string>
+    <string name="weather_desc_508">Forte tempesta di sabbia</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">لانچرUI14</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">عنوان آهنگ</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="unknown">نامشخص</string>
+
+    <string name="radio">رادیو</string>
+    <string name="navi">ناوبری</string>
+    <string name="all_app">اپلیکیشن ها</string>
+    <string name="phone">تلفن بلوتوث</string>
+    <string name="music">موسیقی</string>
+    <string name="video">ویدئو</string>
+
+    <string name="bt_connected">بلوتوث متصل</string>
+    <string name="bt_not_connected">بلوتوث متصل نیست</string>
+    <string name="bt_close">بلوتوث بسته شد</string>
+
+    
+
+</resources>

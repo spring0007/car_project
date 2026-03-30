@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tên bài hát</string>
+    <string name="music">ÂM NHẠC</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="unknown">Không xác định</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">Ứng dụng</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Ứng dụng cửa sổ</string>
+    <string name="am">SÁNG</string>
+    <string name="pm">Chiều</string>
+    <string name="monday">Thứ Hai</string>
+    <string name="tuesday">Thứ Ba</string>
+    <string name="wednesday">Thứ Tư</string>
+    <string name="thursday">Thứ Năm</string>
+    <string name="friday">Thứ sáu</string>
+    <string name="saturday">Thứ bảy</string>
+    <string name="sunday">Chủ nhật</string>
+    <string name="unable_launch_application">Không thể khởi chạy ứng dụng</string>
+    <string name="error_launching_application">Lỗi khởi chạy ứng dụng</string>
+    <string name="unable_uninstall_system_applications">Không thể gỡ cài đặt các ứng dụng hệ thống</string>
+    <string name="unable_uninstall_current_desktop_application">Không thể gỡ cài đặt ứng dụng máy tính để bàn hiện tại</string>
+    <string name="error_uninstalling_application">Lỗi gỡ cài đặt ứng dụng</string>
+    <string name="choose_brand">Chọn một thương hiệu</string>
+    <string name="choose_model">Chọn mẫu xe</string>
+    <string name="uninstall">Không thể khởi động chương trình gỡ cài đặt</string>
+    <string name="custom_carmodel">Mô hình xe tùy chỉnh</string>
+    <string name="select_car_model">Chọn mẫu xe</string>
+    <string name="sd_">Thẻ SD</string>
+    <string name="usb_">Đĩa chữ U</string>
+    <string name="custom_">Tập quán</string>
+    <string name="no_image_available">Không có hình ảnh</string>
+    
+
+</resources>

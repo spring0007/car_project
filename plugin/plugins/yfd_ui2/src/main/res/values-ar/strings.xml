@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">LauncherUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">انقر لتشغيل</string>
+    <string name="music_artist">فنان</string>
+    <string name="add_app">إضافة</string>
+    <string name="settings">المجموعة</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">الموسيقى</string>
+    <string name="navi">السفن</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">ساني</string>
+    <string name="weather_desc_101">غائم</string>
+    <string name="weather_desc_102">قليل من السحب</string>
+    <string name="weather_desc_103">شبه مشمس</string>
+    <string name="weather_desc_104">غائم</string>
+    <string name="weather_desc_300">مطر الزخات</string>
+    <string name="weather_desc_301">أمطار غزيرة</string>
+    <string name="weather_desc_302">زخات رعدية</string>
+    <string name="weather_desc_303">زخات رعدية شديدة</string>
+    <string name="weather_desc_304">رعد مع برد</string>
+    <string name="weather_desc_305">مطر خفيف</string>
+    <string name="weather_desc_306">الأمطار المعتدلة</string>
+    <string name="weather_desc_307">أمطار غزيرة</string>
+    <string name="weather_desc_308">أمطار غزيرة</string>
+    <string name="weather_desc_309">مطر خفيف</string>
+    <string name="weather_desc_310">العاصفة</string>
+    <string name="weather_desc_311">عاصفة قوية</string>
+    <string name="weather_desc_312">عاصفة شديدة</string>
+    <string name="weather_desc_313">المطر المتجمد</string>
+    <string name="weather_desc_400">الثلج الخفيف</string>
+    <string name="weather_desc_401">الثلوج المعتدلة</string>
+    <string name="weather_desc_402">الثلوج الكثيفة</string>
+    <string name="weather_desc_403">عاصفة ثلجية</string>
+    <string name="weather_desc_404">البرد</string>
+    <string name="weather_desc_405">المطر والثلج</string>
+    <string name="weather_desc_406">الثلج المتساقط</string>
+    <string name="weather_desc_407">تساقط الثلوج</string>
+    <string name="weather_desc_500">الضباب</string>
+    <string name="weather_desc_501">المفصل</string>
+    <string name="weather_desc_502">الضباب</string>
+    <string name="weather_desc_503">ضباب كثيف</string>
+    <string name="weather_desc_504">ضباب خفيف</string>
+    <string name="weather_desc_507">عاصفة رملية</string>
+    <string name="weather_desc_508">عاصفة رملية قوية</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

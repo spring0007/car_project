@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">LauncherUI8</string><!-- app 名称 -->
 
-    <string name="ui_key">LauncherUI8</string>
-    <string name="ui_clazz">com.launcher.ui8.MainActivityUI8</string>
+    <string name="ui_key" translatable="false">LauncherUI8</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui8.MainActivityUI8</string>
 
 
     <string name="click_play_music">Click To Play</string>

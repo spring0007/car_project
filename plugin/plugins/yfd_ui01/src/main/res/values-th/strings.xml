@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ตัวเรียกใช้งาน UI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">ชื่อเพลง</string>
+    <string name="music">เพลง</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="unknown">ไม่ทราบ</string>
+    <string name="bluetooth">บลูทูธ</string>
+    <string name="apps">แอป</string>
+    <string name="dsp">ดีเอสพี</string>
+    <string name="window_app">แอพหน้าต่าง</string>
+    <string name="am">น.</string>
+    <string name="pm">น.</string>
+    <string name="monday">วันจันทร์</string>
+    <string name="tuesday">วันอังคาร</string>
+    <string name="wednesday">วันพุธ</string>
+    <string name="thursday">วันพฤหัสบดี</string>
+    <string name="friday">วันศุกร์</string>
+    <string name="saturday">วันเสาร์</string>
+    <string name="sunday">วันอาทิตย์</string>
+    <string name="unable_launch_application">ไม่สามารถเปิดแอปพลิเคชันได้</string>
+    <string name="error_launching_application">เกิดข้อผิดพลาดในการเปิดแอปพลิเคชัน</string>
+    <string name="unable_uninstall_system_applications">ไม่สามารถถอนการติดตั้งแอปพลิเคชันระบบได้</string>
+    <string name="unable_uninstall_current_desktop_application">ไม่สามารถถอนการติดตั้งแอปพลิเคชันเดสก์ท็อปปัจจุบันได้</string>
+    <string name="error_uninstalling_application">ข้อผิดพลาดในการถอนการติดตั้งแอปพลิเคชัน</string>
+    <string name="choose_brand">เลือกแบรนด์</string>
+    <string name="choose_model">เลือกรุ่นรถ</string>
+    <string name="uninstall">ไม่สามารถเริ่มโปรแกรมถอนการติดตั้งได้</string>
+    <string name="custom_carmodel">โมเดลรถที่กําหนดเอง</string>
+    <string name="select_car_model">เลือกรุ่นรถ</string>
+    <string name="sd_">การ์ด SD</string>
+    <string name="usb_">ยูดิสก์</string>
+    <string name="custom_">กําหนดเอง</string>
+    <string name="no_image_available">ไม่มีภาพ</string>
+    
+
+</resources>

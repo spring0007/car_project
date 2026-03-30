@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">LauncherUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">לחץ להפעלה</string>
+    <string name="music_artist">אמן</string>
+    <string name="add_app">הוסף</string>
+    <string name="settings">סט</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">מוזיקה</string>
+    <string name="navi">ספינות</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">סאני</string>
+    <string name="weather_desc_101">מעונן</string>
+    <string name="weather_desc_102">מעט עננים</string>
+    <string name="weather_desc_103">חלקית שמשי</string>
+    <string name="weather_desc_104">מעונן</string>
+    <string name="weather_desc_300">גשם גשם</string>
+    <string name="weather_desc_301">גשם כבד</string>
+    <string name="weather_desc_302">מטר רעמים</string>
+    <string name="weather_desc_303">מטר רעמים עז</string>
+    <string name="weather_desc_304">סופת רעמים עם ברד</string>
+    <string name="weather_desc_305">גשם קל</string>
+    <string name="weather_desc_306">גשם מתון</string>
+    <string name="weather_desc_307">גשם כבד</string>
+    <string name="weather_desc_308">גשם קיצוני</string>
+    <string name="weather_desc_309">גשם טפטוף</string>
+    <string name="weather_desc_310">סערה</string>
+    <string name="weather_desc_311">סערה כבדה</string>
+    <string name="weather_desc_312">סערה קשה</string>
+    <string name="weather_desc_313">גשם קפוא</string>
+    <string name="weather_desc_400">שלג קל</string>
+    <string name="weather_desc_401">שלג בינוני</string>
+    <string name="weather_desc_402">שלג כבד</string>
+    <string name="weather_desc_403">סופת שלג</string>
+    <string name="weather_desc_404">ברד</string>
+    <string name="weather_desc_405">גשם ושלג</string>
+    <string name="weather_desc_406">שלג במקלחת</string>
+    <string name="weather_desc_407">סופת שלג</string>
+    <string name="weather_desc_500">ערפל</string>
+    <string name="weather_desc_501">מפרק</string>
+    <string name="weather_desc_502">ערפל</string>
+    <string name="weather_desc_503">ערפל כבד</string>
+    <string name="weather_desc_504">ערפל קל</string>
+    <string name="weather_desc_507">סופת חול</string>
+    <string name="weather_desc_508">סופת חול כבדה</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

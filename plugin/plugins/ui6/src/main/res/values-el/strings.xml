@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI6</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music">ΜΟΥΣΙΚΗ</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+
+    
+    
+
+</resources>

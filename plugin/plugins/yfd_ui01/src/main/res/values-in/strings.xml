@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">PeluncurUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Judul Lagu</string>
+    <string name="music">MUSIK</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">tidak diketahui</string>
+    <string name="bluetooth">Bahasa Inggris</string>
+    <string name="apps">Aplikasi</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Aplikasi jendela</string>
+    <string name="am">PADA DIA</string>
+    <string name="pm">PM</string>
+    <string name="monday">Senin</string>
+    <string name="tuesday">Selasa</string>
+    <string name="wednesday">Rabu</string>
+    <string name="thursday">Kamis</string>
+    <string name="friday">Jumat</string>
+    <string name="saturday">Sabtu</string>
+    <string name="sunday">Minggu</string>
+    <string name="unable_launch_application">Tidak dapat meluncurkan aplikasi</string>
+    <string name="error_launching_application">Kesalahan meluncurkan aplikasi</string>
+    <string name="unable_uninstall_system_applications">Tidak dapat menghapus aplikasi sistem</string>
+    <string name="unable_uninstall_current_desktop_application">Tidak dapat menghapus aplikasi desktop saat ini</string>
+    <string name="error_uninstalling_application">Kesalahan menghapus aplikasi</string>
+    <string name="choose_brand">Pilih merek</string>
+    <string name="choose_model">Pilih model mobil</string>
+    <string name="uninstall">Tidak dapat memulai program penghapusan instalasi</string>
+    <string name="custom_carmodel">Model Mobil Kustom</string>
+    <string name="select_car_model">Pilih model mobil</string>
+    <string name="sd_">Kartu SD</string>
+    <string name="usb_">Cakram-U</string>
+    <string name="custom_">Kustom</string>
+    <string name="no_image_available">Tidak ada gambar yang tersedia</string>
+    
+
+</resources>

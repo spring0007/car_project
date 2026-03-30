@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">PelancarUI14</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tajuk Lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">Tidak diketahui</string>
+
+    <string name="radio">Radio</string>
+    <string name="navi">Navigasi</string>
+    <string name="all_app">Apl</string>
+    <string name="phone">Telefon Bluetooth</string>
+    <string name="music">Muzik</string>
+    <string name="video">Video</string>
+
+    <string name="bt_connected">Bluetooth Disambungkan</string>
+    <string name="bt_not_connected">Bluetooth Tidak Disambungkan</string>
+    <string name="bt_close">Bluetooth Ditutup</string>
+
+    
+
+</resources>

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI8</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="add_app">Προσθήκη</string>
+
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="navi">Πλοήγηση</string>
+    <string name="all_app">Εφαρμογές</string>
+    <string name="phone">Τηλέφωνο Bluetooth</string>
+    <string name="music">Μουσική</string>
+
+    
+
+</resources>

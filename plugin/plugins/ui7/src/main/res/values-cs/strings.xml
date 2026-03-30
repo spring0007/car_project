@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LauncherUI7</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Klikněte pro přehrávání</string>
+    <string name="music_artist">Umělec</string>
+    <string name="add_app">Přidat</string>
+    <string name="music">Hudba</string>
+    <string name="navigation">Navigace</string>
+    <string name="App">Aplikace</string>
+    <string name="radio">Rádio</string>
+    <string name="phone">Telefon</string>
+    <string name="browser">Prohlížeč</string>
+    <string name="setting">Prostředí</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Video</string>
+    <string name="aux">Do</string>
+
+    
+
+</resources>

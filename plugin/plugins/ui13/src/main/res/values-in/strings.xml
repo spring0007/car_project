@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">PeluncurUI13</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Klik Untuk Bermain</string>
+    <string name="music_artist">Artis</string>
+    <string name="add_app">Tambahkan</string>
+
+    <string name="radio">Radio</string>
+    <string name="navi">Navigasi</string>
+    <string name="all_app">Aplikasi</string>
+    <string name="phone">Bahasa Inggris</string>
+    <string name="video">Videonya</string>
+
+    
+
+</resources>

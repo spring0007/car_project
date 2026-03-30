@@ -1,25 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-/*
-* Copyright (C) 2008 The Android Open Source Project
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
- -->
+<resources>
+    <string name="app_name">启动器UI1</string><!-- app 名称 -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="ExtraTranslation">
+    
+    
+
+
+    <string name="click_play_music">歌曲名</string>
     <string name="music">音乐</string>
     <string name="music_artist">歌手</string>
-    <string name="click_play_music">歌曲名</string>
     <string name="unknown">未知</string>
     <string name="bluetooth">蓝牙</string>
     <string name="apps">所有应用</string>
@@ -39,10 +27,15 @@
     <string name="unable_uninstall_system_applications">无法卸载系统应用</string>
     <string name="unable_uninstall_current_desktop_application">无法卸载当前桌面应用</string>
     <string name="error_uninstalling_application">卸载应用时出错</string>
+    <string name="choose_brand">选择品牌</string>
+    <string name="choose_model">选择车型</string>
+    <string name="uninstall">无法启动卸载程序</string>
     <string name="custom_carmodel">自定义车模</string>
     <string name="select_car_model">选择车模图片</string>
     <string name="sd_">SD卡</string>
     <string name="usb_">U盘</string>
     <string name="custom_">自定义</string>
     <string name="no_image_available">暂无图片</string>
+    
+
 </resources>

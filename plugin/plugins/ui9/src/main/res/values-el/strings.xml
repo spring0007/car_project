@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI9</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="add_app">Προσθήκη</string>
+    <string name="music">Μουσική</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="App">Εφαρμογή</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Διαχείριση φακέλου</string>
+    <string name="setting">Ρυθμίσεις</string>
+    <string name="equalizer">Δσπ</string>
+    <string name="video">Βίντεο</string>
+    <string name="aux">Στο</string>
+
+    
+
+</resources>

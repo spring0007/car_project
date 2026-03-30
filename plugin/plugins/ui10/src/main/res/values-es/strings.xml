@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">LauncherUI10</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Título de la canción</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">Desconocido</string>
+
+    <string name="radio">Radio</string>
+    <string name="navi">Navegación</string>
+    <string name="all_app">Apps</string>
+    <string name="phone">Teléfono Bluetooth</string>
+    <string name="music">Música</string>
+    <string name="video">Vídeo</string>
+
+    
+
+</resources>

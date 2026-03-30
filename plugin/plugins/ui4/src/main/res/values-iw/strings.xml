@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI4</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">לחץ להפעלה</string>
+    <string name="music_artist">אמן</string>
+    <string name="radio">רדיו</string>
+    <string name="add_app">הוסף</string>
+
+
+
+    
+
+</resources>

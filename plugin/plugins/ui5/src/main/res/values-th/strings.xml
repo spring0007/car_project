@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">ตัวเรียกใช้งาน UI5</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">ชื่อเพลง</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="radio">วิทยุ</string>
+    <string name="unknown">ไม่ทราบ</string>
+
+    
+
+</resources>

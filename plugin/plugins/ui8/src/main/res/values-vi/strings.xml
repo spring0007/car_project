@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI8</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="add_app">Thêm</string>
+
+    <string name="radio">Đài phát thanh</string>
+    <string name="navi">Điều hướng</string>
+    <string name="all_app">Ứng dụng</string>
+    <string name="phone">Điện thoại Bluetooth</string>
+    <string name="music">Âm nhạc</string>
+
+    
+
+</resources>

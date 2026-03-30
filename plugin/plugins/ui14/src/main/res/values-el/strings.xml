@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI14</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="navi">Πλοήγηση</string>
+    <string name="all_app">Εφαρμογές</string>
+    <string name="phone">Τηλέφωνο Bluetooth</string>
+    <string name="music">Μουσική</string>
+    <string name="video">Βίντεο</string>
+
+    <string name="bt_connected">Συνδεδεμένο Bluetooth</string>
+    <string name="bt_not_connected">Το Bluetooth δεν είναι συνδεδεμένο</string>
+    <string name="bt_close">Bluetooth Κλειστό</string>
+
+    
+
+</resources>

@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Название песни</string>
+    <string name="music">МУЗЫКА</string>
+    <string name="music_artist">Художник</string>
+    <string name="unknown">неизвестно</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">Приложения</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Приложение Windows</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+    <string name="unable_launch_application">Невозможность запустить приложение</string>
+    <string name="error_launching_application">Приложение для запуска ошибок</string>
+    <string name="unable_uninstall_system_applications">Невозможно удалить системные приложения</string>
+    <string name="unable_uninstall_current_desktop_application">Не удалось удалить текущее десктопное приложение</string>
+    <string name="error_uninstalling_application">Ошибка при удалении приложения</string>
+    <string name="choose_brand">Выберите бренд</string>
+    <string name="choose_model">Выберите модель автомобиля</string>
+    <string name="uninstall">Не удаётся запустить программу удаления</string>
+    <string name="custom_carmodel">Модель кастомного автомобиля</string>
+    <string name="select_car_model">Выберите модель автомобиля</string>
+    <string name="sd_">SD-карта</string>
+    <string name="usb_">U-образный диск</string>
+    <string name="custom_">Обычай</string>
+    <string name="no_image_available">Изображение отсутствует</string>
+    
+
+</resources>

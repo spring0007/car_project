@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">PeluncurUI6</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Judul Lagu</string>
+    <string name="music">MUSIK</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">tidak diketahui</string>
+
+
+    
+
+</resources>

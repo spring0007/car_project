@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">LauncherUI12</string><!-- app 名称 -->
 
-    <string name="ui_key">LauncherUI12</string>
-    <string name="ui_clazz">com.launcher.ui12.MainActivityUI12</string>
+    <string name="ui_key" translatable="false">LauncherUI12</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui12.MainActivityUI12</string>
 
 
     <string name="click_play_music">Click To Play</string>

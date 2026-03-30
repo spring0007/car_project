@@ -1,0 +1,63 @@
+<resources>
+
+
+    <string name="app_name">LauncherUI2</string>
+
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Нажмите, чтобы воспроизвести</string>
+    <string name="music_artist">Художник</string>
+    <string name="add_app">Добавить</string>
+    <string name="settings">Декорации</string>
+    <string name="bluetooth">BT</string>
+    <string name="music">Музыка</string>
+    <string name="navi">Корабли</string>
+
+
+    
+
+
+
+    <string name="weather_desc_100">Санни</string>
+    <string name="weather_desc_101">Облачно</string>
+    <string name="weather_desc_102">Мало облаков</string>
+    <string name="weather_desc_103">Частично солнечно</string>
+    <string name="weather_desc_104">Пасмурное покрытие</string>
+    <string name="weather_desc_300">Ливневой дождь</string>
+    <string name="weather_desc_301">Сильный ливень</string>
+    <string name="weather_desc_302">Грозовой дождь</string>
+    <string name="weather_desc_303">Сильный грозовой ливень</string>
+    <string name="weather_desc_304">Грозовой ливень с градом</string>
+    <string name="weather_desc_305">Лёгкий дождь</string>
+    <string name="weather_desc_306">Умеренный дождь</string>
+    <string name="weather_desc_307">Сильный дождь</string>
+    <string name="weather_desc_308">Сильные дожди</string>
+    <string name="weather_desc_309">Мелкий дождь</string>
+    <string name="weather_desc_310">Шторм</string>
+    <string name="weather_desc_311">Сильный шторм</string>
+    <string name="weather_desc_312">Сильный шторм</string>
+    <string name="weather_desc_313">Ледяной дождь</string>
+    <string name="weather_desc_400">Лёгкий снег</string>
+    <string name="weather_desc_401">Умеренный снег</string>
+    <string name="weather_desc_402">Сильный снег</string>
+    <string name="weather_desc_403">Снежная буря</string>
+    <string name="weather_desc_404">Мокрый снег</string>
+    <string name="weather_desc_405">Дождь и снег</string>
+    <string name="weather_desc_406">Дождь снега</string>
+    <string name="weather_desc_407">Снежный вихрь</string>
+    <string name="weather_desc_500">Туман</string>
+    <string name="weather_desc_501">Сустав</string>
+    <string name="weather_desc_502">Туман</string>
+    <string name="weather_desc_503">Густая дымка</string>
+    <string name="weather_desc_504">Лёгкий туман</string>
+    <string name="weather_desc_507">Песчаная буря</string>
+    <string name="weather_desc_508">Сильная песчаная буря</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+</resources>

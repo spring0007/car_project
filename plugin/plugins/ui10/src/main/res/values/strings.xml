@@ -1,30 +1,13 @@
 <resources>
     <string name="app_name">LauncherUI10</string><!-- app 名称 -->
 
-    <string name="ui_key">LauncherUI10</string>
-    <string name="ui_clazz">com.launcher.ui10.MainActivityUI10</string>
+    <string name="ui_key" translatable="false">LauncherUI10</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui10.MainActivityUI10</string>
 
 
     <string name="click_play_music">Song Title</string>
     <string name="music_artist">Artist</string>
     <string name="unknown">unknown</string>
-
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday">Sunday</string>
-    <string-array name="week_str">
-        <item>@string/sunday</item>
-        <item>@string/monday</item>
-        <item>@string/tuesday</item>
-        <item>@string/wednesday</item>
-        <item>@string/thursday</item>
-        <item>@string/friday</item>
-        <item>@string/saturday</item>
-    </string-array>
 
     <string name="radio">Radio</string>
     <string name="navi">Navigation</string>

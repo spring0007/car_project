@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LauncherUI6</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Şarkı Adı</string>
+    <string name="music">MÜZIK</string>
+    <string name="music_artist">Sanatçı</string>
+    <string name="unknown">bilinmeyen</string>
+
+
+    
+
+</resources>

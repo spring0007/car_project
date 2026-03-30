@@ -7,11 +7,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
-    <TextView
+    <TextClock
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dial_time"
         android:text="11:25"
+        android:format12Hour="hh:mm"
+        android:format24Hour="HH:mm"
         android:textSize="32sp"
         android:textColor="@color/white"
         android:layout_gravity="center"
@@ -31,34 +33,11 @@
         android:layout_marginTop="@dimen/dial_date_top"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dial_date"
-            android:text="11-03"
-            android:textSize="30sp"
-            android:textColor="@color/white"
-            android:layout_marginEnd="70dp"
-            android:layout_gravity="center_vertical|left"
-            android:visibility="gone"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dial_week"
-            android:text="@string/monday"
-            android:textSize="30sp"
-            android:textColor="@color/white"
-            android:layout_gravity="center_vertical|right"
-            android:visibility="gone"
-            />
-
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:format12Hour="MM/dd"
-            android:format24Hour="MM/dd"
+            android:format12Hour="MM-dd"
+            android:format24Hour="MM-dd"
             android:text="5月18日"
             android:textColor="@android:color/white"
             android:textSize="30sp"

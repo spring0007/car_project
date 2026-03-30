@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LauncherUI7</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Нажмите, чтобы воспроизвести</string>
+    <string name="music_artist">Художник</string>
+    <string name="add_app">Добавить</string>
+    <string name="music">Музыка</string>
+    <string name="navigation">Навигация</string>
+    <string name="App">Приложение</string>
+    <string name="radio">Радио</string>
+    <string name="phone">Телефон</string>
+    <string name="browser">Браузер</string>
+    <string name="setting">Места действия</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Видео</string>
+    <string name="aux">К</string>
+
+    
+
+</resources>

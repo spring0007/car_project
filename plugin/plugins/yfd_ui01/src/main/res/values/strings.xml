@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">LauncherUI1</string><!-- app 名称 -->
 
-    <string name="ui_key">LauncherUI1</string>
-    <string name="ui_clazz">com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
+    <string name="ui_key" translatable="false">LauncherUI1</string>
+    <string name="ui_clazz" translatable="false">com.launcher.yfd_ui01.MainActivity_YFD_UI01</string>
 
 
     <string name="click_play_music">Song Title</string>
@@ -41,15 +41,6 @@
         <item>wallpaper_01</item>
         <item>wallpaper_02</item>
         <item>wallpaper_03</item>
-    </string-array>
-    <string-array name="week_str">
-        <item>@string/sunday</item>
-        <item>@string/monday</item>
-        <item>@string/tuesday</item>
-        <item>@string/wednesday</item>
-        <item>@string/thursday</item>
-        <item>@string/friday</item>
-        <item>@string/saturday</item>
     </string-array>
 
 </resources>

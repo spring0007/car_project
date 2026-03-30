@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music">ΜΟΥΣΙΚΗ</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">Εφαρμογές</string>
+    <string name="dsp">ΔΣΠ</string>
+    <string name="window_app">Εφαρμογή παραθύρου</string>
+    <string name="am">ΠΜ</string>
+    <string name="pm">Μ.Μ.</string>
+    <string name="monday">Δευτέρα</string>
+    <string name="tuesday">Τρίτη</string>
+    <string name="wednesday">Τετάρτη</string>
+    <string name="thursday">Πέμπτη</string>
+    <string name="friday">Παρασκευή</string>
+    <string name="saturday">Σάββατο</string>
+    <string name="sunday">Κυριακή</string>
+    <string name="unable_launch_application">Δεν είναι δυνατή η εκκίνηση της εφαρμογής</string>
+    <string name="error_launching_application">Σφάλμα κατά την εκκίνηση της εφαρμογής</string>
+    <string name="unable_uninstall_system_applications">Δεν είναι δυνατή η απεγκατάσταση εφαρμογών συστήματος</string>
+    <string name="unable_uninstall_current_desktop_application">Δεν είναι δυνατή η απεγκατάσταση της τρέχουσας εφαρμογής επιφάνειας εργασίας</string>
+    <string name="error_uninstalling_application">Σφάλμα κατά την απεγκατάσταση της εφαρμογής</string>
+    <string name="choose_brand">Επιλέξτε μια μάρκα</string>
+    <string name="choose_model">Επιλέξτε μοντέλο αυτοκινήτου</string>
+    <string name="uninstall">Δεν είναι δυνατή η έναρξη του προγράμματος απεγκατάστασης</string>
+    <string name="custom_carmodel">Προσαρμοσμένο μοντέλο αυτοκινήτου</string>
+    <string name="select_car_model">Επιλέξτε ένα μοντέλο αυτοκινήτου</string>
+    <string name="sd_">Κάρτα SD</string>
+    <string name="usb_">Δίσκος U</string>
+    <string name="custom_">Εθιμο</string>
+    <string name="no_image_available">Δεν υπάρχει διαθέσιμη εικόνα</string>
+    
+
+</resources>

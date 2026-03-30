@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">啟動器UI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">歌曲名稱</string>
+    <string name="music">音樂</string>
+    <string name="music_artist">藝術家</string>
+    <string name="unknown">未知</string>
+    <string name="bluetooth">藍牙</string>
+    <string name="apps">應用程式</string>
+    <string name="dsp">數位訊號處理（DSP）</string>
+    <string name="window_app">視窗應用程式</string>
+    <string name="am">上午</string>
+    <string name="pm">PM</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+    <string name="unable_launch_application">無法啟動應用程式</string>
+    <string name="error_launching_application">錯誤啟動應用程式</string>
+    <string name="unable_uninstall_system_applications">無法卸載系統應用程式</string>
+    <string name="unable_uninstall_current_desktop_application">無法卸載目前的桌面應用程式</string>
+    <string name="error_uninstalling_application">錯誤：移除應用程式</string>
+    <string name="choose_brand">選擇品牌</string>
+    <string name="choose_model">選擇車款</string>
+    <string name="uninstall">無法啟動卸載程式</string>
+    <string name="custom_carmodel">客製化車型</string>
+    <string name="select_car_model">選擇車款</string>
+    <string name="sd_">SD 卡</string>
+    <string name="usb_">U 型磁碟</string>
+    <string name="custom_">習俗</string>
+    <string name="no_image_available">無影像可用</string>
+    
+
+</resources>

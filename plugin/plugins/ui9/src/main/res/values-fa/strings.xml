@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">لانچرUI9</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">کلیک کنید برای پخش</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="add_app">افزودن</string>
+    <string name="music">موسیقی</string>
+    <string name="navigation">ناوبری</string>
+    <string name="App">اپلیکیشن</string>
+    <string name="radio">رادیو</string>
+    <string name="phone">بلوتوث</string>
+    <string name="folder">مدیریت پوشه ها</string>
+    <string name="setting">محیط ها</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">ویدئو</string>
+    <string name="aux">به</string>
+
+    
+
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">LauncherUI5</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Titre de la chanson</string>
+    <string name="music_artist">Artiste</string>
+    <string name="radio">Radio</string>
+    <string name="unknown">Inconnu</string>
+
+    
+
+</resources>

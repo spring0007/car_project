@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ตัวเรียกใช้งาน UI14</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">ชื่อเพลง</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="unknown">ไม่ทราบ</string>
+
+    <string name="radio">วิทยุ</string>
+    <string name="navi">การเดินเรือ</string>
+    <string name="all_app">แอป</string>
+    <string name="phone">โทรศัพท์บลูทูธ</string>
+    <string name="music">เพลง</string>
+    <string name="video">วิดีโอ</string>
+
+    <string name="bt_connected">เชื่อมต่อบลูทูธแล้ว</string>
+    <string name="bt_not_connected">ไม่ได้เชื่อมต่อบลูทูธ</string>
+    <string name="bt_close">บลูทูธปิด</string>
+
+    
+
+</resources>

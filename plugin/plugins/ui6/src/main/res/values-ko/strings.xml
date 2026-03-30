@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">런처UI6</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">노래 제목</string>
+    <string name="music">음악</string>
+    <string name="music_artist">예술가</string>
+    <string name="unknown">알 수 없음</string>
+
+
+    
+
+</resources>

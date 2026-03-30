@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">PeluncurUI4</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Klik Untuk Bermain</string>
+    <string name="music_artist">Artis</string>
+    <string name="radio">Radio</string>
+    <string name="add_app">Tambahkan</string>
+
+
+
+    
+
+</resources>

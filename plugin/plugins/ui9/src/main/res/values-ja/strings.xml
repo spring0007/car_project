@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">ランチャーUI9</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">クリックしてプレイ</string>
+    <string name="music_artist">アーティスト</string>
+    <string name="add_app">追加</string>
+    <string name="music">音楽</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="App">アプリ</string>
+    <string name="radio">ラジオ</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">フォルダ管理</string>
+    <string name="setting">舞台設定</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">ビデオ</string>
+    <string name="aux">へ</string>
+
+    
+
+</resources>

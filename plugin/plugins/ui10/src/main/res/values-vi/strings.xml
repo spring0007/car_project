@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI10</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tên bài hát</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="unknown">Không xác định</string>
+
+    <string name="radio">Đài phát thanh</string>
+    <string name="navi">Điều hướng</string>
+    <string name="all_app">Ứng dụng</string>
+    <string name="phone">Điện thoại Bluetooth</string>
+    <string name="music">Âm nhạc</string>
+    <string name="video">Băng hình</string>
+
+    
+
+</resources>

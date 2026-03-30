@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">런처UI7</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">클릭하여 재생하기</string>
+    <string name="music_artist">예술가</string>
+    <string name="add_app">추가</string>
+    <string name="music">음악</string>
+    <string name="navigation">항해</string>
+    <string name="App">앱</string>
+    <string name="radio">라디오</string>
+    <string name="phone">전화</string>
+    <string name="browser">브라우저</string>
+    <string name="setting">설정</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">비디오</string>
+    <string name="aux">그</string>
+
+    
+
+</resources>

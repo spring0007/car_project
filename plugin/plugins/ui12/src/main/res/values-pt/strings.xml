@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">LauncherUI12</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Clique para jogar</string>
+    <string name="music_artist">Artista</string>
+    <string name="add_app">Adicionar</string>
+    <string name="music">Música</string>
+    <string name="time">Tempo</string>
+    <string name="navigation">Navegação</string>
+    <string name="App">Aplicação</string>
+    <string name="radio">Rádio</string>
+    <string name="bt">Bluetooth</string>
+    <string name="phone">Telefone</string>
+    <string name="browser">Navegador</string>
+    <string name="setting">Configurações</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Vídeo</string>
+    <string name="aux">Para o</string>
+
+    
+
+</resources>

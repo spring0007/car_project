@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Název písně</string>
+    <string name="music">HUDBA</string>
+    <string name="music_artist">Umělec</string>
+    <string name="unknown">neznámé</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="apps">Aplikace</string>
+    <string name="dsp">DSP</string>
+    <string name="window_app">Aplikace Window</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+    <string name="monday">Pondělí</string>
+    <string name="tuesday">Úterý</string>
+    <string name="wednesday">Středa</string>
+    <string name="thursday">Čtvrtek</string>
+    <string name="friday">Pátek</string>
+    <string name="saturday">Sobota</string>
+    <string name="sunday">Neděle</string>
+    <string name="unable_launch_application">Nelze spustit aplikaci</string>
+    <string name="error_launching_application">Aplikace s chybovým spouštěním</string>
+    <string name="unable_uninstall_system_applications">Nelze odinstalovat systémové aplikace</string>
+    <string name="unable_uninstall_current_desktop_application">Nelze odinstalovat současnou desktopovou aplikaci</string>
+    <string name="error_uninstalling_application">Chyba při odinstalování aplikace</string>
+    <string name="choose_brand">Vyberte si značku</string>
+    <string name="choose_model">Vyberte model auta</string>
+    <string name="uninstall">Nelze spustit program odinstalace</string>
+    <string name="custom_carmodel">Model vlastního vozu</string>
+    <string name="select_car_model">Vyberte si model auta</string>
+    <string name="sd_">SD karta</string>
+    <string name="usb_">U-disk</string>
+    <string name="custom_">Zvyk</string>
+    <string name="no_image_available">Obrázek není k dispozici</string>
+    
+
+</resources>

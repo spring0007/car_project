@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI4</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="add_app">Προσθήκη</string>
+
+
+
+    
+
+</resources>

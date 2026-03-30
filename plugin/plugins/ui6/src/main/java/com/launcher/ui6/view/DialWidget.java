@@ -23,7 +23,7 @@ public class DialWidget extends LinearLayout {
     private AnalogClockView analogClockView;
     private Handler timeHandler;
     private Runnable timeRunnable;
-    private TextView tv_time ,tv_date,tv_week;
+    //private TextView tv_time ,tv_date,tv_week;
 
     private boolean isAnimationRunning = true;
 
@@ -34,9 +34,7 @@ public class DialWidget extends LinearLayout {
 
     public void findViews(Context context, View view) {
         analogClockView= view.findViewById(R.id.analogClockView);
-        tv_time = view.findViewById(R.id.dial_time);
-        tv_date = view.findViewById(R.id.dial_date);
-        tv_week = view.findViewById(R.id.dial_week);
+        //tv_time = view.findViewById(R.id.dial_time);
         setupDigitalTimeUpdater();
         updateTime();
     }
@@ -64,7 +62,7 @@ public class DialWidget extends LinearLayout {
 //        }else{
 //            //tv_time.setText(R.string.pm);
 //        }
-        tv_time.setText(String.format(getDefault(), "%2d:%02d", hour, minute));
+        /*tv_time.setText(String.format(getDefault(), "%2d:%02d", hour, minute));
         tv_date.setText(String.format(getDefault(), "%2d-%02d", month, day));
         if (tv_week != null) {
             String[] formats = null;
@@ -80,7 +78,7 @@ public class DialWidget extends LinearLayout {
                 if (idx < 0) idx = 0;
                 tv_week.setText(formats[idx]);
             }
-        }
+        }*/
 
     }
 

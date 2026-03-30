@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MusicWidget extends RelativeLayout implements OnClickListener {
+public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
 
     private Context mContext;
