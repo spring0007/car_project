@@ -1,0 +1,21 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">ชื่อเพลง</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="unknown">ไม่ทราบ</string>
+    <string name="music">เพลง</string>
+    <string name="radio">วิทยุ</string>
+    <string name="navigation">การเดินเรือ</string>
+    <string name="phone">โทรศัพท์บลูทูธ</string>
+    <string name="bt_music">เพลงบลูทูธ</string>
+    <string name="setting">การตั้งค่า</string>
+
+    
+
+
+</resources>

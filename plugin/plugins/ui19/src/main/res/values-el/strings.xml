@@ -1,0 +1,21 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+    <string name="music">Μουσική</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="phone">Τηλέφωνο Bluetooth</string>
+    <string name="bt_music">Μουσική Bluetooth</string>
+    <string name="setting">Ρύθμιση</string>
+
+    
+
+
+</resources>

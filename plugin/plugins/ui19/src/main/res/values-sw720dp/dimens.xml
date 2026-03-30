@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="hotset_image_size">80dp</dimen>
+    <dimen name="hotset_image_size_small">60dp</dimen>
+    <dimen name="tv_music_name_size">31sp</dimen>
+    <dimen name="iv_text_size">28sp</dimen>
+</resources>

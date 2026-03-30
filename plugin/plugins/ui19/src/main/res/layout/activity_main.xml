@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityUI19">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.14" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.43" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.465" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.796" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.02" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.559" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.582" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.98" />
+    
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.757"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/iv_nav_bg"
+        android:src="@drawable/sf_nav_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
+
+    <com.launcher.ui19.MarqueeTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/navigation"
+        style="@style/marquee_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        app:layout_constraintStart_toStartOf="@+id/iv_nav_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_nav_bg" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/iv_radio_bg"
+        android:src="@drawable/sf_radio_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintStart_toEndOf="@+id/iv_nav_bg"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+        app:layout_constraintEnd_toStartOf="@+id/iv_btphone_bg"
+        tools:ignore="MissingConstraints" />
+
+    <com.launcher.ui19.MarqueeTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        style="@style/marquee_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        app:layout_constraintStart_toStartOf="@+id/iv_radio_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_radio_bg" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/iv_btphone_bg"
+        android:src="@drawable/sf_btphone_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintStart_toEndOf="@+id/iv_radio_bg"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+        app:layout_constraintEnd_toStartOf="@+id/iv_btmusic_bg"
+        tools:ignore="MissingConstraints" />
+
+    <com.launcher.ui19.MarqueeTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/phone"
+        style="@style/marquee_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        app:layout_constraintStart_toStartOf="@+id/iv_btphone_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_btphone_bg" />
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/iv_btmusic_bg"
+        android:src="@drawable/sf_btmusic_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintStart_toEndOf="@+id/iv_btphone_bg"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+        app:layout_constraintEnd_toStartOf="@+id/iv_setting_bg"
+        tools:ignore="MissingConstraints" />
+
+    <com.launcher.ui19.MarqueeTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bt_music"
+        style="@style/marquee_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        app:layout_constraintStart_toStartOf="@+id/iv_btmusic_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_btmusic_bg" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/iv_setting_bg"
+        android:src="@drawable/sf_settings_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintStart_toEndOf="@+id/iv_btmusic_bg"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <com.launcher.ui19.MarqueeTextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/setting"
+        style="@style/marquee_text"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        app:layout_constraintStart_toStartOf="@+id/iv_setting_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_setting_bg" />
+
+
+    <!-- date layout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_date"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/sf_date_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toEndOf="@+id/guideline_left1"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"
+        tools:ignore="MissingConstraints">
+
+        <TextClock
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="@color/black"
+            android:textSize="108sp"
+            android:fontFamily="@font/arialmt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.23"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:weightSum="3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.81"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_time"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
+            <TextClock
+                android:id="@+id/tv_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:format12Hour="EEEE"
+                android:format24Hour="EEEE"
+                android:textColor="@color/black"
+                android:fontFamily="@font/arialmt"
+                android:textSize="33sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextClock
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:format12Hour="yyyy-MM-dd"
+                android:format24Hour="yyyy-MM-dd"
+                android:textColor="@color/black"
+                android:fontFamily="@font/arialmt"
+                android:textSize="27sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--bottom layout-->
+    <LinearLayout
+        android:id="@+id/hotseat_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/sf_bottom_bg"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.158"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <ImageView
+            android:id="@+id/hotset_allapp"
+            android:layout_width="@dimen/hotset_image_size"
+            android:layout_height="@dimen/hotset_image_size"
+            android:src="@drawable/sf_all" />
+
+    </LinearLayout>
+
+
+    <!-- music layout -->
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

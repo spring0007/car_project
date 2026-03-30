@@ -1,0 +1,21 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">שם השיר</string>
+    <string name="music_artist">אמן</string>
+    <string name="unknown">לא ידוע</string>
+    <string name="music">מוזיקה</string>
+    <string name="radio">רדיו</string>
+    <string name="navigation">ניווט</string>
+    <string name="phone">טלפון בלוטות\'</string>
+    <string name="bt_music">מוזיקת בלוטות\'</string>
+    <string name="setting">רקע</string>
+
+    
+
+
+</resources>

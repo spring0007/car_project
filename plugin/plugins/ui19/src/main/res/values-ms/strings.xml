@@ -1,0 +1,21 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Tajuk Lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">Tidak diketahui</string>
+    <string name="music">Muzik</string>
+    <string name="radio">Radio</string>
+    <string name="navigation">Navigasi</string>
+    <string name="phone">Telefon Bluetooth</string>
+    <string name="bt_music">Muzik Bluetooth</string>
+    <string name="setting">Tetapan</string>
+
+    
+
+
+</resources>

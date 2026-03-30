@@ -1,0 +1,21 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Название песни</string>
+    <string name="music_artist">Художник</string>
+    <string name="unknown">неизвестно</string>
+    <string name="music">Музыка</string>
+    <string name="radio">Радио</string>
+    <string name="navigation">Навигация</string>
+    <string name="phone">Bluetooth-телефон</string>
+    <string name="bt_music">Bluetooth-музыка</string>
+    <string name="setting">Место действия</string>
+
+    
+
+
+</resources>
