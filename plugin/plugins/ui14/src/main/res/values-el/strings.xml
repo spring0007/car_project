@@ -19,6 +19,7 @@
     <string name="bt_connected">Συνδεδεμένο Bluetooth</string>
     <string name="bt_not_connected">Το Bluetooth δεν είναι συνδεδεμένο</string>
     <string name="bt_close">Bluetooth Κλειστό</string>
+    <string name="bt_name">Bluetooth</string>
 
     
 

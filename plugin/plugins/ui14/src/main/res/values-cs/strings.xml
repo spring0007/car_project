@@ -19,6 +19,7 @@
     <string name="bt_connected">Bluetooth připojeno</string>
     <string name="bt_not_connected">Bluetooth není připojen</string>
     <string name="bt_close">Bluetooth uzavřen</string>
+    <string name="bt_name">Bluetooth</string>
 
     
 

@@ -203,7 +203,7 @@
                 android:id="@+id/bt_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="蓝牙"
+                android:text="@string/bt_name"
                 android:textColor="@android:color/white"
                 android:textSize="28sp"
                 app:layout_constraintBottom_toBottomOf="parent"

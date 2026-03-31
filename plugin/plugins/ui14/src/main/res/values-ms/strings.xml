@@ -19,6 +19,7 @@
     <string name="bt_connected">Bluetooth Disambungkan</string>
     <string name="bt_not_connected">Bluetooth Tidak Disambungkan</string>
     <string name="bt_close">Bluetooth Ditutup</string>
+    <string name="bt_name">Bahasa Bluetooth</string>
 
     
 

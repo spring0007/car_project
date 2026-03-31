@@ -15,17 +15,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui9.MarqueeTextView
             android:id="@+id/video_tv"
-            android:layout_width="match_parent"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:text="@string/video"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tv_font_size"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,17 +39,18 @@
         app:layout_constraintStart_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui9.MarqueeTextView
             android:id="@+id/folder_tv"
-            android:layout_width="match_parent"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:text="@string/folder"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tv_font_size"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintWidth_percent="0.9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -62,17 +64,18 @@
         app:layout_constraintStart_toEndOf="@+id/folder_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui9.MarqueeTextView
             android:id="@+id/setting_tv"
-            android:layout_width="match_parent"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:text="@string/setting"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tv_font_size"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -85,17 +88,18 @@
         app:layout_constraintStart_toEndOf="@+id/setting_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui9.MarqueeTextView
             android:id="@+id/all_tv"
-            android:layout_width="match_parent"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:text="@string/App"
-            android:textColor="@color/white"
-            android:textSize="@dimen/tv_font_size"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.1" />
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

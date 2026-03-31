@@ -19,6 +19,7 @@
     <string name="bt_connected">藍牙連接</string>
     <string name="bt_not_connected">藍牙未連接</string>
     <string name="bt_close">藍牙關閉</string>
+    <string name="bt_name">藍牙</string>
 
     
 

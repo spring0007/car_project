@@ -19,6 +19,7 @@
     <string name="bt_connected">بلوتوث متصل</string>
     <string name="bt_not_connected">بلوتوث متصل نیست</string>
     <string name="bt_close">بلوتوث بسته شد</string>
+    <string name="bt_name">بلوتوث</string>
 
     
 

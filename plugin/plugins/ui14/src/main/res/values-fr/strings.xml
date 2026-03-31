@@ -19,6 +19,7 @@
     <string name="bt_connected">Bluetooth connecté</string>
     <string name="bt_not_connected">Bluetooth non connecté</string>
     <string name="bt_close">Bluetooth fermé</string>
+    <string name="bt_name">Bluetooth</string>
 
     
 

@@ -15,18 +15,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui7.MarqueeTextView
             android:id="@+id/navi_tv"
-            android:layout_width="wrap_content"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf ="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
             android:text="@string/navigation"
-            android:textColor="@color/yellow_fdb4"
-            android:textSize="@dimen/text_size" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -40,18 +40,18 @@
         app:layout_constraintStart_toEndOf="@+id/navi_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui7.MarqueeTextView
             android:id="@+id/music_tv"
-            android:layout_width="wrap_content"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf ="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
             android:text="@string/music"
-            android:textColor="@color/yellow_fdb4"
-            android:textSize="@dimen/text_size" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,18 +64,18 @@
         app:layout_constraintStart_toEndOf="@+id/music_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui7.MarqueeTextView
             android:id="@+id/all_tv"
-            android:layout_width="wrap_content"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf ="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
             android:text="@string/App"
-            android:textColor="@color/yellow_fdb4"
-            android:textSize="@dimen/text_size" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,18 +88,18 @@
         app:layout_constraintStart_toEndOf="@+id/all_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui7.MarqueeTextView
             android:id="@+id/phone_tv"
-            android:layout_width="wrap_content"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf ="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
             android:text="@string/phone"
-            android:textColor="@color/yellow_fdb4"
-            android:textSize="@dimen/text_size" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,18 +112,18 @@
         app:layout_constraintStart_toEndOf="@+id/phone_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <com.launcher.ui7.MarqueeTextView
             android:id="@+id/radio_tv"
-            android:layout_width="wrap_content"
+            style="@style/marquee_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf ="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
             android:text="@string/radio"
-            android:textColor="@color/yellow_fdb4"
-            android:textSize="@dimen/text_size" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="@dimen/tv_ver_bias"
+            app:layout_constraintWidth_percent="0.9" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

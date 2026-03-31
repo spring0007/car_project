@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="marquee_text">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:focusable">true</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/yellow_fdb4</item>
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+</resources>
