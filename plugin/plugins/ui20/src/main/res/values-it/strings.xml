@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LauncherUI20</string>
+    
+    
+    <string name="time">Tempo</string>
+    <string name="navigation">Navigazione</string>
+    <string name="music">Musica</string>
+    <string name="click_play_music">Titolo della canzone</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">Sconosciuto</string>
+    
+</resources>

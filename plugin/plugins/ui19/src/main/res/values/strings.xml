@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">LauncherUI19</string><!-- app 名称 -->
+    <string name="app_name" >LauncherUI19</string><!-- app 名称 -->
 
     <string name="ui_key" translatable="false">LauncherUI19</string>
     <string name="ui_clazz" translatable="false">com.launcher.ui19.MainActivityUI19</string>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">लॉन्चरयूआई20</string>
+    
+    
+    <string name="time">समय</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="music">राग</string>
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="unknown">अप्रसिद्घ व्यक्ति</string>
+    
+</resources>

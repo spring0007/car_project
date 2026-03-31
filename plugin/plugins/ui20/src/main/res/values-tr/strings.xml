@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LauncherUI20</string>
+    
+    
+    <string name="time">Zaman</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="music">Müzik</string>
+    <string name="click_play_music">Şarkı Adı</string>
+    <string name="music_artist">Sanatçı</string>
+    <string name="unknown">bilinmeyen</string>
+    
+</resources>

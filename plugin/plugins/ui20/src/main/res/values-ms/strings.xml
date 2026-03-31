@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PelancarUI20</string>
+    
+    
+    <string name="time">Masa</string>
+    <string name="navigation">Navigasi</string>
+    <string name="music">Muzik</string>
+    <string name="click_play_music">Tajuk Lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">Tidak diketahui</string>
+    
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI20</string>
+    
+    
+    <string name="time">Χρόνος</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="music">Μουσική</string>
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+    
+</resources>

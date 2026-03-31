@@ -71,10 +71,11 @@
         app:layout_constraintGuide_percent="0.757"/>
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_nav_bg"
         android:src="@drawable/sf_nav_bg"
+        app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
@@ -90,10 +91,11 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_radio_bg"
         android:src="@drawable/sf_radio_bg"
+        app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_nav_bg"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
@@ -111,10 +113,11 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_btphone_bg"
         android:src="@drawable/sf_btphone_bg"
+        app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_radio_bg"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
@@ -133,10 +136,11 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_btmusic_bg"
         android:src="@drawable/sf_btmusic_bg"
+        app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_btphone_bg"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
@@ -153,10 +157,11 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_btmusic_bg" />
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_setting_bg"
         android:src="@drawable/sf_settings_bg"
+        app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_btmusic_bg"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
@@ -194,7 +199,7 @@
             android:format12Hour="hh:mm"
             android:format24Hour="HH:mm"
             android:textColor="@color/black"
-            android:textSize="108sp"
+            android:textSize="@dimen/tc_time_size"
             android:fontFamily="@font/arialmt"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -230,7 +235,8 @@
                 android:format24Hour="EEEE"
                 android:textColor="@color/black"
                 android:fontFamily="@font/arialmt"
-                android:textSize="33sp" />
+                android:gravity="center_horizontal|end"
+                android:textSize="@dimen/iv_week_size" />
 
             <View
                 android:layout_width="1dp"
@@ -246,7 +252,7 @@
                 android:format24Hour="yyyy-MM-dd"
                 android:textColor="@color/black"
                 android:fontFamily="@font/arialmt"
-                android:textSize="27sp" />
+                android:textSize="@dimen/iv_date_size" />
 
             <View
                 android:layout_width="1dp"

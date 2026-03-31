@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ランチャーUI20</string>
+    
+    
+    <string name="time">時間</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="music">音楽</string>
+    <string name="click_play_music">曲名</string>
+    <string name="music_artist">アーティスト</string>
+    <string name="unknown">不明</string>
+    
+</resources>

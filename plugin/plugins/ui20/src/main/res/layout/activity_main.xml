@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivityUI20">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.157" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.84" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.147" />
+
+    <!-- 左侧图标栏 -->
+    <ImageView
+        android:id="@+id/left_icon_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_left_side"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 主页图标 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="2.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/left_icon_bar"
+        app:layout_constraintStart_toStartOf="@+id/left_icon_bar"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+        <ImageView
+            android:id="@+id/navigation_icon"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
+            android:layout_gravity="center"
+            android:src="@drawable/sf_nav" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/music_icon"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
+            android:layout_gravity="center"
+            android:src="@drawable/sf_music" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/bt_icon"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
+            android:layout_gravity="center"
+            android:src="@drawable/sf_bt"
+            app:layout_constraintBottom_toTopOf="@+id/all_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_icon"
+
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/all_icon"
+            android:layout_width="@dimen/icon_width"
+            android:layout_height="@dimen/icon_height"
+            android:layout_gravity="center"
+            android:src="@drawable/sf_all"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_icon" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/all_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+
+        <!-- 时间卡片 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/time_card"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/sf_time_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/navigation_card"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.295">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_horizontal"
+                android:text="@string/time"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/tv_title_size"
+                app:layout_constraintBottom_toBottomOf="@+id/time_card"
+                app:layout_constraintTop_toTopOf="@+id/time_card"
+                app:layout_constraintEnd_toEndOf="@+id/time_card"
+                app:layout_constraintHorizontal_bias="0.82"
+                app:layout_constraintStart_toStartOf="@+id/time_card"
+                app:layout_constraintVertical_bias="0.11"
+                app:layout_constraintWidth_percent="0.65" />
+
+
+            <LinearLayout
+                app:layout_constraintEnd_toEndOf="@+id/time_card"
+                app:layout_constraintStart_toStartOf="@+id/time_card"
+                app:layout_constraintBottom_toBottomOf="@+id/time_card"
+                app:layout_constraintTop_toTopOf="@+id/time_card"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintVertical_bias="0.65"
+                app:layout_constraintHeight_percent="0.45"
+                android:weightSum="1"
+                android:orientation="vertical">
+
+                <TextClock
+                    android:id="@+id/time_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/harmonyos_sans_sc_regular"
+                    android:format12Hour="hh:mm"
+                    android:format24Hour="HH:mm"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/time_value_size" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
+
+                <TextClock
+                    android:id="@+id/date_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/harmonyos_sans_sc_regular"
+                    android:format12Hour="yyyy-MM-dd"
+                    android:format24Hour="yyyy-MM-dd"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/date_text_size" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5" />
+
+                <TextClock
+                    android:id="@+id/weekday_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/harmonyos_sans_sc_regular"
+                    android:format12Hour="EEEE"
+                    android:format24Hour="EEEE"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/date_text_size" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 导航卡片 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigation_card"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/sf_nav_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/music_card"
+            app:layout_constraintStart_toEndOf="@+id/time_card"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.295">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_horizontal"
+                android:text="@string/navigation"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/tv_title_size"
+                app:layout_constraintBottom_toBottomOf="@+id/navigation_card"
+                app:layout_constraintTop_toTopOf="@+id/navigation_card"
+                app:layout_constraintEnd_toEndOf="@+id/navigation_card"
+                app:layout_constraintHorizontal_bias="0.82"
+                app:layout_constraintStart_toStartOf="@+id/navigation_card"
+                app:layout_constraintVertical_bias="0.11"
+                app:layout_constraintWidth_percent="0.65" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- 音乐卡片 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/music_card"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/sf_music_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/navigation_card"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.295">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_horizontal"
+                android:text="@string/music"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/tv_title_size"
+                app:layout_constraintBottom_toBottomOf="@+id/music_card"
+                app:layout_constraintTop_toTopOf="@+id/music_card"
+                app:layout_constraintEnd_toEndOf="@+id/music_card"
+                app:layout_constraintHorizontal_bias="0.82"
+                app:layout_constraintStart_toStartOf="@+id/music_card"
+                app:layout_constraintVertical_bias="0.11"
+                app:layout_constraintWidth_percent="0.65" />
+
+            <include
+                layout="@layout/music_widget"
+                android:id="@+id/layout_music_widget"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/music_card"
+                app:layout_constraintEnd_toEndOf="@+id/music_card"
+                app:layout_constraintHeight_percent="0.72"
+                app:layout_constraintStart_toStartOf="@+id/music_card"
+                app:layout_constraintVertical_bias="0.748"
+                app:layout_constraintWidth_percent="0.83" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

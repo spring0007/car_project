@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 字体大小 -->
+    <dimen name="time_title_size">28sp</dimen>
+    <dimen name="time_value_size">90sp</dimen>
+    <dimen name="date_text_size">30sp</dimen>
+    <dimen name="icon_width">113dp</dimen>
+    <dimen name="icon_height">107dp</dimen>
+    <dimen name="music_widget_logo_size">174dp</dimen>
+    <dimen name="tv_music_name_size">20sp</dimen>
+    <dimen name="music_pre_size">40dp</dimen>
+    <dimen name="music_play_width">87dp</dimen>
+    <dimen name="music_play_height">83dp</dimen>
+    <dimen name="tv_title_size">31sp</dimen>
+</resources>
