@@ -373,15 +373,16 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
 
         @Override
         public void onStartActivityCompleted(String plugin, String activity, boolean result) {
-            // FIXME 当打开Activity成功时触发此逻辑，可在这里做一些APM、打点统计等相关工作
+            // FIXME 当打开 Activity 成功时触发此逻辑，可在这里做一些 APM、打点统计等相关工作
             if (D) {
-
                 Log.i(TAG, "onStartActivityCompleted: huang plugin =>" + plugin);
                 Log.i(TAG, "onStartActivityCompleted: huang activity =>" + activity);
                 Log.i(TAG, "onStartActivityCompleted: huang result =>" + result);
             }
-
-            if (startStatus != null) {
+        
+            // 避免重复回调导致无限循环
+            // 只有在插件启动失败时才需要重试，成功时不需要再次触发
+            if (startStatus != null && !result) {
                 startStatus.startPitActivityResult(plugin, activity, result);
             }
             super.onStartActivityCompleted(plugin, activity, result);

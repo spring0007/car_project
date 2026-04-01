@@ -14,7 +14,7 @@
 -->
 
 <resources>
-
+    <!-- 2000x1200 dpi320 (xhdpi) 屏幕专用 -->
     <dimen name="app_icon_size">125dp</dimen>
     <dimen name="reveal_radius">64dp</dimen>
     <dimen name="app_icon_drawable_padding">3dp</dimen>

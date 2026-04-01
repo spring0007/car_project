@@ -317,6 +317,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
 
+    private boolean isPluginStarting = false; // 防止重复启动插件
+
     private final LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
         @Override
         public void startPitActivityResult(String plugin, String activity, boolean result) {
@@ -326,6 +328,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.i(TAG, "startPitActivityResult: huang start result=>" + result);
             }
 
+            // 如果已经成功启动过插件，不再重复启动，避免无限循环
+            if (isPluginStarting) {
+                if (D) {
+                    Log.d(TAG, "startPitActivityResult: huang plugin already started, ignore");
+                }
+                return;
+            }
+
             if (result) {
                 Log.i(TAG, "startPitActivityResult: huang not finish main activity=>");
                 //finish();
@@ -333,9 +343,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 isFirstBoot = false;
                 String topActivity = getTopActivity();
                 String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
+                
+                // 检查是否需要重新启动插件
                 if ("com.awell.launcher.host.MainActivity".equals(topActivity) || apkClazz.equals(activity)) {
+                    // 设置标志位，防止重复调用
+                    isPluginStarting = true;
                     Message message = buildPluginMsg(apkClazz);
                     realStartPlugin(message);
+                    
+                    // 重置标志位（延迟一点，确保启动完成）
+                    mainHandle.postDelayed(() -> isPluginStarting = false, 1000);
                 }
                 //startInternalLauncher();
                 //finish();
