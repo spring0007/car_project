@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Clicca per riprodurre</string>
+    <string name="music_artist">Artista</string>
+    <string name="add_app">Aggiungi</string>
+    <string name="music">Musica</string>
+    <string name="navigation">Navigazione</string>
+    <string name="App">App</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Gestione delle cartelle</string>
+    <string name="setting">Impostazioni</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Video</string>
+    <string name="aux">Alla</string>
+    <string name="navi">Navigazione mappa</string>
+    <string name="image_album">Navigazione delle immagini</string>
+    <string name="phone_connect">A</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Nuvoloso</string>
+    <string name="weather_desc_102">Poche nuvole</string>
+    <string name="weather_desc_103">Parzialmente soleggiato</string>
+    <string name="weather_desc_104">Nuvoloso</string>
+    <string name="weather_desc_300">Pioggia di pioggia</string>
+    <string name="weather_desc_301">Pioggia intensa</string>
+    <string name="weather_desc_302">Temporale</string>
+    <string name="weather_desc_303">Forte temporale</string>
+    <string name="weather_desc_304">Tuono con grandine</string>
+    <string name="weather_desc_305">Pioggia leggera</string>
+    <string name="weather_desc_306">Pioggia moderata</string>
+    <string name="weather_desc_307">Piogge intense</string>
+    <string name="weather_desc_308">Piogge estreme</string>
+    <string name="weather_desc_309">Pioggerellina</string>
+    <string name="weather_desc_310">Tempesta</string>
+    <string name="weather_desc_311">Forte tempesta</string>
+    <string name="weather_desc_312">Tempesta severa</string>
+    <string name="weather_desc_313">Pioggia gelata</string>
+    <string name="weather_desc_400">Neve leggera</string>
+    <string name="weather_desc_401">Nevicata moderata</string>
+    <string name="weather_desc_402">Nevicate abbondanti</string>
+    <string name="weather_desc_403">Tempesta di neve</string>
+    <string name="weather_desc_404">Nevischio</string>
+    <string name="weather_desc_405">Pioggia e neve</string>
+    <string name="weather_desc_406">Nevicata a pioggia</string>
+    <string name="weather_desc_407">Rivola di neve</string>
+    <string name="weather_desc_500">Nebbia</string>
+    <string name="weather_desc_501">Giunzione</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Fitta foschia</string>
+    <string name="weather_desc_504">Foschia leggera</string>
+    <string name="weather_desc_507">Tempesta di sabbia</string>
+    <string name="weather_desc_508">Forte tempesta di sabbia</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">yyy/MM/dd</string>
+    <string name="aa_hh_mm">hh:mm a</string>
+
+    
+
+</resources>

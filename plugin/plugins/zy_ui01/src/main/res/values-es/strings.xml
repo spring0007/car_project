@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Haz clic para reproducir</string>
+    <string name="music_artist">Artista</string>
+    <string name="add_app">Añadir</string>
+    <string name="music">Música</string>
+    <string name="navigation">Navegación</string>
+    <string name="App">App</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Gestión de carpetas</string>
+    <string name="setting">Escenarios</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Vídeo</string>
+    <string name="aux">A la</string>
+    <string name="navi">Navegación por mapas</string>
+    <string name="image_album">Navegación de imágenes</string>
+    <string name="phone_connect">A</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Nublado</string>
+    <string name="weather_desc_102">Pocas nubes</string>
+    <string name="weather_desc_103">Parcialmente soleado</string>
+    <string name="weather_desc_104">Nublado</string>
+    <string name="weather_desc_300">Lluvia agusca</string>
+    <string name="weather_desc_301">Lluvia intensa</string>
+    <string name="weather_desc_302">Tormenta eléctrica</string>
+    <string name="weather_desc_303">Tormenta severa</string>
+    <string name="weather_desc_304">Tormenta eléctrica con granizo</string>
+    <string name="weather_desc_305">Lluvia ligera</string>
+    <string name="weather_desc_306">Lluvia moderada</string>
+    <string name="weather_desc_307">Lluvias intensas</string>
+    <string name="weather_desc_308">Lluvias extremas</string>
+    <string name="weather_desc_309">Llovizna</string>
+    <string name="weather_desc_310">Tormenta</string>
+    <string name="weather_desc_311">Tormenta fuerte</string>
+    <string name="weather_desc_312">Tormenta severa</string>
+    <string name="weather_desc_313">Lluvia helada</string>
+    <string name="weather_desc_400">Nieve ligera</string>
+    <string name="weather_desc_401">Nieve moderada</string>
+    <string name="weather_desc_402">Nieve intensa</string>
+    <string name="weather_desc_403">Tormenta de nieve</string>
+    <string name="weather_desc_404">Aguanieve</string>
+    <string name="weather_desc_405">Lluvia y nieve</string>
+    <string name="weather_desc_406">Nieve aguacero</string>
+    <string name="weather_desc_407">Ráfaga de nieve</string>
+    <string name="weather_desc_500">Niebla</string>
+    <string name="weather_desc_501">Articulación</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Neblina densa</string>
+    <string name="weather_desc_504">Ligera neblina</string>
+    <string name="weather_desc_507">Tormenta de arena</string>
+    <string name="weather_desc_508">Fuerte tormenta de arena</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">aaaaa/MM/dd</string>
+    <string name="aa_hh_mm">hh:mm a</string>
+
+    
+
+</resources>

@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">啟動器UI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">點擊播放</string>
+    <string name="music_artist">藝術家</string>
+    <string name="add_app">新增</string>
+    <string name="music">音樂</string>
+    <string name="navigation">導航</string>
+    <string name="App">應用程式</string>
+    <string name="radio">廣播</string>
+    <string name="phone">藍牙</string>
+    <string name="folder">資料夾管理</string>
+    <string name="setting">場景設定</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">影片</string>
+    <string name="aux">致</string>
+    <string name="navi">地圖導航</string>
+    <string name="image_album">圖片瀏覽</string>
+    <string name="phone_connect">致</string>
+    <string name="blueth">藍牙</string>
+
+    <string name="weather_desc_100">桑尼</string>
+    <string name="weather_desc_101">多雲</string>
+    <string name="weather_desc_102">少雲</string>
+    <string name="weather_desc_103">部分晴朗</string>
+    <string name="weather_desc_104">陰天</string>
+    <string name="weather_desc_300">陣雨</string>
+    <string name="weather_desc_301">大陣雨</string>
+    <string name="weather_desc_302">雷陣雨</string>
+    <string name="weather_desc_303">嚴重雷陣雨</string>
+    <string name="weather_desc_304">雷陣雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中度降雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">極端降雨</string>
+    <string name="weather_desc_309">細雨</string>
+    <string name="weather_desc_310">風暴</string>
+    <string name="weather_desc_311">暴風雨</string>
+    <string name="weather_desc_312">嚴重風暴</string>
+    <string name="weather_desc_313">凍雨</string>
+    <string name="weather_desc_400">輕雪</string>
+    <string name="weather_desc_401">中度降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴風雪</string>
+    <string name="weather_desc_404">冰雹</string>
+    <string name="weather_desc_405">雨與雪</string>
+    <string name="weather_desc_406">陣雨雪</string>
+    <string name="weather_desc_407">雪花紛飛</string>
+    <string name="weather_desc_500">霧</string>
+    <string name="weather_desc_501">關節</string>
+    <string name="weather_desc_502">霧</string>
+    <string name="weather_desc_503">濃霧</string>
+    <string name="weather_desc_504">輕霧</string>
+    <string name="weather_desc_507">沙塵暴</string>
+    <string name="weather_desc_508">強烈沙塵暴</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">是的/MM/dd</string>
+    <string name="aa_hh_mm">HH：MM A</string>
+
+    
+
+</resources>

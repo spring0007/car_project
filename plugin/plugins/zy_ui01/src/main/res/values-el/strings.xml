@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="add_app">Προσθήκη</string>
+    <string name="music">Μουσική</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="App">Εφαρμογή</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Διαχείριση φακέλου</string>
+    <string name="setting">Ρυθμίσεις</string>
+    <string name="equalizer">Δσπ</string>
+    <string name="video">Βίντεο</string>
+    <string name="aux">Στο</string>
+    <string name="navi">Πλοήγηση στο χάρτη</string>
+    <string name="image_album">Περιήγηση εικόνων</string>
+    <string name="phone_connect">ΠΡΟΣ ΤΟ</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Ηλιόλουστος</string>
+    <string name="weather_desc_101">Νεφελώδης</string>
+    <string name="weather_desc_102">Λίγα σύννεφα</string>
+    <string name="weather_desc_103">Μερική ηλιοφάνεια</string>
+    <string name="weather_desc_104">Συννεφιά</string>
+    <string name="weather_desc_300">Βροχή βροχής</string>
+    <string name="weather_desc_301">Δυνατή βροχή</string>
+    <string name="weather_desc_302">Καταιγίδα</string>
+    <string name="weather_desc_303">Σφοδρή καταιγίδα</string>
+    <string name="weather_desc_304">Καταιγίδα με χαλάζι</string>
+    <string name="weather_desc_305">Ασθενής βροχή</string>
+    <string name="weather_desc_306">Μέτρια βροχή</string>
+    <string name="weather_desc_307">Δυνατή βροχή</string>
+    <string name="weather_desc_308">Ακραίες βροχοπτώσεις</string>
+    <string name="weather_desc_309">Ψιλόβροχο</string>
+    <string name="weather_desc_310">Καταιγίδα</string>
+    <string name="weather_desc_311">Ισχυρή καταιγίδα</string>
+    <string name="weather_desc_312">Σφοδρή καταιγίδα</string>
+    <string name="weather_desc_313">Παγωμένη βροχή</string>
+    <string name="weather_desc_400">Ελαφρύ χιόνι</string>
+    <string name="weather_desc_401">Μέτριο χιόνι</string>
+    <string name="weather_desc_402">Βαρύ χιόνι</string>
+    <string name="weather_desc_403">Χιονοθύελλα</string>
+    <string name="weather_desc_404">Χιονόνερο</string>
+    <string name="weather_desc_405">Βροχή και χιόνι</string>
+    <string name="weather_desc_406">Βροχή χιονιού</string>
+    <string name="weather_desc_407">Χιονοπτώσεις</string>
+    <string name="weather_desc_500">Ομίχλη</string>
+    <string name="weather_desc_501">Κοινή</string>
+    <string name="weather_desc_502">Ομίχλη</string>
+    <string name="weather_desc_503">Βαριά ομίχλη</string>
+    <string name="weather_desc_504">Ελαφριά ομίχλη</string>
+    <string name="weather_desc_507">Αμμοθύελλα</string>
+    <string name="weather_desc_508">Σφοδρή αμμοθύελλα</string>
+    <string name="weather_desc_unknown">ΟΥΝΚ</string>
+    <string name="yyyy_mm_dd">εεεε/μμ/ηη</string>
+    <string name="aa_hh_mm">ωω:μμ α</string>
+
+    
+
+</resources>

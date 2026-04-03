@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="tv_style">
+        <item name="android:fontFamily">@font/harmonyos_sans_sc_regular</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textSize">@dimen/tv_title_size</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center_horizontal</item>
+
+        
+    </style>
+    <style name="tv_style1">
+        <item name="android:fontFamily">@font/harmonyos_sans_sc_regular</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textSize">@dimen/tv_music_size</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+
+</resources>

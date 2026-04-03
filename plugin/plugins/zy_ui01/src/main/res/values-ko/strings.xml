@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">런처UI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">클릭하여 재생하기</string>
+    <string name="music_artist">예술가</string>
+    <string name="add_app">추가</string>
+    <string name="music">음악</string>
+    <string name="navigation">항해</string>
+    <string name="App">앱</string>
+    <string name="radio">라디오</string>
+    <string name="phone">블루투스</string>
+    <string name="folder">폴더 관리</string>
+    <string name="setting">설정</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">비디오</string>
+    <string name="aux">그</string>
+    <string name="navi">지도 탐색</string>
+    <string name="image_album">이미지 탐색</string>
+    <string name="phone_connect">TO(토)</string>
+    <string name="blueth">블루투스</string>
+
+    <string name="weather_desc_100">써니</string>
+    <string name="weather_desc_101">흐림</string>
+    <string name="weather_desc_102">구름이 적어</string>
+    <string name="weather_desc_103">부분적으로 맑음</string>
+    <string name="weather_desc_104">흐림</string>
+    <string name="weather_desc_300">소나기 비</string>
+    <string name="weather_desc_301">폭우</string>
+    <string name="weather_desc_302">천둥소나기</string>
+    <string name="weather_desc_303">심한 뇌우</string>
+    <string name="weather_desc_304">우박이 내린 천둥소나기</string>
+    <string name="weather_desc_305">가벼운 비</string>
+    <string name="weather_desc_306">중간 정도의 비</string>
+    <string name="weather_desc_307">폭우</string>
+    <string name="weather_desc_308">극심한 비</string>
+    <string name="weather_desc_309">이슬비</string>
+    <string name="weather_desc_310">폭풍</string>
+    <string name="weather_desc_311">거센 폭풍</string>
+    <string name="weather_desc_312">심한 폭풍</string>
+    <string name="weather_desc_313">얼음비</string>
+    <string name="weather_desc_400">가벼운 눈</string>
+    <string name="weather_desc_401">적당한 눈</string>
+    <string name="weather_desc_402">많은 눈이 내렸습니다</string>
+    <string name="weather_desc_403">눈보라</string>
+    <string name="weather_desc_404">진눈깨비</string>
+    <string name="weather_desc_405">비와 눈</string>
+    <string name="weather_desc_406">소나기 눈</string>
+    <string name="weather_desc_407">눈보라</string>
+    <string name="weather_desc_500">안개</string>
+    <string name="weather_desc_501">관절</string>
+    <string name="weather_desc_502">헤이즈</string>
+    <string name="weather_desc_503">짙은 안개</string>
+    <string name="weather_desc_504">라이트 헤이즈</string>
+    <string name="weather_desc_507">모래폭풍</string>
+    <string name="weather_desc_508">강한 모래폭풍</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">이이이/음/음</string>
+    <string name="aa_hh_mm">HH:음 A</string>
+
+    
+
+</resources>

@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Zum Spielen klicken</string>
+    <string name="music_artist">Künstler</string>
+    <string name="add_app">Hinzufügen</string>
+    <string name="music">Musik</string>
+    <string name="navigation">Navigation</string>
+    <string name="App">App</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Bluetooth</string>
+    <string name="folder">Ordnerverwaltung</string>
+    <string name="setting">Einstellungen</string>
+    <string name="equalizer">DSP</string>
+    <string name="video">Video</string>
+    <string name="aux">An die</string>
+    <string name="navi">Kartennavigation</string>
+    <string name="image_album">Bilderdurchsuchung</string>
+    <string name="phone_connect">TO</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Bewölkt</string>
+    <string name="weather_desc_102">Wenige Wolken</string>
+    <string name="weather_desc_103">Teilweise sonnig</string>
+    <string name="weather_desc_104">Bewölkt</string>
+    <string name="weather_desc_300">Regenschauer</string>
+    <string name="weather_desc_301">Starker Schauer</string>
+    <string name="weather_desc_302">Gewitterschauer</string>
+    <string name="weather_desc_303">Schwerer Gewitterschauer</string>
+    <string name="weather_desc_304">Gewitter mit Hagel</string>
+    <string name="weather_desc_305">Leichter Regen</string>
+    <string name="weather_desc_306">Mäßiger Regen</string>
+    <string name="weather_desc_307">Starker Regen</string>
+    <string name="weather_desc_308">Extremer Regen</string>
+    <string name="weather_desc_309">Nieselregen</string>
+    <string name="weather_desc_310">Sturm</string>
+    <string name="weather_desc_311">Schwerer Sturm</string>
+    <string name="weather_desc_312">Schwerer Sturm</string>
+    <string name="weather_desc_313">Gefrieren Regen</string>
+    <string name="weather_desc_400">Leichter Schnee</string>
+    <string name="weather_desc_401">Mäßiger Schnee</string>
+    <string name="weather_desc_402">Starker Schnee</string>
+    <string name="weather_desc_403">Schneesturm</string>
+    <string name="weather_desc_404">Schneeregen</string>
+    <string name="weather_desc_405">Regen und Schnee</string>
+    <string name="weather_desc_406">Schauer-Schnee</string>
+    <string name="weather_desc_407">Schneeflocker</string>
+    <string name="weather_desc_500">Nebel</string>
+    <string name="weather_desc_501">Gemeinsam</string>
+    <string name="weather_desc_502">Nebel</string>
+    <string name="weather_desc_503">Dichter Dunst</string>
+    <string name="weather_desc_504">Lichtnebel</string>
+    <string name="weather_desc_507">Sandsturm</string>
+    <string name="weather_desc_508">Starker Sandsturm</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="yyyy_mm_dd">yyyy/MM/dd</string>
+    <string name="aa_hh_mm">hh:mm a</string>
+
+    
+
+</resources>
