@@ -11,9 +11,9 @@
     <dimen name="tv_font_size">33sp</dimen>
     <dimen name="music_iv_size">45dp</dimen>
     <dimen name="tv_title_size">28sp</dimen>
-    <dimen name="tv_music_size">23sp</dimen>
+    <dimen name="tv_music_size">28sp</dimen>
     <dimen name="tv_time_size">42sp</dimen>
     <dimen name="tv_temper_size">35sp</dimen>
-    <dimen name="tv_scope_size">20sp</dimen>
+    <dimen name="tv_scope_size">22sp</dimen>
     <dimen name="tv_width" format="float">0.185</dimen>
 </resources>
