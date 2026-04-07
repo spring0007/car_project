@@ -164,6 +164,37 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         }
     }
 
+    public void getCarPlayData(String zlinStatus, String phoneMode) {
+        Log.e(TAG, "getCarPlayData zlinStatus:" + zlinStatus + " phoneMode:" + phoneMode);
+        if ("CONNECTED".equals(zlinStatus)) {
+            //zlinkCarPlaySocketThread = new SocketThread(1555, carPlayhandler, phoneMode);
+            //currentMedia = CARPLAY;
+            setImageIcon(currentMedia);
+        } else if ("DISCONNECT".equals(zlinStatus)) {
+            setCurMusicState(false, OTHER_MUSIC);
+            //if(zlinkCarPlaySocketThread!=null) {
+            //    zlinkCarPlaySocketThread.disSocket();
+            //}
+        } else if ("ACTION_ZJ_PHONEFOUND".equals(zlinStatus)) {
+            if (phoneMode.contains("carplay")) {
+                //currentMedia = CARPLAY;
+                setImageIcon(currentMedia);
+            } else if (phoneMode.contains("auto")) {
+                //currentMedia = CARPLAY;
+//                if (icon_music_img != null) {
+//                    icon_music_img.setImageResource(com.awell.launcher.library.R.drawable.icon_autoplay_img);
+//                }
+            }
+        } else if (zlinStatus.equals("MAIN_AUDIO_STOP")) {
+            setCurMusicState(false, OTHER_MUSIC);
+        } else if (zlinStatus.equals("MAIN_AUDIO_START")) {
+            //currentMedia = CARPLAY;
+            Log.d(TAG, "getCarPlayData-currentMedia: " + currentMedia);
+            setCurMusicState(true, OTHER_MUSIC);
+        }
+    }
+
+
     int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
     int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
 

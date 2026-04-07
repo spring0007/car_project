@@ -3,7 +3,10 @@ package com.launcher.zy_ui01;
 import static com.awell.utils.Utils.startWallpaper;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import android.os.Looper;
 import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +31,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
+import com.awell.utils.CommonData;
 import com.launcher.zy_ui01.databinding.ActivityMainUi1Binding;
 import com.launcher.zy_ui01.utils.WeatherHelper;
 
@@ -46,6 +51,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private ViewPagerAdapter adapter;
     private int PERMISSION_REQUEST_CODE = 100;
     private Boolean isWeatherTimerRunning = false;
+    private boolean accRecor;
     private Runnable  weatherRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -69,6 +75,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
+        initReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setAppGap(true);
         AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
@@ -77,6 +84,96 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }
 
+
+    private void initReceiver() {
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
+        filter.addAction(CommonData.ACTION_ACC_ON);
+        filter.addAction(CommonData.ACTION_ACC_OFF);
+        filter.addAction("com.zjinnova.zlink");
+        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
+        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
+        filter.addAction("top_session_package_change");
+        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
+//        updateTime();
+    }
+
+    private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
+        String SYSTEM_REASON = "reason";
+        String SYSTEM_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.i(TAG, "mainReceiver:" + action);
+            switch (action) {
+                case CommonData.BROADCAST_LAMP_SWITCH:
+//                    if (intent.getIntExtra("lamplet_state", 0) == 1)
+//                        ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.open);
+//                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
+                    break;
+                case CommonData.ACTION_ACC_ON:
+//                    if (ivLampSwitchBg != null)
+//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    break;
+                case CommonData.ACTION_ACC_OFF:
+                    accRecor = true;
+                    break;
+                case CommonData.BROADCAST_MEDIA_EXIT:
+                    String packge = intent.getStringExtra("package");
+                    if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
+
+                    }
+                    break;
+                case "com.zjinnova.zlink":
+                    String zlinStatus = intent.getStringExtra("status");
+                    String phoneMode = intent.getStringExtra("phoneMode");
+                    Log.d(TAG, "zlinStatus:" + zlinStatus);
+                    if (zlinStatus == null) {
+                        return;
+                    }
+                    musicWidget.getCarPlayData(zlinStatus, phoneMode);
+                    break;
+                case "android.launcher.show.allApp":
+                    Log.d(TAG, "mainReceiver:" + intent.getAction());
+                    AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    break;
+                case "top_session_package_change":
+                    String sessionTopPkg = intent.getStringExtra("top_package");
+                    handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
+                    Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    break;
+
+            }
+
+        }
+    };
+
+    public void handleMediaPlaybackResult(String value1, String value2, int value3, int value4) {
+        String oldPlayingPackage = mediaControl.getCurrentPkgName();
+        boolean isStartCommand = "start".equals(value2);
+        boolean isStopCommand = "stop".equals(value2);
+        boolean isValidPackage = !TextUtils.isEmpty(value1);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
+
+
+        // 处理停止播放的情况
+        //if (isValidPackage && isStopCommand) {
+        //    mMediaListener.setCurrentPlayingPackage(null);
+        //    return;
+        //}
+
+        // 处理开始播放的情况
+        if (isValidPackage && isStartCommand) {
+            // 当前没有播放或切换到新包时，更新并启动回调
+            if (oldPlayingPackage != null && !oldPlayingPackage.equals(value1)) {
+            }
+            //Log.i(TAG, "0000----Switched to new package: " + value1);
+        }
+    }
     public void setMusicWidget(MusicWidget musicWidget) {
         Log.d(TAG, "setMusicWidget: musicWidget = " + musicWidget);
         this.musicWidget = musicWidget;
@@ -196,6 +293,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
         mediaControl.unBindDataService(this);
