@@ -26,7 +26,7 @@ public class IconPkgMap {
 
     static public final Map<String, Integer> PACKAGE_ICON_MAP_ZY_2  = new HashMap<>();
 
-    static final String AIR_NAME = ".HvacLauncherActivity";
+    static final String AIR_NAME = ".AwellCanbusAirView";
     static final String CANBUS_NAME = "com.awell.canbus";
 
     static {
