@@ -13,7 +13,7 @@
         android:src="@drawable/ic_gaode"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintEnd_toStartOf="@+id/layout_music"
+        app:layout_constraintEnd_toStartOf="@+id/layout_music_widget"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,49 +31,21 @@
         app:layout_constraintVertical_bias="0.85"
         app:layout_constraintWidth_percent="@dimen/tv_width" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_music"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/ic_music_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1.4"
-        app:layout_constraintEnd_toStartOf="@+id/iv_radio"
-        app:layout_constraintStart_toEndOf="@+id/iv_navi"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.21">
-
-        <com.launcher.zy_ui01.AlwaysMarqueeTextView
-            android:id="@+id/tv_music"
-            style="@style/tv_style"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center_horizontal"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:paddingHorizontal="2dp"
-            android:singleLine="true"
-            android:text="@string/music"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.68"
-            app:layout_constraintWidth_percent="0.8" />
 
         <include
             layout="@layout/music_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/layout_music_widget"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="1:1.4"
+            app:layout_constraintEnd_toStartOf="@+id/iv_radio"
+            app:layout_constraintStart_toEndOf="@+id/iv_navi"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.92" />
+            app:layout_constraintWidth_percent="0.21"
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            />
+
 
     <ImageView
         android:id="@+id/iv_radio"
@@ -84,7 +56,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
         app:layout_constraintDimensionRatio="1:1.4"
         app:layout_constraintEnd_toStartOf="@+id/iv_bluetooth"
-        app:layout_constraintStart_toEndOf="@+id/layout_music"
+        app:layout_constraintStart_toEndOf="@+id/layout_music_widget"
         app:layout_constraintTop_toTopOf="@+id/iv_navi"
         app:layout_constraintWidth_percent="0.21" />
 

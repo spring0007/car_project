@@ -56,12 +56,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         if (position == 0) {
             // 第二页的控件
             setListener(holder.itemView, R.id.iv_navi);
-            setListener(holder.itemView, R.id.layout_music);
+            setListener(holder.itemView, R.id.layout_music_widget);
             setListener(holder.itemView, R.id.iv_radio);
             setListener(holder.itemView, R.id.iv_bluetooth);
-            TextView textView = holder.itemView.findViewById(R.id.tv_music);
-            activity.setMusicText(textView);
-            MusicWidget musicWidget = holder.itemView.findViewById(R.id.music_widget_layout);
+            MusicWidget musicWidget = holder.itemView.findViewById(R.id.layout_music_widget);
             activity.setMusicWidget(musicWidget);
         } else if (position == 1) {
             // 第一页的控件
