@@ -87,7 +87,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     //private lateinit var speedSimulator: SpeedSimulator
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
-    //    private val BIN_DATA_SPEED_UNIT = 0x84
+    private val BIN_DATA_SPEED_UNIT = 0x84
     private var accRecor: Boolean? = null
     lateinit var systemUIClient: SystemUIClient
  //   private lateinit var imagePreferences: ImagePreferences
@@ -183,7 +183,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     }
     private fun updateImagePosition(imageView: ImageView, reason:String) {
-        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1");
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1")
         LogUtil.i("freeform_launcher_idle,1")
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
@@ -271,6 +271,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 CommonData.ACTION_ACC_ON -> {
                     if (freeformBg?.isVisibleOnScreen() == true)
                         updateImagePosition(freeformBg ,"acc_on")
+
+                    dashboardView?.postDelayed({ accRecor = false}, 8 * 1000)
                 }
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
@@ -312,7 +314,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 }
 
                 Intent.ACTION_CLOSE_SYSTEM_DIALOGS -> {
-                    var reason = intent.getStringExtra("reason");
+                    var reason = intent.getStringExtra("reason")
                     if (reason == "recentapps") {
                         canclePopupWindow()
                         imageUpdateJob?.cancel()
@@ -409,41 +411,30 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
+                        LogUtil.i("speedKm:$speedKm,speedMile:$speedMile")
 //                        mViewBinding.tvGpsSpeed.text = speedKm
-//                        if (accRecor == false) {
-//                            val unit = ByteArray(1)
-//                            CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
-//                            val unitData = unit[0].toInt()
-//                            if (unitData == 0) {
-//                                mViewBinding.tvGpsSpeed.text = speedKm
-//                                mViewBinding.tvGpsSpeedUnit.text = "KM/h"
-//                            } else if (unitData == 1) {
-//                                mViewBinding.tvGpsSpeed.text = speedMile
-//                                mViewBinding.tvGpsSpeedUnit.text = "mph"
-//                            }
-//
-//                            if (speedKm.toInt() > 0 || speedMile.toInt() > 0) {
-//                                if (!mAnimator.isRunning) {
-//                                    mAnimator.start()
-//                                }
-//                                if ((speedKm.toInt() - lastSpeed) > 5) {
-//                                    updateSpeedSmoothly(speedKm.toFloat())
-//                                    lastSpeed = speedKm.toFloat()
-//                                }
-//                            } else {
-//                                stopAnimation()
-//                            }
-//                        }
+                        if (accRecor == false) {
+                            val unit = ByteArray(1)
+                            CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
+                            val unitData = unit[0].toInt()
+                            if (unitData == 0) {
+                                dashboardView.udDataSpeed(speedKm.toInt())
+                                //mViewBinding.tvGpsSpeed.text = speedKm
+                                //mViewBinding.tvGpsSpeedUnit.text = "KM/h"
+                            } else if (unitData == 1) {
+                                dashboardView.udDataSpeed(speedMile.toInt())
+                                //mViewBinding.tvGpsSpeed.text = speedMile
+                                //mViewBinding.tvGpsSpeedUnit.text = "mph"
+                            }
+                        }
                         mHandle.removeMessages(MSG_UPDATE_SPEED)
                         mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
                     }
-
                     MSG_CLEAR_SPEED -> {
                         //mViewBinding.tvGpsSpeed.text = 0.toString()
                         //stopAnimation()
                         dashboardView.udDataSpeed(0)
                     }
-
                 }
             }
         }
@@ -1055,7 +1046,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             // Fragment 被隐藏，隐藏自由窗口
             imageUpdateJob?.cancel()
             systemUIClient.hideFreeform()
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
             systemUIClient.fullScreenFreeform()
             LogUtil.i("freeform_launcher_idle,0")
     
@@ -1111,10 +1102,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         imageUpdateJob?.cancel()
         if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
             systemUIClient.hideFreeform()
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
             systemUIClient.fullScreenFreeform()
         }else
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0");
+            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
 
         LogUtil.i("lqq,onStop")
     }
@@ -1273,4 +1264,3 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     }
 
 }
-
