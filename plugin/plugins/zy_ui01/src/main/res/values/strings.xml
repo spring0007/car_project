@@ -15,7 +15,7 @@
     <string name="phone">Bluetooth</string>
     <string name="folder">Folder Manage</string>
     <string name="setting">Settings</string>
-    <string name="equalizer">Dsp</string>
+    <string name="equalizer">EQ</string>
     <string name="video">Video</string>
     <string name="aux">Aux</string>
     <string name="navi">Map Navigation</string>
