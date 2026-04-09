@@ -45,7 +45,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI1.class.getSimpleName();
     private ActivityMainUi1Binding binding;
     private List<PageData> pageDataList;
-    private TextView musicText;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
     private ViewPagerAdapter adapter;
@@ -184,10 +183,6 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         }
     }
 
-    public void setMusicText(TextView musicText) {
-        this.musicText = musicText;
-    }
-
     private void setUpViewPager() {
         pageDataList = new ArrayList<>();
         pageDataList.add(new PageData(R.layout.viewpager_2));
@@ -301,7 +296,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_music || v.getId() == R.id.layout_music){
+        if (v.getId() == R.id.iv_music ){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         } else if (v.getId() == R.id.iv_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
@@ -394,13 +389,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
-            if (musicText != null) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicText.setText(songName);
-                } else {
-                    musicText.setText(getResources().getString(R.string.click_play_music));
-                }
-            }
+
             if (MusicWidget.OTHER_MUSIC == type) {
                 if (!TextUtils.isEmpty(songName)) {
                     musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
