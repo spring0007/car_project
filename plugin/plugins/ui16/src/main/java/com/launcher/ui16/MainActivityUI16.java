@@ -88,11 +88,20 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
         }
         updateSpeedUnitText();
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(100);
 
+        // 将 ui16 的图标映射表设置给主应用（传递资源名称和 Plugin 包名）
+        // 注意：必须使用插件的实际包名，而不是 getPackageName()（会返回宿主包名 com.awell.launcher.host）
+        AppsCustomizeControl.INSTANCE.setPluginIconMap(
+            IconManager.INSTANCE.getPackageIconMap(),
+                "sf_other_app3_black",// 默认背景资源名称
+                "com.launcher.ui16"// 插件的实际包名
+        );
+
+        // 启用 Plugin 图标映射表
+        AppsCustomizeControl.INSTANCE.setUsePluginIconMap(true);
     }
 	
-	    private void initLocationListener() {
+    private void initLocationListener() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
             public void onStatusChanged(String provider, int status, Bundle extras) {
