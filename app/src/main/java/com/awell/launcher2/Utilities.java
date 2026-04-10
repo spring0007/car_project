@@ -123,6 +123,9 @@ public final class Utilities {
                 return R.drawable.sf_other_app3_yellow;
             case 3:
                 return R.drawable.sf_other_app3_circle;
+            case 0xff://插件包
+                // 从 Plugin 获取默认背景资源 ID
+                return PluginIconManager.getPluginDefaultBackgroundResId();
             default:
                 return R.drawable.sf_other_app3;
         }
@@ -218,7 +221,21 @@ public final class Utilities {
             if (true) {
                 int iconResId = getIconResource(sThemeMode);
                 if (iconResId != 0) {
-                    Bitmap backBitmap = BitmapFactory.decodeResource(context.getResources(), iconResId);
+                    Bitmap backBitmap=null;
+                    
+                    // 判断是否为 Plugin 资源（themeMode=0xff）
+                    if (sThemeMode == 0xff) {
+                        // Plugin 模式：使用插件的 Resources 加载
+                        String pluginPkg = PluginIconManager.getPluginPackageName();
+                        android.content.Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
+                        if (pluginContext != null) {
+                            backBitmap = BitmapFactory.decodeResource(pluginContext.getResources(), iconResId);
+                        }
+                    } else {
+                        // 普通模式：使用主应用的 Resources 加载
+                        backBitmap = BitmapFactory.decodeResource(context.getResources(), iconResId);
+                    }
+                    
                     if (backBitmap != null) {
                         int backWidth = backBitmap.getWidth();
                         int backHeight = backBitmap.getHeight();

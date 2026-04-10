@@ -96,9 +96,6 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
                 "sf_other_app3_black",// 默认背景资源名称
                 "com.launcher.ui16"// 插件的实际包名
         );
-
-        // 启用 Plugin 图标映射表
-        AppsCustomizeControl.INSTANCE.setUsePluginIconMap(true);
     }
 	
     private void initLocationListener() {

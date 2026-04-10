@@ -416,37 +416,16 @@ public class IconCache {
                 }
                 return PACKAGE_ICON_MAP_ZY_2.get(pkg);
             case 100:
-//            getPluginDrawable();
                 return PACKAGE_ICON_MAP_YFD_2.get(pkg);
+            case 0xff:
+                // Plugin 模式：从插件动态获取资源 ID
+                return PluginIconManager.getPluginIconResId(pkg);
             default:
                 return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
                 //return mHomePackageIcon_116_lehang_2[index];
         }
     }
 
-    private void getPluginDrawable() {
-        try {
-            // 获取目标APK的类加载器
-            ClassLoader classLoader = mContext.getClassLoader();
-            Log.i(TAG, "getPluginDrawable: huang class loader=>" + classLoader);
-            // 加载目标类
-            Class<?> iconPkgMapClass = classLoader.loadClass("完整包名.IconPkgMap");
-
-            // 获取静态字段
-            Field field = iconPkgMapClass.getField("PACKAGE_ICON_MAP_YFD_2");
-            Map<String, Integer> map = (Map<String, Integer>) field.get(null);
-
-            // 遍历Map数据
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Integer value = entry.getValue();
-                Log.d("IconPkgMap", "Key: " + key + ", Value: " + value);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public Drawable getFullResDefaultActivityIcon() {
@@ -546,9 +525,25 @@ public class IconCache {
             boolean customIconSet = false;
 
             Integer iconResId = getIconResource(packageName, className);
-            if (iconResId != null) {
+            if (iconResId != null && iconResId != 0) {
                 Utilities.FLAG = false;
-                bmp = getFullResIcon(mContext.getResources(), iconResId);
+                
+                // 判断是否为 Plugin 资源（themeMode=0xff）
+                if (themeMode == 0xff) {
+                    // Plugin 模式：使用插件的 Resources 加载
+                    String pluginPkg = PluginIconManager.getPluginPackageName();
+                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
+                    if (pluginContext != null) {
+                        bmp = getFullResIcon(pluginContext.getResources(), iconResId);
+                    } else {
+                        Log.w(TAG, "getTitleAndIcon: 无法获取插件 Context，使用默认图标");
+                        bmp = getFullResDefaultActivityIcon();
+                    }
+                } else {
+                    // 普通模式：使用主应用的 Resources 加载
+                    bmp = getFullResIcon(mContext.getResources(), iconResId);
+                }
+                
                 application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
                 entry.icon = application.iconBitmap;
                 customIconSet = true;
@@ -589,8 +584,19 @@ public class IconCache {
             String className = resolveInfo.activityInfo.name;
 
             Integer iconResId = getIconResource(packageName, className);
-            if (iconResId != null) {
-                bmp = getFullResIcon(mContext.getResources(), iconResId);
+            if (iconResId != null && iconResId != 0 ) {
+                // 判断是否为 Plugin 资源
+                if (themeMode == 0xff) {
+                    String pluginPkg = PluginIconManager.getPluginPackageName();
+                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
+                    if (pluginContext != null) {
+                        bmp = getFullResIcon(pluginContext.getResources(), iconResId);
+                    } else {
+                        bmp = getFullResDefaultActivityIcon();
+                    }
+                } else {
+                    bmp = getFullResIcon(mContext.getResources(), iconResId);
+                }
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
 
@@ -620,8 +626,19 @@ public class IconCache {
             String className = resolveInfo.activityInfo.name;
 
             Integer iconResId = getIconResource(packageName, className);
-            if (iconResId != null) {
-                bmp = getFullResIcon(mContext.getResources(), iconResId);
+            if (iconResId != null && iconResId != 0) {
+                // 判断是否为 Plugin 资源
+                if (themeMode == 0xff) {
+                    String pluginPkg = PluginIconManager.getPluginPackageName();
+                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
+                    if (pluginContext != null) {
+                        bmp = getFullResIcon(pluginContext.getResources(), iconResId);
+                    } else {
+                        bmp = getFullResDefaultActivityIcon();
+                    }
+                } else {
+                    bmp = getFullResIcon(mContext.getResources(), iconResId);
+                }
                 entry.icon = Utilities.createIconBitmap(bmp, mContext, packageName);
             }
 
