@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_radio_am_fm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_sc_light"
+        android:gravity="start"
+        android:text="FM"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv_radio_am_fm_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16" />
+
+    <TextView
+        android:id="@+id/tv_radio_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_sc_light"
+        android:gravity="start"
+        android:text="95.8"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv_radio_freq_text_size"
+        app:layout_constraintStart_toStartOf="@+id/tv_radio_am_fm"
+        app:layout_constraintTop_toBottomOf="@+id/tv_radio_am_fm"
+        app:layout_constraintBottom_toTopOf="@+id/ll_radio_control" />
+
+
+    <RelativeLayout
+        android:id="@+id/ll_radio_control"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.45">
+
+        <com.launcher.zy_ui03.view.ImageViewTouch
+            android:id="@+id/iv_radio_pre"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:scaleType="fitXY"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/music_left_white" />
+
+
+        <com.launcher.zy_ui03.view.ImageViewTouch
+            android:id="@+id/iv_radio_next"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:layout_alignParentEnd="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/music_right_white"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_radio_icon"
+        android:layout_width="@dimen/iv_radio_icon_size"
+        android:layout_height="@dimen/iv_radio_icon_size"
+        android:scaleType="fitXY"
+        android:src="@drawable/radio_icon1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

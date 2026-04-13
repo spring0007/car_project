@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme_white" >
+        <item name="hotset_switch_bg">@drawable/hotset_switch_style_white</item>
+        <item name="chage_text_color">@color/white</item>
+        <item name="all_app_bg">@drawable/hotset_all_app_white</item>
+        <item name="nav_app_bg">@drawable/hotset_nav_white</item>
+        <item name="bt_app_bg">@drawable/hotset_bt_white</item>
+        <item name="setting_app_bg">@drawable/hotset_setting_white</item>
+        <item name="music_left_bg">@drawable/music_left_white</item>
+        <item name="music_right_bg">@drawable/music_right_white</item>
+        <item name="music_play_bg">@drawable/music_bofang_white</item>
+<!--        <item name="music_zanting_bg">@drawable/music_zanting_white</item>-->
+    </style>
+    <style name="AppTheme_black" >
+        <item name="hotset_switch_bg">@drawable/hotset_switch_style_black</item>
+        <item name="chage_text_color">@color/black</item>
+        <item name="all_app_bg">@drawable/hotset_all_app_black</item>
+        <item name="nav_app_bg">@drawable/hotset_nav_black</item>
+        <item name="bt_app_bg">@drawable/hotset_bt_black</item>
+        <item name="setting_app_bg">@drawable/hotset_setting_black</item>
+        <item name="music_left_bg">@drawable/music_left_black</item>
+        <item name="music_right_bg">@drawable/music_right_black</item>
+        <item name="music_play_bg">@drawable/music_bofang_black</item>
+<!--        <item name="music_zanting_bg">@drawable/music_zanting_black</item>-->
+
+    </style>
+
+
+    <style name="AppTheme1"  parent="AppTheme_white">
+        <item name="home_left_bg">@drawable/hotset_bg1</item>
+        <item name="music_bg">@drawable/music_bg1</item>
+        <item name="add_app_bg">@drawable/app_add_bg1</item>
+        <item name="music_album_bg">@drawable/album_bg1</item>
+        <item name="car_bg">@drawable/cfp_bg1</item>
+        <item name="radio_bg">@drawable/radio_bg1</item>
+        <item name="shortcut_bg">@drawable/shortcut_bg1</item>
+        <item name="radio_icon_bg">@drawable/radio_icon1</item>
+    </style>
+
+
+    <style name="AppTheme2"  parent="AppTheme_black">
+        <item name="home_left_bg">@drawable/hotset_bg2</item>
+        <item name="music_bg">@drawable/music_bg2</item>
+        <item name="add_app_bg">@drawable/app_add_bg2</item>
+        <item name="music_album_bg">@drawable/album_bg2</item>
+        <item name="car_bg">@drawable/cfp_bg2</item>
+        <item name="radio_bg">@drawable/radio_bg2</item>
+        <item name="shortcut_bg">@drawable/shortcut_bg2</item>
+        <item name="radio_icon_bg">@drawable/radio_icon2</item>
+
+    </style>
+
+    <style name="AppTheme3"  parent="AppTheme_white">
+        <item name="home_left_bg">@drawable/hotset_bg3</item>
+        <item name="music_bg">@drawable/music_bg3</item>
+        <item name="add_app_bg">@drawable/app_add_bg3</item>
+        <item name="music_album_bg">@drawable/album_bg3</item>
+        <item name="car_bg">@drawable/cfp_bg3</item>
+        <item name="radio_bg">@drawable/radio_bg3</item>
+        <item name="shortcut_bg">@drawable/shortcut_bg3</item>
+        <item name="radio_icon_bg">@drawable/radio_icon3</item>
+    </style>
+
+    <style name="AppTheme4"  parent="AppTheme_white">
+        <item name="home_left_bg">@drawable/hotset_bg4</item>
+        <item name="music_bg">@drawable/music_bg4</item>
+        <item name="add_app_bg">@drawable/app_add_bg4</item>
+        <item name="music_album_bg">@drawable/album_bg4</item>
+        <item name="car_bg">@drawable/cfp_bg4</item>
+        <item name="radio_bg">@drawable/radio_bg4</item>
+        <item name="shortcut_bg">@drawable/shortcut_bg4</item>
+        <item name="radio_icon_bg">@drawable/radio_icon4</item>
+    </style>
+
+
+</resources>

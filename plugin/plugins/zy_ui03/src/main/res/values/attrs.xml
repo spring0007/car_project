@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 最左侧图标背景 -->
+    <attr name="hotset_switch_bg" format="reference" />
+    <attr name="all_app_bg" format="reference" />
+    <attr name="nav_app_bg" format="reference" />
+    <attr name="bt_app_bg" format="reference" />
+    <attr name="setting_app_bg" format="reference" />
+
+    <!-- 左侧背景 -->
+    <attr name="home_left_bg" format="reference" />
+    <attr name="music_bg" format="reference" />
+    <attr name="car_bg" format="reference" />
+    <attr name="radio_bg" format="reference"/>
+    <attr name="shortcut_bg" format="reference"/>
+
+    <!-- 音乐图标背景 -->
+    <attr name="music_left_bg" format="reference"/>
+    <attr name="music_right_bg" format="reference"/>
+    <attr name="music_play_bg" format="reference"/>
+    <attr name="music_album_bg" format="reference"/>
+    <!--radio icon背景-->
+    <attr name="radio_icon_bg" format="reference"/>
+    <!-- 添加应用占位符图标 -->
+    <attr name="add_app_bg" format="reference" />
+
+    <!-- 切换文字颜色 -->
+    <attr name="chage_text_color" format="color" />
+</resources>

@@ -45,4 +45,5 @@ include ':plugin:plugins:ui20'
 include ':plugin:plugins:yfd_ui03'
 include ':plugin:plugins:zy_ui01'
 include ':plugin:plugins:zy_ui02'
+include ':plugin:plugins:zy_ui03'
 

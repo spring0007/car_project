@@ -1,0 +1,163 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.launcher.zy_ui03'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.launcher.zy_ui03"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+    // 修改 APK 名称
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName = "LauncherUI_C3.apk"
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('../../../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+        release {
+            storeFile file('../../../keystore/platform.jks')
+            keyAlias 'platform'
+            keyPassword 'android'
+            storePassword 'android'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    aaptOptions {
+        additionalParameters '--allow-reserved-package-id', '--package-id', '0x7e'
+    }
+}
+
+
+def isPlugin = true
+
+
+if (isPlugin) {
+    apply plugin: 'replugin-plugin-gradle'
+}else {
+    apply plugin: 'replugin-host-gradle'
+}
+
+dependencies {
+
+
+    /** compileOnly or implementation */
+    //if (rootProject.ext.isPlugin) {
+    if (isPlugin) {
+
+        implementation(libs.replugin.plugin.lib)
+
+        // 作为插件，compileOnly 方式引入
+        compileOnly libs.appcompat
+
+        compileOnly project(path: ':app')
+        compileOnly project(path: ':AwellLibrary')
+
+        //编译期 不会打包
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+        compileOnly libs.recyclerview
+
+
+        compileOnly(libs.okhttp3.integration) {
+            exclude group: 'androidx.core', module: 'core'
+            exclude group: 'androidx.interpolator', module: 'interpolator'
+            exclude group: 'org.jetbrains.kotlin'
+            exclude group: 'org.jetbrains.kotlinx'
+        }
+
+        implementation(libs.constraintlayout) {
+            exclude group: 'androidx.appcompat'
+            exclude group: 'androidx.core'
+            exclude group: 'androidx.fragment'
+        }
+
+        implementation libs.gson
+        implementation libs.androidsvg
+
+    } else {
+
+        // 作为单品，compile 进 APK
+        implementation libs.gson
+        implementation libs.androidsvg
+
+        // 为每个可能引入协程的依赖添加排除规则
+        implementation(project(':app')) {
+        }
+
+        //app module has
+        compileOnly libs.constraintlayout
+
+        //system has
+        compileOnly project(path: ':AwellLibrary')
+
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+        compileOnly libs.recyclerview
+
+
+        //app module has
+        compileOnly(libs.okhttp3.integration) {
+            exclude group: 'androidx.core', module: 'core'
+            exclude group: 'androidx.interpolator', module: 'interpolator'
+            exclude group: 'org.jetbrains.kotlin'
+            exclude group: 'org.jetbrains.kotlinx'
+        }
+    }
+}
+
+
+if (isPlugin) {
+    repluginPluginConfig {
+        //插件名
+        pluginName = "zy_ui03"
+        //使用根项目中定义的宿主app包名
+        hostApplicationId = rootProject.ext.hostApplicationId
+        //使用根项目中定义的宿主app启动activity
+        hostAppLauncherActivity = rootProject.ext.hostAppLauncherActivity
+//    ignoredInjectors = ['LoaderActivityInjector', 'ProviderInjector']
+    }
+}
+
+task copyReleaseApk(type: Copy) {
+    from 'build/outputs/apk/release'
+    into './release'
+    include '*.apk'
+}
+
+// 让 assembleRelease 任务完成后执行复制任务
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease') {
+        task.finalizedBy copyReleaseApk
+    }
+}
+
