@@ -43,7 +43,8 @@ import java.util.Objects;
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private boolean D = false;
+    private static int logswitch = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch","1"));
+    private boolean D = (logswitch == 1);
 
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
     private final String LAUNCHER_CLAZZ = "persist.sys.launcher.clazz"; //value : plugin app class name
@@ -80,10 +81,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //        if (debug == 1) {
 //            D = true;
 //        }
-
-        if (D) {
-            Log.i(TAG, "onCreate: huang launcher main activity create==>");
-        }
 
         binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -260,36 +257,163 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
     /**
-     * 模拟安装或升级（覆盖安装）外置插件
-     * 注意：为方便演示，外置插件临时放置到Host的assets/external目录下，具体说明见README</p>
+     * 模拟安装或升级(覆盖安装)外置插件
+     * 注意:为方便演示,外置插件临时放置到Host的assets/external目录下,具体说明见README</p>
      */
     private void simulateInstallExternalPlugin(String path, String name, String clazz) {
+    
+        // 检查源文件是否存在且可读
+        File sourceFile = new File(path);
+        if (!sourceFile.exists()) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang source file not exists: " + path);
+            return;
+        }
+            
+        long sourceFileSize = sourceFile.length();
+        if (sourceFileSize == 0) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang source file is empty: " + path);
+            return;
+        }
 
-        // 文件是否已经存在？直接删除重来
+        // 【关键修复】清理 RePlugin 内部缓存目录,避免只读文件冲突
+        cleanRePluginCache(name);
+    
+        // 文件是否已经存在?直接删除重来
         String pluginFilePath = getFilesDir().getAbsolutePath() + File.separator + name;
         File pluginFile = new File(pluginFilePath);
         if (pluginFile.exists()) {
             if (D) {
-                Log.i(TAG, "simulateInstallExternalPlugin: huang delete ==>");
+                Log.i(TAG, "simulateInstallExternalPlugin: huang delete old plugin==>");
             }
             FileUtils.deleteQuietly(pluginFile);
         }
+            
         // 开始复制
-        copyAssetsFileToAppFiles(path, name);
-
+        boolean copySuccess = copyAssetsFileToAppFiles(path, name);
+        if (!copySuccess) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang copy file failed");
+            return;
+        }
+            
+        // 验证复制后的文件完整性
+        if (!pluginFile.exists()) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang copied file not exists");
+            return;
+        }
+            
+        long copiedFileSize = pluginFile.length();
+        if (copiedFileSize != sourceFileSize) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang file size mismatch! source: " + 
+                    sourceFileSize + ", copied: " + copiedFileSize);
+            // 删除损坏的文件
+            FileUtils.deleteQuietly(pluginFile);
+            return;
+        }
+            
+        if (copiedFileSize == 0) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang copied file is empty");
+            FileUtils.deleteQuietly(pluginFile);
+            return;
+        }
+    
         info = null;
-        if (pluginFile.exists()) {
+        try {
+            // 尝试安装插件
             info = RePlugin.install(pluginFilePath);
+            if (info == null) {
+                Log.e(TAG, "simulateInstallExternalPlugin: huang install plugin failed, file may be corrupted");
+                // 安装失败,删除损坏的文件
+                FileUtils.deleteQuietly(pluginFile);
+            } else {
+                if (D) {
+                    Log.i(TAG, "simulateInstallExternalPlugin: huang install success: " + info.getName());
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "simulateInstallExternalPlugin: huang install exception: " + e.getMessage(), e);
+            // 发生异常,删除可能损坏的文件
+            FileUtils.deleteQuietly(pluginFile);
+            info = null;
         }
-        if (D) {
-            Log.i(TAG, "simulateInstallExternalPlugin: huang info=>" + info);
-            Log.i(TAG, "simulateInstallExternalPlugin: huang path=>" + path + " exists=>" + (new File(path)).exists());
-        }
-
+    
         Utils.setPluginApkFilePath(path);
         Message message = buildPluginMsg(clazz);
         mainHandle.sendMessage(message);
+    
+    }
 
+    /**
+     * 清理 RePlugin 内部缓存目录,防止只读文件导致安装失败
+     * RePlugin 会将插件复制到 app_p_a 目录,如果该目录存在只读文件会导致安装失败
+     * 
+     * @param pluginName 插件名称
+     */
+    private void cleanRePluginCache(String pluginName) {
+        try {
+            // RePlugin 缓存目录: /data/user/0/{package}/app_p_a/
+            File cacheDir = new File(getFilesDir().getParent(), "app_p_a");
+            if (cacheDir.exists() && cacheDir.isDirectory()) {
+                // 查找并删除与当前插件相关的缓存文件
+                File[] cachedFiles = cacheDir.listFiles((dir, filename) -> 
+                    filename.contains(pluginName.replace(".apk", "")) || 
+                    filename.endsWith(".jar") ||
+                    filename.endsWith(".odex")
+                );
+                
+                if (cachedFiles != null && cachedFiles.length > 0) {
+                    if (D) {
+                        Log.i(TAG, "cleanRePluginCache: huang found " + cachedFiles.length + " cached files to clean");
+                    }
+                    for (File cachedFile : cachedFiles) {
+                        // 强制设置可写权限
+                        if (!cachedFile.canWrite()) {
+                            cachedFile.setWritable(true);
+                            if (D) {
+                                Log.i(TAG, "cleanRePluginCache: huang set writable for: " + cachedFile.getName());
+                            }
+                        }
+                        
+                        boolean deleted = cachedFile.delete();
+                        if (D) {
+                            Log.i(TAG, "cleanRePluginCache: huang delete " + cachedFile.getName() + ": " + deleted);
+                        }
+                    }
+                }
+                
+                // 同时清理 oat 目录中的 odex 文件
+                File oatDir = new File(cacheDir, "oat");
+                if (oatDir.exists()) {
+                    deleteRecursively(oatDir);
+                }
+                
+                // 清理 native lib 目录
+                File nlibDir = new File(getFilesDir().getParent(), "app_p_n");
+                if (nlibDir.exists()) {
+                    deleteRecursively(nlibDir);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "cleanRePluginCache: huang error: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 递归删除目录及其内容
+     */
+    private boolean deleteRecursively(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            File[] children = fileOrDirectory.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursively(child);
+                }
+            }
+        }
+        // 强制设置可写权限后再删除
+        if (!fileOrDirectory.canWrite()) {
+            fileOrDirectory.setWritable(true);
+        }
+        return fileOrDirectory.delete();
     }
 
     /**
@@ -297,22 +421,51 @@ public class MainActivity extends Activity implements View.OnClickListener {
      *
      * @param assetFileName assets目录下的Apk源文件路径
      * @param newFileName   复制到/data/data/package_name/files/目录下文件名
+     * @return true if copy success, false otherwise
      */
-    private void copyAssetsFileToAppFiles(String assetFileName, String newFileName) {
-        int buffsize = 1024;
+    private boolean copyAssetsFileToAppFiles(String assetFileName, String newFileName) {
+        int buffsize = 8192; // 增大缓冲区提高复制效率
+        long totalBytesRead = 0;
+
+        File sourceFile = new File(assetFileName);
+        long expectedSize = sourceFile.length();
 
         try (
                 InputStream is = new FileInputStream(assetFileName);
                 FileOutputStream fos = this.openFileOutput(newFileName, Context.MODE_PRIVATE)) {
-            //            is = this.getAssets().open(assetFileName);
-            int byteCount = 0;
             byte[] buffer = new byte[buffsize];
+            int byteCount;
             while ((byteCount = is.read(buffer)) != -1) {
                 fos.write(buffer, 0, byteCount);
+                totalBytesRead += byteCount;
             }
             fos.flush();
+            
+            // 验证复制的字节数
+            if (expectedSize > 0 && totalBytesRead != expectedSize) {
+                Log.e(TAG, "copyAssetsFileToAppFiles: huang size mismatch! expected: " + 
+                        expectedSize + ", actual: " + totalBytesRead);
+                // 删除不完整的文件
+                fos.close();
+                File destFile = new File(getFilesDir(), newFileName);
+                if (destFile.exists()) {
+                    destFile.delete();
+                }
+                return false;
+            }
+
+            if (D) {
+                Log.i(TAG, "copyAssetsFileToAppFiles: huang copy success, size: " + totalBytesRead);
+            }
+            return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "copyAssetsFileToAppFiles: huang error: " + e.getMessage(), e);
+            // 发生异常时删除可能不完整的文件
+            File destFile = new File(getFilesDir(), newFileName);
+            if (destFile.exists()) {
+                destFile.delete();
+            }
+            return false;
         }
     }
 
