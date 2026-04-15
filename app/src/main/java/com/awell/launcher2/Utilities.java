@@ -123,6 +123,10 @@ public final class Utilities {
                 return R.drawable.sf_other_app3_yellow;
             case 3:
                 return R.drawable.sf_other_app3_circle;
+            case 4:
+                return R.drawable.ic_other_app3;
+            case 5:
+                return R.drawable.zy2_other_app3;
             case 0xff://插件包
                 // 从 Plugin 获取默认背景资源 ID
                 return PluginIconManager.getPluginDefaultBackgroundResId();
@@ -378,7 +382,7 @@ public final class Utilities {
     public static Bitmap drawableToBitmap(Drawable drawable, int Width, int Height) {
 
         Bitmap bitmap = Bitmap.createBitmap(Width, Height,
-                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                drawable.getOpacity() != PixelFormat.OPAQUE ? android.graphics.Bitmap.Config.ARGB_8888
                         : Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
         //canvas.setBitmap(bitmap);

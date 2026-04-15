@@ -393,15 +393,23 @@ public class IconCache {
         Log.i(TAG,"theme="+themeMode);
         switch (themeMode) {
             case 0:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_DARK.get(pkg);
                 //return mHomePackageIcon_116_lehang_2_dark[index];
             case 1:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
                 //return mHomePackageIcon_116_lehang_2[index];
             case 2:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_YELLOW.get(pkg);
                 //return mHomePackageIcon_116_lehang_2_yellow[index];
             case 3:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_CIRCLE.get(pkg);
             case 4:
                 //Log.i(TAG, "pak=>" + pkg + "----->className=>"+className);
@@ -416,11 +424,15 @@ public class IconCache {
                 }
                 return PACKAGE_ICON_MAP_ZY_2.get(pkg);
             case 100:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_YFD_2.get(pkg);
             case 0xff:
                 // Plugin 模式：从插件动态获取资源 ID
                 return PluginIconManager.getPluginIconResId(pkg);
             default:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
+                    return null;
                 return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
                 //return mHomePackageIcon_116_lehang_2[index];
         }

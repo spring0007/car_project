@@ -256,7 +256,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_ZY_2.put("com.awell.backcar", R.drawable.zy2_usb);
         PACKAGE_ICON_MAP_ZY_2.put("cn.kuwo.kwmusiccar", R.drawable.ay2_kw);
         PACKAGE_ICON_MAP_ZY_2.put("com.awell.eqselect", R.drawable.zy2_dsp);
-        PACKAGE_ICON_MAP_ZY_2.put(CANBUS_NAME, R.drawable.zy2_car_info);
+        PACKAGE_ICON_MAP_ZY_2.put("com.awell.canbus", R.drawable.zy2_car_info);
         PACKAGE_ICON_MAP_ZY_2.put("com.awell.canbus2", R.drawable.zy2_car_info);
         PACKAGE_ICON_MAP_ZY_2.put("com.autonavi.amapauto", R.drawable.zy2_gaode);
 //        PACKAGE_ICON_MAP_ZY_2.put("com.tima.carnet.vt", R.drawable.sf_zlink_circle);

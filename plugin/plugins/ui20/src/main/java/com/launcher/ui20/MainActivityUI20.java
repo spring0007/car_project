@@ -252,7 +252,7 @@ public class MainActivityUI20 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        }else if ( v.getId() == binding.musicIcon.getId() || v.getId() == binding.musicCard.getId() ){
+        }else if ( v.getId() == binding.musicIcon.getId() ){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         }else if (v.getId() == binding.timeCard.getId()){
             Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);

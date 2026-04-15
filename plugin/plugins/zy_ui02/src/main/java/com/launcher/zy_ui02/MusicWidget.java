@@ -164,8 +164,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         }
     }
 
-    int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
-    int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
+ //   int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
+  //  int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
 
 
     @Override
@@ -386,10 +386,10 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                     resumeLoadAnim();
                 }
             }
-            mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
+           // mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
             pauseLoadAnim();
-            mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
+           // mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
 

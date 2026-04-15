@@ -67,6 +67,7 @@ import android.widget.Toast;
 import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.control.AppsCustomizeControl;
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 
 import java.lang.ref.WeakReference;

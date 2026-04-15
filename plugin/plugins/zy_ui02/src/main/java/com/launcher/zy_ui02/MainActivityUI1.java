@@ -67,7 +67,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setAppGap(true);
         AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
         AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
         musicWidget = findViewById(R.id.music_widget_layout);
         setMusicWidget(musicWidget);
@@ -137,7 +137,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         } else if (v.getId() == R.id.iv_eq || v.getId() == R.id.iv_card_eq) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
         } else if (v.getId() == R.id.iv_car) {
-            startActivity("com.awell.canbus", "com.awell.canbus.carsettings.gac.Gs4SetOriginal");
+            startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
         }
     }
 
