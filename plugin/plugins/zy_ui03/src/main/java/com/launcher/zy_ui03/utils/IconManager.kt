@@ -233,5 +233,43 @@ object IconManager {
         }*/
     }
 
+    ///=============================
+    val PACKAGE_ICON_MAP: Map<String, String> = mapOf(
+        "com.awell.localvideo" to "sf_video_circle",
+        "com.awell.localmusic" to "sf_music_circle",
+        "com.awell.radio" to "sf_radio_circle",
+        "com.awell.bluetooth" to "sf_btphone_circle",
+        "com.awell.navigation" to "sf_navi_circle",
+        "com.android.browser" to "sf_liulanqi_circle",
+        "com.mediatek.filemanager" to "sf_wjgl_circle",
+        "com.android.documentsui" to "sf_wjgl_circle",
+        "com.awell.carsetting" to "sf_shezhi_circle",
+        "com.awell.backcar" to "sf_wjsr_circle",
+        //"cn.kuwo.kwmusiccar" to "sf_kugou_circle",
+        "com.awell.eqselect" to "sf_jhq_circle",
+        //"com.awell.canbus" to "sf_yuanche_circle",
+        //"com.awell.canbus2" to "sf_yuanche_circle",
+        "com.autonavi.amapauto" to "sf_navi_circle",
+        // "com.tima.carnet.vt" to "sf_zlink_circle",
+        //"net.easyconn" to "sf_zlink_circle",
+        "com.zjinnova.zlink" to "sf_link_circle",
+        "com.awell.awellmanual" to "sf_manual_circle",
+        // "com.google.android.apps.maps" to "sf_googlemap_circle",
+        "com.google.android.youtube" to "sf_youtube_circle",
+        "com.android.vending" to "sf_playstore_circle",
+        "com.android.chrome" to "sf_liulanqi_circle",
+        "com.google.android.googlequicksearchbox" to "sf_gg_circle",
+        "com.android.gallery3d" to "sf_gallery_circle",
+        "org.chromium.chrome" to "sf_liulanqi_circle",
+        "com.awell.electricfan" to "sf_fan_circle",
+        // "com.awell.frontvideo" to "sf_front_video_circle",
+        // "com.awell.keylight" to "sf_color_light_circle",
+        "com.awell.keystudy" to "sf_training_circle",
+        "com.awell.themesetting" to "sf_theme_circle",
+        // "com.ms.ms2160" to "sf_usb_video_output_circle",
+        // "com.awell.weather" to "sf_weather_circle"
+    )
+
+
 
 }

@@ -9,9 +9,9 @@
     <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
     
 
-    <string name="click_play_music">请选择歌曲</string>
-    <string name="music_artist">艺术家</string>
-    <string name="add_app">添加应用</string>
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="add_app">Thêm ứng dụng</string>
 
 
     

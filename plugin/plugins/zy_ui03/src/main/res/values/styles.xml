@@ -37,6 +37,7 @@
         <item name="radio_bg">@drawable/radio_bg1</item>
         <item name="shortcut_bg">@drawable/shortcut_bg1</item>
         <item name="radio_icon_bg">@drawable/radio_icon1</item>
+        <item name="ui_theme_bg">@drawable/wallpaper_00</item>
     </style>
 
 
@@ -49,6 +50,7 @@
         <item name="radio_bg">@drawable/radio_bg2</item>
         <item name="shortcut_bg">@drawable/shortcut_bg2</item>
         <item name="radio_icon_bg">@drawable/radio_icon2</item>
+        <item name="ui_theme_bg">@drawable/wallpaper_01</item>
 
     </style>
 
@@ -61,6 +63,7 @@
         <item name="radio_bg">@drawable/radio_bg3</item>
         <item name="shortcut_bg">@drawable/shortcut_bg3</item>
         <item name="radio_icon_bg">@drawable/radio_icon3</item>
+        <item name="ui_theme_bg">@drawable/wallpaper_02</item>
     </style>
 
     <style name="AppTheme4"  parent="AppTheme_white">
@@ -72,6 +75,7 @@
         <item name="radio_bg">@drawable/radio_bg4</item>
         <item name="shortcut_bg">@drawable/shortcut_bg4</item>
         <item name="radio_icon_bg">@drawable/radio_icon4</item>
+        <item name="ui_theme_bg">@drawable/wallpaper_03</item>
     </style>
 
 
