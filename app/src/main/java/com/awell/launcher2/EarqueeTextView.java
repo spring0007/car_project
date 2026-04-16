@@ -43,17 +43,17 @@ public class EarqueeTextView extends TextView {
         super(context, attrs);
     }
 
-    @Override
-    public boolean isFocused() {
-        return true;
-    }
+//    @Override
+//    public boolean isFocused() {
+//        return true;
+//    }
     public void setMarqueeEnabled(boolean enabled) {
-        if (mShouldMarquee != enabled) {
-            mShouldMarquee = enabled;
-            // 强制刷新视图
-            setSelected(enabled);
-            invalidate();
-        }
+//        if (mShouldMarquee != enabled) {
+//            mShouldMarquee = enabled;
+//            // 强制刷新视图
+//            setSelected(enabled);
+//            invalidate();
+//        }
     }
 }
 
