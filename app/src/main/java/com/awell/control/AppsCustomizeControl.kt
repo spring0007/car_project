@@ -68,6 +68,7 @@ object AppsCustomizeControl {
     fun setPluginThemeMode(themeMode: Int) {
         mIconCache.setPluginThemeMode(themeMode)
         Utilities.setPluginThemeMode(themeMode, mAppContext)
+        resetAppIconSize()
         LogUtil.d( "setPluginThemeMode: themeMode=$themeMode")
     }
     
@@ -109,6 +110,43 @@ object AppsCustomizeControl {
         } else {
             LogUtil.w( "setAppIconPadding: AppIconPadding must be greater than 0")
         }
+    }
+
+    /**
+     * 设置应用图标大小
+     * @param iconSize 图标大小（像素）。传入 <= 0 的值将重置为默认值（兼容旧 plugin）
+     * @return 是否设置成功
+     */
+    fun setAppIconSize(iconSize: Int): Boolean {
+        val result = mAppsCustomizeContent?.setAppIconSize(iconSize) ?: false
+        if (result) {
+            if (iconSize <= 0) {
+                LogUtil.d("setAppIconSize: successfully reset to default size")
+            } else {
+                LogUtil.d("setAppIconSize: successfully set icon size to $iconSize")
+            }
+        }
+        return result
+    }
+
+    /**
+     * 重置应用图标大小为默认值（R.dimen.app_icon_size）
+     * @return 是否重置成功
+     */
+    fun resetAppIconSize(): Boolean {
+        val result = mAppsCustomizeContent?.resetAppIconSize() ?: false
+        if (result) {
+            LogUtil.d("resetAppIconSize: successfully reset to default size")
+        }
+        return result
+    }
+
+    /**
+     * 获取当前应用图标大小
+     * @return 当前图标大小（像素），如果未设置则返回 -1
+     */
+    fun getAppIconSize(): Int {
+        return mAppsCustomizeContent?.getAppIconSize() ?: -1
     }
 
     fun setAppGap(autoWidthGap: Boolean) {

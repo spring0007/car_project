@@ -119,7 +119,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 // 验证生成的 Intent 是否有效
                 if (intent == null || intent.getComponent() == null) {
                     Log.e(TAG, "realStartPlugin: huang create intent failed, will reinstall plugin");
-                    isStartingPlugin = false;
                     initThread();
                     return;
                 }

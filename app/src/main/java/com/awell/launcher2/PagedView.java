@@ -543,6 +543,18 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         // unless they were set to WRAP_CONTENT
         if (DEBUG) Log.d(TAG, "PagedView.onMeasure(): " + widthSize + ", " + heightSize);
         final int childCount = getChildCount();
+        
+        // 优化：只测量可见页面和相邻页面，而不是所有页面
+        // 获取当前可见的页面范围
+        int[] visiblePages = new int[2];
+        getVisiblePages(visiblePages);
+        int leftScreen = visiblePages[0];
+        int rightScreen = visiblePages[1];
+        
+        // 扩展测量范围到相邻页面，用于平滑滚动
+        int measureStart = Math.max(0, leftScreen - 1);
+        int measureEnd = Math.min(childCount - 1, rightScreen + 1);
+        
         for (int i = 0; i < childCount; i++) {
             // disallowing padding in paged view (just pass 0)
             final View child = getPageAt(i);
@@ -567,7 +579,23 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             final int childHeightMeasureSpec =
                     MeasureSpec.makeMeasureSpec(heightSize - verticalPadding, childHeightMode);
 
-            child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+            // 优化：对于不可见的页面，如果已经有测量尺寸且布局参数未改变，跳过测量
+            boolean shouldMeasure = true;
+            if (i < measureStart || i > measureEnd) {
+                // 非可见区域的页面，检查是否已有有效测量值
+                if (child.getMeasuredWidth() > 0 && child.getMeasuredHeight() > 0) {
+                    // 检查布局参数是否改变
+                    if (lp.width == LayoutParams.MATCH_PARENT || lp.width == widthSize - horizontalPadding) {
+                        if (lp.height == LayoutParams.MATCH_PARENT || lp.height == heightSize - verticalPadding) {
+                            shouldMeasure = false; // 跳过测量
+                        }
+                    }
+                }
+            }
+            
+            if (shouldMeasure) {
+                child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
+            }
             maxChildHeight = Math.max(maxChildHeight, child.getMeasuredHeight());
             if (DEBUG) Log.d(TAG, "\tmeasure-child" + i + ": " + child.getMeasuredWidth() + ", "
                     + child.getMeasuredHeight());
@@ -669,10 +697,20 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         if (DEBUG) Log.d(TAG, "PagedView.onLayout()");
         final int verticalPadding = getPaddingTop() + getPaddingBottom();
         final int childCount = getChildCount();
+        
+        // 安全检查：确保至少有一个子View
+        if (childCount == 0) {
+            return;
+        }
+        
         int childLeft = getRelativeChildOffset(0);
 
         for (int i = 0; i < childCount; i++) {
             final View child = getPageAt(i);
+            // 安全检查：跳过null的View
+            if (child == null) {
+                continue;
+            }
             if (child.getVisibility() != View.GONE) {
                 final int childWidth = getScaledMeasuredWidth(child);
                 final int childHeight = child.getMeasuredHeight();
@@ -791,6 +829,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     protected int getScaledMeasuredWidth(View child) {
         // This functions are called enough times that it actually makes a difference in the
         // profiler -- so just inline the max() here
+        if (child == null) {
+            return mMinimumWidth;
+        }
         final int measuredWidth = child.getMeasuredWidth();
         final int minWidth = mMinimumWidth;
         final int maxWidth = (minWidth > measuredWidth) ? minWidth : measuredWidth;
@@ -832,7 +873,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     }
 
     protected boolean shouldDrawChild(View child) {
-        return child.getAlpha() > 0;
+        return child != null && child.getAlpha() > 0;
     }
 
     @Override
@@ -883,8 +924,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
                     for (int i = getChildCount() - 1; i >= 0; i--) {
                         final View v = getPageAt(i);
-                        if (mForceDrawAllChildrenNextFrame ||
-                                (leftScreen <= i && i <= rightScreen && shouldDrawChild(v))) {
+                        if (v != null && (mForceDrawAllChildrenNextFrame ||
+                                (leftScreen <= i && i <= rightScreen && shouldDrawChild(v)))) {
                             drawChild(canvas, v, drawingTime);
                         }
                     }
@@ -1515,7 +1556,11 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     protected int getChildWidth(int index) {
         // This functions are called enough times that it actually makes a difference in the
         // profiler -- so just inline the max() here
-        final int measuredWidth = getPageAt(index).getMeasuredWidth();
+        View page = getPageAt(index);
+        if (page == null) {
+            return mMinimumWidth;
+        }
+        final int measuredWidth = page.getMeasuredWidth();
         final int minWidth = mMinimumWidth;
         return (minWidth > measuredWidth) ? minWidth : measuredWidth;
     }

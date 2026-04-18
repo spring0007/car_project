@@ -88,6 +88,27 @@ public class PagedViewIcon extends TextView {
 
     }
 
+    /**
+     * 使用自定义缩故后的 Bitmap 设置图标
+     * @param info 应用信息
+     * @param scaleUp 是否允许放大
+     * @param cb 按下回调
+     * @param drawablePadding 图标和文字的间距
+     * @param scaledBitmap 已经缩故好的 Bitmap
+     */
+    @SuppressLint("ResourceType")
+    public void applyFromApplicationInfoWithBitmap(ApplicationInfo info, boolean scaleUp,
+                                                    PagedViewIcon.PressedCallback cb, int drawablePadding,
+                                                    Bitmap scaledBitmap) {
+        mIcon = scaledBitmap != null ? scaledBitmap : info.iconBitmap;
+        mPressedCallback = cb;
+        setText(info.title);
+        setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
+        setCompoundDrawablePadding(drawablePadding);
+        setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
+        setTag(info);
+    }
+
     public void lockDrawableState() {
         mLockDrawableState = true;
     }

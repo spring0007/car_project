@@ -343,6 +343,65 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     /**
+     * 设置应用图标大小
+     * @param iconSize 图标大小（像素），必须大于 0。传入 0 或负数将重置为默认值
+     * @return 是否设置成功
+     */
+    public boolean setAppIconSize(int iconSize) {
+        // 如果传入 0 或负数，重置为默认值（兼容旧 plugin）
+        if (iconSize <= 0) {
+            int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+            if (this.mAppIconSize == defaultSize) {
+                Log.d(TAG, "setAppIconSize: already using default size: " + defaultSize);
+                return true;
+            }
+            this.mAppIconSize = defaultSize;
+            Log.d(TAG, "setAppIconSize: reset to default size: " + defaultSize);
+            if (isDataReady()) {
+                onDataReady(getMeasuredWidth(), getMeasuredHeight());
+            }
+            return true;
+        }
+        
+        if (this.mAppIconSize == iconSize) {
+            Log.d(TAG, "setAppIconSize: same size, no need to update, size: " + iconSize);
+            return true;
+        }
+        this.mAppIconSize = iconSize;
+        Log.d(TAG, "setAppIconSize: successfully set icon size to " + iconSize);
+        if (isDataReady()) {
+            onDataReady(getMeasuredWidth(), getMeasuredHeight());
+        }
+        return true;
+    }
+
+    /**
+     * 重置应用图标大小为默认值（R.dimen.app_icon_size）
+     * @return 是否重置成功
+     */
+    public boolean resetAppIconSize() {
+        int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+        if (this.mAppIconSize == defaultSize) {
+            Log.d(TAG, "resetAppIconSize: already using default size: " + defaultSize);
+            return true;
+        }
+        this.mAppIconSize = defaultSize;
+        Log.d(TAG, "resetAppIconSize: successfully reset to default size: " + defaultSize);
+        if (isDataReady()) {
+            onDataReady(getMeasuredWidth(), getMeasuredHeight());
+        }
+        return true;
+    }
+
+    /**
+     * 获取当前应用图标大小
+     * @return 当前图标大小（像素）
+     */
+    public int getAppIconSize() {
+        return this.mAppIconSize;
+    }
+
+    /**
      * 设置每排显示的应用图标数量
      * @param countPerRow 每排显示的应用图标数量（必须大于 0）
      */
@@ -400,6 +459,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
         // Save the default widget preview background
         Resources resources = context.getResources();
+        // 初始化默认图标大小，如果 plugin 未调用 setAppIconSize，将使用此默认值
         mAppIconSize = resources.getDimensionPixelSize(R.dimen.app_icon_size);
         Log.d(TAG, "AppsCustomizePagedView: mAppIconSize = " + mAppIconSize);
 
@@ -555,18 +615,40 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         updatePageCounts();
 
         // Force a measure to update recalculate the gaps
-        int widthSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.AT_MOST);
-        int heightSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST);
-        mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
-        mWidgetSpacingLayout.measure(widthSpec, heightSpec);
-        mContentWidth = mWidgetSpacingLayout.getContentWidth();
+        // 优化：只在必要时才进行二次测量和计算
+        int measuredWidth = getMeasuredWidth();
+        int measuredHeight = getMeasuredHeight();
+        if (measuredWidth > 0 && measuredHeight > 0) {
+            int widthSpec = MeasureSpec.makeMeasureSpec(measuredWidth, MeasureSpec.AT_MOST);
+            int heightSpec = MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.AT_MOST);
+            // 避免重复计算，直接测量获取最终结果
+            mWidgetSpacingLayout.measure(widthSpec, heightSpec);
+            mContentWidth = mWidgetSpacingLayout.getContentWidth();
+        }
 
         AppsCustomizeTabHost host = (AppsCustomizeTabHost) getTabHost();
-        final boolean hostIsTransitioning = host.isTransitioning();
+        final boolean hostIsTransitioning = host != null && host.isTransitioning();
 
         // Restore the page
         int page = getPageForComponent(mSaveInstanceStateItemIndex);
-        invalidatePageData(Math.max(0, page), hostIsTransitioning);
+        
+        // 优化：立即更新页面指示器，延迟重量级的页面数据同步
+        // 先更新页面计数到指示器
+        if (getPageIndication() != null) {
+            getPageIndication().setMTotalPages(mNumAppsPages);
+            getPageIndication().setMCurrentPage(0);
+            getPageIndication().invalidate();
+        }
+        
+        // 延迟页面数据失效，避免在测量阶段触发重量级操作
+        final int finalPage = Math.max(0, page);
+        final boolean finalHostIsTransitioning = hostIsTransitioning;
+        post(new Runnable() {
+            @Override
+            public void run() {
+                invalidatePageData(finalPage, finalHostIsTransitioning);
+            }
+        });
 
         // Show All Apps cling if we are finished transitioning, otherwise, we
         // will try again when
@@ -608,6 +690,13 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                 setDataIsReady();
                 setMeasuredDimension(width, height);
                 onDataReady(width, height);
+            }
+        } else {
+            // 数据已就绪时，避免重复测量，直接使用缓存的尺寸
+            if (getMeasuredWidth() == width && getMeasuredHeight() == height) {
+                // 尺寸未变化，跳过父类的完整测量流程
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+                return;
             }
         }
 
@@ -1184,7 +1273,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (int i = startIndex; i < endIndex; ++i) {
             ApplicationInfo info = mApps.get(i);
             PagedViewIcon icon = (PagedViewIcon) mLayoutInflater.inflate(R.layout.apps_customize_application, layout, false);
-            icon.applyFromApplicationInfo(info, true, this, mAppIconPadding);
+            
+            // 根据 mAppIconSize 缩放图标
+            Bitmap scaledIcon = scaleBitmapIfNeeded(info.iconBitmap, mAppIconSize);
+            icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppIconPadding, scaledIcon);
+            
             icon.setOnClickListener(this);
             icon.setOnLongClickListener(this);
             icon.setOnTouchListener(this);
@@ -1380,6 +1473,39 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         return preview;
     }
 
+    /**
+     * 根据需要缩放 Bitmap 到指定尺寸
+     * @param bitmap 原始 Bitmap
+     * @param targetSize 目标尺寸（宽高相同）
+     * @return 缩放后的 Bitmap，如果不需要缩放则返回原图
+     */
+    private Bitmap scaleBitmapIfNeeded(Bitmap bitmap, int targetSize) {
+        if (bitmap == null || targetSize <= 0) {
+            return bitmap;
+        }
+        
+        int originalWidth = bitmap.getWidth();
+        int originalHeight = bitmap.getHeight();
+        
+        // 如果已经是目标尺寸，直接返回
+        if (originalWidth == targetSize && originalHeight == targetSize) {
+            return bitmap;
+        }
+        
+        // 计算缩放比例
+        float scale = Math.min((float) targetSize / originalWidth, (float) targetSize / originalHeight);
+        
+        // 如果缩故比例接近 1，直接返回原图
+        if (Math.abs(scale - 1.0f) < 0.01f) {
+            return bitmap;
+        }
+        
+        int scaledWidth = Math.round(originalWidth * scale);
+        int scaledHeight = Math.round(originalHeight * scale);
+        
+        return Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
+    }
+
     private Bitmap getWidgetPreview(ComponentName provider, int previewImage, int iconId, int cellHSpan, int cellVSpan, int maxWidth, int maxHeight) {
         // Load the preview image if possible
         String packageName = provider.getPackageName();
@@ -1424,7 +1550,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             int minOffset = (int) (mAppIconSize * sWidgetPreviewIconPaddingPercentage);
             int smallestSide = Math.min(bitmapWidth, bitmapHeight);
             float iconScale = Math.min((float) smallestSide / (mAppIconSize + 2 * minOffset), 1f);
-
+            LogUtil.d(" mAppIconSize = " + mAppIconSize+", iconScale = " + iconScale+", bitmapWidth = " + bitmapWidth+" bitmapHeight = " + bitmapHeight);
             try {
                 Drawable icon = null;
                 int hoffset = (int) ((previewDrawableWidth - mAppIconSize * iconScale) / 2);
