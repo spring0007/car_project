@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical">
-
         <LinearLayout
             android:id="@+id/ll_name_layout_music"
             android:layout_width="0dp"
@@ -207,5 +200,4 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rl_music_ablum_container" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.launcher.zy_ui02.MusicWidget>
