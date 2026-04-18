@@ -68,6 +68,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setAppGap(true);
         AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
+      //  AppsCustomizeControl.INSTANCE.setAppIconSize((int) getResources().getDimension(R.dimen.app_icon_size));
         AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
         musicWidget = findViewById(R.id.music_widget_layout);
         setMusicWidget(musicWidget);
@@ -110,9 +111,9 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_card_music){
+        /*if (v.getId() == R.id.iv_card_music){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
+        } else*/ if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -199,28 +200,11 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
-            if (!TextUtils.isEmpty(songName)) {
-                binding.tvMusic.setText(songName);
-            } else {
-                binding.tvMusic.setText("");
-            }
-            if (!TextUtils.isEmpty(singerName)) {
-                binding.tvArtistName.setText(singerName);
-            } else {
-                binding.tvArtistName.setText(getResources().getString(R.string.music_artist));
-            }
-            if (MusicWidget.OTHER_MUSIC == type) {
-                if (!TextUtils.isEmpty(songName)) {
-                    binding.tvMusic.setText(songName);
-                } else {
-                    binding.tvMusic.setText(getResources().getString(R.string.click_play_music));
-                }
-            }
         }
 
         @Override
         public void updateViewPlayTime(@NotNull Bundle bundle, long currentTime, long totalTime, int type) {
-            musicWidget.setMusicSeekBar((int) currentTime, (int) totalTime, type);
+         //   musicWidget.setMusicSeekBar((int) currentTime, (int) totalTime, type);
         }
 
         @Override

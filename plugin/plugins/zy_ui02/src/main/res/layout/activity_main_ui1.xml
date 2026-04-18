@@ -44,7 +44,7 @@
         app:layout_constraintTop_toTopOf="@+id/iv_card_navi"
         app:layout_constraintBottom_toBottomOf="@+id/iv_card_navi"/>
 
-    <com.awell.launcher2.EarqueeTextView
+ <!--   <com.awell.launcher2.EarqueeTextView
         android:id="@+id/tv_music"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -77,12 +77,13 @@
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/iv_card_music"
         app:layout_constraintEnd_toEndOf="@+id/iv_card_music"
-        app:layout_constraintTop_toBottomOf="@+id/tv_music"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_music"/>-->
 
     <include
         layout="@layout/music_widget"
+        android:id="@+id/music_widget_layout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="@+id/iv_card_music"
         app:layout_constraintEnd_toEndOf="@+id/iv_card_music"
         app:layout_constraintTop_toTopOf="@+id/iv_card_music"

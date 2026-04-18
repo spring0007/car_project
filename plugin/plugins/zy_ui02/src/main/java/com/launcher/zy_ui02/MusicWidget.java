@@ -124,7 +124,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         musicNextIv = view.findViewById(R.id.music_widget_next);
         musicNextIv.setOnClickListener(this);
 
-        view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
+        setOnClickListener(this);
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
         ivLoadnim = view.findViewById(R.id.img_song_art);
@@ -217,7 +217,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendTogglePlayPause();
             }
-        } else if (id == R.id.ll_name_layout_music
+        } else if (id == R.id.music_widget_layout
                 || id == R.id.img_song_art
                 || id == R.id.img_song_art_bg
                 || id == R.id.music_widget_seekbars) {
