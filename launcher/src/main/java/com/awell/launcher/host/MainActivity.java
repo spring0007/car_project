@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -42,7 +43,7 @@ import java.util.Objects;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
-    private static final String TAG = "MainActivity1" ;// MainActivity.class.getSimpleName();
+    private static final String TAG =  MainActivity.class.getSimpleName();
     private boolean D = false;
 
     private final String LAUNCHER_KEY = "persist.sys.launcher.key"; //value : plugin-app/plugin2-app
@@ -65,7 +66,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private boolean isFirstBoot = true;
     private PluginInfo info;
-    private volatile boolean isStartingPlugin = false; // 防止重复启动
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,14 +105,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void realStartPlugin(@NonNull Message msg) {
-        // 防止重复启动
-        if (isStartingPlugin) {
-            Log.w(TAG, "realStartPlugin: huang plugin is already starting, skip");
-            return;
-        }
         
         try {
-            isStartingPlugin = true;
             info = (PluginInfo) msg.obj;
             String clazz = Objects.requireNonNull(msg.getData().get("clazz")).toString();
             
@@ -138,15 +132,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 if (D) {
                     Log.i(TAG, "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
                 }
-                isStartingPlugin = false;
+                
             } else {
                 Log.e(TAG, "realStartPlugin: huang plugin info is null, will reinstall");
-                isStartingPlugin = false;
                 initThread();
             }
         } catch (Exception e) {
             Log.e(TAG, "realStartPlugin: huang exception: " + e.getMessage(), e);
-            isStartingPlugin = false;
+            
             initThread();
         }
     }
@@ -348,21 +341,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Log.i(TAG, "startPitActivityResult: huang plugin=" + plugin + ", activity=" + activity + ", result=" + result);
             }
 
-            // 无论成功失败，都先重置标志位，允许后续操作
-            isStartingPlugin = false;
-
             if (result) {
                 Log.i(TAG, "startPitActivityResult: huang plugin started successfully");
                 // 启动成功，保持当前状态
             } else {
                 Log.w(TAG, "startPitActivityResult: huang plugin start failed, will retry");
                 isFirstBoot = false;
-                
+
                 // 检查当前栈顶Activity，避免在非MainActivity时重复启动
                 String topActivity = getTopActivity();
                 String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
                 
-                if ("com.awell.launcher.host.MainActivity".equals(topActivity)) {
+                if ("com.awell.launcher.host.MainActivity".equals(topActivity) || apkClazz.equals(activity)) {
                     Log.i(TAG, "startPitActivityResult: huang top is MainActivity, retry with current info");
                     // 使用当前的info和clazz重试
                     if (info != null) {
