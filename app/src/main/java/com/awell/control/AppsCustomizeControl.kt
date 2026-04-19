@@ -68,10 +68,23 @@ object AppsCustomizeControl {
     fun setPluginThemeMode(themeMode: Int) {
         mIconCache.setPluginThemeMode(themeMode)
         Utilities.setPluginThemeMode(themeMode, mAppContext)
-        resetAppIconSize()
+        resetAppIconAttributes()
         LogUtil.d( "setPluginThemeMode: themeMode=$themeMode")
     }
-    
+    //还原app icon属性
+    private fun resetAppIconAttributes() {
+        resetAppIconSize()
+        resetAppIconPadding()
+
+    }
+
+    private fun resetAppIconPadding() {
+        val result = mAppsCustomizeContent?.resetAppIconPadding() ?: false
+        if (result) {
+            LogUtil.d("resetAppIconPadding: successfully reset to default padding")
+        }
+    }
+
     /**
      * 设置 Plugin 的图标映射表到主应用
      * @param iconMap Plugin 提供的图标映射表（包名 -> 资源名称）
