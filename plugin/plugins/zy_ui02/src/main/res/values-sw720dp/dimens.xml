@@ -10,6 +10,7 @@
     <dimen name="viewpager_item_height">465dp</dimen>
     <dimen name="tv_font_size">33sp</dimen>
     <dimen name="music_iv_size">45dp</dimen>
+    <dimen name="app_icon_padding">32dp</dimen>
     <dimen name="app_icon_size">110dp</dimen>
     <dimen name="music_artist_text_size">22sp</dimen>
     <dimen name="music_name_text_size">25sp</dimen>
