@@ -342,6 +342,20 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         this.mAppIconPadding = mAppIconPadding;
     }
 
+    public boolean resetAppIconPadding() {
+        int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_padding_top);
+        if (this.mAppIconPadding == defaultSize) {
+            Log.d(TAG, "resetAppIconPadding: already using icon padding: " + defaultSize);
+            return true;
+        }
+        this.mAppIconPadding = defaultSize;
+        Log.d(TAG, "resetAppIconPadding: successfully reset icon padding to default size: " + defaultSize);
+        if (isDataReady()) {
+            onDataReady(getMeasuredWidth(), getMeasuredHeight());
+        }
+        return true;
+    }
+
     /**
      * 设置应用图标大小
      * @param iconSize 图标大小（像素），必须大于 0。传入 0 或负数将重置为默认值
