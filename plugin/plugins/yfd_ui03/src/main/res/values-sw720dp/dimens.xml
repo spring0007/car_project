@@ -10,8 +10,6 @@
     <dimen name="gpsSpeed_size">46sp</dimen>
     <dimen name="gpsSpeedUnit_size">26sp</dimen>
 
-    <dimen name="rv_margin_bottom">0dp</dimen>
-    <dimen name="rv_margin_end">36dp</dimen>
     <dimen name="iv_radio_image_size">40dp</dimen>
 
 </resources>
