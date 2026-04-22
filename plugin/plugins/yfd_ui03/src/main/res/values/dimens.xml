@@ -9,6 +9,7 @@
     <dimen name="clockData_size">32sp</dimen>
     <dimen name="gpsSpeed_size">46sp</dimen>
     <dimen name="gpsSpeedUnit_size">26sp</dimen>
-    <dimen name="iv_radio_image_size">40dp</dimen>
+    <dimen name="iv_radio_image_size">60dp</dimen>
+    <dimen name="app_name_text_size">25sp</dimen>
 
 </resources>

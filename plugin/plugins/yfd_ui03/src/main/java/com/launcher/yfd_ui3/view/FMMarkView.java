@@ -82,8 +82,8 @@ public class FMMarkView extends View {
 
     // 刻度线及刻度值颜色
     private int markLineColor = Color.parseColor("#FFFFFFFF");
-    // 渐变色起始颜色（灰色）
-    private int gradientStartColor = Color.parseColor("#FF888888");
+    // 渐变色起始颜色（深灰色）
+    private int gradientStartColor = Color.parseColor("#FF444444");
     // 刻度值字体大小
     private float numberTextSize = dipToPx(18);
     // 当前值字体大小
@@ -330,6 +330,17 @@ public class FMMarkView extends View {
         float spacing = dipToPx(20);
         float centerY = getHeight() / 2 + spacing;
         
+        // 计算可视范围内的刻度索引范围
+        int scrollX = getScrollX();
+        float viewLeft = scrollX;
+        float viewRight = scrollX + getWidth();
+        int firstVisibleMark = (int) (viewLeft / dipToPx(defaultMark)) - 1;
+        int lastVisibleMark = (int) (viewRight / dipToPx(defaultMark)) + 1;
+        
+        // 确保索引在有效范围内
+        firstVisibleMark = Math.max(0, firstVisibleMark);
+        lastVisibleMark = Math.min(markCount, lastVisibleMark);
+        
         // 画所有刻度线
         for (int i = 0; i <= markCount; i++) {
             float markStartX = dipToPx(defaultMark * (i + 1));
@@ -346,7 +357,27 @@ public class FMMarkView extends View {
                 markStartY = centerY - dipToPx(shortLineLength / 2);
                 markEndY = centerY + dipToPx(shortLineLength / 2);
             }
-            canvas.drawLine(markStartX, markStartY, markEndX, markEndY, linePaint);
+            
+            // 设置刻度线颜色（处理边缘渐变）
+            Paint currentPaint = linePaint;
+            int color = markLineColor;
+            
+            // 左侧前10个刻度线：深灰色到白色渐变
+            if (i >= firstVisibleMark && i < firstVisibleMark + 10) {
+                float ratio = (i - firstVisibleMark) / 10.0f;
+                color = blendColors(gradientStartColor, markLineColor, ratio);
+                currentPaint = new Paint(linePaint);
+                currentPaint.setColor(color);
+            }
+            // 右侧后10个刻度线：白色到深灰色渐变
+            else if (i > lastVisibleMark - 10 && i <= lastVisibleMark) {
+                float ratio = (lastVisibleMark - i) / 10.0f;
+                color = blendColors(gradientStartColor, markLineColor, ratio);
+                currentPaint = new Paint(linePaint);
+                currentPaint.setColor(color);
+            }
+            
+            canvas.drawLine(markStartX, markStartY, markEndX, markEndY, currentPaint);
         }
         
         // 画中心指示线（长条）
@@ -598,6 +629,34 @@ public class FMMarkView extends View {
 
     private float dipToPx(int dip) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, getResources().getDisplayMetrics());
+    }
+
+    /**
+     * 混合两种颜色，根据比例从startColor渐变到endColor
+     * @param startColor 起始颜色（灰色）
+     * @param endColor 结束颜色（白色）
+     * @param ratio 比例，0.0为startColor，1.0为endColor
+     * @return 混合后的颜色
+     */
+    private int blendColors(int startColor, int endColor, float ratio) {
+        // 提取ARGB分量
+        int startA = Color.alpha(startColor);
+        int startR = Color.red(startColor);
+        int startG = Color.green(startColor);
+        int startB = Color.blue(startColor);
+        
+        int endA = Color.alpha(endColor);
+        int endR = Color.red(endColor);
+        int endG = Color.green(endColor);
+        int endB = Color.blue(endColor);
+        
+        // 计算混合后的颜色分量
+        int a = (int) (startA + (endA - startA) * ratio);
+        int r = (int) (startR + (endR - startR) * ratio);
+        int g = (int) (startG + (endG - startG) * ratio);
+        int b = (int) (startB + (endB - startB) * ratio);
+        
+        return Color.argb(a, r, g, b);
     }
 
     /**

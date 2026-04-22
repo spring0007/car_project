@@ -214,7 +214,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <!--33333333333333333333333333333333333333333-->
+    <!--view.gone-->
 
 
     <TextView
@@ -257,7 +257,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_gps_speed" />
 
 
-    <!--    1111111111111111111111111111111111111111-->
+    <!--    view.gone-->
 
 
     <androidx.constraintlayout.widget.Guideline

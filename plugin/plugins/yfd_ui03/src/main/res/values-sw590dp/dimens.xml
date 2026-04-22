@@ -2,12 +2,13 @@
 <resources>
     <dimen name="text_50sp">50sp</dimen>
 
-    <dimen name="app_icon_bg_size">124dp</dimen>
+    <dimen name="app_icon_bg_size">80dp</dimen>
     <dimen name="recycle_app_icon_size">88dp</dimen>
     <dimen name="recycle_app_width">160dp</dimen>
     <dimen name="clockTime_size">116sp</dimen>
     <dimen name="clockData_size">26sp</dimen>
     <dimen name="gpsSpeed_size">36sp</dimen>
     <dimen name="gpsSpeedUnit_size">16sp</dimen>
-    <dimen name="iv_radio_image_size">40dp</dimen>
+    <dimen name="iv_radio_image_size">48dp</dimen>
+    <dimen name="app_name_text_size">20sp</dimen>
 </resources>

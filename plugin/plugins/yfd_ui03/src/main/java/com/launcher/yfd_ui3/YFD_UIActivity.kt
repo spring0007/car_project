@@ -872,19 +872,35 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 )
             }
         }
+    mViewBinding.homeAppVideo.setOnClickListener {
+            val pkg =
+                Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
+
+            when (pkg) {
+                "com.google.android.youtube" -> {
+                    systemUIClient.fullScreenFreeform()
+
+                }
+
+                else -> {
+                    startActivity("com.google.android.youtube", "com.google.android.apps.youtube.app.WatchWhileActivity")
+                }
+            }
+
+        }
+
 
         mViewBinding.homeAppGoogleplay.setOnClickListener {
             val pkg =
                 Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
 
             when (pkg) {
-                MUSIC_PKG -> {
+                "com.android.vending" -> {
                     systemUIClient.fullScreenFreeform()
 
                 }
-
                 else -> {
-                    startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity")
+                    startActivity("com.android.vending", "com.android.vending.AssetBrowserActivity")
                 }
             }
 
@@ -909,9 +925,18 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeAppBluetooth.setOnClickListener {
-            startActivity(
-                "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
-            )
+            val pkg =
+                Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
+
+            when (pkg) {
+                "com.spotify.music" -> {
+                    systemUIClient.fullScreenFreeform()
+                }
+
+                else -> {
+                    startActivity("com.spotify.music", "com.spotify.music.MainActivity")
+                }
+            }
         }
 
 //        mViewBinding.freeformFullScreen.setOnClickListener(this)
@@ -1114,12 +1139,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-//            mViewBinding.freeformFullScreen.id -> {
-//                systemUIClient.fullScreenFreeform()
-//            }
-            mViewBinding.layoutRadioLayout.radioLayout.id -> {
-                startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity")
-            }
             mViewBinding.layoutRadioLayout.ivRadioNext.id -> {
                 if (ClickUtils.isFastClick()) {
                     return
@@ -1137,6 +1156,9 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 //            }
             mViewBinding.layoutRadioLayout.tvRadioAmFm.id -> {
                 mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
+            }
+            mViewBinding.layoutRadioLayout.radioLayout.id -> {
+                startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity")
             }
 
 

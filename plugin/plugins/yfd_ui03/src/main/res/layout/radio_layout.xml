@@ -68,7 +68,7 @@
             android:id="@+id/iv_radio_pre"
             android:layout_width="@dimen/iv_radio_image_size"
             android:layout_height="@dimen/iv_radio_image_size"
-            android:padding="10dp"
+
             android:background="@drawable/sf_radio_pre" />
 
 <!--        <View-->
@@ -93,7 +93,6 @@
             android:id="@+id/iv_radio_next"
             android:layout_width="@dimen/iv_radio_image_size"
             android:layout_height="@dimen/iv_radio_image_size"
-            android:padding="10dp"
             android:background="@drawable/sf_radio_next"
             tools:ignore="ContentDescription" />
     </LinearLayout>
