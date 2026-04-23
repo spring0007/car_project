@@ -28,12 +28,9 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.launcher.zy_ui02.databinding.ActivityMainUi1Binding;
-import com.launcher.zy_ui02.utils.WeatherHelper;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivityUI1 extends Activity implements View.OnClickListener {
@@ -51,7 +48,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         initLongTouch();
         binding.ivNavi.setOnClickListener(this);
         binding.ivHome.setOnClickListener(this);
-        binding.ivEq.setOnClickListener(this);
+        binding.ivMusic.setOnClickListener(this);
         binding.ivCar.setOnClickListener(this);
         binding.ivPhone.setOnClickListener(this);
         binding.ivCardMusic.setOnClickListener(this);
@@ -111,9 +108,9 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        /*if (v.getId() == R.id.iv_card_music){
+        if (v.getId() == R.id.iv_music){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else*/ if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
+        } else if (v.getId() == R.id.iv_navi || v.getId() == R.id.iv_card_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -135,7 +132,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         } else if (v.getId() == R.id.iv_video) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        } else if (v.getId() == R.id.iv_eq || v.getId() == R.id.iv_card_eq) {
+        } else if ( v.getId() == R.id.iv_card_eq) {
             startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
         } else if (v.getId() == R.id.iv_car) {
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
@@ -174,7 +171,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
         @Override
         public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
-            if (!"com.awell.radio".equals(pkg)) {
+            if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
             }
         }
@@ -192,11 +189,13 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
-            musicWidget.setMusicNameTextView(songName, type);
-            musicWidget.setArtistNameTextView(singerName, type);
-            if ("NO_MUSIC_LIST".equals(songName)
+            if(MusicWidget.MUSIC == type) {
+                musicWidget.setMusicNameTextView(songName, type);
+                musicWidget.setArtistNameTextView(singerName, type);
+            }else
+            /*if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
-                    && "NO_MUSIC_LIST".equals(album)) {
+                    && "NO_MUSIC_LIST".equals(album)) */{
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
