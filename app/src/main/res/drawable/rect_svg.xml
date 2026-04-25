@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="358dp"
+    android:height="126dp"
+    android:viewportWidth="358"
+    android:viewportHeight="126">
+    
+    <!-- 底层：全圆角矩形，50% 半透明黑色 -->
+    <path
+        android:pathData="M10,0 L348,0 Q358,0 358,10 L358,116 Q358,126 348,126 L10,126 Q0,126 0,116 L0,10 Q0,0 10,0 Z"
+        android:fillColor="#2b397fcc"
+        android:strokeWidth="2"
+        android:strokeColor="#CC397fcc" />
+    
+    <!-- 左侧正方形：高度等于矩形高度，宽度与高度一致，左侧圆角10，右侧直角 -->
+    <path
+        android:pathData="M10,0 L126,0 L126,126 L10,126 Q0,126 0,116 L0,10 Q0,0 10,0 Z"
+        android:fillColor="#353f7280" />
+</vector>

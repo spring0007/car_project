@@ -182,7 +182,7 @@ public class IconManager {
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public static AppInfo getAppIcon(Context context, String packageName) throws PackageManager.NameNotFoundException {
+    public static AppInfo getAppIcon(Context context, String packageName) {
         if (packageName == null) return null;
         AppInfo info = new AppInfo();
         //单独处理
@@ -193,7 +193,15 @@ public class IconManager {
             return info;
         }
         PackageManager pm = context.getPackageManager();
-        PackageInfo packageInfo = pm.getPackageInfo(packageName,PackageManager.GET_ACTIVITIES);
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+        } catch (PackageManager.NameNotFoundException e) {
+            // 包不存在，使用默认图标
+            info.setIcon(context.getDrawable(R.drawable.yfd_ui1_apk_installer));
+            info.setLabel(context.getString(R.string.unknown));
+            return info;
+        }
 
         // 检查自定义图标
         Integer resId = CUSTOM_ICONS.get(packageName);
