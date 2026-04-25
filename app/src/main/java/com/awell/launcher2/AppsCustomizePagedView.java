@@ -52,18 +52,19 @@ import android.os.Process;
 import android.os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
 import com.awell.control.AppsCustomizeControl;
@@ -289,15 +290,14 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private PagedViewCellLayout mWidgetSpacingLayout;
     private int mNumAppsPages = 0;
     private int mNumWidgetPages;
-    
-    /**
-     * 默认每排显示的应用图标数量
-     */
-    private int mDefaultAppCountPerRow = 0;
-    // app水平间距自适应
-    private boolean mAutoAppWidthGap = false;
 
     private int mAppIconPadding = 0;
+    private int mPageBackgroundResId = 0;
+
+    // 保存从 XML 读取的原始页面间距默认值，用于重置
+    private int mCustomPageLayoutWidthGap = -1;
+    private int mCustomPageLayoutHeightGap = -1;
+
     // Relating to the scroll and overscroll effects
     Workspace.ZInterpolator mZInterpolator = new Workspace.ZInterpolator(0.5f);
     private static float CAMERA_DISTANCE = 6500;
@@ -311,7 +311,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     // Previews & outlines
     ArrayList<AppsCustomizeAsyncTask> mRunningTasks;
     private static final int sPageSleepDelay = 200;
-
+    private static final int defaultAppColumnCount = 7;//默认每行显示的应用图标数量
+    private static final int defaultAppRowCount = 2;//默认每列显示的应用图标数量
     private Runnable mInflateWidgetRunnable = null;
     private Runnable mBindWidgetRunnable = null;
     static final int WIDGET_NO_CLEANUP_REQUIRED = -1;
@@ -333,110 +334,105 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private Rect mTmpRect = new Rect();
 
     private static final String LAUNCHER_PLUGIN_CLAZZ = "persist.sys.launcher.clazz";
+    private AppsCustomizeConfig mAppsCustomizeConfig = null;
 
-    public void setAutoAppWidthGap(boolean mAutoAppWidthGap) {
-        this.mAutoAppWidthGap = mAutoAppWidthGap;
-    }
+    // 防抖机制：防止重复调用 invalidatePageData 导致多次 syncPages
+    private boolean mPendingInvalidatePageData = false;
+    private Runnable mPendingInvalidatePageDataRunnable = null;
+    private boolean mIsSyncingPages = false; // 标记是否正在执行 syncPages
 
-    public void setAppIconPadding(int mAppIconPadding) {
-        this.mAppIconPadding = mAppIconPadding;
-    }
-
-    public boolean resetAppIconPadding() {
-        int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_padding_top);
-        if (this.mAppIconPadding == defaultSize) {
-            Log.d(TAG, "resetAppIconPadding: already using icon padding: " + defaultSize);
-            return true;
-        }
-        this.mAppIconPadding = defaultSize;
-        Log.d(TAG, "resetAppIconPadding: successfully reset icon padding to default size: " + defaultSize);
-        if (isDataReady()) {
-            onDataReady(getMeasuredWidth(), getMeasuredHeight());
-        }
-        return true;
-    }
 
     /**
-     * 设置应用图标大小
-     * @param iconSize 图标大小（像素），必须大于 0。传入 0 或负数将重置为默认值
-     * @return 是否设置成功
-     */
-    public boolean setAppIconSize(int iconSize) {
-        // 如果传入 0 或负数，重置为默认值（兼容旧 plugin）
-        if (iconSize <= 0) {
-            int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
-            if (this.mAppIconSize == defaultSize) {
-                Log.d(TAG, "setAppIconSize: already using default size: " + defaultSize);
-                return true;
-            }
-            this.mAppIconSize = defaultSize;
-            Log.d(TAG, "setAppIconSize: reset to default size: " + defaultSize);
-            if (isDataReady()) {
-                onDataReady(getMeasuredWidth(), getMeasuredHeight());
-            }
-            return true;
-        }
-        
-        if (this.mAppIconSize == iconSize) {
-            Log.d(TAG, "setAppIconSize: same size, no need to update, size: " + iconSize);
-            return true;
-        }
-        this.mAppIconSize = iconSize;
-        Log.d(TAG, "setAppIconSize: successfully set icon size to " + iconSize);
-        if (isDataReady()) {
-            onDataReady(getMeasuredWidth(), getMeasuredHeight());
-        }
-        return true;
-    }
-
-    /**
-     * 重置应用图标大小为默认值（R.dimen.app_icon_size）
+     * 批量重置所有图标属性（只在最后刷新一次布局）
      * @return 是否重置成功
      */
-    public boolean resetAppIconSize() {
-        int defaultSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
-        if (this.mAppIconSize == defaultSize) {
-            Log.d(TAG, "resetAppIconSize: already using default size: " + defaultSize);
-            return true;
+    public void resetAllAppAttributes() {
+        LogUtil.d("resetAllAppAttributes: resetting all app attributes...");
+        this.mAppsCustomizeConfig = null;
+        mAppIconSize =  getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+        mPageBackgroundResId = 0;
+        
+        // 重置 mWidgetSpacingLayout 到默认值，防止之前 plugin 的设置影响当前 plugin
+        if (mWidgetSpacingLayout != null) {
+            mWidgetSpacingLayout.resetToDefaultCellDimensions();
+          //  LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
         }
-        this.mAppIconSize = defaultSize;
-        Log.d(TAG, "resetAppIconSize: successfully reset to default size: " + defaultSize);
+        
+        // 重置页面间距为从 XML 读取的原始默认值
+        // 不同屏幕尺寸有不同的默认值（如 sw600dp-land-mdpi 是 45dp）
+        mCustomPageLayoutWidthGap = mPageLayoutWidthGap ;
+        mCustomPageLayoutHeightGap = mPageLayoutHeightGap ;
+        //LogUtil.d("resetAllAppAttributes: reset gaps to original defaults - width=" + mCustomPageLayoutWidthGap
+        //        + ", height=" + mCustomPageLayoutHeightGap +",isDataReady="+isDataReady());
+        
+        // 统一刷新布局（只调用一次）
         if (isDataReady()) {
-            onDataReady(getMeasuredWidth(), getMeasuredHeight());
-        }
-        return true;
-    }
-
-    /**
-     * 获取当前应用图标大小
-     * @return 当前图标大小（像素）
-     */
-    public int getAppIconSize() {
-        return this.mAppIconSize;
-    }
-
-    /**
-     * 设置每排显示的应用图标数量
-     * @param countPerRow 每排显示的应用图标数量（必须大于 0）
-     */
-    public void setAppCountPerRow(int countPerRow) {
-        if (countPerRow > 0) {
-            mDefaultAppCountPerRow = countPerRow;
-            // 重新计算布局
-            if (isDataReady()) {
-                onDataReady(getMeasuredWidth(), getMeasuredHeight());
+            // 关键修复：使用父容器的可用高度，而不是当前已缩小的测量值
+            // 避免 wrap_content 导致的恶性循环：570dp -> 441px -> 更小 -> ...
+            int availableWidth = getMeasuredWidth();
+            int availableHeight = getMeasuredHeight();
+            
+            // 如果当前高度异常小（可能是上次切换导致的），使用父容器高度
+            ViewParent parent = getParent();
+            if (parent instanceof View) {
+                View parentView = (View) parent;
+                int parentHeight = parentView.getMeasuredHeight();
+                // 如果父容器高度合理且当前高度明显偏小，使用父容器高度
+                if (parentHeight > 0 && availableHeight < parentHeight) {
+                    availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
+                   // LogUtil.d("resetAllAppAttributes: using parent height instead of current - parent=" + parentHeight
+                   //         + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
+                }
             }
+            
+            onDataReady(availableWidth, availableHeight);
+          //  LogUtil.d("resetAllAppAttributes: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
         }
     }
-    
+
     /**
-     * 获取当前每排显示的应用图标数量
-     * @return 每排显示的应用图标数量
+     * 处理来自 AppsCustomizeControl 的配置对象
+     * 此方法负责数据的解析和应用，实现数据处理逻辑
+     * @param configObj 配置对象（Kotlin data class）
      */
-    public int getAppCountPerRow() {
-        return mDefaultAppCountPerRow;
+    public void processAppsCustomizeConfig(AppsCustomizeConfig configObj) {
+        if (configObj == null) {
+            LogUtil.w("processAppsCustomizeConfig: config is null, resetting to default");
+            resetAllAppAttributes();
+            return;
+        }
+        mAppsCustomizeConfig = configObj;
+        if(configObj.getBackgroundTheme() <=0){
+            mPageBackgroundResId = 0;
+        }else{
+            mPageBackgroundResId =R.drawable.rect_svg;
+        }
+        if (mWidgetSpacingLayout != null) {
+            mWidgetSpacingLayout.resetToDefaultCellDimensions();
+        //    LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
+        }
+        if (isDataReady()) {
+            // 关键修复：使用父容器的可用高度，避免累积缩小
+            int availableWidth = getMeasuredWidth();
+            int availableHeight = getMeasuredHeight();
+            
+            ViewParent parent = getParent();
+            if (parent instanceof View) {
+                View parentView = (View) parent;
+                int parentHeight = parentView.getMeasuredHeight();
+                if (parentHeight > 0 && availableHeight < parentHeight ) {
+                    availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
+                //    LogUtil.d("processAppsCustomizeConfig: using parent height - parent=" + parentHeight
+                //            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
+                }
+            }
+            
+            onDataReady(availableWidth, availableHeight);
+         //   LogUtil.d("processAppsCustomizeConfig: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
+        }
+       // LogUtil.d("processAppsCustomizeConfig: processing configuration...");
     }
-    
+
     public void setActivity(Context context) {
         mActivity = new WeakReference<>(context);
     }
@@ -475,19 +471,26 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         Resources resources = context.getResources();
         // 初始化默认图标大小，如果 plugin 未调用 setAppIconSize，将使用此默认值
         mAppIconSize = resources.getDimensionPixelSize(R.dimen.app_icon_size);
-        Log.d(TAG, "AppsCustomizePagedView: mAppIconSize = " + mAppIconSize);
+      //  LogUtil.d("AppsCustomizePagedView: mAppIconSize = " + mAppIconSize);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AppsCustomizePagedView, 0, 0);
         mMaxAppCellCountX = a.getInt(R.styleable.AppsCustomizePagedView_maxAppCellCountX, -1);
         mMaxAppCellCountY = a.getInt(R.styleable.AppsCustomizePagedView_maxAppCellCountY, -1);
         mWidgetWidthGap = a.getDimensionPixelSize(R.styleable.AppsCustomizePagedView_widgetCellWidthGap, 0);
         mWidgetHeightGap = a.getDimensionPixelSize(R.styleable.AppsCustomizePagedView_widgetCellHeightGap, 0);
-        mWidgetCountX = a.getInt(R.styleable.AppsCustomizePagedView_widgetCountX, 2);
+        mWidgetCountX = a.getInt(R.styleable.AppsCustomizePagedView_widgetCountX, 7);
         mWidgetCountY = a.getInt(R.styleable.AppsCustomizePagedView_widgetCountY, 2);
         mClingFocusedX = a.getInt(R.styleable.AppsCustomizePagedView_clingFocusedX, 0);
         mClingFocusedY = a.getInt(R.styleable.AppsCustomizePagedView_clingFocusedY, 0);
         a.recycle();
         mWidgetSpacingLayout = new PagedViewCellLayout(getContext());
+
+        // 保存从父类构造函数中读取的原始页面间距默认值
+        // 这些值是从 XML 布局属性中读取的（如 values-sw600dp-land-mdpi-v13 中的 45dp）
+        mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
+        mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
+       // LogUtil.d("AppsCustomizePagedView: saved default gaps - width=" + mCustomPageLayoutWidthGap
+       //         + ", height=" + mCustomPageLayoutHeightGap);
 
         // The padding on the non-matched dimension for the default widget
         // preview icons
@@ -577,8 +580,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private void updatePageCounts() {
 
 //		mNumWidgetPages = (int) Math.ceil(mWidgets.size() / (mWidgetCountX * mWidgetCountY)); // by jxy (float)
-        //Log.i(TAG, "updatePageCounts: huang mNumAppsPages=>" + mNumAppsPages + " mApps.size()=>" + mApps.size() + " count=>" + (mCellCountX * mCellCountY));
         mNumAppsPages = (int) Math.ceil((float) mApps.size() / (mCellCountX * mCellCountY));
+    //    LogUtil.i("updatePageCounts: huang mNumAppsPages=>" + mNumAppsPages + " mApps.size()=>" + mApps.size() + " count=>" + (mCellCountX * mCellCountY));
         if (mNumAppsPages == 1) {
             if (getPageIndication() != null) {
                 getPageIndication().setVisibility(View.GONE);
@@ -600,29 +603,65 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             maxCellCountX = (isLandscape ? LauncherModel.getCellCountX() : LauncherModel.getCellCountY());
             maxCellCountY = (isLandscape ? LauncherModel.getCellCountY() : LauncherModel.getCellCountX());
         }
+
+
         if (mMaxAppCellCountX > -1) {
             maxCellCountX = Math.min(maxCellCountX, mMaxAppCellCountX);
         }
-        // 如果未设置默认值，则使用 XML 配置的值
-        if (mDefaultAppCountPerRow > 0) {
-            maxCellCountX = mDefaultAppCountPerRow; // 根据提供的接口数量显示
-        }else
-            maxCellCountX = 7;
-        maxCellCountY = 2;
+
+        // 使用默认布局或 setAppCountPerRow 设置的值
+        if (mAppsCustomizeConfig!=null && mAppsCustomizeConfig.getColumnCount() > 0) {
+            maxCellCountX = mAppsCustomizeConfig.getColumnCount(); // 根据提供的接口数量显示
+        } else {
+            maxCellCountX = defaultAppColumnCount;
+        }
+        if (mAppsCustomizeConfig!=null && mAppsCustomizeConfig.getRowCount() > 0) {
+            maxCellCountY = mAppsCustomizeConfig.getRowCount(); // 根据提供的接口数量显示
+        }else {
+            maxCellCountY = defaultAppRowCount;
+        }
+       // LogUtil.d("onDataReady: using DEFAULT layout, columnCount=" + maxCellCountX + ", rowCount=" + maxCellCountY);
+
+
         // Temp hack for now: only use the max cell count Y for widget layout
         int maxWidgetCellCountY = maxCellCountY;
-        if (mMaxAppCellCountY > -1) {
+
+        /*if (mMaxAppCellCountY > -1) {
             maxWidgetCellCountY = Math.min(maxWidgetCellCountY, mMaxAppCellCountY);
         }
-
+        LogUtil.d("onDataReady: using DEFAULT layout, maxCellCountY=" + maxCellCountY + ", mMaxAppCellCountY=" + mMaxAppCellCountY);*/
         // Now that the data is ready, we can calculate the content width, the
         // number of cells to
         // use for each page
-        if (mAutoAppWidthGap) {
-            mPageLayoutWidthGap = -1;
+        // 处理页面间距：如果配置对象存在但未设置，则使用从 XML 读取的原始默认值
+        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoWidthGap()) {
+            mCustomPageLayoutWidthGap = -1;
+        } else {
+            mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
         }
-        mWidgetSpacingLayout.setGap(mPageLayoutWidthGap, mPageLayoutHeightGap);
+
+        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
+            mCustomPageLayoutHeightGap = -1;
+        } else {
+            mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
+        }
+       // LogUtil.d("onDataReady: config applied - mCustomPageLayoutWidthGap=" + mCustomPageLayoutWidthGap
+        //        + ", mCustomPageLayoutHeightGap=" + mCustomPageLayoutHeightGap);
+
+        mWidgetSpacingLayout.setGap(mCustomPageLayoutWidthGap, mCustomPageLayoutHeightGap);
         mWidgetSpacingLayout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
+        
+        // 如果设置了自定义 Cell 尺寸，则直接设置到 PagedViewCellLayout
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 ) {
+            int cellWidthPx = (int) (mAppsCustomizeConfig.getCellWidthDp());
+            mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
+        }
+
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 ) {
+            int cellHeightPx = (int) (mAppsCustomizeConfig.getCellHeightDp());
+            mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+        }
+
         mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
         mCellCountX = mWidgetSpacingLayout.getCellCountX();
         mCellCountY = mWidgetSpacingLayout.getCellCountY();
@@ -654,15 +693,27 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             getPageIndication().invalidate();
         }
         
+        // 防抖：取消之前的 pending 任务，只保留最新的调用
+        if (mPendingInvalidatePageData && mPendingInvalidatePageDataRunnable != null) {
+            removeCallbacks(mPendingInvalidatePageDataRunnable);
+         //   LogUtil.d("onDataReady: cancelled previous pending invalidatePageData to avoid duplicate syncPages");
+        }
+        
         // 延迟页面数据失效，避免在测量阶段触发重量级操作
         final int finalPage = Math.max(0, page);
         final boolean finalHostIsTransitioning = hostIsTransitioning;
-        post(new Runnable() {
+        
+        mPendingInvalidatePageDataRunnable = new Runnable() {
             @Override
             public void run() {
+                mPendingInvalidatePageData = false;
+             //   LogUtil.d("onDataReady: executing deferred invalidatePageData - page=" + finalPage);
                 invalidatePageData(finalPage, finalHostIsTransitioning);
             }
-        });
+        };
+        
+        mPendingInvalidatePageData = true;
+        postDelayed(mPendingInvalidatePageDataRunnable, 50); // 增加延迟到50ms以合并多次调用
 
         // Show All Apps cling if we are finished transitioning, otherwise, we
         // will try again when
@@ -749,7 +800,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     @Override
     public void onClick(View v) {
         // When we have exited all apps or are in transition, disregard clicks
-        Log.i(TAG, "onClick: huang v=>" + v);
+    //    LogUtil.i("onClick: huang v=>" + v);
 
         //if (!mLauncher.isAllAppsVisible() || mLauncher.getWorkspace().isSwitchingState()) return;
 
@@ -775,11 +826,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                     getUiActivity().toString().contains(currentPluginUi)) {
                 //使用Plugin的Activity上下文
                 context = getUiActivity();
-                Log.i(TAG, "onClick: huang use plugin context=>" + context);
+               // LogUtil.i("onClick: huang use plugin context=>" + context);
             }
 
             startActivitySafely(v, context, appInfo.intent, appInfo);
-            Log.i(TAG, "appinfo huang packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
+          //  LogUtil.i("appinfo huang packageName = " + appInfo.componentName.getPackageName() + ",className = " + appInfo.componentName.getClassName());
         } else if (v instanceof PagedViewWidget) {
             // Let the user know that they have to long press to add a widget
             if (mWidgetInstructionToast != null) {
@@ -1251,11 +1302,34 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void setupPage(PagedViewCellLayout layout) {
-        if (mAutoAppWidthGap) {
-            mPageLayoutWidthGap = -1;
+        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoWidthGap()) {
+            mCustomPageLayoutWidthGap = -1;
+        } else {
+            mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
         }
+
+        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
+            mCustomPageLayoutHeightGap = -1;
+        } else {
+            mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
+        }
+      //  LogUtil.d("setupPage: mCustomWidthGap=" + mCustomPageLayoutWidthGap + ", mCustomHeightGap=" + mCustomPageLayoutHeightGap);
+
+        // 如果是自定义样式且设置了自定义 Cell 尺寸，则应用到每个页面
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 ) {
+            int cellWidthPx = (int) (mAppsCustomizeConfig.getCellWidthDp());
+            mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
+        }
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 ) {
+            int cellHeightPx = (int) (mAppsCustomizeConfig.getCellHeightDp());
+            mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+        }
+
+        layout.setPageViewIconBackgroundResource(mPageBackgroundResId);
+
+        
         layout.setCellCount(mCellCountX, mCellCountY);
-        layout.setGap(mPageLayoutWidthGap, mPageLayoutHeightGap);
+        layout.setGap(mCustomPageLayoutWidthGap, mCustomPageLayoutHeightGap);
         layout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
 
         // Note: We force a measure here to get around the fact that when we do
@@ -1270,7 +1344,13 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         int widthSpec = MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.AT_MOST);
         int heightSpec = MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.AT_MOST);
         layout.setMinimumWidth(getPageContentWidth());
-        layout.measure(widthSpec, heightSpec);
+        
+        // 优化：只在尺寸真正变化时才 measure，避免重复测量
+        if (layout.getMeasuredWidth() != getMeasuredWidth() || 
+            layout.getMeasuredHeight() != getMeasuredHeight() ||
+            !layout.isLayoutRequested()) {
+            layout.measure(widthSpec, heightSpec);
+        }
         setVisibilityOnChildren(layout, View.VISIBLE);
     }
 
@@ -1284,13 +1364,26 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         layout.removeAllViewsOnPage();
         ArrayList<Object> items = new ArrayList<Object>();
         ArrayList<Bitmap> images = new ArrayList<Bitmap>();
+        // 根据 mAppIconSize 缩放图标
+        if(mAppsCustomizeConfig !=null && mAppsCustomizeConfig.getIconSize()>0)
+            mAppIconSize = mAppsCustomizeConfig.getIconSize();
+
+      //  LogUtil.i("syncAppsPageItems: scaling icon to " + mAppIconSize + "px");
+
         for (int i = startIndex; i < endIndex; ++i) {
             ApplicationInfo info = mApps.get(i);
             PagedViewIcon icon = (PagedViewIcon) mLayoutInflater.inflate(R.layout.apps_customize_application, layout, false);
-            
-            // 根据 mAppIconSize 缩放图标
+
             Bitmap scaledIcon = scaleBitmapIfNeeded(info.iconBitmap, mAppIconSize);
-            icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppIconPadding, scaledIcon);
+            if(mAppsCustomizeConfig!=null)
+                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppsCustomizeConfig.getIconTextPadding(), scaledIcon, mAppsCustomizeConfig.getFontSizeSp(), mAppsCustomizeConfig.getFontColor(), mAppsCustomizeConfig.getTextOrientation(), mAppsCustomizeConfig.getTextGravity());
+            else
+                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppIconPadding, scaledIcon, 0, 0,0, 0);
+            
+            // 应用图标水平偏移量配置
+            if(mAppsCustomizeConfig != null && (mAppsCustomizeConfig.getIconOffsetX() != 0 || mAppsCustomizeConfig.getIconOffsetY() !=0)) {
+                icon.setIconOffsetXY(mAppsCustomizeConfig.getIconOffsetX() , mAppsCustomizeConfig.getIconOffsetY());
+            }
             
             icon.setOnClickListener(this);
             icon.setOnLongClickListener(this);
@@ -1307,6 +1400,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         }
 
         layout.createHardwareLayers();
+        
+        // 在添加完所有图标后，应用背景到每个图标
+        if (mPageBackgroundResId != 0) {
+            layout.setPageViewIconBackgroundResource(mPageBackgroundResId);
+            //LogUtil.d("syncAppsPageItems: applied background after adding icons: resId=" + mPageBackgroundResId);
+        }else {
+            layout.setPageViewIconBackgroundResource(0);
+            //LogUtil.d("syncAppsPageItems: no background applied");
+        }
     }
 
     /**
@@ -1529,9 +1631,9 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         Drawable drawable = null;
         if (previewImage != 0) {
             drawable = mPackageManager.getDrawable(packageName, previewImage, null);
-            if (drawable == null) {
-                Log.w(TAG, "Can't load widget preview drawable 0x" + Integer.toHexString(previewImage) + " for provider: " + provider);
-            }
+//            if (drawable == null) {
+//                LogUtil.w("Can't load widget preview drawable 0x" + Integer.toHexString(previewImage) + " for provider: " + provider);
+//            }
         }
 
         int bitmapWidth;
@@ -1564,7 +1666,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             int minOffset = (int) (mAppIconSize * sWidgetPreviewIconPaddingPercentage);
             int smallestSide = Math.min(bitmapWidth, bitmapHeight);
             float iconScale = Math.min((float) smallestSide / (mAppIconSize + 2 * minOffset), 1f);
-            LogUtil.d(" mAppIconSize = " + mAppIconSize+", iconScale = " + iconScale+", bitmapWidth = " + bitmapWidth+" bitmapHeight = " + bitmapHeight);
+            //LogUtil.d(" mAppIconSize = " + mAppIconSize+", iconScale = " + iconScale+", bitmapWidth = " + bitmapWidth+" bitmapHeight = " + bitmapHeight);
             try {
                 Drawable icon = null;
                 int hoffset = (int) ((previewDrawableWidth - mAppIconSize * iconScale) / 2);
@@ -1785,9 +1887,12 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
     @Override
     public void syncPages() {
-        Log.i(TAG, "syncPages: huang pages mNumWidgetPages=>" + mNumWidgetPages + " mNumAppsPages=>" + mNumAppsPages);
-        removeAllViews();
-        cancelAllTasks();
+        //LogUtil.i("syncPages: huang pages mNumWidgetPages=>" + mNumWidgetPages + " mNumAppsPages=>" + mNumAppsPages +",mWidgetCountX="+mWidgetCountX+",mWidgetCountY="+mWidgetCountY);
+            
+        mIsSyncingPages = true; // 标记开始同步页面
+        try {
+            removeAllViews();
+            cancelAllTasks();
 
         Context context = getContext();
         for (int j = 0; j < mNumWidgetPages; ++j) {
@@ -1796,10 +1901,32 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             addView(layout, new PagedView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         }
 
+        // 保存自定义 Cell 尺寸信息（如果有的话）
+        int customCellWidth = 0;
+        int customCellHeight = 0;
+        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() > 0) {
+            Resources res = getResources();
+            float density = res.getDisplayMetrics().density;
+            customCellWidth = (int) (mAppsCustomizeConfig.getCellWidthDp() * density);
+            customCellHeight = (int) (mAppsCustomizeConfig.getCellHeightDp() * density);
+         //   LogUtil.d("syncPages: will apply custom cell dimensions - width=" + customCellWidth + ", height=" + customCellHeight);
+        }
+
         for (int i = 0; i < mNumAppsPages; ++i) {
             PagedViewCellLayout layout = new PagedViewCellLayout(context);
+            
+            // 如果有自定义 Cell 尺寸，立即应用到新创建的页面上
+            if (customCellWidth > 0 && customCellHeight > 0) {
+                layout.setCustomCellDimensions(customCellWidth, customCellHeight);
+            //    LogUtil.d("syncPages: applied custom dimensions to page " + i);
+            }
+            
             setupPage(layout);
             addView(layout);
+        }
+        } finally {
+            mIsSyncingPages = false; // 标记同步页面完成
+         //   LogUtil.d("syncPages: completed, mIsSyncingPages=false");
         }
     }
 
@@ -1943,6 +2070,19 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             // request a layout to trigger the page data when ready.
             requestLayout();
         } else {
+            // 防抖1:如果正在执行 syncPages，跳过此次调用
+            if (mIsSyncingPages) {
+              //  LogUtil.d("invalidateOnDataChange: skipped because syncPages is currently executing");
+                return;
+            }
+            
+            // 防抖2:如果已经有 pending 的 invalidatePageData，跳过此次调用
+            // 因为 onDataReady 中的 postDelayed 会稍后执行
+            if (mPendingInvalidatePageData) {
+              //  LogUtil.d("invalidateOnDataChange: skipped because there's already a pending invalidatePageData");
+                return;
+            }
+            
             cancelAllTasks();
             invalidatePageData();
         }
@@ -2294,7 +2434,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             ApplicationInfo info = list.get(i);
             int removeIndex = findAppByComponent(mApps, info);
             if (removeIndex > -1) {
-                Log.i(TAG, "removeAppsWithoutInvalidate: huang remove info=>" + info);
+            //    LogUtil.i("removeAppsWithoutInvalidate: huang remove info=>" + info);
                 mApps.remove(removeIndex);
             }
         }
@@ -2306,7 +2446,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         for (String pn : packageNames) {
             int removeIndex = findAppByPackage(mApps, pn);
             while (removeIndex > -1) {
-                Log.i(TAG, "removeAppsWithPackageNameWithoutInvalidate: huang remove pm =>" + pn);
+            //    LogUtil.i("removeAppsWithPackageNameWithoutInvalidate: huang remove pm =>" + pn);
                 mApps.remove(removeIndex);
                 removeIndex = findAppByPackage(mApps, pn);
             }
@@ -2366,14 +2506,14 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void dumpAppWidgetProviderInfoList(String tag, String label, ArrayList<Object> list) {
-        Log.d(tag, label + " size=" + list.size());
+        LogUtil.d(label + " size=" + list.size());
         for (Object i : list) {
             if (i instanceof AppWidgetProviderInfo) {
                 AppWidgetProviderInfo info = (AppWidgetProviderInfo) i;
-                Log.d(tag, "   label=\"" + info.label + "\" previewImage=" + info.previewImage + " resizeMode=" + info.resizeMode + " configure=" + info.configure + " initialLayout=" + info.initialLayout + " minWidth=" + info.minWidth + " minHeight=" + info.minHeight);
+                LogUtil.d( "tag"+tag+"   label=\"" + info.label + "\" previewImage=" + info.previewImage + " resizeMode=" + info.resizeMode + " configure=" + info.configure + " initialLayout=" + info.initialLayout + " minWidth=" + info.minWidth + " minHeight=" + info.minHeight);
             } else if (i instanceof ResolveInfo) {
                 ResolveInfo info = (ResolveInfo) i;
-                Log.d(tag, "   label=\"" + info.loadLabel(mPackageManager) + "\" icon=" + info.icon);
+                LogUtil.d( "tag"+tag+"   label=\"" + info.loadLabel(mPackageManager) + "\" icon=" + info.icon);
             }
         }
     }

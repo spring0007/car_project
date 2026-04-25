@@ -19,6 +19,8 @@ package com.awell.launcher2;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -50,6 +52,10 @@ public class PagedViewIcon extends TextView {
 
     private Bitmap mIcon;
     private Context mContext;
+    
+    // 图标偏移量（像素）
+    private int mIconOffsetX = 0;  // 水平偏移，正值向右，负值向左
+    private int mIconOffsetY = 0;  // 垂直偏移，正值向下，负值向上
 
     public PagedViewIcon(Context context) {
         this(context, null);
@@ -62,6 +68,8 @@ public class PagedViewIcon extends TextView {
     public PagedViewIcon(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext = context;
+        mIconOffsetX = 0;
+        mIconOffsetY = 0;
     }
 
     @SuppressLint("ResourceType")
@@ -95,18 +103,90 @@ public class PagedViewIcon extends TextView {
      * @param cb 按下回调
      * @param drawablePadding 图标和文字的间距
      * @param scaledBitmap 已经缩故好的 Bitmap
+     * @param textSize 文字大小
+     * @param textOrientation 文字方向
+     * @param textGravity 文字重力方向，默认水平居中
      */
     @SuppressLint("ResourceType")
     public void applyFromApplicationInfoWithBitmap(ApplicationInfo info, boolean scaleUp,
                                                     PagedViewIcon.PressedCallback cb, int drawablePadding,
-                                                    Bitmap scaledBitmap) {
+                                                    Bitmap scaledBitmap ,int textSize ,int textColor,int textOrientation ,int textGravity) {
         mIcon = scaledBitmap != null ? scaledBitmap : info.iconBitmap;
         mPressedCallback = cb;
         setText(info.title);
-        setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
+        
+
+//            // 默认布局：图标在上，文字在下
+//            setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
+//            setCompoundDrawablePadding(drawablePadding);
+//            setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
+//            setGravity(Gravity.CENTER_HORIZONTAL);
+//        
+
+        if(textSize > 0)
+            setTextSize(textSize);
+        else
+            setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
+
+        if(textColor > 0)
+            setTextColor(textColor);
+        else
+            setTextColor(Color.WHITE);
+
         setCompoundDrawablePadding(drawablePadding);
-        setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
+        if(textOrientation==1)
+            setCompoundDrawablesWithIntrinsicBounds(null,null, null,  new FastBitmapDrawable(mIcon));
+        else if(textOrientation==2)
+            setCompoundDrawablesWithIntrinsicBounds(new FastBitmapDrawable(mIcon), null, null, null);
+        else if(textOrientation==3)
+            setCompoundDrawablesWithIntrinsicBounds(null,  null, new FastBitmapDrawable(mIcon),null);
+        else
+            setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
+
+        if(textGravity<=0)
+            setGravity(Gravity.CENTER_HORIZONTAL);
+        else
+            setGravity(textGravity);
+
+        
         setTag(info);
+    }
+
+    /**
+     * 设置图标的水平偏移量（像素）
+     * @param offsetX 偏移量，正值向右偏移，负值向左偏移，0表示不偏移（默认）
+     */
+    public void setIconOffsetX(int offsetX) {
+        this.mIconOffsetX = offsetX;
+        invalidate();  // 重绘以应用偏移
+    }
+    public void setIconOffsetY(int offsetY) {
+        this.mIconOffsetY = offsetY;
+        invalidate();
+    }
+
+    public void setIconOffsetXY(int offsetX, int offsetY) {
+        this.mIconOffsetX = offsetX;
+        this.mIconOffsetY = offsetY;
+        invalidate();
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (mIconOffsetX != 0 || mIconOffsetY != 0) {
+            // 保存画布状态
+            canvas.save();
+            // 平移画布以实现图标偏移效果
+            canvas.translate(mIconOffsetX, mIconOffsetY);
+            // 调用父类的 onDraw 来绘制图标和文字
+            super.onDraw(canvas);
+            // 恢复画布状态
+            canvas.restore();
+        } else {
+            // 没有偏移时，直接调用父类方法
+            super.onDraw(canvas);
+        }
     }
 
     public void lockDrawableState() {

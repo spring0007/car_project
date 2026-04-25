@@ -368,7 +368,6 @@ public class IconCache {
 
             // 清除缓存，这样下次获取图标时会重新加载
             flush();
-            Log.d(TAG, "setPluginThemeMode 1 -->");
             // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
             if (mContext instanceof LauncherApplication) {
                 Log.d(TAG, "setPluginThemeMode 2 -->");
@@ -390,7 +389,7 @@ public class IconCache {
         if (pkg == null || pkg.isEmpty()) {
             return null;
         }
-        Log.i(TAG,"theme="+themeMode);
+        //Log.i(TAG,"theme="+themeMode);
         switch (themeMode) {
             case 0:
                 if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
@@ -519,6 +518,7 @@ public class IconCache {
      */
     public void flush() {
         synchronized (mCache) {
+            Log.d(TAG, "flush: mCache size=" + mCache.size());
             mCache.clear();
         }
     }
@@ -528,7 +528,7 @@ public class IconCache {
      */
     public void getTitleAndIcon(ApplicationInfo application, ResolveInfo info,
                                 HashMap<Object, CharSequence> labelCache) {
-        Log.d(TAG, "getTitleAndIcon");
+       // Log.d(TAG, "getTitleAndIcon");
         synchronized (mCache) {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;

@@ -36,7 +36,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.awell.launcher.library.R;
 
@@ -62,6 +61,7 @@ public final class Utilities {
     private static final Canvas sCanvas = new Canvas();
 
     private static int sThemeMode = 0;
+    private static boolean sIconSizeSame = false;
 
     private static int[] sfOtherBG = {
             R.drawable.sf_other_app1
@@ -106,10 +106,22 @@ public final class Utilities {
         }
     }
 
-    public static void setPluginThemeMode(int themeMode,Context context) {
+    public static void setPluginThemeMode(int themeMode,  Context context) {
         if (sThemeMode != themeMode) {
             sThemeMode = themeMode;
             // 注意：不在这里触发刷新，由 IconCache.setPluginThemeMode 统一处理，避免重复加载
+        }
+        sIconSizeSame= false ;
+    }
+
+
+    public static void setPluginThemeMode(int themeMode, boolean iconSizeSame, Context context) {
+        if (sThemeMode != themeMode) {
+            sThemeMode = themeMode;
+            // 注意：不在这里触发刷新，由 IconCache.setPluginThemeMode 统一处理，避免重复加载
+        }
+        if (sIconSizeSame!= iconSizeSame) {
+            sIconSizeSame = iconSizeSame;
         }
     }
 
@@ -197,17 +209,26 @@ public final class Utilities {
             // no intrinsic size --> use default size
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
-
-            width = sIconTextureWidth / 3 * 2;
-            height = sIconTextureHeight / 3 * 2;
+            if (!sIconSizeSame) {
+                width = sIconTextureWidth / 3 * 2;
+                height = sIconTextureHeight / 3 * 2;
+            }else{
+                width = sIconWidth;
+                height = sIconHeight;
+            }
 
             final Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
                     Bitmap.Config.ARGB_8888);
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
-
-            final int left = (textureWidth - width) / 2;
-            final int top = (textureHeight - height) / 2;
+            int left = 0;
+            int top = 0;
+            if (!sIconSizeSame) {//不同图标大小,居中绘制
+                left = (textureWidth - width) / 2;
+                top = (textureHeight - height) / 2;
+            }
+//            final int left = (textureWidth - width) / 2;
+//            final int top = (textureHeight - height) / 2;
 
             @SuppressWarnings("all") // suppress dead code warning
             final boolean debug = false;
@@ -222,7 +243,8 @@ public final class Utilities {
 
 
             //增加图标背景图片 OWL - 仅在需要时加载当前主题的图片
-            if (true) {
+            if (!sIconSizeSame) { //不同图标大小,绘制背景,
+
                 int iconResId = getIconResource(sThemeMode);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
@@ -407,4 +429,11 @@ public final class Utilities {
         return -1;
     }
 
+    public static boolean issIconSizeSame() {
+        return sIconSizeSame;
+    }
+
+    public static void setsIconSizeSame(boolean sIconSizeSame) {
+        Utilities.sIconSizeSame = sIconSizeSame;
+    }
 }

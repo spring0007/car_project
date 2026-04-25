@@ -199,5 +199,6 @@
     <dimen name="app_icon_bg_size">80dp</dimen>
     <dimen name="recycle_app_width">120dp</dimen>
     <dimen name="recycle_app_icon_size">100dp</dimen>
-    <dimen name="app_icon_padding" />
+    <dimen name="app_icon_padding">10dp</dimen>
+    <dimen name="status_bar_height">48dp</dimen>
 </resources>

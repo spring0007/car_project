@@ -48,6 +48,7 @@ object AppsCustomizeControl {
     private lateinit var mAppContext: Context
     private lateinit var mModel: LauncherModel
     private lateinit var mIconCache: IconCache
+    private var mAppsCustomizeConfig: AppsCustomizeConfig? = null
 
 
     var mAllIsShowing = false
@@ -64,25 +65,52 @@ object AppsCustomizeControl {
         mIconCache = iconCache
 
     }
-
+    
     fun setPluginThemeMode(themeMode: Int) {
-        mIconCache.setPluginThemeMode(themeMode)
-        Utilities.setPluginThemeMode(themeMode, mAppContext)
-        resetAppIconAttributes()
-        LogUtil.d( "setPluginThemeMode: themeMode=$themeMode")
+        setPluginThemeMode(themeMode, true)
     }
+
+    fun setPluginThemeMode(themeMode: Int,refresh: Boolean = true ) {
+        setPluginThemeMode(themeMode, refresh , iconSizeSame = false)
+    }
+
+    fun setPluginThemeMode(themeMode: Int ,refresh: Boolean = true ,iconSizeSame: Boolean = false) {
+
+        mIconCache.setPluginThemeMode(themeMode)
+        Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
+
+
+        // 立即执行重置（旧 Plugin 只会调用这个方法，不会再调用 applyAppsCustomizeConfig）
+        if (refresh) {
+            resetAppIconAttributes()
+        }
+
+        LogUtil.d("setPluginThemeMode: themeMode=$themeMode, refresh=$refresh, attributes reset immediately")
+    }
+
     //还原app icon属性
     private fun resetAppIconAttributes() {
-        resetAppIconSize()
-        resetAppIconPadding()
+        // 使用批量重置方法，只刷新一次布局
+        if(mAppsCustomizeConfig == null)
+            return
+        mAppsCustomizeConfig = null;
+        
 
+        
+        mAppsCustomizeContent?.resetAllAppAttributes() ?: false
     }
 
-    private fun resetAppIconPadding() {
-        val result = mAppsCustomizeContent?.resetAppIconPadding() ?: false
-        if (result) {
-            LogUtil.d("resetAppIconPadding: successfully reset to default padding")
-        }
+    /**
+     * 应用配置到 AppsCustomizePagedView
+     * 此方法只负责数据传输，具体的数据处理由 AppsCustomizePagedView 完成
+     * @param config 配置对象，只设置需要修改的子配置
+     */
+    fun applyAppsCustomizeConfig(config: AppsCustomizeConfig) {
+        mAppsCustomizeConfig = config
+        // 直接传递给 AppsCustomizePagedView 进行数据处理
+        mAppsCustomizeContent?.processAppsCustomizeConfig(config)
+        
+        LogUtil.d("applyAppsCustomizeConfig: config transferred successfully")
     }
 
     /**
@@ -102,7 +130,7 @@ object AppsCustomizeControl {
             PluginIconManager.setIconMap(iconMap)
 
             //如果启用了 Plugin 图标映射表，则主题模式设置为默认值 (1)，不与其他主题冲突
-            setPluginThemeMode(0xff) // 使用plugin图标
+            setPluginThemeMode(0xff ,false,true) // 使用plugin图标,并不刷新属性
             
             //Log.i(TAG, "setPluginIconMap: 成功设置 Plugin 图标映射表")
             //Log.i(TAG, "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
@@ -115,75 +143,6 @@ object AppsCustomizeControl {
 
     fun setActivity(context: Context?) {
         mAppsCustomizeContent?.setActivity(context)
-    }
-
-    fun setAppIconPadding(paddingTop: Int) {
-        if (paddingTop > 0) {
-            mAppsCustomizeContent?.setAppIconPadding(paddingTop)
-        } else {
-            LogUtil.w( "setAppIconPadding: AppIconPadding must be greater than 0")
-        }
-    }
-
-    /**
-     * 设置应用图标大小
-     * @param iconSize 图标大小（像素）。传入 <= 0 的值将重置为默认值（兼容旧 plugin）
-     * @return 是否设置成功
-     */
-    fun setAppIconSize(iconSize: Int): Boolean {
-        val result = mAppsCustomizeContent?.setAppIconSize(iconSize) ?: false
-        if (result) {
-            if (iconSize <= 0) {
-                LogUtil.d("setAppIconSize: successfully reset to default size")
-            } else {
-                LogUtil.d("setAppIconSize: successfully set icon size to $iconSize")
-            }
-        }
-        return result
-    }
-
-    /**
-     * 重置应用图标大小为默认值（R.dimen.app_icon_size）
-     * @return 是否重置成功
-     */
-    fun resetAppIconSize(): Boolean {
-        val result = mAppsCustomizeContent?.resetAppIconSize() ?: false
-        if (result) {
-            LogUtil.d("resetAppIconSize: successfully reset to default size")
-        }
-        return result
-    }
-
-    /**
-     * 获取当前应用图标大小
-     * @return 当前图标大小（像素），如果未设置则返回 -1
-     */
-    fun getAppIconSize(): Int {
-        return mAppsCustomizeContent?.getAppIconSize() ?: -1
-    }
-
-    fun setAppGap(autoWidthGap: Boolean) {
-        mAppsCustomizeContent?.setAutoAppWidthGap(autoWidthGap)
-    }
-
-    /**
-     * 设置每排显示的应用图标数量
-     * @param countPerRow 每排显示的应用图标数量（必须大于 0）
-     */
-    fun setAppCountPerRow(countPerRow: Int) {
-        if (countPerRow > 0) {
-            mAppsCustomizeContent?.appCountPerRow = countPerRow
-        } else {
-            LogUtil.w( "setAppCountPerRow: countPerRow must be greater than 0")
-        }
-    }
-
-    /**
-     * 获取当前每排显示的应用图标数量
-     * @return 每排显示的应用图标数量
-     */
-    fun getAppCountPerRow(): Int {
-        return mAppsCustomizeContent?.appCountPerRow ?: 6
     }
 
     /**

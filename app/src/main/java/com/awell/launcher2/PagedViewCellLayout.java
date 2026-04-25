@@ -19,15 +19,13 @@ package com.awell.launcher2;
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.awell.launcher.library.R;
+import com.awell.utils.LogUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +71,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
         mOriginalCellHeight = mCellHeight =
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
-        Log.d(TAG, "PagedViewCellLayout: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
+        LogUtil.d("PagedViewCellLayout: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
         mCellCountX = LauncherModel.getCellCountX();
         mCellCountY = LauncherModel.getCellCountY();
         mOriginalWidthGap = mOriginalHeightGap = mWidthGap = mHeightGap = -1;
@@ -93,6 +91,113 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     public int getCellHeight() {
         return mCellHeight;
     }
+    
+    /**
+     * 设置自定义 Cell 宽度（像素）
+     * @param widthPx 自定义宽度
+     */
+    public void setCustomCellWidth(int widthPx) {
+        if (widthPx > 0) {
+            mCellWidth = mOriginalCellWidth= widthPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
+            mChildren.setCellDimensions(mCellWidth, mCellHeight);
+            LogUtil.d("setCustomCellWidth: " + widthPx);
+            requestLayout();
+        }
+    }
+
+    public void setDefaultCellWidth(Context context) {
+        mOriginalCellWidth = mCellWidth = context.getResources().getDimensionPixelSize(R.dimen.apps_customize_cell_width);
+            LogUtil.d("setDefaultCellWidth: " + mCellWidth);
+            requestLayout();
+    }
+    
+    /**
+     * 设置自定义 Cell 高度（像素）
+     * @param heightPx 自定义高度
+     */
+    public void setCustomCellHeight(int heightPx) {
+        if (heightPx > 0) {
+            mCellHeight = mOriginalCellHeight= heightPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
+            mChildren.setCellDimensions(mCellWidth, mCellHeight);
+            LogUtil.d("setCustomCellHeight: " + heightPx);
+            requestLayout();
+        }
+    }
+
+    public void setDefaultCellHeight(Context context) {
+        mOriginalCellHeight = mCellHeight = context.getResources().getDimensionPixelSize(R.dimen.apps_customize_cell_height);
+        LogUtil.d("setDefaultCellHeight: " + mCellHeight);
+        requestLayout();
+    }
+
+    /**
+     * 设置自定义 Cell 高度（像素）
+     * @param heightPx 自定义高度
+     */
+    public void setCustomCellDimensions(int widthPx, int heightPx) {
+
+        if (widthPx > 0 && heightPx > 0) {
+            mCellWidth = mOriginalCellWidth= widthPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
+            mCellHeight = mOriginalCellHeight= heightPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
+            mChildren.setCellDimensions(mCellWidth, mCellHeight);
+            LogUtil.d("setCustomCellDimensions: width = " + widthPx + ", height = " + heightPx);
+            requestLayout();
+        }
+    }
+
+    /**
+     * 重置 Cell 尺寸为默认值（从资源文件重新读取）
+     * 用于 plugin 切换时恢复初始状态
+     */
+    public void resetToDefaultCellDimensions() {
+        Resources resources = getContext().getResources();
+        mOriginalCellWidth = mCellWidth = resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
+        mOriginalCellHeight = mCellHeight = resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
+
+        mCellCountX = LauncherModel.getCellCountX();
+        mCellCountY = LauncherModel.getCellCountY();
+        mOriginalWidthGap = mOriginalHeightGap = mWidthGap = mHeightGap = -1;
+        mMaxGap = resources.getDimensionPixelSize(R.dimen.apps_customize_max_gap);
+
+        mChildren.setCellDimensions(mCellWidth, mCellHeight);
+        mChildren.setGap(mWidthGap, mHeightGap);
+        LogUtil.d("resetToDefaultCellDimensions: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
+        requestLayout();
+    }
+
+
+    // 缓存当前应用的背景资源 ID，避免重复设置
+    private int mCurrentBackgroundResId = 0;
+
+    /**
+     * 设置页面背景（支持资源 ID、颜色值或 Drawable）
+     * 此方法设置的是所有 PagedViewIcon 的背景，不影响原有的布局计算和功能
+     * @param backgroundResId 背景资源 ID，0 表示清除背景
+     */
+    public void setPageViewIconBackgroundResource(int backgroundResId) {
+        // 优化：如果背景资源 ID 未变化，跳过设置
+        if (backgroundResId == mCurrentBackgroundResId) {
+            LogUtil.d("setPageViewIconBackgroundResource: skipped - background unchanged (resId=" + backgroundResId + ")");
+            return;
+        }
+        
+        if (mChildren != null) {
+            int childCount = mChildren.getChildCount();
+            for (int i = 0; i < childCount; i++) {
+                View child = mChildren.getChildAt(i);
+                if (child instanceof PagedViewIcon) {
+                    if (backgroundResId != 0) {
+                        child.setBackgroundResource(backgroundResId);
+                    } else {
+                        child.setBackground(null);
+                    }
+                }
+            }
+            mCurrentBackgroundResId = backgroundResId; // 更新缓存
+            LogUtil.d("setPageViewIconBackgroundResource: resId=" + backgroundResId + ", applied to " + childCount + " icons");
+        }
+    }
+
 
     void destroyHardwareLayers() {
         // called when a page is no longer visible (triggered by loadAssociatedPages ->
@@ -142,6 +247,9 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     public void removeAllViewsOnPage() {
         mChildren.removeAllViews();
         destroyHardwareLayers();
+        // 优化：清空页面时重置背景缓存，确保下次设置时能正确应用
+        mCurrentBackgroundResId = 0;
+        LogUtil.d("removeAllViewsOnPage: reset background cache");
     }
 
     @Override
@@ -197,6 +305,31 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
             throw new RuntimeException("CellLayout cannot have UNSPECIFIED dimensions");
         }
 
+        // 优化：如果尺寸未变化且没有布局请求，跳过测量
+        if (widthSpecSize == getMeasuredWidth() && 
+            heightSpecSize == getMeasuredHeight() && 
+            !isLayoutRequested() &&
+            getChildCount() > 0) {
+            // 检查子 View 是否也需要重新测量
+            boolean needsRemesure = false;
+            final int count = getChildCount();
+            for (int i = 0; i < count; i++) {
+                View child = getChildAt(i);
+                if (child.isLayoutRequested()) {
+                    needsRemesure = true;
+                    break;
+                }
+            }
+            if (!needsRemesure) {
+                LogUtil.d("onMeasure: skipped - dimensions unchanged (" + widthSpecSize + "x" + heightSpecSize + ")");
+                return;
+            }
+        } else {
+            LogUtil.d("onMeasure: will measure - sizeChanged=" + (widthSpecSize != getMeasuredWidth() || heightSpecSize != getMeasuredHeight()) + 
+                     ", layoutRequested=" + isLayoutRequested() + 
+                     ", childCount=" + getChildCount());
+        }
+
         int numWidthGaps = mCellCountX - 1;
         int numHeightGaps = mCellCountY - 1;
 
@@ -207,17 +340,20 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 int hSpace = widthSpecSize - getPaddingLeft() - getPaddingRight();
                 int hFreeSpace = hSpace - (mCellCountX * mOriginalCellWidth);
                 mWidthGap = Math.min(mMaxGap, numWidthGaps > 0 ? (hFreeSpace / numWidthGaps) : 0);
-            } else {
+            }
+
+            if (mOriginalHeightGap < 0) {
+                numHeightGaps = mCellCountY + 1;
                 int vSpace = heightSpecSize - getPaddingTop() - getPaddingBottom();
                 int vFreeSpace = vSpace - (mCellCountY * mOriginalCellHeight);
                 mHeightGap = Math.min(mMaxGap, numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
             }
-            Log.i(TAG, "mMaxGap = >" + mMaxGap + "-->mWidthGap=" + mWidthGap);
+            LogUtil.i("mMaxGap = >" + mMaxGap + "-->mWidthGap=" + mWidthGap);
             mChildren.setGap(mWidthGap, mHeightGap);
         } else {
             mWidthGap = mOriginalWidthGap;
             mHeightGap = mOriginalHeightGap;
-            Log.i(TAG, "mOriginalWidthGap = >" + mOriginalWidthGap);
+            LogUtil.i("mOriginalWidthGap = >" + mOriginalWidthGap);
         }
         // Initial values correspond to widthSpecMode == MeasureSpec.EXACTLY
         int newWidth = widthSpecSize;
@@ -344,7 +480,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
 
         // We know that we have to fit N cells with N-1 width gaps, so we just juggle to solve for N
         int n = Math.max(1, (availWidth + mWidthGap) / (mCellWidth + mWidthGap));
-
+        LogUtil.d("estimateCellHSpan: n = " + n+", width = "+width+", mCellWidth = "+mCellWidth+", mWidthGap = "+mWidthGap);
         // We don't do anything fancy to determine if we squeeze another row in.
         return n;
     }
@@ -359,7 +495,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
 
         // We know that we have to fit N cells with N-1 height gaps, so we juggle to solve for N
         int n = Math.max(1, (availHeight + mHeightGap) / (mCellHeight + mHeightGap));
-
+        LogUtil.d("estimateCellVSpan: n = " + n+", height = "+height+", mCellHeight = "+mCellHeight+", mHeightGap = "+mHeightGap);
         // We don't do anything fancy to determine if we squeeze another row in.
         return n;
     }
@@ -375,9 +511,10 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     }
 
     public void calculateCellCount(int width, int height, int maxCellCountX, int maxCellCountY) {
-        Log.d(TAG, "calculateCellCount: width = " + width + ", height = " + height + ", maxCellCountX = " + maxCellCountX + ", maxCellCountY = " + maxCellCountY);
+        LogUtil.d("calculateCellCount: width = " + width + ", height = " + height + ", maxCellCountX = " + maxCellCountX + ", maxCellCountY = " + maxCellCountY);
         mCellCountX = Math.min(maxCellCountX, estimateCellHSpan(width));
         mCellCountY = Math.min(maxCellCountY, estimateCellVSpan(height));
+        LogUtil.i("calculateCellCount: mCellCountX = " + mCellCountX + ", mCellCountY = " + mCellCountY);
 //        mCellCountY = 3;
         requestLayout();
     }

@@ -18,7 +18,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:saveEnabled="false"
-    android:paddingTop="30dp">
+    android:paddingTop="@dimen/status_bar_height">
 
     <LinearLayout
         android:id="@+id/apps_customize_content"
@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingTop="30dp"
+                    android:layout_marginBottom="39dp"
                     launcher:clingFocusedX="@integer/apps_customize_cling_focused_x"
                     launcher:clingFocusedY="@integer/apps_customize_cling_focused_y"
                     launcher:maxAppCellCountX="@integer/apps_customize_maxCellCountX"
