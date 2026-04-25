@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/rv_show_bg"
     android:orientation="vertical"
     tools:ignore="MissingDefaultResource">
@@ -10,8 +10,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pop_allapp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp" />
+         />
 </LinearLayout>

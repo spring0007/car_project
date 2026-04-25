@@ -3,7 +3,6 @@ package com.launcher.zy_ui03
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.app.WallpaperManager
 import android.content.BroadcastReceiver
 import android.content.ContentValues
@@ -16,8 +15,7 @@ import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -28,6 +26,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
 import android.view.Gravity
@@ -36,8 +35,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-import android.widget.ImageView
 import android.widget.PopupWindow
 import androidx.annotation.RequiresPermission
 import androidx.recyclerview.widget.GridLayoutManager
@@ -47,6 +46,7 @@ import com.awell.addapp.AddSelectAppCallback
 import com.awell.addapp.AppInfo
 import com.awell.addapp.MyDbHelper
 import com.awell.addapp.ShowPopupI
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -108,23 +108,17 @@ class UIActivity : Activity(), View.OnClickListener {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Load saved theme from SharedPreferences, default to AppTheme1
-        val savedThemeResId = getInitialThemeResId()
-        
-        // Create a temporary themed context ONLY for layout inflation to resolve theme attributes
-        // Note: ContextThemeWrapper is not held beyond this scope - it's discarded after inflation
-        val themedInflater = layoutInflater.cloneInContext(
-            android.view.ContextThemeWrapper(this, savedThemeResId)
-        )
-        mViewBinding = UiActivityBinding.inflate(themedInflater)
-        // themedInflater and themedContext are now eligible for garbage collection
-        
+
+        mViewBinding = UiActivityBinding.inflate(layoutInflater)
+
         setContentView(mViewBinding.root)
         LogUtil.setIsDebuggable()
 
 
         initView()
+        // 通过配置对象直接应用
+        val savedThemeResId = getThemeResId(getSavedThemeId())
+        setStyleTheme(savedThemeResId)
 
         initMediaMusic()
 
@@ -135,10 +129,32 @@ class UIActivity : Activity(), View.OnClickListener {
         initBroadcastReceiver()
 
         AppsCustomizeControl.setActivity(this)
-
+        
         // 设置主题模式，并同步到 IconManager
-        AppsCustomizeControl.setPluginThemeMode(3)
+       // AppsCustomizeControl.setAppIconSize(getResources().getDimensionPixelSize(R.dimen.app_icon_size))
+        val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)//126
+        val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
+         val config = AppsCustomizeConfig(
+             iconSize = icSize,
+             iconOffsetX = (cellHeight-icSize-3)/2,
+             iconTextPadding = resources.getDimensionPixelSize(R.dimen.app_icon_text_padding) +(cellHeight-icSize-4)/2,
+             columnCount = 3,
+             rowCount = 4,
+             autoWidthGap = true,
+             autoHeightGap = true,
+             fontSizeSp = resources.getDimensionPixelSize(R.dimen.font_size_sp), // 20
+             textOrientation = 2,
+             textGravity = Gravity.CENTER_VERTICAL or Gravity.START,
+             fontColor = Color.WHITE,
+             cellWidthDp = resources.getDimensionPixelSize(R.dimen.cell_width_dp), //358
+             cellHeightDp = cellHeight,
+             backgroundTheme = 1
 
+        )
+
+                
+        AppsCustomizeControl.setPluginIconMap(IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui03")
+        AppsCustomizeControl.applyAppsCustomizeConfig(config)
         // 初始化 IconManager，预加载资源
         IconManager.initialize(this)
 
@@ -347,12 +363,12 @@ class UIActivity : Activity(), View.OnClickListener {
         // 计算屏幕尺寸的 80% 和 60%
         val displayMetrics = resources.displayMetrics
         val popupWidth = (displayMetrics.widthPixels * 0.8).toInt()
-        val popupHeight = (displayMetrics.heightPixels * 0.8).toInt()
+        //val popupHeight = (displayMetrics.heightPixels * 0.8).toInt()
         
         popupWindow = PopupWindow(
             view,
-            popupWidth,
-            popupHeight
+            popupWidth  ,
+           /* popupHeight */ WindowManager.LayoutParams.WRAP_CONTENT
         )
 
         popupWindow.isOutsideTouchable = true
@@ -364,6 +380,16 @@ class UIActivity : Activity(), View.OnClickListener {
         val gridLayoutManager = GridLayoutManager(this, 4)
         gridLayoutManager.spanCount = 2
         gridLayoutManager.orientation = RecyclerView.HORIZONTAL
+        
+        // 添加垂直方向间隔（50dp）- 只在行与行之间有间隔
+        val verticalSpacing = (50 * resources.displayMetrics.density).toInt()
+        rvPop.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = verticalSpacing
+                outRect.bottom = verticalSpacing
+            }
+        })
+        
         val appInfoAdapter = AppPopAdapter(this, allAppInfoList, addSelectAppCallback)
         rvPop.layoutManager = gridLayoutManager
         rvPop.adapter = appInfoAdapter
@@ -773,12 +799,11 @@ class UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeSwitchStyle.setOnClickListener {
-            if (ClickUtils.isFastClick()) {
+            /*if (ClickUtils.isFastClickFiveSecond()) {//5秒内快速点击无效, 防止重复切换主题壁纸
                 return@setOnClickListener
-            }
+            }*/
             switchToNextTheme()
 
-           // startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity")
         }
 
 
@@ -789,7 +814,7 @@ class UIActivity : Activity(), View.OnClickListener {
         }
 
         mViewBinding.homeAppAllApp.setOnClickListener {
-
+            AppsCustomizeControl.showApps(findViewById(android.R.id.content));
         }
 
         mViewBinding.homeAppBluetooth.setOnClickListener {
@@ -1248,6 +1273,11 @@ class UIActivity : Activity(), View.OnClickListener {
         mViewBinding.layoutMusicWidget.musicArtist.setTextColor(color)
         mViewBinding.layoutRadioLayout.tvRadioFreq.setTextColor(color)
         mViewBinding.layoutRadioLayout.tvRadioAmFm.setTextColor(color)
+
+      /*  val themeBgResId = StyleParser.getResourceIdFromStyle(this, styleResId, R.attr.ui_theme_bg)
+        if (themeBgResId != 0) {
+            mViewBinding.rlMainLayout.setBackgroundResource(themeBgResId)
+        }*/
         
         // 更新应用列表中文本的颜色
         if (::appInfoAdapter.isInitialized) {
@@ -1265,8 +1295,24 @@ class UIActivity : Activity(), View.OnClickListener {
     companion object {
         private const val PREFS_NAME = "theme_prefs"
         private const val KEY_THEME_ID = "theme_id"  // Store simple ID (1-4), NOT resource ID
-        private const val DEFAULT_THEME_ID = 1
-        private const val MAX_THEME_ID = 4
+        private const val DEFAULT_THEME_ID = 0
+        private const val MAX_THEME_ID = 3
+    }
+    
+    // 壁纸切换状态管理
+    private var wallpaperTaskThread: Thread? = null
+    @Volatile
+    private var isWallpaperSwitching = false  // 是否正在切换壁纸
+    private val WALLPAPER_SWITCH_TIMEOUT = 5000L  // 5秒超时
+    private val wallpaperTimeoutHandler = Handler(Looper.getMainLooper())
+    private val wallpaperTimeoutRunnable = Runnable {
+        LogUtil.w("Wallpaper switch timeout, releasing resources")
+        synchronized(this@UIActivity) {
+            if (isWallpaperSwitching) {
+                isWallpaperSwitching = false
+                LogUtil.i("Wallpaper switch timeout - resources released")
+            }
+        }
     }
 
     /**
@@ -1276,7 +1322,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun getSavedThemeId(): Int {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val themeId = prefs.getInt(KEY_THEME_ID, DEFAULT_THEME_ID)
-        return themeId.coerceIn(1, MAX_THEME_ID) // Ensure valid range
+        return themeId.coerceIn(DEFAULT_THEME_ID, MAX_THEME_ID) // Ensure valid range
     }
 
     /**
@@ -1284,10 +1330,10 @@ class UIActivity : Activity(), View.OnClickListener {
      */
     private fun getThemeResId(themeId: Int): Int {
         return when (themeId) {
-            1 -> R.style.AppTheme1
-            2 -> R.style.AppTheme2
-            3 -> R.style.AppTheme3
-            4 -> R.style.AppTheme4
+            0 -> R.style.AppTheme1
+            1 -> R.style.AppTheme2
+            2 -> R.style.AppTheme3
+            3 -> R.style.AppTheme4
             else -> R.style.AppTheme1
         }
     }
@@ -1298,8 +1344,11 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun saveAndApplyTheme(themeId: Int) {
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         prefs.edit().putInt(KEY_THEME_ID, themeId).apply()
-        //设置壁纸 - 异步执行避免ANR, 优化:使用BitmapFactory直接解码+采样压缩+JPEG质量压缩,大幅提升性能，但大概需要3s,依然太慢卡顿
-        setWallpaperByThemeIdAsync(this, themeId)
+        // 设置系统壁纸 - 使用优化后的异步方法,支持任务取消和状态管理
+        setWallpaperByThemeIdOptimized(this, themeId)
+        val uiKey = resources.getString(R.string.ui_key)
+        val themeIdStr = if (themeId < 10) "0$themeId" else "$themeId"
+        SystemProperties.set(uiKey, "wallpaper_$themeIdStr")
         LogUtil.i("Theme switched to ID: $themeId")
         setStyleTheme(getThemeResId(themeId))
         // 更新音乐播放控件的主题（根据音乐状态切换不同颜色的图片）
@@ -1312,13 +1361,44 @@ class UIActivity : Activity(), View.OnClickListener {
      * Switch to next theme (cyclic: 1->2->3->4->1)
      */
     private fun switchToNextTheme() {
+        // 检查是否可以切换壁纸
+        synchronized(this@UIActivity) {
+            if (isWallpaperSwitching) {
+                LogUtil.w("Wallpaper is switching, please wait...")
+                return
+            }
+            
+            // 设置切换状态和超时定时器
+            isWallpaperSwitching = true
+            wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
+            wallpaperTimeoutHandler.postDelayed(wallpaperTimeoutRunnable, WALLPAPER_SWITCH_TIMEOUT)
+            LogUtil.i("Start wallpaper switch, timeout in ${WALLPAPER_SWITCH_TIMEOUT}ms")
+        }
+        
+        // 取消之前的壁纸设置任务
+        cancelWallpaperTask()
+        
         val currentThemeId = getSavedThemeId()
         val nextThemeId = if (currentThemeId >= MAX_THEME_ID) {
-            1 // Cycle back to first theme
+            0 // Cycle back to first theme
         } else {
             currentThemeId + 1
         }
         saveAndApplyTheme(nextThemeId)
+    }
+    
+    /**
+     * 取消当前正在执行的壁纸设置任务
+     */
+    private fun cancelWallpaperTask() {
+        wallpaperTaskThread?.let { thread ->
+            if (thread.isAlive) {
+                LogUtil.d("Canceling previous wallpaper task")
+                // 中断线程(需要在任务中检查interrupted状态)
+                thread.interrupt()
+            }
+            wallpaperTaskThread = null
+        }
     }
 
     /**
@@ -1331,33 +1411,42 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     /**
-     * 异步设置壁纸,避免阻塞主线程导致ANR
-     * 优化:使用BitmapFactory直接解码+采样压缩+JPEG质量压缩,大幅提升性能
+     * 优化的壁纸设置方法 - 使用WallpaperManager确保全局生效
+     * 优化点:
+     * 1. 支持任务取消(通过interrupt)
+     * 2. 使用Bitmap采样减少内存占用
+     * 3. 在关键步骤检查interrupted状态,及时退出
+     * 4. 异步执行不阻塞UI
+     * 5. 使用suggestDesiredDimensions预设置尺寸,提升设置速度
      */
-    private fun setWallpaperByThemeIdAsync(context: Context, themeId: Int) {
-        val startTime = System.currentTimeMillis()
-        LogUtil.i("setWallpaperByThemeIdAsync start for theme: $themeId")
+    private fun setWallpaperByThemeIdOptimized(context: Context, themeId: Int) {
+       // val startTime = System.currentTimeMillis()
+        LogUtil.i("setWallpaperByThemeIdOptimized start for theme: $themeId")
         
-        Thread {
+        // 创建新的壁纸设置任务
+        val newTask = Thread {
             var bitmap: Bitmap? = null
             try {
                 val wallpaperManager = WallpaperManager.getInstance(context)
                     
                 // 根据主题ID选择壁纸资源
                 val wallpaperResId = when (themeId) {
-                    1 -> R.drawable.wallpaper_00
-                    2 -> R.drawable.wallpaper_01
-                    3 -> R.drawable.wallpaper_02
-                    4 -> R.drawable.wallpaper_03
+                    0 -> R.drawable.wallpaper_00
+                    1 -> R.drawable.wallpaper_01
+                    2 -> R.drawable.wallpaper_02
+                    3 -> R.drawable.wallpaper_03
                     else -> R.drawable.wallpaper_00
                 }
-                
+
                 // 获取屏幕尺寸用于计算合适的采样率
                 val displayMetrics = context.resources.displayMetrics
                 val targetWidth = displayMetrics.widthPixels
                 val targetHeight = displayMetrics.heightPixels
                 
                 LogUtil.d("Screen size: ${targetWidth}x${targetHeight}")
+                
+                // 关键优化: 预先设置期望的壁纸尺寸,加快setBitmap速度
+                wallpaperManager.suggestDesiredDimensions(targetWidth, targetHeight)
                     
                 // 第一步:仅获取图片原始尺寸
                 val options = BitmapFactory.Options().apply {
@@ -1379,7 +1468,7 @@ class UIActivity : Activity(), View.OnClickListener {
                 options.inPreferredConfig = Bitmap.Config.RGB_565 // 使用RGB_565减少50%内存
                 options.inDither = true // 启用抖动,改善RGB_565的画质
                     
-                LogUtil.d("Sample size: ${options.inSampleSize}")
+              //  LogUtil.i("Sample size: ${options.inSampleSize}")
                 
                 // 第三步:解码压缩后的图片
                 bitmap = context.resources.openRawResource(wallpaperResId).use { inputStream ->
@@ -1387,25 +1476,59 @@ class UIActivity : Activity(), View.OnClickListener {
                 }
                 
                 if (bitmap != null && !bitmap.isRecycled) {
-                    LogUtil.d("Decoded bitmap size: ${bitmap.width}x${bitmap.height}, config: ${bitmap.config}")
+                  //  LogUtil.i("Decoded bitmap size: ${bitmap.width}x${bitmap.height}, config: ${bitmap.config}")
                     
-                    // 第四步:设置壁纸(这是最耗时的操作)
+                    // 第四步:设置壁纸(由于已调用suggestDesiredDimensions,此操作会更快)
+                    // 传入null表示使用整个屏幕,确保壁纸全屏显示
                     wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
                     
-                    val elapsed = System.currentTimeMillis() - startTime
-                    LogUtil.i("✓ Wallpaper set successfully for theme: $themeId (${originalWidth}x${originalHeight} -> ${bitmap.width}x${bitmap.height}) in ${elapsed}ms")
+                  //  val elapsed = System.currentTimeMillis() - startTime
+                  //  LogUtil.i("✓ Wallpaper set successfully for theme: $themeId (${originalWidth}x${originalHeight} -> ${bitmap.width}x${bitmap.height}) in ${elapsed}ms")
+                    
+                    // 壁纸切换成功，重置状态
+                    synchronized(this@UIActivity) {
+                        isWallpaperSwitching = false
+                        wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
+                        LogUtil.i("Wallpaper switched successfully, ready for next switch")
+                    }
                 } else {
                     LogUtil.e("Failed to decode wallpaper for theme: $themeId")
+                    // 失败时也释放锁，允许重试
+                    synchronized(this@UIActivity) {
+                        isWallpaperSwitching = false
+                        wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
+                    }
+                }
+            } catch (e: InterruptedException) {
+              //  val elapsed = System.currentTimeMillis() - startTime
+              //  LogUtil.d("✗ Wallpaper task interrupted after ${elapsed}ms")
+                // 中断时释放锁
+                synchronized(this@UIActivity) {
+                    isWallpaperSwitching = false
+                    wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
                 }
             } catch (e: Exception) {
-                val elapsed = System.currentTimeMillis() - startTime
-                LogUtil.e("✗ setWallpaperByThemeIdAsync error after ${elapsed}ms: ${e.message}")
+               // val elapsed = System.currentTimeMillis() - startTime
+               // LogUtil.e("✗ setWallpaperByThemeIdOptimized error after ${elapsed}ms: ${e.message}")
                 e.printStackTrace()
+                // 异常时释放锁，允许重试
+                synchronized(this@UIActivity) {
+                    isWallpaperSwitching = false
+                    wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
+                }
             } finally {
                 // 确保bitmap被回收
                 bitmap?.recycle()
+                // 清理任务引用
+                if (wallpaperTaskThread == Thread.currentThread()) {
+                    wallpaperTaskThread = null
+                }
             }
-        }.start()
+        }
+        
+        // 保存任务引用并启动
+        wallpaperTaskThread = newTask
+        newTask.start()
     }
     
     /**

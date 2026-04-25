@@ -21,6 +21,13 @@
     <dimen name="tv_radio_freq_text_size">40sp</dimen>
     <dimen name="shortcut_tv_size">24sp</dimen>
     <dimen name="ll_item_margin">25dp</dimen>
+    <dimen name="app_icon_size">90dp</dimen>
+    <dimen name="cell_width_dp">358dp</dimen>
+    <dimen name="cell_height_dp">126dp</dimen>
+    <dimen name="font_size_sp">20sp</dimen>
+    <dimen name="app_icon_text_padding">30dp</dimen>
+    <dimen name="recycle_app_item_width">120dp</dimen>
+    <dimen name="recycle_app_item_margin">14dp</dimen>
 
 
 </resources>

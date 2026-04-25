@@ -251,6 +251,8 @@
         android:id="@+id/rv"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="@dimen/recycle_app_item_margin"
+        android:layout_marginEnd="@dimen/recycle_app_item_margin"
         app:layout_constraintHeight_percent="0.21"
         app:layout_constraintHeight_default="percent"
         app:layout_constraintBottom_toBottomOf="@+id/home_bottom_"
