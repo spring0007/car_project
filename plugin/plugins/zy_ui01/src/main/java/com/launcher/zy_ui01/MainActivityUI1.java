@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -76,10 +77,14 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
         initReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setAppGap(true);
-        AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4);
-        AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4,false);
+        AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+                .setAutoWidthGap(true)
+                .setColumnCount(5)
+                .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
+                .build();
+        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
+
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }
 
