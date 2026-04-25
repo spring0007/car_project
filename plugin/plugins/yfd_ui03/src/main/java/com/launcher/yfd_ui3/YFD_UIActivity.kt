@@ -883,7 +883,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 }
 
                 else -> {
-                    startActivity("com.google.android.youtube", "com.google.android.apps.youtube.app.WatchWhileActivity")
+                    startActivity("com.google.android.youtube", "com.google.android.youtube.app.honeycomb.Shell\$HomeActivity")
                 }
             }
 
