@@ -16,14 +16,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.WindowManager;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager2.widget.ViewPager2;
-
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -62,13 +56,24 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
         binding.ivBluetoothPhone.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setAppGap(true);
-        AppsCustomizeControl.INSTANCE.setAppCountPerRow(5);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5);
-        AppsCustomizeControl.INSTANCE.setAppIconSize((int) getResources().getDimension(R.dimen.app_icon_size));
-        AppsCustomizeControl.INSTANCE.setAppIconPadding((int) getResources().getDimension(R.dimen.app_icon_padding));
+      //  AppsCustomizeControl.INSTANCE.setAppIconSize((int) getResources().getDimension(R.dimen.app_icon_size));
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5, false);
+        AppsCustomizeConfig config = getAppsCustomizeConfig();
+        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(config);
+
         musicWidget = findViewById(R.id.music_widget_layout);
         setMusicWidget(musicWidget);
+    }
+    private AppsCustomizeConfig getAppsCustomizeConfig() {
+        int iconSize = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+        int iconPadding = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_padding);
+        return new AppsCustomizeConfig.Builder()
+                .setCustomStyle(true)
+                .setIconSize(iconSize)
+                .setIconTextPadding(iconPadding)
+                .setColumnCount(5)
+                .setAutoWidthGap(true)
+                .build();
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {
