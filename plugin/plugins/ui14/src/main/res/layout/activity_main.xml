@@ -85,6 +85,24 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
 
+    <TextView
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.15"
+        android:layout_height="wrap_content"
+        android:text="@string/navi"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintVertical_bias="0.54"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left1"
+        app:layout_constraintStart_toStartOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        />
+
     <ImageView
         android:id="@+id/bt_bg"
         android:layout_width="0dp"

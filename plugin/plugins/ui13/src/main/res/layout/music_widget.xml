@@ -153,7 +153,6 @@
                     android:layout_centerInParent="true"
                     android:clickable="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ablum_default_bg"
                     tools:ignore="ContentDescription" />
 
             </RelativeLayout>

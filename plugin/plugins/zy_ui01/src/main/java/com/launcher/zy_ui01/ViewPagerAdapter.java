@@ -73,7 +73,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             if (weatherInfo != null) {
                 tvTemper.setText(weatherInfo.temperature + " ℃");
                 String weather = (WeatherTextMapper.description(holder.itemView.getContext(), weatherInfo.condCode));
-                tvTemperScope.setText(weather + " " + weatherInfo.tempMax + "/" + weatherInfo.tempMin + "℃");
+                tvTemperScope.setText(weather + " " + weatherInfo.tempMin + "/" + weatherInfo.tempMax + "℃");
                 WeatherIconLoader.load(ivWeather, weatherInfo.condCode);
             } else {
                 tvTemper.setText("");

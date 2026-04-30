@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
@@ -38,7 +39,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 
-public class MusicWidget extends RelativeLayout implements OnClickListener {
+public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
 
     private Context mContext;
@@ -124,7 +125,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         musicNextIv = view.findViewById(R.id.music_widget_next);
         musicNextIv.setOnClickListener(this);
 
-        view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
+        view.findViewById(R.id.music_widget_layout).setOnClickListener(this);
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
         ivLoadnim = view.findViewById(R.id.img_song_art);
@@ -217,10 +218,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendTogglePlayPause();
             }
-        } else if (id == R.id.ll_name_layout_music
-                || id == R.id.img_song_art
-                || id == R.id.img_song_art_bg
-                || id == R.id.music_widget_seekbars) {
+        } else if (id == R.id.music_widget_layout) {
             if (currentMedia == MUSIC) {
                 startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
             } else if (currentMedia == BT) {
@@ -324,7 +322,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             return;
         }
 
-        Glide.with(this)
+       /* Glide.with(this)
                 .load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -332,14 +330,14 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 .circleCrop()
                 .placeholder(R.drawable.ablum_default_bg)
                 .error(R.drawable.ablum_default_bg)
-                .into(ivLoadnim);
+                .into(ivLoadnim);*/
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
+       // ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {

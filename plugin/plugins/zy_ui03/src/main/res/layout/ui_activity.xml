@@ -158,8 +158,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/harmonyos_sans_sc_regular"
-            android:format12Hour="yyyy-dd-mm"
-            android:format24Hour="yyyy-dd-mm"
+            android:format12Hour="yyyy-MM-dd"
+            android:format24Hour="yyyy-MM-dd"
             android:text="2026-04-16"
             android:textColor="@color/white"
             android:textSize="@dimen/clockData_size" />

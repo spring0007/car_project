@@ -67,7 +67,7 @@ public class MainActivityUI19 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
 
         musicWidgetBinding = binding.layoutMusicWidget;
-        musicWidget = musicWidgetBinding.musicWidgetLayout;
+        musicWidget = musicWidgetBinding.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
         setContentView(binding.getRoot());
@@ -228,7 +228,6 @@ public class MainActivityUI19 extends Activity implements View.OnClickListener {
         binding.ivBtphoneBg.setOnClickListener(this);
 		binding.ivNavBg.setOnClickListener(this);
         binding.hotsetAllapp.setOnClickListener(this);
-        binding.layoutMusicWidget.musicWidgetLayout.setOnClickListener(this);
         binding.layoutDate.setOnClickListener(this);
     }
 
@@ -252,8 +251,12 @@ public class MainActivityUI19 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        }else if ( v.getId() == binding.layoutMusicWidget.musicWidgetLayout.getId() || v.getId() == binding.ivBtmusicBg.getId() ){
-            startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
+        }else if ( v.getId() == binding.ivBtmusicBg.getId() ){
+            Intent btIntent = new Intent("com.awell.bluetooth");
+            btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+            btIntent.putExtra("bt_preference_key", 3);
+            startActivity(btIntent);
+           // startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         }else if(v.getId() == binding.ivRadioBg.getId()){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
 

@@ -159,9 +159,9 @@ public class MainActivityUI12 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.music_iv){
+        /*if (v.getId() == R.id.music_iv){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else if (v.getId() == R.id.navi_iv) {
+        } else*/ if (v.getId() == R.id.navi_iv) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))

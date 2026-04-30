@@ -39,7 +39,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         if (position == 0) {
             // 第一页的控件
             setListener(holder.itemView, R.id.time_iv);
-            setListener(holder.itemView, R.id.music_iv);
+            setListener(holder.itemView, R.id.music_widget_layout);
             setListener(holder.itemView, R.id.bt_iv);
             setListener(holder.itemView, R.id.navi_iv);
             MusicWidget musicWidget = holder.itemView.findViewById(R.id.music_widget_layout);

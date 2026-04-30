@@ -9,7 +9,7 @@
     <dimen name="viewpager_item_width">282dp</dimen>
     <dimen name="viewpager_item_height">381dp</dimen>
     <dimen name="music_name_tv_size">28sp</dimen>
-    <dimen name="music_widget_iv_size">30dp</dimen>
+    <dimen name="music_widget_iv_size">60dp</dimen>
     <dimen name="time_tv_size">80sp</dimen>
     <dimen name="am_tc_size">30sp</dimen>
     <dimen name="date_tc_size">32sp</dimen>

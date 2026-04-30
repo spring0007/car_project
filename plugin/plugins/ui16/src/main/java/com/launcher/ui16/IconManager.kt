@@ -49,12 +49,6 @@ object IconManager {
     fun getPackageIconMap(): Map<String, String> {
         return PACKAGE_ICON_MAP_BLACK
     }
-    // 主题模式对应的背景资源
-    // 注意：如果资源不存在，会返回 null 并使用原始图标
-    fun getDefaultIconBackground():  String{
-
-        return "sf_other_app3_black"
-    }
 
 
 }

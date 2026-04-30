@@ -11,7 +11,7 @@
         android:layout_height="@dimen/viewpager_item_height"
         android:background="@drawable/sf_time"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/music_iv"
+        app:layout_constraintEnd_toStartOf="@+id/music_widget_layout"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -70,40 +70,17 @@
             app:layout_constraintTop_toBottomOf="@+id/am_pm_tc" />
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!--音乐-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/music_iv"
-        android:layout_width="@dimen/viewpager_item_width"
-        android:layout_height="@dimen/viewpager_item_height"
-        android:background="@drawable/sf_music"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bt_iv"
-        app:layout_constraintStart_toEndOf="@+id/time_iv"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/music_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/music"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="@dimen/tv_margin_top" />
-
         <include
             android:id="@+id/music_widget_layout"
             layout="@layout/music_widget"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/viewpager_item_width"
+            android:layout_height="@dimen/viewpager_item_height"
+            android:background="@drawable/sf_music"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.85" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintEnd_toStartOf="@+id/bt_iv"
+            app:layout_constraintStart_toEndOf="@+id/time_iv"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bt_iv"
@@ -112,7 +89,7 @@
         android:background="@drawable/sf_bt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/navi_iv"
-        app:layout_constraintStart_toEndOf="@+id/music_iv"
+        app:layout_constraintStart_toEndOf="@+id/music_widget_layout"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView

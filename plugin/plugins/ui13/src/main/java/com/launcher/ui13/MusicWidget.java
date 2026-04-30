@@ -324,22 +324,22 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             return;
         }
 
-        Glide.with(this)
-                .load(uri)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .addListener(listener)
-                .circleCrop()
-                .placeholder(R.drawable.ablum_default_bg)
-                .error(R.drawable.ablum_default_bg)
-                .into(ivLoadnim);
+//        Glide.with(this)
+//                .load(uri)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
+//                .addListener(listener)
+//                .circleCrop()
+//                .placeholder(R.drawable.ablum_default_bg)
+//                .error(R.drawable.ablum_default_bg)
+//                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
+      //  ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {

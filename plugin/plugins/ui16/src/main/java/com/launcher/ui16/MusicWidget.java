@@ -112,12 +112,9 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     
         // 准备图片资源 (可以从资源文件或网络加载)
         List<Bitmap> bitmaps = new ArrayList<>();
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_200));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_201));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_202));
-       // bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_203));
-       // bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.image_204));
-    
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.music_bg_1));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.music_bg_2));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.music_bg_3));
         carouselView.setBitmaps(bitmaps);
     
         // 在 carouselView 布局完成后，设置 MusicWidget 的宽度
@@ -131,8 +128,6 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 }
             }
         });
-
-
 
         mPlayStateImageView = view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);
