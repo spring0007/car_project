@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivityUI21">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.04" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.42" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.775" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.787" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.96" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.025" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1125" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.13" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.40" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.41" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.69" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.70" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9758" />
+
+    <!-- 左侧图标栏 -->
+    <ImageView
+        android:id="@+id/left_icon_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/hostset_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top" />
+
+    <!-- 主页图标 -->
+    <LinearLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="4"
+        app:layout_constraintBottom_toBottomOf="@+id/left_icon_bar"
+        app:layout_constraintEnd_toEndOf="@+id/left_icon_bar"
+        app:layout_constraintStart_toStartOf="@+id/left_icon_bar"
+        app:layout_constraintTop_toTopOf="@+id/left_icon_bar">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+        <com.launcher.ui21.ImageViewTouch
+            android:id="@+id/navigation_icon"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/hostset_nav" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.launcher.ui21.ImageViewTouch
+            android:id="@+id/music_icon"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/hostset_music" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.launcher.ui21.ImageViewTouch
+            android:id="@+id/radio_icon"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/hostset_radio"
+
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.launcher.ui21.ImageViewTouch
+            android:id="@+id/video_icon"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/hostset_video" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/all_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/left_icon_bar"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        android:src="@drawable/hostset_all" />
+
+
+
+
+
+        <!-- 时间卡片 -->
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/time_card"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:background="@drawable/time_bg"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/guideline_right"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/guideline_left7"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/guideline_top"-->
+<!--            >-->
+
+
+<!--            <TextView-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="start|center_horizontal"-->
+<!--                android:text="@string/time"-->
+<!--                android:textColor="@color/text_color"-->
+<!--                android:textSize="@dimen/tv_title_size"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/time_card"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/time_card"-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/time_card"-->
+<!--                app:layout_constraintHorizontal_bias="0.82"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/time_card"-->
+<!--                app:layout_constraintVertical_bias="0.11"-->
+<!--                app:layout_constraintWidth_percent="0.65" />-->
+
+
+<!--            <LinearLayout-->
+<!--                app:layout_constraintEnd_toEndOf="@+id/time_card"-->
+<!--                app:layout_constraintStart_toStartOf="@+id/time_card"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/time_card"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/time_card"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="0dp"-->
+<!--                app:layout_constraintVertical_bias="0.65"-->
+<!--                app:layout_constraintHeight_percent="0.45"-->
+<!--                android:weightSum="1"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <TextClock-->
+<!--                    android:id="@+id/time_value"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:fontFamily="@font/harmonyos_sans_sc_regular"-->
+<!--                    android:format12Hour="hh:mm"-->
+<!--                    android:format24Hour="HH:mm"-->
+<!--                    android:textColor="@color/text_color"-->
+<!--                    android:textSize="@dimen/time_value_size" />-->
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="0.5" />-->
+
+<!--                <TextClock-->
+<!--                    android:id="@+id/date_value"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:fontFamily="@font/harmonyos_sans_sc_regular"-->
+<!--                    android:format12Hour="yyyy-MM-dd"-->
+<!--                    android:format24Hour="yyyy-MM-dd"-->
+<!--                    android:textColor="@color/text_color"-->
+<!--                    android:textSize="@dimen/date_text_size" />-->
+
+<!--                <View-->
+<!--                    android:layout_width="1dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_weight="0.5" />-->
+
+<!--                <TextClock-->
+<!--                    android:id="@+id/weekday_value"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_horizontal"-->
+<!--                    android:fontFamily="@font/harmonyos_sans_sc_regular"-->
+<!--                    android:format12Hour="EEEE"-->
+<!--                    android:format24Hour="EEEE"-->
+<!--                    android:textColor="@color/text_color"-->
+<!--                    android:textSize="@dimen/date_text_size" />-->
+<!--            </LinearLayout>-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+0
+        <!-- 收音机 -->
+
+    <include
+        layout="@layout/radio_layout"
+        android:id="@+id/radio_widget_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        />
+
+       <!--apps info-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/sf_app_bg"
+            android:rowCount="2"
+            android:columnCount="2"
+            app:layout_constraintTop_toBottomOf="@+id/guideline_top2"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+            app:layout_constraintStart_toEndOf="@+id/guideline_left4"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_left5" >
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/horizontal_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/vertical_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_center"
+                app:layout_constraintBottom_toTopOf="@+id/horizontal_center"
+                android:text="@string/navigation"
+                android:drawableTop="@drawable/sf_nav"
+                style="@style/sf_tv_style"
+                android:src="@drawable/sf_nav" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.4"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/vertical_center"
+                app:layout_constraintBottom_toTopOf="@+id/horizontal_center"
+                style="@style/sf_tv_style"
+                android:text="@string/music"
+                android:drawableTop="@drawable/sf_music" />
+
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontal_center"
+                app:layout_constraintEnd_toStartOf="@+id/vertical_center"
+                style="@style/sf_tv_style"
+                android:text="@string/radio"
+                android:drawableTop="@drawable/sf_video" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintWidth_percent="0.4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizontal_center"
+                app:layout_constraintStart_toEndOf="@+id/vertical_center"
+                style="@style/sf_tv_style"
+                android:text="@string/phone"
+                android:drawableTop="@drawable/sf_btphone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- 音乐卡片 -->
+        <include
+            layout="@layout/music_widget"
+            android:id="@+id/music_widget_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_left5"
+            app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+            app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+             />
+
+<!--时间卡片-->
+    <ImageView
+        android:id="@+id/time_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/time_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left6"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top" />
+
+    <com.launcher.ui21.AnalogClockView
+        android:id="@+id/analogClockView"
+        android:layout_width="@dimen/analog_clock_size"
+        android:layout_height="@dimen/analog_clock_size"
+        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toTopOf="@+id/time_date"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left6"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"
+        />
+
+
+
+    <TextClock
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.22"
+        app:layout_constraintVertical_bias="0.73"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_hour"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/time_hour_text_size"
+        android:format12Hour="hh:mm"
+        android:format24Hour="hh:mm"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/time_date"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left6"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"  />
+    <TextClock
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.22"
+        app:layout_constraintVertical_bias="0.87"
+        android:layout_height="wrap_content"
+        android:id="@+id/time_date"
+        android:format12Hour="yyyy.MM.dd EEEE"
+        android:format24Hour="yyyy.MM.dd EEEE"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/time_date_text_size"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_bottom"
+        app:layout_constraintTop_toTopOf="@id/guideline_top"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left6"
+
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

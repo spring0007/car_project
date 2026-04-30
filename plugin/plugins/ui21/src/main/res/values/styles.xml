@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="sf_tv_style">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/harmonyos_sans_sc_regular</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+</resources>

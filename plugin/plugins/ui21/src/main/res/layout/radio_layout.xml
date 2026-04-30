@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/radio_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_radio_am_fm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="FM"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.09" />
+
+    <TextView
+        android:id="@+id/tv_radio_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="95.8"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/harmonyos_sans_sc_regular"
+        android:textSize="90sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_radio_am_fm"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29" />
+
+    <TextView
+        android:id="@+id/tv_radio_freq_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="MHz"
+        android:textColor="#ffffff"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_radio_freq"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/ll_radio_control"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.82"
+        app:layout_constraintWidth_percent="0.7">
+
+        <ImageView
+            android:id="@+id/iv_radio_pre"
+            android:layout_width="@dimen/music_pre_size"
+            android:layout_height="@dimen/music_pre_size"
+            android:src="@drawable/sf_music_pre" />
+
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="0.5" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_radio_play_pause"-->
+<!--            android:layout_width="@dimen/music_pre_size"-->
+<!--            android:layout_height="@dimen/music_pre_size"-->
+<!--            android:padding="10dp"-->
+<!--            android:background="@drawable/sf_radio_play"-->
+<!--            tools:ignore="ContentDescription" />-->
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/iv_radio_next"
+            android:layout_width="@dimen/music_pre_size"
+            android:layout_height="@dimen/music_pre_size"
+            android:src="@drawable/sf_music_next"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
