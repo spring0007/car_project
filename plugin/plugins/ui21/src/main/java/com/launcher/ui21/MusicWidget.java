@@ -42,7 +42,7 @@ import com.launcher.ui21.R;
 
 
 
-public class MusicWidget extends RelativeLayout implements OnClickListener {
+public class MusicWidget extends ConstraintLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
 
     private Context mContext;

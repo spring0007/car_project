@@ -7,11 +7,6 @@
     android:background="@drawable/music_bg"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
         <com.awell.launcher2.EarqueeTextView
             android:id="@+id/music_widget_music_name"
             android:layout_width="0dp"
@@ -117,5 +112,4 @@
                 android:src="@drawable/sf_music_next" />
 
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.launcher.ui21.MusicWidget>
