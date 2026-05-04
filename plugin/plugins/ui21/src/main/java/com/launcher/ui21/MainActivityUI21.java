@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.AnalogClock;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -50,6 +51,7 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
     private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
+    private AnalogClockView analogClockView;
     private final int MSG_UPDATE_SPEED = 1;
     private final int MSG_CLEAR_SPEED = 2;
     private static final String BTSTATUS = "awell_bt_status";
@@ -71,6 +73,7 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
         setContentView(binding.getRoot());
+        analogClockView = binding.analogClockView;
 
         initReceiver();
         initLongTouch();
@@ -82,6 +85,18 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(analogClockView != null)
+            analogClockView.startAnimation();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(analogClockView != null)
+            analogClockView.stopAnimation();
+    }
 
     private void initLongTouch() {
         handler = new Handler(Looper.getMainLooper()) {
@@ -114,6 +129,9 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
         filter.addAction("CANBUS_CHANGE_SPEED_Unit");
         filter.addAction("top_session_package_change");
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
     }
@@ -138,6 +156,12 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
 //                    break;
                 case CommonData.ACTION_ACC_OFF:
  //                   accRecor = true;
+                    break;
+                case Intent.ACTION_TIME_CHANGED:
+                case Intent.ACTION_TIMEZONE_CHANGED:
+                    /*,Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK*/
+                    if(analogClockView != null)
+                        analogClockView.resetToCurrentTime();
                     break;
                 case CommonData.BROADCAST_MEDIA_EXIT:
                     String packge = intent.getStringExtra("package");
@@ -227,18 +251,26 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
         binding.radioIcon.setOnClickListener(this);
         binding.videoIcon.setOnClickListener(this);
 		binding.musicIcon.setOnClickListener(this);
+        binding.radioWidgetLayout.radioWidgetLayout.setOnClickListener(this);
+        binding.radioWidgetLayout.tvRadioAmFm.setOnClickListener(this);
+        binding.radioWidgetLayout.ivRadioNext.setOnClickListener(this);
+        binding.radioWidgetLayout.ivRadioPre.setOnClickListener(this);
+        binding.navText.setOnClickListener(this);
+        binding.musicText.setOnClickListener(this);
+        binding.videoText.setOnClickListener(this);
+		binding.phoneText.setOnClickListener(this);
       //  binding.musicCard.setOnClickListener(this);
        // binding.layoutMusicWidget.musicWidgetLayout.setOnClickListener(this);
-       // binding.timeCard.setOnClickListener(this);
+        binding.timeCard.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == binding.allIcon.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }/*else if (v.getId() == binding.btIcon.getId() ) {
+        }else if (v.getId() == binding.phoneText.getId() ) {
             startActivity( "com.awell.bluetooth","com.awell.bluetooth.MainActivity");
-        }*/else if (v.getId() == binding.navigationIcon.getId()/* || v.getId() == binding.navigationCard.getId()*/ ){
+        }else if (v.getId() == binding.navigationIcon.getId() || v.getId() == binding.navText.getId() ){
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -252,30 +284,30 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        }else if ( v.getId() == binding.musicIcon.getId() ){
+        }else if ( v.getId() == binding.musicIcon.getId()  || v.getId() == binding.musicText.getId()){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        }else if ( v.getId() == binding.radioIcon.getId() ){
+        }else if ( v.getId() == binding.radioIcon.getId() || v.getId() == binding.radioWidgetLayout.radioWidgetLayout.getId() ){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-        }else if ( v.getId() == binding.videoIcon.getId() ){
+        }else if ( v.getId() == binding.videoIcon.getId() || v.getId() == binding.videoText.getId() ){
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
 
-        }/*else if (v.getId() == binding.timeCard.getId()){
+        }else if (v.getId() == binding.timeCard.getId()){
             Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        }*//*else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
+        }else if (v.getId() == binding.radioWidgetLayout.ivRadioNext.getId()){
             if (ClickUtils.isFastClick()) {
                 return;
             }
             mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
-        }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
+        }else if(v.getId() == binding.radioWidgetLayout.ivRadioPre.getId()){
             if (ClickUtils.isFastClick()) {
                 return;
             }
             mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
-        }else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()){
+        }else if (v.getId() == binding.radioWidgetLayout.tvRadioAmFm.getId()){
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
-        }*/
+        }
     }
 
     /**
@@ -369,11 +401,11 @@ public class MainActivityUI21 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
-          /* runOnUiThread(() -> {
-               binding.layoutRadioWidget.tvRadioAmFm.setText(fmOrAm);
-               binding.layoutRadioWidget.tvRadioFreq.setText(freq);
-               binding.layoutRadioWidget.tvRadioFreqUnit.setText(unit);
-             });*/
+           runOnUiThread(() -> {
+               binding.radioWidgetLayout.tvRadioAmFm.setText(fmOrAm);
+               binding.radioWidgetLayout.tvRadioFreq.setText(freq);
+               binding.radioWidgetLayout.tvRadioFreqUnit.setText(unit);
+             });
         }
 
         @Override

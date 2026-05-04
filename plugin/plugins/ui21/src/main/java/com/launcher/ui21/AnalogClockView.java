@@ -12,8 +12,6 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.launcher.ui21.R;
-
 import java.util.Calendar;
 
 public class AnalogClockView extends View {
@@ -23,7 +21,7 @@ public class AnalogClockView extends View {
     private Bitmap hourHand;
     private Bitmap minuteHand;
     private Bitmap secondHand;
-    private Bitmap centerDot;
+   // private Bitmap centerDot;
 
     // 绘图工具
     private Paint paint;
@@ -108,7 +106,7 @@ public class AnalogClockView extends View {
         }
         if (minuteHand != null) {
             minuteHandCenterX = -minuteHand.getWidth() / 2.0f;
-            minuteHandCenterY = -minuteHand.getHeight();
+            minuteHandCenterY = -minuteHand.getHeight()+10;
         }
         if (secondHand != null) {
             secondHandCenterX = -secondHand.getWidth() / 2.0f;
@@ -183,7 +181,7 @@ public class AnalogClockView extends View {
         
         // 检查位图是否加载成功
         if (clockBackground == null || hourHand == null || 
-            minuteHand == null || secondHand == null || centerDot == null) {
+            minuteHand == null || secondHand == null /*|| centerDot == null*/) {
             return;
         }
 
@@ -208,7 +206,7 @@ public class AnalogClockView extends View {
             drawBitmapCenteredPoint(canvas, secondHand, 0, 0, secondHandCenterX, secondHandCenterY, secondRotation);
 
             // 绘制中心原点
-            drawBitmapCentered(canvas, centerDot, 0, 0, 0);
+          //  drawBitmapCentered(canvas, centerDot, 0, 0, 0);
             
         } catch (Exception e) {
             // 捕获绘制过程中的异常，避免应用崩溃
@@ -307,7 +305,7 @@ public class AnalogClockView extends View {
         recycleBitmap(hourHand);
         recycleBitmap(minuteHand);
         recycleBitmap(secondHand);
-        recycleBitmap(centerDot);
+       // recycleBitmap(centerDot);
     }
 
     private void recycleBitmap(Bitmap bitmap) {

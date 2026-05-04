@@ -1,0 +1,15 @@
+<resources>
+    
+    
+    
+    <string name="navigation">Navegação</string>
+    <string name="music">Música</string>
+    <string name="click_play_music">Título da Música</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">desconhecido</string>
+    <string name="video">Vídeo</string>
+    <string name="phone">Telefone Bluetooth</string>
+    <string name="bt_music">Bluetooth Music</string>
+
+    
+</resources>

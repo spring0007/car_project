@@ -1,0 +1,15 @@
+<resources>
+    
+    
+    
+    <string name="navigation">الملاحة</string>
+    <string name="music">الموسيقى</string>
+    <string name="click_play_music">عنوان الأغنية</string>
+    <string name="music_artist">فنان</string>
+    <string name="unknown">غير معروف</string>
+    <string name="video">الفيديو</string>
+    <string name="phone">هاتف البلوتوث</string>
+    <string name="bt_music">موسيقى البلوتوث</string>
+
+    
+</resources>

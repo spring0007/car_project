@@ -2,13 +2,16 @@
 <resources>
     <dimen name="time_title_size">22sp</dimen>
     <dimen name="time_value_size">72sp</dimen>
-    <dimen name="date_text_size">28sp</dimen>
-    <dimen name="icon_width">90dp</dimen>
-    <dimen name="icon_height">86dp</dimen>
-    <dimen name="music_widget_logo_size">139dp</dimen>
-    <dimen name="tv_music_name_size">16sp</dimen>
-    <dimen name="music_pre_size">32dp</dimen>
-    <dimen name="music_play_width">70dp</dimen>
-    <dimen name="music_play_height">66dp</dimen>
-    <dimen name="tv_title_size">25sp</dimen>
+    <dimen name="date_text_size">24sp</dimen>
+    <dimen name="music_pre_size">48dp</dimen>
+    <dimen name="music_play_size">72dp</dimen>
+    <dimen name="time_date_text_size">24sp</dimen>
+    <dimen name="time_hour_text_size">80sp</dimen>
+    <dimen name="analog_clock_size">214dp</dimen>
+    <dimen name="tv_music_name_size">24sp</dimen>
+    <dimen name="tv_music_artist_size">18sp</dimen>
+    <dimen name="host_icon_size">56dp</dimen>
+    <dimen name="tv_radio_amfm_font_size">24sp</dimen>
+    <dimen name="tv_radio_freq_font_size">72sp</dimen>
+    <dimen name="tv_radio_freq_unit_font_size">21sp</dimen>
 </resources>

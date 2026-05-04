@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="FM"
         android:textColor="#ffffff"
-        android:textSize="30sp"
+        android:textSize="@dimen/tv_radio_amfm_font_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.10"
@@ -31,13 +31,13 @@
         android:text="95.8"
         android:textColor="#ffffff"
         android:fontFamily="@font/harmonyos_sans_sc_regular"
-        android:textSize="90sp"
+        android:textSize="@dimen/tv_radio_freq_font_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_radio_am_fm"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.29" />
+        app:layout_constraintVertical_bias="0.45" />
 
     <TextView
         android:id="@+id/tv_radio_freq_unit"
@@ -46,12 +46,13 @@
         android:gravity="center"
         android:text="MHz"
         android:textColor="#ffffff"
-        android:textSize="26sp"
+        android:textSize="@dimen/tv_radio_freq_unit_font_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_radio_freq"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.67"
         />
 
 

@@ -26,20 +26,28 @@
             android:textSize="@dimen/tv_music_name_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
-            app:layout_constraintWidth_percent="0.9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.13"
+            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintWidth_percent="0.61"
             tools:ignore="MissingConstraints" />
 
         <com.awell.launcher2.EarqueeTextView
             android:id="@+id/music_artist"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:ellipsize="marquee"
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.31"
+            app:layout_constraintHorizontal_bias="0.18"
+            app:layout_constraintWidth_percent="0.61"
             app:layout_constraintTop_toBottomOf="@+id/music_widget_music_name"
             android:singleLine="true"
             android:text="@string/music_artist"
@@ -70,9 +78,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:weightSum="2"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.85"
+            app:layout_constraintHorizontal_bias="0.287"
+            app:layout_constraintWidth_percent="0.42"
             app:layout_constraintTop_toBottomOf="@+id/music_artist">
 
 
@@ -89,8 +101,8 @@
 
             <ImageView
                 android:id="@+id/music_widget_play"
-                android:layout_width="@dimen/music_play_width"
-                android:layout_height="@dimen/music_play_height"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
                 android:src="@drawable/sf_music_bofang" />
 
             <View
