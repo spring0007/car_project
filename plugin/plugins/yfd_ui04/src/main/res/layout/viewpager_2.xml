@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20dp">
+
+    <ImageView
+        android:id="@+id/iv_navi"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_gaode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toStartOf="@+id/layout_music_widget"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.21" />
+
+    <TextView
+        style="@style/tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/navi"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
+        app:layout_constraintEnd_toEndOf="@+id/iv_navi"
+        app:layout_constraintStart_toStartOf="@+id/iv_navi"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintWidth_percent="@dimen/tv_width" />
+
+
+        <include
+            layout="@layout/music_widget"
+            android:id="@+id/layout_music_widget"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1.4"
+            app:layout_constraintEnd_toStartOf="@+id/iv_radio"
+            app:layout_constraintStart_toEndOf="@+id/iv_navi"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.21"
+
+            />
+
+
+    <ImageView
+        android:id="@+id/iv_radio"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_radio_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toStartOf="@+id/iv_bluetooth"
+        app:layout_constraintStart_toEndOf="@+id/layout_music_widget"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintWidth_percent="0.21" />
+
+    <TextView
+        style="@style/tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_radio"
+        app:layout_constraintEnd_toEndOf="@+id/iv_radio"
+        app:layout_constraintStart_toStartOf="@+id/iv_radio"
+        app:layout_constraintTop_toTopOf="@+id/iv_radio"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintWidth_percent="@dimen/tv_width" />
+
+    <ImageView
+        android:id="@+id/iv_bluetooth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_bluetooth"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi"
+        app:layout_constraintDimensionRatio="1:1.4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_radio"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi"
+        app:layout_constraintWidth_percent="0.21" />
+
+    <TextView
+        style="@style/tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/blueth"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_bluetooth"
+        app:layout_constraintEnd_toEndOf="@+id/iv_bluetooth"
+        app:layout_constraintStart_toStartOf="@+id/iv_bluetooth"
+        app:layout_constraintTop_toTopOf="@+id/iv_bluetooth"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintWidth_percent="@dimen/tv_width" />
+</androidx.constraintlayout.widget.ConstraintLayout>

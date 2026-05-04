@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityUI4">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_left_bg"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_left_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.1"
+        android:scaleType="fitXY"
+        android:src="@drawable/id8_main_left_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linear_indicator"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintWidth_percent="0.09"
+        android:weightSum="5.5"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_left_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_left_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_left_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_left_bg">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_app"
+            android:layout_width="@dimen/main_left_icon_app_size"
+            android:layout_height="@dimen/main_left_icon_app_size"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/id8_main_left_icon_app" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:id="@+id/tv_app"
+            style="@style/tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/App" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_music"
+            android:layout_width="@dimen/main_left_icon_app_size"
+            android:layout_height="@dimen/main_left_icon_app_size"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/id8_main_left_icon_music" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:id="@+id/tv_music"
+            style="@style/tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/music" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="@dimen/main_left_icon_app_size"
+            android:layout_height="@dimen/main_left_icon_app_size"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/id8_main_left_icon_bt"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            style="@style/tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_nav"
+            android:layout_width="@dimen/main_left_icon_app_size"
+            android:layout_height="@dimen/main_left_icon_app_size"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/id8_main_left_icon_navi" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+        <TextView
+            android:id="@+id/tv_nav"
+            style="@style/tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="@dimen/main_left_icon_app_size"
+            android:layout_height="@dimen/main_left_icon_app_size"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/id8_main_left_icon_set" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+        <TextView
+            android:id="@+id/tv_setting"
+            style="@style/tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
