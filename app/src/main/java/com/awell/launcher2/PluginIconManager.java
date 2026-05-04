@@ -3,6 +3,8 @@ package com.awell.launcher2;
 import android.content.Context;
 import android.util.Log;
 
+import com.awell.utils.LogUtil;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +45,9 @@ public class PluginIconManager {
     public static void setPluginPackageName(String packageName) {
         if (packageName != null && !packageName.isEmpty()) {
             pluginPackageName = packageName;
-         //   Log.i(TAG, "setPluginPackageName: " + packageName);
-        }
+            LogUtil.i( "setPluginPackageName: " + packageName);
+        }else
+            pluginPackageName = null;
     }
 
     /**
@@ -62,8 +65,9 @@ public class PluginIconManager {
     public static void setDefaultPluginBgName(String resName) {
         if (resName != null && !resName.isEmpty()) {
             defaultPluginBgName = resName;
-          //  Log.i(TAG, "setDefaultPluginBgName: " + resName);
-        }
+            LogUtil.i( "setDefaultPluginBgName: " + resName);
+        }else
+            defaultPluginBgName = null;
     }
 
     /**
@@ -84,9 +88,10 @@ public class PluginIconManager {
         if (sourceMap != null) {
             PACKAGE_ICON_MAP_PLUGIN_NAMES.clear();
             PACKAGE_ICON_MAP_PLUGIN_NAMES.putAll(sourceMap);
-          //  Log.i(TAG, "setIconMap: 已设置 PLUGIN 图标映射表，共 " + PACKAGE_ICON_MAP_PLUGIN_NAMES.size() + " 个图标");
+            LogUtil.i( "setIconMap: 已设置 PLUGIN 图标映射表，共 " + PACKAGE_ICON_MAP_PLUGIN_NAMES.size() + " 个图标");
         } else {
-            Log.w(TAG, "setIconMap: sourceMap 为 null");
+            PACKAGE_ICON_MAP_PLUGIN_NAMES.clear();
+            LogUtil.w( "setIconMap: sourceMap 为 null");
         }
     }
 
@@ -109,7 +114,7 @@ public class PluginIconManager {
             // 1. 获取资源名称
             String resourceName = getPluginIconName(packageName);
             if (resourceName == null || resourceName.isEmpty()) {
-               // Log.w(TAG, "getPluginIconResId: 资源名称为空, packageName=" + packageName);
+                LogUtil.w( "getPluginIconResId: 资源名称为空, packageName=" + packageName);
                 return 0;
             }
             
@@ -117,7 +122,7 @@ public class PluginIconManager {
             return getResourceIdFromPlugin(resourceName);
             
         } catch (Exception e) {
-            Log.e(TAG, "getPluginIconResId: 获取失败, packageName=" + packageName, e);
+            LogUtil.e( "getPluginIconResId: 获取失败, packageName=" + packageName, e);
             return 0;
         }
     }
@@ -139,7 +144,7 @@ public class PluginIconManager {
             // 2. 通过 RePlugin 获取插件 Context
             Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
             if (pluginContext == null) {
-            //    Log.w(TAG, "getResourceIdFromPlugin: 无法获取插件 Context, pluginPkg=" + pluginPkg);
+                LogUtil.w( "getResourceIdFromPlugin: 无法获取插件 Context, pluginPkg=" + pluginPkg);
                 return 0;
             }
 
@@ -150,16 +155,16 @@ public class PluginIconManager {
                     pluginPkg
             );
 
-           /* if (resId == 0) {
-                Log.w(TAG, "getResourceIdFromPlugin: 资源不存在, resourceName=" + resourceName + ", pluginPkg=" + pluginPkg);
+            if (resId == 0) {
+                LogUtil.w( "getResourceIdFromPlugin: 资源不存在, resourceName=" + resourceName + ", pluginPkg=" + pluginPkg);
             } else {
-                Log.i(TAG, "getResourceIdFromPlugin: 成功获取, resourceName=" + resourceName + ", resId=" + resId);
-            }*/
-           // Log.i(TAG, "getResourceIdFromPlugin: resId=" + resId);
+                LogUtil.i( "getResourceIdFromPlugin: 成功获取, resourceName=" + resourceName + ", resId=" + resId);
+            }
+            LogUtil.i( "getResourceIdFromPlugin: resId=" + resId);
             return resId;
 
         } catch (Exception e) {
-            Log.e(TAG, "getResourceIdFromPlugin: 获取失败, resourceName=" + resourceName, e);
+            LogUtil.e( "getResourceIdFromPlugin: 获取失败, resourceName=" + resourceName, e);
             return 0;
         }
     }
@@ -173,7 +178,7 @@ public class PluginIconManager {
             // 1. 获取背景资源名称
             String bgResName = getDefaultPluginBgName();
             if (bgResName == null || bgResName.isEmpty()) {
-              //  Log.w(TAG, "getPluginDefaultBackgroundResId: 背景资源名称为空");
+                LogUtil.w( "getPluginDefaultBackgroundResId: 背景资源名称为空");
                 return 0;
             }
 
@@ -181,7 +186,7 @@ public class PluginIconManager {
             return getResourceIdFromPlugin(bgResName);
             
         } catch (Exception e) {
-            Log.e(TAG, "getPluginDefaultBackgroundResId: 获取失败", e);
+            LogUtil.e( "getPluginDefaultBackgroundResId: 获取失败", e);
             return 0;
         }
     }

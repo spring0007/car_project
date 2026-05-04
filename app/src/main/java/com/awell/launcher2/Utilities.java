@@ -38,6 +38,7 @@ import android.graphics.drawable.PaintDrawable;
 import android.util.DisplayMetrics;
 
 import com.awell.launcher.library.R;
+import com.awell.utils.LogUtil;
 
 
 /**
@@ -107,26 +108,22 @@ public final class Utilities {
     }
 
     public static void setPluginThemeMode(int themeMode,  Context context) {
-        if (sThemeMode != themeMode) {
-            sThemeMode = themeMode;
-            // 注意：不在这里触发刷新，由 IconCache.setPluginThemeMode 统一处理，避免重复加载
-        }
-        sIconSizeSame= false ;
+        setPluginThemeMode(themeMode, false, context);
     }
 
 
     public static void setPluginThemeMode(int themeMode, boolean iconSizeSame, Context context) {
         if (sThemeMode != themeMode) {
             sThemeMode = themeMode;
-            // 注意：不在这里触发刷新，由 IconCache.setPluginThemeMode 统一处理，避免重复加载
+            LogUtil.d("setPluginThemeMode, themeMode=" + themeMode);
         }
         if (sIconSizeSame!= iconSizeSame) {
             sIconSizeSame = iconSizeSame;
         }
     }
 
-    private static int getIconResource(int sThemeMode) {
-        switch (sThemeMode) {
+    private static int getIconResource(int themeMode) {
+        switch (themeMode) {
             case 0:
                 return R.drawable.sf_other_app3_dark;
             case 1:
@@ -139,6 +136,8 @@ public final class Utilities {
                 return R.drawable.ic_other_app3;
             case 5:
                 return R.drawable.zy2_other_app3;
+            case 100:
+                return R.drawable.sf_other_yfd_2;
             case 0xff://插件包
                 // 从 Plugin 获取默认背景资源 ID
                 return PluginIconManager.getPluginDefaultBackgroundResId();
@@ -163,7 +162,7 @@ public final class Utilities {
             for (int i = 0; i < IconCache.mHomePackageName_lehang.length; i++) {
                 synchronized (packageName) {
                     if (packageName.equals(IconCache.mHomePackageName_lehang[i])) {
-                        BitmapDrawable bd = (BitmapDrawable) icon;
+                        //BitmapDrawable bd = (BitmapDrawable) icon;
                         FLAG = false;
 //    						return bd.getBitmap();
                         return drawableToBitmap(icon, sIconTextureWidth, sIconTextureHeight);
@@ -209,6 +208,7 @@ public final class Utilities {
             // no intrinsic size --> use default size
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
+            LogUtil.i("sIconSizeSame=" + sIconSizeSame);
             if (!sIconSizeSame) {
                 width = sIconTextureWidth / 3 * 2;
                 height = sIconTextureHeight / 3 * 2;
@@ -246,6 +246,7 @@ public final class Utilities {
             if (!sIconSizeSame) { //不同图标大小,绘制背景,
 
                 int iconResId = getIconResource(sThemeMode);
+                LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
                     

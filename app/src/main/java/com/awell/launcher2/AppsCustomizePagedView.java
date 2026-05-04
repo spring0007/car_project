@@ -355,15 +355,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         // 重置 mWidgetSpacingLayout 到默认值，防止之前 plugin 的设置影响当前 plugin
         if (mWidgetSpacingLayout != null) {
             mWidgetSpacingLayout.resetToDefaultCellDimensions();
-          //  LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
+            LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
         }
         
         // 重置页面间距为从 XML 读取的原始默认值
         // 不同屏幕尺寸有不同的默认值（如 sw600dp-land-mdpi 是 45dp）
         mCustomPageLayoutWidthGap = mPageLayoutWidthGap ;
         mCustomPageLayoutHeightGap = mPageLayoutHeightGap ;
-        //LogUtil.d("resetAllAppAttributes: reset gaps to original defaults - width=" + mCustomPageLayoutWidthGap
-        //        + ", height=" + mCustomPageLayoutHeightGap +",isDataReady="+isDataReady());
+        LogUtil.d("resetAllAppAttributes: reset gaps to original defaults - width=" + mCustomPageLayoutWidthGap
+                + ", height=" + mCustomPageLayoutHeightGap +",isDataReady="+isDataReady());
         
         // 统一刷新布局（只调用一次）
         if (isDataReady()) {
@@ -380,13 +380,13 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                 // 如果父容器高度合理且当前高度明显偏小，使用父容器高度
                 if (parentHeight > 0 && availableHeight < parentHeight) {
                     availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
-                   // LogUtil.d("resetAllAppAttributes: using parent height instead of current - parent=" + parentHeight
-                   //         + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
+                    LogUtil.d("resetAllAppAttributes: using parent height instead of current - parent=" + parentHeight
+                            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
                 }
             }
             
             onDataReady(availableWidth, availableHeight);
-          //  LogUtil.d("resetAllAppAttributes: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
+            LogUtil.d("resetAllAppAttributes: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
         }
     }
 
@@ -409,7 +409,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         }
         if (mWidgetSpacingLayout != null) {
             mWidgetSpacingLayout.resetToDefaultCellDimensions();
-        //    LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
+            LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
         }
         if (isDataReady()) {
             // 关键修复：使用父容器的可用高度，避免累积缩小
@@ -422,15 +422,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
                 int parentHeight = parentView.getMeasuredHeight();
                 if (parentHeight > 0 && availableHeight < parentHeight ) {
                     availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
-                //    LogUtil.d("processAppsCustomizeConfig: using parent height - parent=" + parentHeight
-                //            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
+                    LogUtil.d("processAppsCustomizeConfig: using parent height - parent=" + parentHeight
+                            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
                 }
             }
             
             onDataReady(availableWidth, availableHeight);
-         //   LogUtil.d("processAppsCustomizeConfig: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
+            LogUtil.d("processAppsCustomizeConfig: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
         }
-       // LogUtil.d("processAppsCustomizeConfig: processing configuration...");
+        LogUtil.d("processAppsCustomizeConfig: processing configuration...");
     }
 
     public void setActivity(Context context) {

@@ -28,6 +28,7 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -43,6 +44,7 @@ import java.util.Map;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.library.R;
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 
 /**
@@ -346,7 +348,9 @@ public class IconCache {
     private final HashMap<ComponentName, CacheEntry> mCache =
             new HashMap<ComponentName, CacheEntry>(INITIAL_ICON_CACHE_CAPACITY);
     private int mIconDpi;
-    private int themeMode = 0;
+    private int mThemeMode = 0;
+    private static final String PREFS_NAME = "theme_preferences";
+    private static final String KEY_THEME_MODE = "theme_mode";
 
     public IconCache(Context context) {
         ActivityManager activityManager =
@@ -356,21 +360,29 @@ public class IconCache {
         mPackageManager = context.getPackageManager();
         mIconDpi = activityManager.getLauncherLargeIconDensity();
 
+        // 恢复之前保存的主题模式，避免 ACC OFF/ON 后被重置为 0
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        mThemeMode = prefs.getInt(KEY_THEME_MODE, 0);
+
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
     }
 
     public void setPluginThemeMode(int themeMode) {
         // 当themeMode发生变化时
-        if (this.themeMode != themeMode) {
-            this.themeMode = themeMode;
-            Log.d(TAG, "setPluginThemeMode: themeMode changed to " + themeMode);
+        if (this.mThemeMode != themeMode) {
+            LogUtil.d( "setPluginThemeMode: themeMode changed to " + themeMode + " from " + this.mThemeMode);
+            this.mThemeMode = themeMode;
+
+            
+            // 保存主题模式到 SharedPreferences，避免 ACC OFF/ON 后被重置
+            SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            prefs.edit().putInt(KEY_THEME_MODE, themeMode).apply();
 
             // 清除缓存，这样下次获取图标时会重新加载
             flush();
             // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
             if (mContext instanceof LauncherApplication) {
-                Log.d(TAG, "setPluginThemeMode 2 -->");
                 LauncherApplication app = (LauncherApplication) mContext;
                 LauncherModel model = app.getModel();
                 if (model != null) {
@@ -389,8 +401,8 @@ public class IconCache {
         if (pkg == null || pkg.isEmpty()) {
             return null;
         }
-        //Log.i(TAG,"theme="+themeMode);
-        switch (themeMode) {
+        LogUtil.i("mThemeMode="+this.mThemeMode);
+        switch (mThemeMode) {
             case 0:
                 if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
                     return null;
@@ -518,7 +530,7 @@ public class IconCache {
      */
     public void flush() {
         synchronized (mCache) {
-            Log.d(TAG, "flush: mCache size=" + mCache.size());
+            LogUtil.d( "flush: mCache size=" + mCache.size());
             mCache.clear();
         }
     }
@@ -528,7 +540,7 @@ public class IconCache {
      */
     public void getTitleAndIcon(ApplicationInfo application, ResolveInfo info,
                                 HashMap<Object, CharSequence> labelCache) {
-       // Log.d(TAG, "getTitleAndIcon");
+        //LogUtil.d( "getTitleAndIcon");
         synchronized (mCache) {
             CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;
@@ -539,16 +551,16 @@ public class IconCache {
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0) {
                 Utilities.FLAG = false;
-                
+
                 // 判断是否为 Plugin 资源（themeMode=0xff）
-                if (themeMode == 0xff) {
+                if (mThemeMode == 0xff) {
                     // Plugin 模式：使用插件的 Resources 加载
                     String pluginPkg = PluginIconManager.getPluginPackageName();
                     Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
                     if (pluginContext != null) {
                         bmp = getFullResIcon(pluginContext.getResources(), iconResId);
                     } else {
-                        Log.w(TAG, "getTitleAndIcon: 无法获取插件 Context，使用默认图标");
+                        LogUtil.w( "getTitleAndIcon: 无法获取插件 Context，使用默认图标");
                         bmp = getFullResDefaultActivityIcon();
                     }
                 } else {
@@ -559,7 +571,12 @@ public class IconCache {
                 application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
                 entry.icon = application.iconBitmap;
                 customIconSet = true;
-            }
+            }/*else {
+                bmp = getFullResIcon(info);
+                application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
+                entry.icon = application.iconBitmap;
+                customIconSet = true;
+            }*/
 
 
 //            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
@@ -598,7 +615,7 @@ public class IconCache {
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0 ) {
                 // 判断是否为 Plugin 资源
-                if (themeMode == 0xff) {
+                if (mThemeMode == 0xff) {
                     String pluginPkg = PluginIconManager.getPluginPackageName();
                     Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
                     if (pluginContext != null) {
@@ -640,7 +657,7 @@ public class IconCache {
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0) {
                 // 判断是否为 Plugin 资源
-                if (themeMode == 0xff) {
+                if (mThemeMode == 0xff) {
                     String pluginPkg = PluginIconManager.getPluginPackageName();
                     Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
                     if (pluginContext != null) {

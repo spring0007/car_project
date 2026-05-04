@@ -65,16 +65,51 @@ object AppsCustomizeControl {
         mIconCache = iconCache
 
     }
-    
+
+    /**
+     * 设置 Plugin 主题模式
+     * @param themeMode 主题模式值
+     * @param refresh 默认立即刷新应用图标属性
+     */
     fun setPluginThemeMode(themeMode: Int) {
         setPluginThemeMode(themeMode, true)
     }
 
+    /**
+     * 设置 Plugin 主题模式
+     * @param themeMode 主题模式值
+     * @param refresh 是否立即刷新应用图标属性
+     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
+     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
+     */
     fun setPluginThemeMode(themeMode: Int,refresh: Boolean = true ) {
         setPluginThemeMode(themeMode, refresh , iconSizeSame = false)
     }
 
+    /***
+     * 设置 Plugin 主题模式
+     * @param themeMode 主题模式值
+     * @param refresh 是否立即刷新应用图标属性
+     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
+     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
+     */
     fun setPluginThemeMode(themeMode: Int ,refresh: Boolean = true ,iconSizeSame: Boolean = false) {
+
+        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,null, null, "")
+    }
+
+    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,
+        iconMap: Map<String, String>?, defaultPluginBgName: String? = null, pluginPackageName: String
+    ) {
+
+
+        // 设置 Plugin 配置
+        PluginIconManager.setPluginPackageName(pluginPackageName)
+        PluginIconManager.setDefaultPluginBgName(defaultPluginBgName)
+
+        // 设置图标映射表
+        PluginIconManager.setIconMap(iconMap)
+
 
         mIconCache.setPluginThemeMode(themeMode)
         Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
@@ -94,9 +129,7 @@ object AppsCustomizeControl {
         if(mAppsCustomizeConfig == null)
             return
         mAppsCustomizeConfig = null;
-        
 
-        
         mAppsCustomizeContent?.resetAllAppAttributes() ?: false
     }
 
@@ -121,19 +154,11 @@ object AppsCustomizeControl {
      */
     fun setPluginIconMap(iconMap: Map<String, String>, defaultPluginBgName: String? = null, pluginPackageName: String) {
         try {
-            // 设置 Plugin 配置
-            PluginIconManager.setPluginPackageName(pluginPackageName)
-            if (defaultPluginBgName != null)// 设置默认背景,如果为空,表示不使用默认背景
-                PluginIconManager.setDefaultPluginBgName(defaultPluginBgName)
-            
-            // 设置图标映射表
-            PluginIconManager.setIconMap(iconMap)
-
             //如果启用了 Plugin 图标映射表，则主题模式设置为默认值 (1)，不与其他主题冲突
-            setPluginThemeMode(0xff ,false,true) // 使用plugin图标,并不刷新属性
+            setPluginThemeMode(0xff ,false,false ,iconMap, defaultPluginBgName, pluginPackageName)  // 使用plugin图标,并不刷新属性
             
-            //Log.i(TAG, "setPluginIconMap: 成功设置 Plugin 图标映射表")
-            //Log.i(TAG, "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
+            LogUtil.i( "setPluginIconMap: 成功设置 Plugin 图标映射表")
+            LogUtil.i( "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
         } catch (e: Exception) {
             LogUtil.e( "setPluginIconMap: 设置图标映射表失败", e)
             setPluginThemeMode(1) // 使用普通图标
@@ -174,9 +199,7 @@ object AppsCustomizeControl {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
 
         if (mAllIsShowing) {
-            if (DEBUG) {
                 LogUtil.i( "showApps: huang already show all apps=>")
-            }
             return
         }
         currentViewGroup = WeakReference(viewGroup)
@@ -192,9 +215,8 @@ object AppsCustomizeControl {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-        if (DEBUG) {
-            LogUtil.i( "showApps: huang show all apps=>")
-        }
+        LogUtil.i( "showApps: huang show all apps=>")
+
         mAppsCustomizeTabHost?.requestFocus()
         mAppsCustomizeTabHost?.let { animationHandle.animateShow(it) }
 
@@ -215,7 +237,17 @@ object AppsCustomizeControl {
      * 再添加全部app列表显示前确保先移除该View
      */
     private fun removeFromParent() {
-        (mAppsCustomizeTabHost?.parent as? ViewGroup)?.removeView(mAppsCustomizeTabHost)
+                val parent = mAppsCustomizeTabHost?.parent as? ViewGroup
+        if (parent != null && mAppsCustomizeTabHost != null) {
+            try {
+                parent.removeView(mAppsCustomizeTabHost)
+                LogUtil.d("removeFromParent: successfully removed from parent")
+            } catch (e: Exception) {
+                LogUtil.e("removeFromParent: error removing view", e)
+            }
+        } else {
+            LogUtil.d("removeFromParent: no parent or tabHost is null, nothing to remove")
+        }
         mAllIsShowing = false
 
     }
@@ -256,43 +288,43 @@ object AppsCustomizeControl {
     }
 
     fun hideApps() {
-        if (!mAllIsShowing) {
-            if (DEBUG)
-                LogUtil.i( "hideApps: huang already hide all apps==>")
-            return
-        }
-
+        LogUtil.d("hideApps: mAllIsShowing=$mAllIsShowing")
+        
+        // 无论 mAllIsShowing 是什么状态，都尝试清理
+        // 这样可以确保在 plugin 切换时能够正确清理
         removeFromParent()
         restoreActivityState()
-
+        
+        // 强制重置状态
         mAllIsShowing = false
+        LogUtil.d("hideApps: apps hidden successfully")
     }
 
 
     fun bindPackagesUpdated() {
-        //LogUtil.i( "bindPackagesUpdated: huang ==>")
+        LogUtil.i( "bindPackagesUpdated: huang ==>")
         mAppsCustomizeContent?.onPackagesUpdated()
     }
 
     fun bindAppsRemoved(packageNames: ArrayList<String>?, permanent: Boolean) {
-        //LogUtil.i( "bindAppsRemoved: huang ==>")
+        LogUtil.i( "bindAppsRemoved: huang ==>")
         mAppsCustomizeContent?.removeApps(packageNames)
     }
 
     fun bindAppsUpdated(apps: ArrayList<ApplicationInfo>?) {
-        //LogUtil.i( "bindAppsUpdated: huang bind apps update =>")
+        LogUtil.i( "bindAppsUpdated: huang bind apps update =>")
         mAppsCustomizeContent?.updateApps(apps)
 
     }
 
     fun bindAppsAdded(apps: ArrayList<ApplicationInfo>?) {
-        //LogUtil.i( "bindAppsAdded: huang apps ==>")
+        LogUtil.i( "bindAppsAdded: huang apps ==>")
         mAppsCustomizeContent?.addApps(apps)
     }
 
     fun bindApps(apps: ArrayList<ApplicationInfo>?) {
         val setAllAppsRunnable = Runnable {
-            //LogUtil.i( "bindApps: huang bind apps=>")
+            LogUtil.i( "bindApps: huang bind apps=>")
             mAppsCustomizeContent?.setApps(apps)
         }
 
