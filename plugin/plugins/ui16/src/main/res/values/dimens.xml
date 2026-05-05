@@ -15,5 +15,7 @@
     <dimen name="radio_bg_height">111dp</dimen>
     <dimen name="cariv_width">260dp</dimen>
     <dimen name="cariv_height">210dp</dimen>
+    <dimen name="app_icon_padding">30dp</dimen>
+    <dimen name="app_icon_size">147dp</dimen>
 
 </resources>

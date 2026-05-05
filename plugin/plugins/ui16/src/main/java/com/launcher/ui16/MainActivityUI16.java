@@ -31,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -96,6 +97,15 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
                 "sf_other_app3_black",// 默认背景资源名称
                 "com.launcher.ui16"// 插件的实际包名
         );
+
+        AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+                .setAutoWidthGap(true)
+                .setAutoHeightGap(true)
+                .setColumnCount(6)
+                .setIconSize((int) getResources().getDimension(R.dimen.app_icon_size))
+                .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
+                .build();
+        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
     }
 	
     private void initLocationListener() {

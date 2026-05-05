@@ -153,7 +153,7 @@ class UIActivity : Activity(), View.OnClickListener {
         )
 
                 
-        AppsCustomizeControl.setPluginIconMap(IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui03")
+        AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui03")
         AppsCustomizeControl.applyAppsCustomizeConfig(config)
         // 初始化 IconManager，预加载资源
         IconManager.initialize(this)
