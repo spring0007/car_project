@@ -146,6 +146,15 @@ object AppsCustomizeControl {
         LogUtil.d("applyAppsCustomizeConfig: config transferred successfully")
     }
 
+    fun applyDefaultAppsCustomizeConfig() {
+        mAppsCustomizeConfig = AppsCustomizeConfig.createDefault()
+        // 直接传递给 AppsCustomizePagedView 进行数据处理
+        mAppsCustomizeContent?.processAppsCustomizeConfig(mAppsCustomizeConfig)
+
+        LogUtil.d("applyAppsCustomizeConfig: config transferred successfully")
+    }
+
+
     /**
      * 设置 Plugin 的图标映射表到主应用
      * @param iconMap Plugin 提供的图标映射表（包名 -> 资源名称）

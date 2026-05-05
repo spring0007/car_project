@@ -71,7 +71,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_width);
         mOriginalCellHeight = mCellHeight =
                 resources.getDimensionPixelSize(R.dimen.apps_customize_cell_height);
-        LogUtil.d("PagedViewCellLayout: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
+        //LogUtil.d("PagedViewCellLayout: cellWidth = " + mCellWidth + ", cellHeight = " + mCellHeight);
         mCellCountX = LauncherModel.getCellCountX();
         mCellCountY = LauncherModel.getCellCountY();
         mOriginalWidthGap = mOriginalHeightGap = mWidthGap = mHeightGap = -1;
@@ -100,14 +100,14 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         if (widthPx > 0) {
             mCellWidth = mOriginalCellWidth= widthPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
             mChildren.setCellDimensions(mCellWidth, mCellHeight);
-            LogUtil.d("setCustomCellWidth: " + widthPx);
+            //LogUtil.d("setCustomCellWidth: " + widthPx);
             requestLayout();
         }
     }
 
     public void setDefaultCellWidth(Context context) {
         mOriginalCellWidth = mCellWidth = context.getResources().getDimensionPixelSize(R.dimen.apps_customize_cell_width);
-            LogUtil.d("setDefaultCellWidth: " + mCellWidth);
+           // LogUtil.d("setDefaultCellWidth: " + mCellWidth);
             requestLayout();
     }
     
@@ -119,7 +119,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         if (heightPx > 0) {
             mCellHeight = mOriginalCellHeight= heightPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
             mChildren.setCellDimensions(mCellWidth, mCellHeight);
-            LogUtil.d("setCustomCellHeight: " + heightPx);
+            //LogUtil.d("setCustomCellHeight: " + heightPx);
             requestLayout();
         }
     }
@@ -325,9 +325,9 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 return;
             }
         } else {
-            LogUtil.d("onMeasure: will measure - sizeChanged=" + (widthSpecSize != getMeasuredWidth() || heightSpecSize != getMeasuredHeight()) + 
-                     ", layoutRequested=" + isLayoutRequested() + 
-                     ", childCount=" + getChildCount());
+          //  LogUtil.d("onMeasure: will measure - sizeChanged=" + (widthSpecSize != getMeasuredWidth() || heightSpecSize != getMeasuredHeight()) +
+          //           ", layoutRequested=" + isLayoutRequested() +
+          //           ", childCount=" + getChildCount());
         }
 
         int numWidthGaps = mCellCountX - 1;
@@ -348,12 +348,12 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 int vFreeSpace = vSpace - (mCellCountY * mOriginalCellHeight);
                 mHeightGap = Math.min(mMaxGap, numHeightGaps > 0 ? (vFreeSpace / numHeightGaps) : 0);
             }
-            LogUtil.i("mMaxGap = >" + mMaxGap + "-->mWidthGap=" + mWidthGap);
+           // LogUtil.i("mMaxGap = >" + mMaxGap + "-->mWidthGap=" + mWidthGap);
             mChildren.setGap(mWidthGap, mHeightGap);
         } else {
             mWidthGap = mOriginalWidthGap;
             mHeightGap = mOriginalHeightGap;
-            LogUtil.i("mOriginalWidthGap = >" + mOriginalWidthGap);
+           // LogUtil.i("mOriginalWidthGap = >" + mOriginalWidthGap);
         }
         // Initial values correspond to widthSpecMode == MeasureSpec.EXACTLY
         int newWidth = widthSpecSize;

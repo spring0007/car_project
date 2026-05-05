@@ -370,7 +370,7 @@ public class IconCache {
 
     public void setPluginThemeMode(int themeMode) {
         // 当themeMode发生变化时
-        if (this.mThemeMode != themeMode) {
+        if (this.mThemeMode != themeMode || themeMode == 0xff) {
             LogUtil.d( "setPluginThemeMode: themeMode changed to " + themeMode + " from " + this.mThemeMode);
             this.mThemeMode = themeMode;
 
