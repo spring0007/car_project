@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Chanson inconnue</string>
+    <string name="music_artist">Artiste inconnu</string>
+    <string name="add_app">Ajouter</string>
+    <string name="radio">RADIO</string>
+    <string name="phone_connect">Le téléphone connecté</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Nuageux</string>
+    <string name="weather_desc_102">Quelques nuages</string>
+    <string name="weather_desc_103">Partiellement ensoleillé</string>
+    <string name="weather_desc_104">Nuageux</string>
+    <string name="weather_desc_300">Pluie d’averses</string>
+    <string name="weather_desc_301">Fortes averses</string>
+    <string name="weather_desc_302">Orage</string>
+    <string name="weather_desc_303">Averse violente</string>
+    <string name="weather_desc_304">Orage avec grêle</string>
+    <string name="weather_desc_305">Pluie légère</string>
+    <string name="weather_desc_306">Pluies modérées</string>
+    <string name="weather_desc_307">Fortes pluies</string>
+    <string name="weather_desc_308">Pluies extrêmes</string>
+    <string name="weather_desc_309">Pluie fine</string>
+    <string name="weather_desc_310">Tempête</string>
+    <string name="weather_desc_311">Forte tempête</string>
+    <string name="weather_desc_312">Tempête violente</string>
+    <string name="weather_desc_313">Pluie verglaçante</string>
+    <string name="weather_desc_400">Légère neige</string>
+    <string name="weather_desc_401">Neige modérée</string>
+    <string name="weather_desc_402">Forte neige</string>
+    <string name="weather_desc_403">Tempête de neige</string>
+    <string name="weather_desc_404">Grésil</string>
+    <string name="weather_desc_405">Pluie et neige</string>
+    <string name="weather_desc_406">Neige d’averse</string>
+    <string name="weather_desc_407">Pluie de neige</string>
+    <string name="weather_desc_500">Brouillard</string>
+    <string name="weather_desc_501">Joint</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Épais brouillard</string>
+    <string name="weather_desc_504">Légère brume</string>
+    <string name="weather_desc_507">Tempête de sable</string>
+    <string name="weather_desc_508">Forte tempête de sable</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">APP</string>
+    <string name="music">MUSIQUE</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">AUCUN</string>
+    <string name="navi">NAVIGATION</string>
+    <string name="set">ENSEMBLE</string>
+    <string name="setting">CADRE</string>
+    <string name="navigate_for_you_in_real_time">Naviguer pour vous en temps réel</string>
+    <string name="telephone">TÉLÉPHONE</string>
+    <string name="no_phone_connected">Aucun téléphone connecté</string>
+    <string name="hd_video">VIDÉO HD</string>
+    <string name="don_t_watch_while_driving">Ne regardez pas en conduisant</string>
+    <string name="the_radio_is_not_playing">La radio est comme une amie venue de loin</string>
+    <string name="you_are_listening_to">Tu écoutes</string>
+    <string name="system_functions_settings">Paramètres des fonctions système</string>
+    <string name="bt_music">BT MUSIQUE</string>
+    <string name="unknown_song">Chanson inconnue</string>
+    <string name="weather">MÉTÉO</string>
+    <string name="no_weather_information_available_at_the_moment">Aucune information météo disponible pour le moment</string>
+    <string name="car_info">INFOS SUR LA VOITURE</string>
+    <string name="vehicle_information">Informations sur le véhicule</string>
+
+
+    
+
+</resources>

@@ -63,4 +63,6 @@ public final class WeatherTextMapper {
         }
         return context.getString(resId);
     }
+
+
 }

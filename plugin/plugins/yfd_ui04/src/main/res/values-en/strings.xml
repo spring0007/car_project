@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Unknown Song</string>
+    <string name="music_artist">Unknown Artist</string>
+    <string name="add_app">Add</string>
+    <string name="radio">RADIO</string>
+    <string name="phone_connect">The phone Connected</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Cloudy</string>
+    <string name="weather_desc_102">Few clouds</string>
+    <string name="weather_desc_103">Partly sunny</string>
+    <string name="weather_desc_104">Overcast</string>
+    <string name="weather_desc_300">Shower rain</string>
+    <string name="weather_desc_301">Heavy shower rain</string>
+    <string name="weather_desc_302">Thundershower</string>
+    <string name="weather_desc_303">Severe thundershower</string>
+    <string name="weather_desc_304">Thundershower with hail</string>
+    <string name="weather_desc_305">Light rain</string>
+    <string name="weather_desc_306">Moderate rain</string>
+    <string name="weather_desc_307">Heavy rain</string>
+    <string name="weather_desc_308">Extreme rain</string>
+    <string name="weather_desc_309">Drizzle rain</string>
+    <string name="weather_desc_310">Storm</string>
+    <string name="weather_desc_311">Heavy storm</string>
+    <string name="weather_desc_312">Severe storm</string>
+    <string name="weather_desc_313">Freezing rain</string>
+    <string name="weather_desc_400">Light snow</string>
+    <string name="weather_desc_401">Moderate snow</string>
+    <string name="weather_desc_402">Heavy snow</string>
+    <string name="weather_desc_403">Snowstorm</string>
+    <string name="weather_desc_404">Sleet</string>
+    <string name="weather_desc_405">Rain and snow</string>
+    <string name="weather_desc_406">Shower snow</string>
+    <string name="weather_desc_407">Snow flurry</string>
+    <string name="weather_desc_500">Fog</string>
+    <string name="weather_desc_501">Joint</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Heavy haze</string>
+    <string name="weather_desc_504">Light haze</string>
+    <string name="weather_desc_507">Sandstorm</string>
+    <string name="weather_desc_508">Heavy sandstorm</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">APP</string>
+    <string name="music">MUSIC</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">NONE</string>
+    <string name="navi">NAVIGATION</string>
+    <string name="set">SET</string>
+    <string name="setting">SETTING</string>
+    <string name="navigate_for_you_in_real_time">Navigate for you in real time</string>
+    <string name="telephone">TELEPHONE</string>
+    <string name="no_phone_connected">No phone connected</string>
+    <string name="hd_video">HD VIDEO</string>
+    <string name="don_t_watch_while_driving">Don\'t watch while driving</string>
+    <string name="the_radio_is_not_playing">The radio is like a friend from afar</string>
+    <string name="you_are_listening_to">You are listening to</string>
+    <string name="system_functions_settings">System Functions Settings</string>
+    <string name="bt_music">BT MUSIC</string>
+    <string name="unknown_song">Unknown song</string>
+    <string name="weather">WEATHER</string>
+    <string name="no_weather_information_available_at_the_moment">No weather information available at the moment</string>
+    <string name="car_info">CAR INFO</string>
+    <string name="vehicle_information">Vehicle Information</string>
+
+
+    
+
+</resources>

@@ -7,26 +7,347 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityUI4">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager"
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_left_bg"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHeight_percent="0.8"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_navi"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_navi">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navi"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/navigate_for_you_in_real_time"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_music"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_music">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/music"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <include layout="@layout/music_widget"
+                    android:id="@+id/layout_music_widget"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_video"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_video_bg">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hd_video"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/don_t_watch_while_driving"
+                    style="@style/tv_sub_title_style1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_phone"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_phone_unconnected">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/telephone"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_phone_sub_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_phone_connected"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_radio"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_radio">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/the_radio_is_not_playing"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_setting"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_settings">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/system_functions_settings"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_car"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/edit_icon_car">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/car_info"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vehicle_information"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/item_weather"
+                android:layout_width="@dimen/main_right_icon_width"
+                android:layout_marginStart="@dimen/item_margin_start"
+                android:layout_height="match_parent"
+                android:background="@drawable/id8_genv2_main_edit_icon_add">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weather"
+                    style="@style/tv_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/weater_tv_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_weather_information_available_at_the_moment"
+                    style="@style/tv_sub_title_style"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.20"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/weater_tv_temp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    style="@style/tv_sub_title_style2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.40"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <ImageView
+                    android:id="@+id/weater_iv_info"
+                    android:layout_width="@dimen/weather_iv_size"
+                    android:layout_height="@dimen/weather_iv_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"
+                    app:layout_constraintVertical_bias="0.7"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </HorizontalScrollView>
 
 
     <ImageView
         android:id="@+id/iv_left_bg"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.1"
         android:scaleType="fitXY"
-        android:src="@drawable/id8_main_left_bg"
+        android:src="@drawable/left_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.10" />
 
     <LinearLayout
         android:id="@+id/linear_indicator"
@@ -34,12 +355,13 @@
         android:layout_height="0dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintWidth_percent="0.09"
         android:weightSum="5.5"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_left_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/iv_left_bg"
         app:layout_constraintStart_toStartOf="@+id/iv_left_bg"
-        app:layout_constraintTop_toTopOf="@+id/iv_left_bg">
+        app:layout_constraintWidth_percent="0.08"
+        app:layout_constraintHeight_percent="0.90" >
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -50,7 +372,7 @@
             android:layout_width="@dimen/main_left_icon_app_size"
             android:layout_height="@dimen/main_left_icon_app_size"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/id8_main_left_icon_app" />
+            android:background="@drawable/left_icon_app" />
 
         <View
             android:layout_width="1dp"
@@ -74,7 +396,7 @@
             android:layout_width="@dimen/main_left_icon_app_size"
             android:layout_height="@dimen/main_left_icon_app_size"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/id8_main_left_icon_music" />
+            android:background="@drawable/left_icon_music" />
 
         <View
             android:layout_width="1dp"
@@ -87,6 +409,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/music" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -97,7 +420,8 @@
             android:layout_width="@dimen/main_left_icon_app_size"
             android:layout_height="@dimen/main_left_icon_app_size"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/id8_main_left_icon_bt"/>
+            android:background="@drawable/left_icon_bt" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -109,6 +433,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/phone" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -119,17 +444,20 @@
             android:layout_width="@dimen/main_left_icon_app_size"
             android:layout_height="@dimen/main_left_icon_app_size"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/id8_main_left_icon_navi" />
+            android:background="@drawable/left_icon_navi" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_weight="0.5" />
+
         <TextView
             android:id="@+id/tv_nav"
             style="@style/tv_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/navigation" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -140,17 +468,20 @@
             android:layout_width="@dimen/main_left_icon_app_size"
             android:layout_height="@dimen/main_left_icon_app_size"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/id8_main_left_icon_set" />
+            android:background="@drawable/left_icon_set" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_weight="0.5" />
+
         <TextView
             android:id="@+id/tv_setting"
             style="@style/tv_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setting" />
+            android:text="@string/set" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="0dp"

@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">未知歌曲</string>
+    <string name="music_artist">未知艺术家</string>
+    <string name="add_app">添加</string>
+    <string name="radio">广播</string>
+    <string name="phone_connect">电话已连接</string>
+    <string name="blueth">蓝牙</string>
+
+    <string name="weather_desc_100">桑尼</string>
+    <string name="weather_desc_101">多云</string>
+    <string name="weather_desc_102">少云</string>
+    <string name="weather_desc_103">部分晴朗</string>
+    <string name="weather_desc_104">阴天</string>
+    <string name="weather_desc_300">阵雨</string>
+    <string name="weather_desc_301">大阵雨</string>
+    <string name="weather_desc_302">雷阵雨</string>
+    <string name="weather_desc_303">强烈雷阵雨</string>
+    <string name="weather_desc_304">雷阵雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中等降雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">极端降雨</string>
+    <string name="weather_desc_309">细雨</string>
+    <string name="weather_desc_310">风暴</string>
+    <string name="weather_desc_311">暴风雨</string>
+    <string name="weather_desc_312">严重风暴</string>
+    <string name="weather_desc_313">冻雨</string>
+    <string name="weather_desc_400">轻雪</string>
+    <string name="weather_desc_401">中等降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴风雪</string>
+    <string name="weather_desc_404">冰雹</string>
+    <string name="weather_desc_405">雨雪</string>
+    <string name="weather_desc_406">阵雨雪</string>
+    <string name="weather_desc_407">雪花飘落</string>
+    <string name="weather_desc_500">雾</string>
+    <string name="weather_desc_501">关节</string>
+    <string name="weather_desc_502">雾霾</string>
+    <string name="weather_desc_503">浓雾</string>
+    <string name="weather_desc_504">轻微雾霾</string>
+    <string name="weather_desc_507">沙尘暴</string>
+    <string name="weather_desc_508">强烈的沙尘暴</string>
+    <string name="weather_desc_unknown">未知</string>
+
+
+    <string name="App">APP</string>
+    <string name="music">音乐</string>
+    <string name="phone">蓝牙</string>
+    <string name="navigation">没有</string>
+    <string name="navi">导航</string>
+    <string name="set">集合</string>
+    <string name="setting">背景设定</string>
+    <string name="navigate_for_you_in_real_time">实时为您导航</string>
+    <string name="telephone">电话</string>
+    <string name="no_phone_connected">没有连接电话</string>
+    <string name="hd_video">高清视频</string>
+    <string name="don_t_watch_while_driving">开车时不要看</string>
+    <string name="the_radio_is_not_playing">收音机就像远方的朋友</string>
+    <string name="you_are_listening_to">你正在收听</string>
+    <string name="system_functions_settings">系统功能设置</string>
+    <string name="bt_music">BT音乐</string>
+    <string name="unknown_song">未知歌曲</string>
+    <string name="weather">天气</string>
+    <string name="no_weather_information_available_at_the_moment">目前没有天气信息</string>
+    <string name="car_info">车辆信息</string>
+    <string name="vehicle_information">车辆信息</string>
+
+
+    
+
+</resources>

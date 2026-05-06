@@ -196,8 +196,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
 
-    int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
-    int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
+   // int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
+   // int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
 
 
     @Override
@@ -356,22 +356,22 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             return;
         }
 
-        Glide.with(this)
-                .load(uri)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .addListener(listener)
-                .circleCrop()
-                .placeholder(R.drawable.ablum_default_bg)
-                .error(R.drawable.ablum_default_bg)
-                .into(ivLoadnim);
+//        Glide.with(this)
+//                .load(uri)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
+//                .addListener(listener)
+//                .circleCrop()
+//                .placeholder(R.drawable.ablum_default_bg)
+//                .error(R.drawable.ablum_default_bg)
+//                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
+       // ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
@@ -418,10 +418,10 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                     resumeLoadAnim();
                 }
             }
-            mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
+          // mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
             pauseLoadAnim();
-            mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
+           // mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
 

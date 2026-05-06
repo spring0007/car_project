@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Bilinmeyen Şarkı</string>
+    <string name="music_artist">Bilinmeyen Sanatçı</string>
+    <string name="add_app">Ekle</string>
+    <string name="radio">RADYO</string>
+    <string name="phone_connect">Telefon Bağlandı</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Bulutlu</string>
+    <string name="weather_desc_102">Az sayıda bulut</string>
+    <string name="weather_desc_103">Kısmen güneşli</string>
+    <string name="weather_desc_104">Bulutlu</string>
+    <string name="weather_desc_300">Yağmur yağmuru</string>
+    <string name="weather_desc_301">Şiddetli sağanak yağmuru</string>
+    <string name="weather_desc_302">Gök gürültüsü</string>
+    <string name="weather_desc_303">Şiddetli gök gürültüsü</string>
+    <string name="weather_desc_304">Dolu ile gök gürültülü</string>
+    <string name="weather_desc_305">Hafif yağmur</string>
+    <string name="weather_desc_306">Orta şiddetli yağmur</string>
+    <string name="weather_desc_307">Şiddetli yağmur</string>
+    <string name="weather_desc_308">Aşırı yağmur</string>
+    <string name="weather_desc_309">Çiseleyen yağmur</string>
+    <string name="weather_desc_310">Fırtına</string>
+    <string name="weather_desc_311">Şiddetli fırtına</string>
+    <string name="weather_desc_312">Şiddetli fırtına</string>
+    <string name="weather_desc_313">Dondurucu yağmur</string>
+    <string name="weather_desc_400">Hafif kar</string>
+    <string name="weather_desc_401">Orta derecede kar</string>
+    <string name="weather_desc_402">Yoğun kar</string>
+    <string name="weather_desc_403">Kar Fırtınası</string>
+    <string name="weather_desc_404">Yağmur</string>
+    <string name="weather_desc_405">Yağmur ve kar</string>
+    <string name="weather_desc_406">Yağmur</string>
+    <string name="weather_desc_407">Kar Yağışı</string>
+    <string name="weather_desc_500">Sis</string>
+    <string name="weather_desc_501">Joint</string>
+    <string name="weather_desc_502">Sis</string>
+    <string name="weather_desc_503">Yoğun sis</string>
+    <string name="weather_desc_504">Hafif sis</string>
+    <string name="weather_desc_507">Kum Fırtınası</string>
+    <string name="weather_desc_508">Yoğun kum fırtınası</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">UYGULAMA</string>
+    <string name="music">MÜZIK</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">HİÇBİR</string>
+    <string name="navi">NAVIGASYON</string>
+    <string name="set">SET</string>
+    <string name="setting">MEKAN</string>
+    <string name="navigate_for_you_in_real_time">Gerçek zamanlı olarak sizin için gezinmek</string>
+    <string name="telephone">TELEFON</string>
+    <string name="no_phone_connected">Telefon bağlı değil</string>
+    <string name="hd_video">HD VİDEO</string>
+    <string name="don_t_watch_while_driving">Sürüyorken izleme</string>
+    <string name="the_radio_is_not_playing">Radyo uzaktan bir arkadaş gibidir</string>
+    <string name="you_are_listening_to">Dinliyorsun</string>
+    <string name="system_functions_settings">Sistem Fonksiyonları Ayarları</string>
+    <string name="bt_music">BT MÜZIK</string>
+    <string name="unknown_song">Bilinmeyen şarkı</string>
+    <string name="weather">HAVA DURUMU</string>
+    <string name="no_weather_information_available_at_the_moment">Şu anda hava durumu bilgisi mevcut değil</string>
+    <string name="car_info">ARABA BILGISI</string>
+    <string name="vehicle_information">Araç Bilgileri</string>
+
+
+    
+
+</resources>

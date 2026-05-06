@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">未知の歌</string>
+    <string name="music_artist">無名アーティスト</string>
+    <string name="add_app">追加</string>
+    <string name="radio">ラジオ</string>
+    <string name="phone_connect">電話が接続された</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">サニー</string>
+    <string name="weather_desc_101">曇り</string>
+    <string name="weather_desc_102">雲は少ない</string>
+    <string name="weather_desc_103">部分的晴れ</string>
+    <string name="weather_desc_104">曇り空</string>
+    <string name="weather_desc_300">にわか雨</string>
+    <string name="weather_desc_301">激しいにわか雨</string>
+    <string name="weather_desc_302">雷雨</string>
+    <string name="weather_desc_303">激しい雷雨</string>
+    <string name="weather_desc_304">雹を伴う雷雨</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中程度の降雨</string>
+    <string name="weather_desc_307">激しい雨</string>
+    <string name="weather_desc_308">極端な降雨</string>
+    <string name="weather_desc_309">霧雨</string>
+    <string name="weather_desc_310">嵐</string>
+    <string name="weather_desc_311">激しい嵐</string>
+    <string name="weather_desc_312">激しい嵐</string>
+    <string name="weather_desc_313">凍雨</string>
+    <string name="weather_desc_400">軽い雪</string>
+    <string name="weather_desc_401">中程度の降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">吹雪</string>
+    <string name="weather_desc_404">みぞれ</string>
+    <string name="weather_desc_405">雨と雪</string>
+    <string name="weather_desc_406">シャワースノー</string>
+    <string name="weather_desc_407">雪の吹雪</string>
+    <string name="weather_desc_500">霧</string>
+    <string name="weather_desc_501">関節</string>
+    <string name="weather_desc_502">ヘイズ</string>
+    <string name="weather_desc_503">重いヘイズ</string>
+    <string name="weather_desc_504">ライトヘイズ</string>
+    <string name="weather_desc_507">砂嵐</string>
+    <string name="weather_desc_508">激しい砂嵐</string>
+    <string name="weather_desc_unknown">未知</string>
+
+
+    <string name="App">APP</string>
+    <string name="music">音楽</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">全くありません</string>
+    <string name="navi">ナビゲーション</string>
+    <string name="set">セット</string>
+    <string name="setting">舞台設定</string>
+    <string name="navigate_for_you_in_real_time">リアルタイムでナビゲートしてくれます</string>
+    <string name="telephone">電話</string>
+    <string name="no_phone_connected">電話は接続されていません</string>
+    <string name="hd_video">HDビデオ</string>
+    <string name="don_t_watch_while_driving">運転中に見ないでください</string>
+    <string name="the_radio_is_not_playing">ラジオは遠くから友達のようなものです</string>
+    <string name="you_are_listening_to">あなたは</string>
+    <string name="system_functions_settings">システム機能設定</string>
+    <string name="bt_music">BTミュージック</string>
+    <string name="unknown_song">不明の曲</string>
+    <string name="weather">天候</string>
+    <string name="no_weather_information_available_at_the_moment">現在、天気情報はありません</string>
+    <string name="car_info">車の情報</string>
+    <string name="vehicle_information">車両情報</string>
+
+
+    
+
+</resources>

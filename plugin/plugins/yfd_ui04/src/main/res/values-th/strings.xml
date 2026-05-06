@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">เพลงที่ไม่รู้จัก</string>
+    <string name="music_artist">ศิลปินนิรนาม</string>
+    <string name="add_app">เพิ่ม</string>
+    <string name="radio">วิทยุ</string>
+    <string name="phone_connect">โทรศัพท์เชื่อมต่อแล้ว</string>
+    <string name="blueth">บลูทูธ</string>
+
+    <string name="weather_desc_100">แดดจัด</string>
+    <string name="weather_desc_101">มีเมฆมาก</string>
+    <string name="weather_desc_102">มีเมฆน้อย</string>
+    <string name="weather_desc_103">แดดจัดบางส่วน</string>
+    <string name="weather_desc_104">มืดครึ้ม</string>
+    <string name="weather_desc_300">ฝนตก</string>
+    <string name="weather_desc_301">ฝนตกหนัก</string>
+    <string name="weather_desc_302">ฝักบัวฟ้าร้อง</string>
+    <string name="weather_desc_303">ฝนฟ้าคะนองรุนแรง</string>
+    <string name="weather_desc_304">ฝนฟ้าคะนองพร้อมลูกเห็บ</string>
+    <string name="weather_desc_305">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_306">ฝนปานกลาง</string>
+    <string name="weather_desc_307">ฝนตกหนัก</string>
+    <string name="weather_desc_308">ฝนตกหนัก</string>
+    <string name="weather_desc_309">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_310">พายุ</string>
+    <string name="weather_desc_311">พายุหนัก</string>
+    <string name="weather_desc_312">พายุรุนแรง</string>
+    <string name="weather_desc_313">ฝนเยือกแข็ง</string>
+    <string name="weather_desc_400">หิมะตกเล็กน้อย</string>
+    <string name="weather_desc_401">หิมะตกปานกลาง</string>
+    <string name="weather_desc_402">หิมะตกหนัก</string>
+    <string name="weather_desc_403">พายุหิมะ</string>
+    <string name="weather_desc_404">ลูกเห็บ</string>
+    <string name="weather_desc_405">ฝนและหิมะ</string>
+    <string name="weather_desc_406">ฝนหิมะตก</string>
+    <string name="weather_desc_407">หิมะตก</string>
+    <string name="weather_desc_500">หมอก</string>
+    <string name="weather_desc_501">ข้อต่อ</string>
+    <string name="weather_desc_502">หมอกควัน</string>
+    <string name="weather_desc_503">หมอกควันหนา</string>
+    <string name="weather_desc_504">หมอกควันเล็กน้อย</string>
+    <string name="weather_desc_507">พายุทราย</string>
+    <string name="weather_desc_508">พายุทรายหนัก</string>
+    <string name="weather_desc_unknown">ยูเอ็นเค</string>
+
+
+    <string name="App">แอป</string>
+    <string name="music">เพลง</string>
+    <string name="phone">บลูทูธ</string>
+    <string name="navigation">ไม่มี</string>
+    <string name="navi">การเดินเรือ</string>
+    <string name="set">ตลาดหลักทรัพย์ฯ</string>
+    <string name="setting">การตั้งค่า</string>
+    <string name="navigate_for_you_in_real_time">นําทางให้คุณแบบเรียลไทม์</string>
+    <string name="telephone">โทรศัพท์</string>
+    <string name="no_phone_connected">ไม่ได้เชื่อมต่อโทรศัพท์</string>
+    <string name="hd_video">วิดีโอ HD</string>
+    <string name="don_t_watch_while_driving">อย่าดูขณะขับรถ</string>
+    <string name="the_radio_is_not_playing">วิทยุเหมือนเพื่อนจากระยะไกล</string>
+    <string name="you_are_listening_to">คุณกําลังฟัง</string>
+    <string name="system_functions_settings">การตั้งค่าฟังก์ชั่นระบบ</string>
+    <string name="bt_music">เพลง BT</string>
+    <string name="unknown_song">เพลงที่ไม่รู้จัก</string>
+    <string name="weather">สภาพอากาศ</string>
+    <string name="no_weather_information_available_at_the_moment">ไม่มีข้อมูลสภาพอากาศในขณะนี้</string>
+    <string name="car_info">ข้อมูลรถ</string>
+    <string name="vehicle_information">ข้อมูลยานพาหนะ</string>
+
+
+    
+
+</resources>

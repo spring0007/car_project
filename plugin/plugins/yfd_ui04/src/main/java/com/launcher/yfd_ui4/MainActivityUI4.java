@@ -24,7 +24,6 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
@@ -33,23 +32,22 @@ import com.awell.launcher2.IconCache;
 import com.awell.utils.CommonData;
 import com.launcher.yfd_ui4.databinding.ActivityMainUi1Binding;
 import com.launcher.yfd_ui4.utils.WeatherHelper;
+import com.launcher.yfd_ui4.utils.WeatherIconLoader;
+import com.launcher.yfd_ui4.utils.WeatherTextMapper;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
     private ActivityMainUi1Binding binding;
-    private List<PageData> pageDataList;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
-    private ViewPagerAdapter adapter;
     private int PERMISSION_REQUEST_CODE = 100;
     private Boolean isWeatherTimerRunning = false;
     private boolean accRecor;
+    private static final String BTSTATUS = "awell_bt_status";
     private Runnable  weatherRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -62,17 +60,39 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainUi1Binding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        initLongTouch();
-        setUpViewPager();
-        binding.ivNavi.setOnClickListener(this);
-        binding.ivHome.setOnClickListener(this);
-        binding.ivMusic.setOnClickListener(this);
-        binding.ivRadio.setOnClickListener(this);
-        binding.ivEq.setOnClickListener(this);
+
         mediaControl = new AwellMediaControl();
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
+
+        musicWidget = binding.layoutMusicWidget.layoutMusicWidget;
+        musicWidget.setMediaLibrary(mediaControl);
+        musicWidget.setActivity(this, musicWidget);
+
+        setContentView(binding.getRoot());
+        initLongTouch();
+        binding.tvApp.setOnClickListener(this);
+        binding.ivApp.setOnClickListener(this);
+        binding.tvMusic.setOnClickListener(this);
+        binding.ivMusic.setOnClickListener(this);
+        binding.tvNav.setOnClickListener(this);
+        binding.ivNav.setOnClickListener(this);
+        binding.tvSetting.setOnClickListener(this);
+        binding.ivSetting.setOnClickListener(this);
+        binding.tvPhone.setOnClickListener(this);
+        binding.ivPhone.setOnClickListener(this);
+
+
+        binding.itemMusic.setOnClickListener(this);
+        binding.itemCar.setOnClickListener(this);
+        binding.itemNavi.setOnClickListener(this);
+        binding.itemPhone.setOnClickListener(this);
+        binding.itemRadio.setOnClickListener(this);
+        binding.itemSetting.setOnClickListener(this);
+        binding.itemVideo.setOnClickListener(this);
+        binding.itemWeather.setOnClickListener(this);
+
+        setBtstatus();
         initReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(4,false);
@@ -100,6 +120,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         filter.addAction("top_session_package_change");
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
+    }
+
+    private void setBtstatus(){
+        // flag 0 : BT close   1 : BT NoConnected    2 : BT Connected
+        int mBTStatus = Settings.System.getInt(getContentResolver(), BTSTATUS, 0);
+        Log.d(TAG, " mBTStatus = " + mBTStatus);
+
+        if (mBTStatus == 0 || mBTStatus == 1){
+            binding.itemPhone.setBackgroundResource(R.drawable.edit_icon_phone_unconnected);
+            binding.tvPhoneSubTitle.setText(R.string.no_phone_connected);
+        }else if (mBTStatus == 2){
+            binding.itemPhone.setBackgroundResource(R.drawable.edit_icon_phone_connected);
+            binding.tvPhoneSubTitle.setText(R.string.phone_connect);
+        }
     }
 
     private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
@@ -139,7 +173,6 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                     musicWidget.getCarPlayData(zlinStatus, phoneMode);
                     break;
                 case "android.launcher.show.allApp":
-                    Log.d(TAG, "mainReceiver:" + intent.getAction());
                     AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
                     break;
                 case "top_session_package_change":
@@ -176,51 +209,23 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             //Log.i(TAG, "0000----Switched to new package: " + value1);
         }
     }
-    public void setMusicWidget(MusicWidget musicWidget) {
-        Log.d(TAG, "setMusicWidget: musicWidget = " + musicWidget);
-        this.musicWidget = musicWidget;
-
-        if (this.musicWidget != null && mediaControl != null) {
-            this.musicWidget.setMediaLibrary(mediaControl);
-            this.musicWidget.setActivity(this, this.musicWidget);
-        }
-    }
-
-    private void setUpViewPager() {
-        pageDataList = new ArrayList<>();
-        pageDataList.add(new PageData(R.layout.viewpager_2));
-        pageDataList.add(new PageData(R.layout.viewpager_1));
-        adapter = new ViewPagerAdapter(pageDataList, this, this);
-        binding.viewpager.setAdapter(adapter);
-        binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                updateIndicators(position);
-            }
-        });
-        updateIndicators(0);
-    }
-
-    private void updateIndicators(int position) {
-        // 更新第一个指示点
-        if (position == 0) {
-            binding.indicator1.setBackgroundResource(R.drawable.indicator_selected);
-            binding.indicator2.setBackgroundResource(R.drawable.indicator_unselect);
-        } else {
-            binding.indicator1.setBackgroundResource(R.drawable.indicator_unselect);
-            binding.indicator2.setBackgroundResource(R.drawable.indicator_selected);
-
-        }
-    }
-
     private void loadWeatherData() {
         Log.i(TAG, "loadWeatherData: huang info=>");
         new Thread(() -> {
-            WeatherHelper.WeatherInfo info = WeatherHelper.getCurrentWeather(MainActivityUI4.this);
-            Log.i(TAG, "loadWeatherData: huang info=>" + info);
+            WeatherHelper.WeatherInfo weatherInfo = WeatherHelper.getCurrentWeather(MainActivityUI4.this);
+            Log.i(TAG, "loadWeatherData: huang info=>" + weatherInfo);
             handler.post(() -> {
-                if (adapter != null) {
-                    adapter.setWeatherInfo(info);
+                if (weatherInfo != null) {
+                    binding.weaterTvTemp.setText(weatherInfo.temperature + " ℃");
+                    String weather = (WeatherTextMapper.description(MainActivityUI4.this, weatherInfo.condCode));
+                    binding.weaterTvTemp.setVisibility(View.VISIBLE);
+                    binding.weaterIvInfo.setVisibility(View.VISIBLE);
+                    binding.weaterTvInfo.setText(weather + "  " + weatherInfo.tempMin + "/" + weatherInfo.tempMax + "℃");
+                    WeatherIconLoader.getWeatherIcon(binding.weaterIvInfo, weatherInfo.condCode);
+                }else {
+                    binding.weaterTvInfo.setText(R.string.no_weather_information_available_at_the_moment);
+                    binding.weaterTvTemp.setVisibility(View.GONE);
+                    binding.weaterIvInfo.setVisibility(View.GONE);
                 }
             });
         }).start();
@@ -262,6 +267,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             handler.postDelayed(weatherRefreshRunnable, 0);
             isWeatherTimerRunning = true;
         }
+        setBtstatus();
     }
 
     @Override
@@ -269,6 +275,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         super.onPause();
         handler.removeCallbacks(weatherRefreshRunnable);
         isWeatherTimerRunning = false;
+        setBtstatus();
     }
 
     private void initLongTouch() {
@@ -299,9 +306,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_music ){
+        if (v.getId() == R.id.iv_music || v.getId() == R.id.tv_music || v.getId() == R.id.item_music ){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else if (v.getId() == R.id.iv_navi) {
+        } else if (v.getId() == R.id.iv_nav || v.getId() == R.id.tv_nav || v.getId() == R.id.item_navi) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -315,22 +322,22 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-        } else if (v.getId() == R.id.iv_time) {
+        } else if (v.getId() == R.id.item_weather) {
             startActivity("com.awell.weather", "com.awell.weather.MainActivity");
-        } else if (v.getId() == R.id.iv_home) {
+        } else if (v.getId() == R.id.iv_app || v.getId() == R.id.tv_app) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        } else if (v.getId() == R.id.iv_radio) {
+        } else if (v.getId() == R.id.item_radio) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-        } else if (v.getId() == R.id.iv_interconnect) {
+       } else if (v.getId() == R.id.item_car) {
             startActivity("com.awell.backcar", "com.awell.backcar.MainActivity");
-        } else if (v.getId() == R.id.iv_bluetooth) {
+        } else if (v.getId() == R.id.iv_phone || v.getId() == R.id.tv_phone) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-        } else if (v.getId() == R.id.iv_video) {
+        } else if (v.getId() == R.id.item_video) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        } else if (v.getId() == R.id.iv_album) {
-            startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
-        } else if (v.getId() == R.id.iv_eq) {
-            startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
+        } else if (v.getId() == R.id.iv_setting || v.getId() == R.id.tv_setting || v.getId() == R.id.item_setting) {
+            startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
+        } else if ( v.getId() == R.id.item_phone) {
+            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
         }
     }
 

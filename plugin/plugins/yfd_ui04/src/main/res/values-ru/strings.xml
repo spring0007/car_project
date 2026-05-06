@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Неизвестная песня</string>
+    <string name="music_artist">Неизвестный артист</string>
+    <string name="add_app">Добавить</string>
+    <string name="radio">РАДИО</string>
+    <string name="phone_connect">Телефон подключился</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Санни</string>
+    <string name="weather_desc_101">Облачно</string>
+    <string name="weather_desc_102">Мало облаков</string>
+    <string name="weather_desc_103">Частично солнечно</string>
+    <string name="weather_desc_104">Пасмурное покрытие</string>
+    <string name="weather_desc_300">Ливневой дождь</string>
+    <string name="weather_desc_301">Сильный ливень</string>
+    <string name="weather_desc_302">Грозовой дождь</string>
+    <string name="weather_desc_303">Сильный грозовой ливень</string>
+    <string name="weather_desc_304">Грозовой ливень с градом</string>
+    <string name="weather_desc_305">Лёгкий дождь</string>
+    <string name="weather_desc_306">Умеренный дождь</string>
+    <string name="weather_desc_307">Сильный дождь</string>
+    <string name="weather_desc_308">Сильные дожди</string>
+    <string name="weather_desc_309">Мелкий дождь</string>
+    <string name="weather_desc_310">Шторм</string>
+    <string name="weather_desc_311">Сильный шторм</string>
+    <string name="weather_desc_312">Сильный шторм</string>
+    <string name="weather_desc_313">Ледяной дождь</string>
+    <string name="weather_desc_400">Лёгкий снег</string>
+    <string name="weather_desc_401">Умеренный снег</string>
+    <string name="weather_desc_402">Сильный снег</string>
+    <string name="weather_desc_403">Снежная буря</string>
+    <string name="weather_desc_404">Мокрый снег</string>
+    <string name="weather_desc_405">Дождь и снег</string>
+    <string name="weather_desc_406">Дождь снега</string>
+    <string name="weather_desc_407">Снежный вихрь</string>
+    <string name="weather_desc_500">Туман</string>
+    <string name="weather_desc_501">Сустав</string>
+    <string name="weather_desc_502">Туман</string>
+    <string name="weather_desc_503">Густая дымка</string>
+    <string name="weather_desc_504">Лёгкий туман</string>
+    <string name="weather_desc_507">Песчаная буря</string>
+    <string name="weather_desc_508">Сильная песчаная буря</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">ПРИЛОЖЕНИЕ</string>
+    <string name="music">МУЗЫКА</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">НЕТ</string>
+    <string name="navi">НАВИГАЦИЯ</string>
+    <string name="set">ДЕКОРАЦИИ</string>
+    <string name="setting">МЕСТО ДЕЙСТВИЯ</string>
+    <string name="navigate_for_you_in_real_time">Навигация для вас в реальном времени</string>
+    <string name="telephone">ТЕЛЕФОН</string>
+    <string name="no_phone_connected">Телефон не подключён</string>
+    <string name="hd_video">HD ВИДЕО</string>
+    <string name="don_t_watch_while_driving">Не смотрите за рулём</string>
+    <string name="the_radio_is_not_playing">Радио — как друг издалека</string>
+    <string name="you_are_listening_to">Вы слушаете</string>
+    <string name="system_functions_settings">Настройки функций системы</string>
+    <string name="bt_music">BT MUSIC</string>
+    <string name="unknown_song">Неизвестная песня</string>
+    <string name="weather">ПОГОДА</string>
+    <string name="no_weather_information_available_at_the_moment">В данный момент нет информации о погоде</string>
+    <string name="car_info">ИНФОРМАЦИЯ О АВТОМОБИЛЕ</string>
+    <string name="vehicle_information">Информация о транспортном средстве</string>
+
+
+    
+
+</resources>

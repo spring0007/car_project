@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">שיר לא ידוע</string>
+    <string name="music_artist">אמן לא ידוע</string>
+    <string name="add_app">הוסף</string>
+    <string name="radio">רדיו</string>
+    <string name="phone_connect">הטלפון מחובר</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">סאני</string>
+    <string name="weather_desc_101">מעונן</string>
+    <string name="weather_desc_102">מעט עננים</string>
+    <string name="weather_desc_103">חלקית שמשי</string>
+    <string name="weather_desc_104">מעונן</string>
+    <string name="weather_desc_300">גשם גשם</string>
+    <string name="weather_desc_301">גשם כבד</string>
+    <string name="weather_desc_302">מטר רעמים</string>
+    <string name="weather_desc_303">מטר רעמים עז</string>
+    <string name="weather_desc_304">סופת רעמים עם ברד</string>
+    <string name="weather_desc_305">גשם קל</string>
+    <string name="weather_desc_306">גשם מתון</string>
+    <string name="weather_desc_307">גשם כבד</string>
+    <string name="weather_desc_308">גשם קיצוני</string>
+    <string name="weather_desc_309">גשם טפטוף</string>
+    <string name="weather_desc_310">סערה</string>
+    <string name="weather_desc_311">סערה כבדה</string>
+    <string name="weather_desc_312">סערה קשה</string>
+    <string name="weather_desc_313">גשם קפוא</string>
+    <string name="weather_desc_400">שלג קל</string>
+    <string name="weather_desc_401">שלג בינוני</string>
+    <string name="weather_desc_402">שלג כבד</string>
+    <string name="weather_desc_403">סופת שלג</string>
+    <string name="weather_desc_404">ברד</string>
+    <string name="weather_desc_405">גשם ושלג</string>
+    <string name="weather_desc_406">שלג במקלחת</string>
+    <string name="weather_desc_407">סופת שלג</string>
+    <string name="weather_desc_500">ערפל</string>
+    <string name="weather_desc_501">מפרק</string>
+    <string name="weather_desc_502">ערפל</string>
+    <string name="weather_desc_503">ערפל כבד</string>
+    <string name="weather_desc_504">ערפל קל</string>
+    <string name="weather_desc_507">סופת חול</string>
+    <string name="weather_desc_508">סופת חול כבדה</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">APP</string>
+    <string name="music">מוזיקה</string>
+    <string name="phone">בלוטות\'</string>
+    <string name="navigation">אין</string>
+    <string name="navi">ניווט</string>
+    <string name="set">סט</string>
+    <string name="setting">רקע</string>
+    <string name="navigate_for_you_in_real_time">ניווט בשבילך בזמן אמת</string>
+    <string name="telephone">טלפון</string>
+    <string name="no_phone_connected">אין טלפון מחובר</string>
+    <string name="hd_video">וידאו HD</string>
+    <string name="don_t_watch_while_driving">אל תסתכל בזמן נהיגה</string>
+    <string name="the_radio_is_not_playing">הרדיו הוא כמו חבר מרחוק</string>
+    <string name="you_are_listening_to">אתה מקשיב ל</string>
+    <string name="system_functions_settings">הגדרות פונקציות מערכת</string>
+    <string name="bt_music">BT MUSIC</string>
+    <string name="unknown_song">שיר לא ידוע</string>
+    <string name="weather">מזג אוויר</string>
+    <string name="no_weather_information_available_at_the_moment">אין מידע מזג אוויר זמין כרגע</string>
+    <string name="car_info">מידע על רכב</string>
+    <string name="vehicle_information">מידע על הרכב</string>
+
+
+    
+
+</resources>

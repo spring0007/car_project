@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_left_icon_app_size">62dp</dimen>
+    <dimen name="tv_title_size">30sp</dimen>
+    <dimen name="tv_sub_title_size">24sp</dimen>
+    <dimen name="tv_title_width_parcent">0.8</dimen>
+    <dimen name="tv_title_vertical_bias">0.10</dimen>
+    <dimen name="item_margin_start">15dp</dimen>
+    <dimen name="main_right_icon_width">374dp</dimen>
+    <dimen name="weather_iv_size">174dp</dimen>
+
+    <dimen name="app_icon_padding">20dp</dimen>
+    <dimen name="music_iv_size">60dp</dimen>
 
 </resources>

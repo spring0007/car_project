@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Bài hát không xác định</string>
+    <string name="music_artist">Nghệ sĩ vô danh</string>
+    <string name="add_app">Thêm</string>
+    <string name="radio">ĐÀI PHÁT</string>
+    <string name="phone_connect">Điện thoại đã kết nối</string>
+    <string name="blueth">Bluetooth</string>
+
+    <string name="weather_desc_100">Nắng</string>
+    <string name="weather_desc_101">Nhiều mây</string>
+    <string name="weather_desc_102">Ít mây</string>
+    <string name="weather_desc_103">Một phần nắng</string>
+    <string name="weather_desc_104">U ám</string>
+    <string name="weather_desc_300">Mưa rào</string>
+    <string name="weather_desc_301">Mưa lớn</string>
+    <string name="weather_desc_302">Mưa sấm sét</string>
+    <string name="weather_desc_303">Mưa giông nghiêm trọng</string>
+    <string name="weather_desc_304">Mưa giông với mưa đá</string>
+    <string name="weather_desc_305">Mưa nhẹ</string>
+    <string name="weather_desc_306">Mưa vừa phải</string>
+    <string name="weather_desc_307">Mưa lớn</string>
+    <string name="weather_desc_308">Mưa cực đoan</string>
+    <string name="weather_desc_309">Mưa phùn</string>
+    <string name="weather_desc_310">Bão</string>
+    <string name="weather_desc_311">Bão lớn</string>
+    <string name="weather_desc_312">Bão dữ dội</string>
+    <string name="weather_desc_313">Mưa đóng băng</string>
+    <string name="weather_desc_400">Tuyết nhẹ</string>
+    <string name="weather_desc_401">Tuyết vừa phải</string>
+    <string name="weather_desc_402">Tuyết rơi dày</string>
+    <string name="weather_desc_403">Bão tuyết</string>
+    <string name="weather_desc_404">Mưa đá</string>
+    <string name="weather_desc_405">Mưa và tuyết</string>
+    <string name="weather_desc_406">Mưa tuyết</string>
+    <string name="weather_desc_407">Tuyết rơi</string>
+    <string name="weather_desc_500">Sương mù</string>
+    <string name="weather_desc_501">Chung</string>
+    <string name="weather_desc_502">Sương mù</string>
+    <string name="weather_desc_503">Sương mù dày đặc</string>
+    <string name="weather_desc_504">Sương mù nhẹ</string>
+    <string name="weather_desc_507">Bão cát</string>
+    <string name="weather_desc_508">Bão cát lớn</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">ỨNG DỤNG</string>
+    <string name="music">ÂM NHẠC</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">KHÔNG CÓ</string>
+    <string name="navi">ĐIỀU HƯỚNG</string>
+    <string name="set">BỘ</string>
+    <string name="setting">CÀI ĐẶT</string>
+    <string name="navigate_for_you_in_real_time">Điều hướng cho bạn trong thời gian thực</string>
+    <string name="telephone">ĐIỆN THOẠI</string>
+    <string name="no_phone_connected">Không có điện thoại được kết nối</string>
+    <string name="hd_video">HD VIDEO</string>
+    <string name="don_t_watch_while_driving">Không xem khi đang lái xe</string>
+    <string name="the_radio_is_not_playing">Đài phát thanh giống như một người bạn từ xa</string>
+    <string name="you_are_listening_to">Bạn đang lắng nghe</string>
+    <string name="system_functions_settings">Cài đặt chức năng hệ thống</string>
+    <string name="bt_music">ÂM NHẠC BT</string>
+    <string name="unknown_song">Bài hát không xác định</string>
+    <string name="weather">THỜI TIẾT</string>
+    <string name="no_weather_information_available_at_the_moment">Hiện tại không có thông tin thời tiết</string>
+    <string name="car_info">THÔNG TIN XE HƠI</string>
+    <string name="vehicle_information">Thông tin xe</string>
+
+
+    
+
+</resources>

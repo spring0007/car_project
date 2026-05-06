@@ -1,0 +1,77 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">Lagu Tidak Dikenal</string>
+    <string name="music_artist">Artis Tidak Dikenal</string>
+    <string name="add_app">Tambahkan</string>
+    <string name="radio">RADIO</string>
+    <string name="phone_connect">Telepon Terhubung</string>
+    <string name="blueth">Bahasa Inggris</string>
+
+    <string name="weather_desc_100">Cerah</string>
+    <string name="weather_desc_101">Berawan</string>
+    <string name="weather_desc_102">Beberapa awan</string>
+    <string name="weather_desc_103">Sebagian cerah</string>
+    <string name="weather_desc_104">Mendung</string>
+    <string name="weather_desc_300">Hujan hujan</string>
+    <string name="weather_desc_301">Hujan lebat</string>
+    <string name="weather_desc_302">Hujan petir</string>
+    <string name="weather_desc_303">Hujan petir yang parah</string>
+    <string name="weather_desc_304">Hujan petir dengan hujan es</string>
+    <string name="weather_desc_305">Hujan ringan</string>
+    <string name="weather_desc_306">Hujan sedang</string>
+    <string name="weather_desc_307">Hujan lebat</string>
+    <string name="weather_desc_308">Hujan ekstrem</string>
+    <string name="weather_desc_309">Hujan gerimis</string>
+    <string name="weather_desc_310">Badai</string>
+    <string name="weather_desc_311">Badai besar</string>
+    <string name="weather_desc_312">Badai parah</string>
+    <string name="weather_desc_313">Hujan beku</string>
+    <string name="weather_desc_400">Salju tipis</string>
+    <string name="weather_desc_401">Salju sedang</string>
+    <string name="weather_desc_402">Salju tebal</string>
+    <string name="weather_desc_403">Badai salju</string>
+    <string name="weather_desc_404">Hujan es</string>
+    <string name="weather_desc_405">Hujan dan salju</string>
+    <string name="weather_desc_406">Mandi salju</string>
+    <string name="weather_desc_407">Badai salju</string>
+    <string name="weather_desc_500">Kabut</string>
+    <string name="weather_desc_501">Sambungan</string>
+    <string name="weather_desc_502">Kabut</string>
+    <string name="weather_desc_503">Kabut tebal</string>
+    <string name="weather_desc_504">Kabut ringan</string>
+    <string name="weather_desc_507">Badai pasir</string>
+    <string name="weather_desc_508">Badai pasir yang berat</string>
+    <string name="weather_desc_unknown">UNK</string>
+
+
+    <string name="App">APLIKASI</string>
+    <string name="music">MUSIK</string>
+    <string name="phone">BLUETOOTH</string>
+    <string name="navigation">TIDAK ADA</string>
+    <string name="navi">NAVIGASI</string>
+    <string name="set">MENGATUR</string>
+    <string name="setting">PENGATURAN</string>
+    <string name="navigate_for_you_in_real_time">Navigasi untuk Anda secara real time</string>
+    <string name="telephone">TELEPON</string>
+    <string name="no_phone_connected">Tidak ada telepon yang terhubung</string>
+    <string name="hd_video">HD VIDEO</string>
+    <string name="don_t_watch_while_driving">Jangan menonton saat mengemudi</string>
+    <string name="the_radio_is_not_playing">Radio seperti teman dari jauh</string>
+    <string name="you_are_listening_to">Anda mendengarkan</string>
+    <string name="system_functions_settings">Pengaturan Fungsi Sistem</string>
+    <string name="bt_music">MUSIK BT</string>
+    <string name="unknown_song">Lagu tidak dikenal</string>
+    <string name="weather">CUACA</string>
+    <string name="no_weather_information_available_at_the_moment">Tidak ada informasi cuaca yang tersedia saat ini</string>
+    <string name="car_info">INFO MOBIL</string>
+    <string name="vehicle_information">Informasi Kendaraan</string>
+
+
+    
+
+</resources>

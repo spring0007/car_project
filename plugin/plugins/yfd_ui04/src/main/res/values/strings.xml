@@ -5,22 +5,11 @@
     <string name="ui_clazz" translatable="false">com.launcher.yfd_ui4.MainActivityUI4</string>
 
 
-    <string name="click_play_music">Click To Play</string>
-    <string name="music_artist">Artist</string>
+    <string name="click_play_music">Unknown Song</string>
+    <string name="music_artist">Unknown Artist</string>
     <string name="add_app">Add</string>
-
-
-
-    <string name="radio">Radio</string>
-
-    <string name="folder">Folder Manage</string>
-
-    <string name="equalizer">EQ</string>
-    <string name="video">Video</string>
-    <string name="aux">Aux</string>
-    <string name="navi">Map Navigation</string>
-    <string name="image_album">Image browsing</string>
-    <string name="phone_connect">AUX</string>
+    <string name="radio">RADIO</string>
+    <string name="phone_connect">The phone Connected</string>
     <string name="blueth">Bluetooth</string>
 
     <string name="weather_desc_100">Sunny</string>
@@ -58,25 +47,35 @@
     <string name="weather_desc_507">Sandstorm</string>
     <string name="weather_desc_508">Heavy sandstorm</string>
     <string name="weather_desc_unknown">UNK</string>
-    <string name="yyyy_mm_dd">yyyy/MM/dd</string>
-    <string name="aa_hh_mm">hh:mm a</string>
 
 
     <string name="App">APP</string>
     <string name="music">MUSIC</string>
     <string name="phone">BLUETOOTH</string>
     <string name="navigation">NAV</string>
-    <string name="setting">SET</string>
-
-
-
+    <string name="navi">NAVIGATION</string>
+    <string name="set">SET</string>
+    <string name="setting">SETTING</string>
+    <string name="navigate_for_you_in_real_time">Navigate for you in real time</string>
+    <string name="telephone">TELEPHONE</string>
+    <string name="no_phone_connected">No phone connected</string>
+    <string name="hd_video">HD VIDEO</string>
+    <string name="don_t_watch_while_driving">Don\'t watch while driving</string>
+    <string name="the_radio_is_not_playing">The radio is like a friend from afar</string>
+    <string name="you_are_listening_to">You are listening to</string>
+    <string name="system_functions_settings">System Functions Settings</string>
+    <string name="bt_music">BT MUSIC</string>
+    <string name="unknown_song">Unknown song</string>
+    <string name="weather">WEATHER</string>
+    <string name="no_weather_information_available_at_the_moment">No weather information available at the moment</string>
+    <string name="car_info">CAR INFO</string>
+    <string name="vehicle_information">Vehicle Information</string>
 
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
         <item>wallpaper_01</item>
         <item>wallpaper_02</item>
-        <item>wallpaper_03</item>
     </string-array>
 
 </resources>
