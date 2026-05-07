@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">नेविगेशन</string>
+    <string name="Apps">ऐप्स</string>
+    <string name="radio">रेडियो</string>
+    <string name="video">वीडियो</string>
+    <string name="phone">फ़ोन</string>
+    <string name="music">राग</string>
+    <string name="unknown_song">अज्ञात गीत</string>
+    <string name="no_phone_connected">कोई फोन कनेक्ट नहीं है</string>
+    <string name="phone_connected">फोन कनेक्टेड</string>
+    <string name="theme_settings">थीम सेटिंग्स</string>
+    <string name="navigate_for_you_in_real_time">वास्तविक समय में आपके लिए नेविगेट करें</string>
+    <string name="radiomedia">रेडियोमीडिया</string>
+    <string name="hd_video">एचडी वीडियो</string>
+    <string name="don_t_watch_while_driving">गाड़ी चलाते समय न देखें</string>
+    <string name="more_apps">अधिक ऐप्स</string>
+    <string name="settings">सेटिंग</string>
+    <string name="system">प्रणाली</string>
+    <string name="management_the_files">फ़ाइलों का प्रबंधन</string>
+
+    
+
+</resources>

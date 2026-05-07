@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--video-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/video_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/app_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/iv_video_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:scaleType="fitXY"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/video_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/video_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/hd_video"
+            app:layout_constraintBottom_toTopOf="@+id/video_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_video_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/video_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/don_t_watch_while_driving"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/video_tv"
+            app:layout_constraintBottom_toTopOf="@+id/video_iv_layout"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/video_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/video_play_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/video_icon_1" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/video_file_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/video_icon_2" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/app_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/navi_layout"
+        app:layout_constraintStart_toEndOf="@+id/video_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:scaleType="fitXY"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/app_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/app_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Apps"
+            app:layout_constraintBottom_toTopOf="@+id/app_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_app_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/app_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/more_apps"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_tv"
+            app:layout_constraintBottom_toTopOf="@+id/app_iv_layout"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/app_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/app_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/app_icon_1" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/app_iv2"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/app_icon_2" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--settings-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settings_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/file_layout"
+        app:layout_constraintStart_toEndOf="@+id/app_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/settings_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:scaleType="fitXY"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/settings_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/settings_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            app:layout_constraintBottom_toTopOf="@+id/settings_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/settings_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/system"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_tv"
+            app:layout_constraintBottom_toTopOf="@+id/settings_iv_layout"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/settings_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/nav_setting_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/settings_icon_1" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/nav_app_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/settings_icon_2" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--radio-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/file_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/settings_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/iv_file_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:scaleType="fitXY"
+            android:src="@drawable/files_title_icon"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/file_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/management_the_files"
+            app:layout_constraintBottom_toTopOf="@+id/file_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_file_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/file_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/management_the_files"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/file_tv"
+            app:layout_constraintBottom_toTopOf="@+id/file_iv_layout"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/file_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/file_pre"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/files_icon_1" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/file_next"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/files_icon_2" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

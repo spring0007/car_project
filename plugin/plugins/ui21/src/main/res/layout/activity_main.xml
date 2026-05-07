@@ -419,7 +419,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:format12Hour="hh:mm"
-        android:format24Hour="hh:mm"
+        android:format24Hour="HH:mm"
         android:gravity="center_horizontal"
         android:textColor="#ffffff"
         android:textSize="@dimen/time_hour_text_size"

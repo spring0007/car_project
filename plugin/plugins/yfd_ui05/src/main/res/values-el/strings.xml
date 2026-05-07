@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">Πλοήγηση</string>
+    <string name="Apps">ΕΦΑΡΜΟΓΕΣ</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="video">Βίντεο</string>
+    <string name="phone">Τηλέφωνο</string>
+    <string name="music">Μουσική</string>
+    <string name="unknown_song">Άγνωστο τραγούδι</string>
+    <string name="no_phone_connected">Δεν υπάρχει συνδεδεμένο τηλέφωνο</string>
+    <string name="phone_connected">Το τηλέφωνο συνδέθηκε</string>
+    <string name="theme_settings">Ρυθμίσεις θέματος</string>
+    <string name="navigate_for_you_in_real_time">Πλοηγηθείτε για εσάς σε πραγματικό χρόνο</string>
+    <string name="radiomedia">Ραδιομέσα</string>
+    <string name="hd_video">Βίντεο HD</string>
+    <string name="don_t_watch_while_driving">Μην παρακολουθείτε ενώ οδηγείτε</string>
+    <string name="more_apps">Περισσότερες εφαρμογές</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="system">Σύστημα</string>
+    <string name="management_the_files">Διαχείριση των αρχείων</string>
+
+    
+
+</resources>

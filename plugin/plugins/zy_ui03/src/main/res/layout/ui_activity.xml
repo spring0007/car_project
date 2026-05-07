@@ -176,7 +176,7 @@
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:format12Hour="hh:mm a"
-            android:format24Hour="HH:mm a"
+            android:format24Hour="HH:mm"
             android:gravity="bottom"
             android:text="12:50 PM"
             android:textColor="@color/white"

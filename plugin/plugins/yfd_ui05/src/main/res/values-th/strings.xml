@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">การเดินเรือ</string>
+    <string name="Apps">แอป</string>
+    <string name="radio">วิทยุ</string>
+    <string name="video">วิดีโอ</string>
+    <string name="phone">โทรศัพท์</string>
+    <string name="music">เพลง</string>
+    <string name="unknown_song">เพลงที่ไม่รู้จัก</string>
+    <string name="no_phone_connected">ไม่ได้เชื่อมต่อโทรศัพท์</string>
+    <string name="phone_connected">โทรศัพท์เชื่อมต่อแล้ว</string>
+    <string name="theme_settings">การตั้งค่าธีม</string>
+    <string name="navigate_for_you_in_real_time">นําทางให้คุณแบบเรียลไทม์</string>
+    <string name="radiomedia">เรดิโอมีเดีย</string>
+    <string name="hd_video">วิดีโอ HD</string>
+    <string name="don_t_watch_while_driving">อย่าดูขณะขับรถ</string>
+    <string name="more_apps">แอพเพิ่มเติม</string>
+    <string name="settings">การตั้งค่า</string>
+    <string name="system">ระบบ</string>
+    <string name="management_the_files">การจัดการไฟล์</string>
+
+    
+
+</resources>

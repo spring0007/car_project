@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--音乐-->
+    <include
+        android:id="@+id/music_widget_layout"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_phone"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bt_phone"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/navi_layout"
+        app:layout_constraintStart_toEndOf="@+id/music_widget_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/iv_bt_phone_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/phone_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/bt_phone_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/phone"
+            app:layout_constraintBottom_toTopOf="@+id/bt_phone_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_bt_phone_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/bt_phone_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_phone_connected"
+            app:layout_constraintBottom_toTopOf="@+id/bt_phone_iv_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_phone_tv"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/bt_phone_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/phone_book_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/phonebook" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/contact_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/contact" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--navi-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/navi_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/radio_layout"
+        app:layout_constraintStart_toEndOf="@+id/bt_phone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/nav_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/nav_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation"
+            app:layout_constraintBottom_toTopOf="@+id/nav_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nav_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/nav_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/navigate_for_you_in_real_time"
+            app:layout_constraintBottom_toTopOf="@+id/nav_iv_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nav_tv"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/nav_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/nav_setting_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/nav_icon_1" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/nav_app_iv"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/nav_icon_2" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--radio-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/radio_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/navi_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="@dimen/viewpager_item_width_percent">
+
+        <ImageView
+            android:id="@+id/iv_radio_icon"
+            android:layout_width="@dimen/widget_title_icon_width"
+            android:layout_height="@dimen/widget_title_icon_width"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/radio_title_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+
+        <TextView
+            android:id="@+id/radio_tv"
+            style="@style/widget_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/radiomedia"
+            app:layout_constraintBottom_toTopOf="@+id/radio_sub_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_radio_icon"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <TextView
+            android:id="@+id/radio_sub_tv"
+            style="@style/widget_sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/radio"
+            app:layout_constraintBottom_toTopOf="@+id/radio_iv_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/radio_tv"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <LinearLayout
+            android:id="@+id/radio_iv_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/radio_pre"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/sf_music_pre" />
+
+            <View
+                android:layout_width="@dimen/iv_gav_width"
+                android:layout_height="1dp" />
+
+            <ImageView
+                android:id="@+id/radio_next"
+                style="@style/iv_bt_con_style"
+                android:src="@drawable/sf_music_next" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

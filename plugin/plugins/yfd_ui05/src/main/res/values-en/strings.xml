@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">Navigation</string>
+    <string name="Apps">APPS</string>
+    <string name="radio">Radio</string>
+    <string name="video">Video</string>
+    <string name="phone">Phone</string>
+    <string name="music">Music</string>
+    <string name="unknown_song">Unknown Song</string>
+    <string name="no_phone_connected">No phone Connected</string>
+    <string name="phone_connected">The phone Connected</string>
+    <string name="theme_settings">Theme Settings</string>
+    <string name="navigate_for_you_in_real_time">Navigate for you in real time</string>
+    <string name="radiomedia">RadioMedia</string>
+    <string name="hd_video">HD Video</string>
+    <string name="don_t_watch_while_driving">Don\'t watch while driving</string>
+    <string name="more_apps">More Apps</string>
+    <string name="settings">Settings</string>
+    <string name="system">System</string>
+    <string name="management_the_files">Management the files</string>
+
+    
+
+</resources>

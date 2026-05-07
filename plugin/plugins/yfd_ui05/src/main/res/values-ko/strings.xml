@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">항해</string>
+    <string name="Apps">앱</string>
+    <string name="radio">라디오</string>
+    <string name="video">비디오</string>
+    <string name="phone">전화</string>
+    <string name="music">음악</string>
+    <string name="unknown_song">알려지지 않은 노래</string>
+    <string name="no_phone_connected">전화 연결 없음</string>
+    <string name="phone_connected">전화가 연결됐어</string>
+    <string name="theme_settings">테마 설정</string>
+    <string name="navigate_for_you_in_real_time">실시간으로 네비게이션을 대신해 줘</string>
+    <string name="radiomedia">라디오미디어</string>
+    <string name="hd_video">HD 비디오</string>
+    <string name="don_t_watch_while_driving">운전 중에는 마세요</string>
+    <string name="more_apps">더 많은 앱</string>
+    <string name="settings">설정</string>
+    <string name="system">시스템</string>
+    <string name="management_the_files">파일 관리</string>
+
+    
+
+</resources>

@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">الملاحة</string>
+    <string name="Apps">التطبيقات</string>
+    <string name="radio">الراديو</string>
+    <string name="video">الفيديو</string>
+    <string name="phone">الهاتف</string>
+    <string name="music">الموسيقى</string>
+    <string name="unknown_song">أغنية غير معروفة</string>
+    <string name="no_phone_connected">لا يوجد هاتف متصل</string>
+    <string name="phone_connected">الهاتف متصل</string>
+    <string name="theme_settings">إعدادات الموضوع</string>
+    <string name="navigate_for_you_in_real_time">التنقل لك في الوقت الحقيقي</string>
+    <string name="radiomedia">راديوميديا</string>
+    <string name="hd_video">فيديو عالي الدقة</string>
+    <string name="don_t_watch_while_driving">لا تشاهد أثناء القيادة</string>
+    <string name="more_apps">المزيد من التطبيقات</string>
+    <string name="settings">الإعدادات</string>
+    <string name="system">النظام</string>
+    <string name="management_the_files">إدارة الملفات</string>
+
+    
+
+</resources>

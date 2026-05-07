@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">Điều hướng</string>
+    <string name="Apps">ỨNG DỤNG</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="video">Băng hình</string>
+    <string name="phone">Điện thoại</string>
+    <string name="music">Âm nhạc</string>
+    <string name="unknown_song">Bài hát không xác định</string>
+    <string name="no_phone_connected">Không có điện thoại được kết nối</string>
+    <string name="phone_connected">Điện thoại đã kết nối</string>
+    <string name="theme_settings">Cài đặt chủ đề</string>
+    <string name="navigate_for_you_in_real_time">Điều hướng cho bạn trong thời gian thực</string>
+    <string name="radiomedia">Truyền thông phát thanh</string>
+    <string name="hd_video">HD Video</string>
+    <string name="don_t_watch_while_driving">Không xem khi đang lái xe</string>
+    <string name="more_apps">Ứng dụng khác</string>
+    <string name="settings">Cài đặt</string>
+    <string name="system">Hệ thống</string>
+    <string name="management_the_files">Quản lý các tệp</string>
+
+    
+
+</resources>

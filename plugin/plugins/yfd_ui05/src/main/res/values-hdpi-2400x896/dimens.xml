@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <dimen name="music_widget_iv_size">54dp</dimen>
+    <dimen name="title_text_size">22sp</dimen>
+    <dimen name="sub_title_tv_size">19sp</dimen>
+    <dimen name="iv_gav_width">12dp</dimen>
+    <dimen name="widget_title_icon_width">204dp</dimen>
+    <dimen name="theme_icon_size">34dp</dimen>
+    <item name="viewpager_item_width_percent" type="dimen" format="float">0.25</item>
+    <item name="viewpager_height_parent" type="dimen" format="float">0.75</item>
+</resources>

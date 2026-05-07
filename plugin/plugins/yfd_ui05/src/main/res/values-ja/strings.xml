@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">ナビゲーション</string>
+    <string name="Apps">アプリ</string>
+    <string name="radio">ラジオ</string>
+    <string name="video">ビデオ</string>
+    <string name="phone">電話</string>
+    <string name="music">音楽</string>
+    <string name="unknown_song">未知の歌</string>
+    <string name="no_phone_connected">電話接続なし</string>
+    <string name="phone_connected">電話が接続された</string>
+    <string name="theme_settings">テーマ設定</string>
+    <string name="navigate_for_you_in_real_time">リアルタイムでナビゲートしてくれます</string>
+    <string name="radiomedia">ラジオメディア</string>
+    <string name="hd_video">HDビデオ</string>
+    <string name="don_t_watch_while_driving">運転中に見ないでください</string>
+    <string name="more_apps">さらに多くのアプリ</string>
+    <string name="settings">舞台設定</string>
+    <string name="system">システム</string>
+    <string name="management_the_files">ファイルの管理</string>
+
+    
+
+</resources>

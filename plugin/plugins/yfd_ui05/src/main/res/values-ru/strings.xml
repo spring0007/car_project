@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">Навигация</string>
+    <string name="Apps">ПРИЛОЖЕНИЯ</string>
+    <string name="radio">Радио</string>
+    <string name="video">Видео</string>
+    <string name="phone">Телефон</string>
+    <string name="music">Музыка</string>
+    <string name="unknown_song">Неизвестная песня</string>
+    <string name="no_phone_connected">Нет телефона. Подключен</string>
+    <string name="phone_connected">Телефон подключился</string>
+    <string name="theme_settings">Тематические настройки</string>
+    <string name="navigate_for_you_in_real_time">Навигация для вас в реальном времени</string>
+    <string name="radiomedia">RadioMedia</string>
+    <string name="hd_video">HD видео</string>
+    <string name="don_t_watch_while_driving">Не смотрите за рулём</string>
+    <string name="more_apps">Больше приложений</string>
+    <string name="settings">Места действия</string>
+    <string name="system">Система</string>
+    <string name="management_the_files">Управление файлами</string>
+
+    
+
+</resources>

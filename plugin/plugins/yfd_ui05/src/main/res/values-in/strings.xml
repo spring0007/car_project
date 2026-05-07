@@ -1,0 +1,28 @@
+<resources>
+    <!-- app 名称 -->
+
+    
+    
+
+    <string name="navigation">Navigasi</string>
+    <string name="Apps">APLIKASI</string>
+    <string name="radio">Radio</string>
+    <string name="video">Videonya</string>
+    <string name="phone">Telepon</string>
+    <string name="music">Musik</string>
+    <string name="unknown_song">Lagu Tidak Dikenal</string>
+    <string name="no_phone_connected">Tidak ada telepon yang terhubung</string>
+    <string name="phone_connected">Telepon Terhubung</string>
+    <string name="theme_settings">Pengaturan Tema</string>
+    <string name="navigate_for_you_in_real_time">Navigasi untuk Anda secara real time</string>
+    <string name="radiomedia">Media Radiomedia</string>
+    <string name="hd_video">HD Video</string>
+    <string name="don_t_watch_while_driving">Jangan menonton saat mengemudi</string>
+    <string name="more_apps">Aplikasi Lainnya</string>
+    <string name="settings">Pengaturan</string>
+    <string name="system">Sistem</string>
+    <string name="management_the_files">Mengelola file</string>
+
+    
+
+</resources>
