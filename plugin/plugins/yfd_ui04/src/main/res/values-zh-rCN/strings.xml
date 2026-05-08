@@ -52,10 +52,10 @@
     <string name="App">APP</string>
     <string name="music">音乐</string>
     <string name="phone">蓝牙</string>
-    <string name="navigation">没有</string>
+    <string name="navigation">导航</string>
     <string name="navi">导航</string>
     <string name="set">集合</string>
-    <string name="setting">背景设定</string>
+    <string name="setting">设置</string>
     <string name="navigate_for_you_in_real_time">实时为您导航</string>
     <string name="telephone">电话</string>
     <string name="no_phone_connected">没有连接电话</string>
