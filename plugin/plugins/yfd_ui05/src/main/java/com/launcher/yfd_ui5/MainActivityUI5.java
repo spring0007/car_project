@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -47,6 +49,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     private AwellMediaControl mediaControl;
     private static final String BTSTATUS = "awell_bt_status";
     private ImageView btNoIv;
+    private ContentObserver btStatusObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,8 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
 
-        setBtstatus();
+        // 注册蓝牙状态监听器
+        registerBtStatusObserver();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
         SharedPreferences sharedPreferences = getSharedPreferences("styleMode", MODE_PRIVATE);
@@ -118,17 +122,48 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         viewConfiguration = ViewConfiguration.get(this);
     }
 
-    private void setBtstatus(){
+    /**
+     * 注册蓝牙状态观察者
+     */
+    private void registerBtStatusObserver() {
+        btStatusObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                Log.d(TAG, "Bluetooth status changed");
+                setBtstatus();
+            }
+        };
+        
+        getContentResolver().registerContentObserver(
+            Settings.System.getUriFor(BTSTATUS),
+            false,
+            btStatusObserver
+        );
+    }
+
+    /**
+     * 注销蓝牙状态观察者
+     */
+    private void unregisterBtStatusObserver() {
+        if (btStatusObserver != null) {
+            getContentResolver().unregisterContentObserver(btStatusObserver);
+            btStatusObserver = null;
+        }
+    }
+
+    public void setBtstatus(){
         // flag 0 : BT close   1 : BT NoConnected    2 : BT Connected
         int mBTStatus = Settings.System.getInt(getContentResolver(), BTSTATUS, 0);
         Log.d(TAG, " mBTStatus = " + mBTStatus);
-        if (btNoIv == null){
-            return;
-        }
-        if (mBTStatus == 0 || mBTStatus == 1){
-            btNoIv.setVisibility(View.VISIBLE);
-        }else if (mBTStatus == 2){
-            btNoIv.setVisibility(View.GONE);
+        TextView btPhoneSubTv = findViewById(R.id.bt_phone_sub_tv);
+        if (btPhoneSubTv != null) {
+            Log.d(TAG, " mBTStatus ,btPhoneSubTv");
+            if (mBTStatus == 0 || mBTStatus == 1){
+                btPhoneSubTv.setText(R.string.no_phone_connected);
+            }else if (mBTStatus == 2){
+                btPhoneSubTv.setText(R.string.phone_connected);
+            }
         }
     }
 
@@ -154,12 +189,14 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        setBtstatus();
+        //setBtstatus();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 注销蓝牙状态观察者
+        unregisterBtStatusObserver();
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
     }
