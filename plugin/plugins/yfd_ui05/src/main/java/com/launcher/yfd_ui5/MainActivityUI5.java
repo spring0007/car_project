@@ -3,7 +3,9 @@ package com.launcher.yfd_ui5;
 import static com.awell.utils.Utils.startWallpaper;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,13 +20,16 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
-
+import com.awell.library.AwellTool;
+import com.awell.utils.LogUtil;
 import com.launcher.yfd_ui5.databinding.ActivityMainUi5Binding;
 
 
@@ -49,7 +54,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         binding = ActivityMainUi5Binding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
-
+        initView();
         initLongTouch();
 
         setUpViewPager();
@@ -61,8 +66,14 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         setBtstatus();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
+        SharedPreferences sharedPreferences = getSharedPreferences("styleMode", MODE_PRIVATE);
+        int styleMode = sharedPreferences.getInt("styleMode", 1);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(styleMode);
 
+    }
+
+    private void initView() {
+        binding.themeLayout.setOnClickListener(this);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {
@@ -74,16 +85,11 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
             this.musicWidget.setActivity(this, this.musicWidget);
         }
     }
-
-    public void setBtNoIv(ImageView btNoIv) {
-        this.btNoIv = btNoIv;
-    }
-
     private void setUpViewPager() {
         pageDataList = new ArrayList<>();
         pageDataList.add(new PageData(R.layout.viewpager_1));
         pageDataList.add(new PageData(R.layout.viewpager_2));
-        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this,this);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this);
         binding.viewpager.setAdapter(adapter);
         binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -161,14 +167,16 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Log.i(TAG, "onClick: " + v.getId());
         /*if (v.getId() == R.id.music_iv){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else*/ if (v.getId() == R.id.navi_layout) {
+        } else*/
+        if (v.getId() == R.id.nav_icon) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
-            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
+            if (TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
                 startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-            else{
+            else {
                 Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
                 if (intent != null) {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -177,22 +185,143 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
                 }
             }
-       /* }else if (v.getId() == R.id.all_iv) {
-            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        }else if (v.getId() == R.id.radio_iv) {
-            startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-        }else if (v.getId() == R.id.bt_iv) {
+        } else if (v.getId() == R.id.nav_setting_iv) {
+            Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.carsetting");
+            mIntent.setComponent(new ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity"));
+            mIntent.putExtra("SelectDefaultId", 8);
+            mIntent.putExtra("SelectDefaultFragment", 0);
+            startActivityIntent(mIntent);
+            //}else if (v.getId() == R.id.nav_app_iv) {
+
+        } else if (v.getId() == R.id.theme_layout) {
+            startActivity("com.awell.themesetting", "com.awell.themesetting.MainActivity");
+        } else if (v.getId() == R.id.phone_book_iv || v.getId() == R.id.contact_iv) {
+            // 打开电话簿，跳转到车机设置的电话簿页面
+            Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.bluetooth");
+            mIntent.setComponent(new ComponentName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity"));
+
+            if (v.getId() == R.id.phone_book_iv)
+                mIntent.putExtra("bt_preference_key", 0);
+            else
+                mIntent.putExtra("bt_preference_key", 1);
+            startActivityIntent(mIntent);
+
+        } else if (v.getId() == R.id.iv_bt_phone_icon) {
             startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-        }else if (v.getId() == R.id.setting_iv) {
+        } else if (v.getId() == R.id.settings_icon) {
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
-        }else if (v.getId() == R.id.video_iv) {
+        } else if (v.getId() == R.id.setting_general_iv) {
+
+            Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.carsetting");
+            mIntent.setComponent(new ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity"));
+            mIntent.putExtra("SelectDefaultId", 3);
+            //mIntent.putExtra("SelectDefaultFragment", 30);
+            startActivityIntent(mIntent);
+        } else if (v.getId() == R.id.setting_sound_iv) {
+
+            Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.carsetting");
+            mIntent.setComponent(new ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity"));
+            mIntent.putExtra("SelectDefaultId", 2);
+            //mIntent.putExtra("SelectDefaultFragment", 30);
+            startActivityIntent(mIntent);
+
+        } else if (v.getId() == R.id.iv_video_icon) {
             startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        }else if (v.getId() == R.id.time_iv) {
+        } else if (v.getId() == R.id.video_file_iv || v.getId() == R.id.video_search_iv) {
+            Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.localvideo");
+            mIntent.setComponent(new ComponentName("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity"));
+            if (v.getId() == R.id.video_search_iv)
+                mIntent.putExtra("default_frament", 3);
+            else
+                mIntent.putExtra("default_frament", 0);
+            startActivityIntent(mIntent);
+        }else if(v.getId() == R.id.iv_app_icon){
+            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+        }else if(v.getId() == R.id.app_iv ){
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            SharedPreferences sharedPreferences = getSharedPreferences("styleMode", MODE_PRIVATE);
+            int styleMode = sharedPreferences.getInt("styleMode", 1);
+            if(styleMode >= 3){
+                styleMode = 1;
+            }else{
+                styleMode++;
+            }
+            sharedPreferences.edit().putInt("styleMode", styleMode).apply();
+            AppsCustomizeControl.INSTANCE.setPluginThemeMode(styleMode,true);
+            Toast.makeText(this, "应用图标已切换成功", Toast.LENGTH_SHORT).show();
+        }else if (v.getId() == R.id.iv_radio_icon) {
+            startActivity("com.awell.radio", "com.awell.radio.MainActivity");
+        }else if (v.getId() == R.id.iv_file_icon) {
+            startActivity("com.mediatek.filemanager", "com.mediatek.filemanager.FileManagerOperationActivity");
+       // }else if (v.getId() == R.id.file_searchs) {
+        //    startActivity("com.mediatek.filemanager", "com.mediatek.filemanager.FileManagerSearchActivity");
+        }else if (v.getId() == R.id.file_gallery) {
+            startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
+        }else if (v.getId() == R.id.radio_pre) {
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+        }else if (v.getId() == R.id.radio_next){
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
+        /*}else if (v.getId() == R.id.time_iv) {
                 Log.d(TAG, "onClick: " + v.getId());
             Intent intent = new Intent(Settings.ACTION_DATE_SETTINGS);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);*/
+            startActivity(intent);
+
+             Intent mIntent = new Intent();
+            mIntent.setPackage("com.awell.carsetting");
+            mIntent.setComponent(new ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity"));
+            mIntent.putExtra("SelectDefaultId", 3);
+            mIntent.putExtra("SelectDefaultFragment", 30);
+            startActivityIntent(mIntent);
+
+            */
         }
+    }
+
+    /**
+     * 启动Activity并处理启动标记
+     *
+     * @param intent Intent对象
+     */
+    private void startActivityIntent(Intent intent) {
+        LogUtil.i("startActivityIntent");
+        String packName = intent.getPackage();
+        boolean isboot = true;
+        
+        // 检查是否为工作区应用
+        for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
+            if (packName == null || !packName.equals(IconCache.WorkSpacePackageName[index])) {
+                isboot = false;
+                break;
+            }
+        }
+        
+        // 根据包名设置不同的启动标记
+        if (packName != null && packName.contains("com.autonavi")) {
+            if (isboot) {
+                Settings.System.putString(getContentResolver(), "boot_apk1", packName);
+            }
+        } else {
+            if (isboot) {
+                Settings.System.putString(getContentResolver(), "boot_apk2", packName);
+            }
+        }
+        
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(intent);
     }
 
     /**
@@ -251,7 +380,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                     && "NO_MUSIC_LIST".equals(singerName)
                     && "NO_MUSIC_LIST".equals(album)) {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.unknown_song), MusicWidget.MUSIC);
-              //  musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
+                musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
             }
 
             if (MusicWidget.OTHER_MUSIC == type) {
@@ -263,7 +392,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                 if (!TextUtils.isEmpty(singerName)) {
                     musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
                 } else {
-                   // musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
+                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
                 }
             }
         }
@@ -275,6 +404,9 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
+            runOnUiThread(() -> {
+                ((TextView)findViewById(R.id.radio_sub_tv)).setText(String.format("%s %s%s", fmOrAm, freq, unit));
+             });
 
         }
 

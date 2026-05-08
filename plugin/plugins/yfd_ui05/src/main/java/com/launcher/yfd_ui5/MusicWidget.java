@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
@@ -128,8 +129,6 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         // 只给标题图标设置点击事件，而不是整个容器
         View titleIcon = view.findViewById(R.id.music_widget_title_icon);
         if (titleIcon != null) {
-            titleIcon.setClickable(true);
-            titleIcon.setFocusable(true);
             titleIcon.setOnClickListener(this);
         }
         view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
@@ -171,8 +170,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         }
     }
 
-   // int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang};
-   // int[] sf_music_zantingId = {R.drawable.sf_music_zanting, R.drawable.sf_music_zanting};
+    int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang};
+    int[] sf_music_zantingId = {R.drawable.sf_music_zanting, R.drawable.sf_music_zanting};
 
 
     @Override
@@ -312,14 +311,14 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        /*Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
+        Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
         if (mArtistNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(artistName)) {
                 mArtistNameTextView.setText(artistName);
             } else {
                 mArtistNameTextView.setText(getResources().getString(R.string.music_artist));
             }
-        }*/
+        }
     }
 
     public void loadAlbumArtByUri(Uri uri) {
@@ -391,10 +390,10 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                     resumeLoadAnim();
                 }
             }
-           // mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
+            mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
             pauseLoadAnim();
-            //mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
+            mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
 

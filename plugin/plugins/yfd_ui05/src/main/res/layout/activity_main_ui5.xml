@@ -58,6 +58,7 @@
         app:layout_constraintVertical_bias="0.96">
 
         <ImageView
+            android:id="@+id/theme_icon"
             android:layout_width="@dimen/theme_icon_size"
             android:layout_height="@dimen/theme_icon_size"
             android:clickable="true"

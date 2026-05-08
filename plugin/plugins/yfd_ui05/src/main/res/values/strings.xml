@@ -3,6 +3,7 @@
     <string name="ui_key" translatable="false">LauncherUI_C5</string>
     <string name="ui_clazz" translatable="false">com.launcher.yfd_ui5.MainActivityUI5</string>
 
+    <string name="music_artist">Artist</string>
     <string name="navigation">Navigation</string>
     <string name="Apps">APPS</string>
     <string name="radio">Radio</string>

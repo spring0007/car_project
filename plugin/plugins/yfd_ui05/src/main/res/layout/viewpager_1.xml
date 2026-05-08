@@ -36,6 +36,7 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitXY"
+            android:onClick="onClick"
             android:src="@drawable/phone_title_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +113,7 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitXY"
+            android:onClick="onClick"
             android:src="@drawable/nav_title_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,16 +157,17 @@
             <ImageView
                 android:id="@+id/nav_setting_iv"
                 style="@style/iv_bt_con_style"
+                android:layout_height="56dp"
                 android:src="@drawable/nav_icon_1" />
 
-            <View
-                android:layout_width="@dimen/iv_gav_width"
-                android:layout_height="1dp" />
+<!--            <View-->
+<!--                android:layout_width="@dimen/iv_gav_width"-->
+<!--                android:layout_height="1dp" />-->
 
-            <ImageView
-                android:id="@+id/nav_app_iv"
-                style="@style/iv_bt_con_style"
-                android:src="@drawable/nav_icon_2" />
+<!--            <ImageView-->
+<!--                android:id="@+id/nav_app_iv"-->
+<!--                style="@style/iv_bt_con_style"-->
+<!--                android:src="@drawable/nav_icon_2" />-->
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -187,6 +190,7 @@
             android:clickable="true"
             android:focusable="true"
             android:scaleType="fitXY"
+            android:onClick="onClick"
             android:src="@drawable/radio_title_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
