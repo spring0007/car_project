@@ -111,8 +111,53 @@
     <string name="custom_workspace_cling_description_2" msgid="2758258454975288377"></string>
 
 
+    <string name="brake_warntitle">手煞車警告</string>
+    <string name="moreapp">更多應用程式</string>
+    <string name="cdwidgetready">點擊播放</string>
+    <string name="low_temp_tips">22~32℃</string>
+    <string name="danyi_temp_tips">25</string>
+    <string name="wind_fx">東風</string>
+    <string name="wind_level">第二層</string>
+    <string name="air_visib_def">能見度：10公里</string>
+    <string name="onlinenews">我們正在嘗試為你載入今天的最新消息，請稍候......</string>
+    <string name="onlinemusic">線上音樂</string>
+    <string name="onlineradio">FM 廣播</string>
+    <string name="navi">導航</string>
+    <string name="super_cd">超級CD</string>
+    <string name="temp_unit">℃</string>
+    <string name="temp_fanwei">12-28℃</string>
     <string name="weather_city">深圳</string>
     <string name="city">城市--</string>
+    <string name="listen_news">線上新聞</string>
+    <string name="Please_access_router_sim_card">請存取路由器的 SIM 卡</string>
+
+    <string name="click_play_music">請選擇音樂</string>
+    <string name="music_artist">藝術家</string>
+    <string name="navi_title">導航</string>
+    <string name="music_title">音樂</string>
+    <string name="radio_title">收音機</string>
+    <string name="bt_title">藍牙</string>
+    <string name="time_example1">PM</string>
+    <string name="time_example2">0:00</string>
+    <string name="lean_line">/</string>
+    <string name="string_divider">:</string>
+    <string name="string_singer">深圳</string>
+    <string name="string_gang">/</string>
+
+    <string name="weather_simple">多雲</string>
+    <string name="uninstall_system_app">無法卸載系統應用</string>
+    <string name="navi_xy">導航</string>
+    <string name="music_xy">音樂</string>
+    <string name="bt_xy">藍牙</string>
+    <string name="radio_xy">收音機</string>
+    <string name="radio_pinglv">點擊播放</string>
+    <string name="radio_FM">MHz</string>
+    <string name="radio_AM">KHz</string>
+    <string name="settings_xy">設置</string>
+    <string name="super_cd_xy">虛擬CD</string>
+    <string name="vido">視頻</string>
+
+
     <string name="wind">風速--</string>
     <string name="wind_one">風速高</string>
     <string name="wind_two">風速中</string>
@@ -121,22 +166,6 @@
     <string name="air_one">空氣質量優</string>
     <string name="air_two">空氣質量好</string>
     <string name="air_there">空氣質量差</string>
-    <!--    <string name="air_null">未連接</string>-->
-    <string name="weather_simple">多雲</string>
-    <string name="click_play_music">請選擇音樂</string>
-    <string name="navi_title">導航</string>
-    <string name="music_title">音樂</string>
-    <string name="radio_title">收音機</string>
-    <string name="bt_title">藍牙</string>
-    <string name="uninstall_system_app">無法卸載系統應用</string>
-    <string name="navi_xy">導航</string>
-    <string name="bt_xy">藍牙</string>
-    <string name="radio_xy">收音機</string>
-    <string name="radio_pinglv">點擊播放</string>
-    <string name="music_xy">音樂</string>
-    <string name="settings_xy">設置</string>
-    <string name="super_cd_xy">虛擬CD</string>
-    <string name="vido">視頻</string>
 
     <string name="zixun">雲資訊</string>
     <string name="yule">雲娛樂</string>
@@ -167,9 +196,24 @@
     <string name="main_setting">設置</string>
     <string name="main_bt">藍牙</string>
 
+
     <string name="widget_music_title">音樂</string>
     <string name="widget_radio_title">收音機</string>
     <string name="widget_kwplay_title">酷我音樂</string>
     <string name="widget_bt_title">藍牙音樂</string>
     <string name="widget_music_name">歌曲名</string>
+    <string name="main_music_tv">音樂</string>
+    <string name="main_navi_tv">船隻</string>
+    <string name="main_Radio_tv">廣播</string>
+    <string name="main_sf_tv">外部輸入</string>
+    <string name="main_phone_tv">電話</string>
+    <string name="main_set_tv">場景設定</string>
+
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">地理位置</string>
+    <string name="radio_save">搜尋</string>
+    <string name="icon_add_name">新增</string>
+    <string name="unknow_song_name">歌曲名稱不詳</string>
+    <string name="unknow_song_artist">未知藝術家</string>
 </resources>

@@ -110,4 +110,110 @@
     <string name="custom_workspace_cling_title_2" msgid="5516006164661020362"></string>
     <string name="custom_workspace_cling_description_2" msgid="2758258454975288377"></string>
 
+
+    <string name="brake_warntitle">Park Freni Uyarısı</string>
+    <string name="moreapp">Daha Fazla Uygulama</string>
+    <string name="cdwidgetready">Oynamak için tıklayın</string>
+    <string name="low_temp_tips">22~32℃</string>
+    <string name="danyi_temp_tips">25</string>
+    <string name="wind_fx">Doğu rüzgarı</string>
+    <string name="wind_level">Seviye 2</string>
+    <string name="air_visib_def">Görüş mesafesi:10km</string>
+    <string name="onlinenews">Bugün en son haberleri sizin için yüklemeye çalışıyorum, lütfen bekleyin...</string>
+    <string name="onlinemusic"> Çevrimiçi müzik </string>
+    <string name="onlineradio">FM radyo</string>
+    <string name="navi">Navigasyon </string>
+    <string name="super_cd">Süper CD</string>
+    <string name="temp_unit">℃</string>
+    <string name="temp_fanwei">12-28℃</string>
+    <string name="weather_city">ShenZhen</string>
+    <string name="city">Şehir- -</string>
+    <string name="listen_news">Çevrimiçi Haberler</string>
+    <string name="Please_access_router_sim_card">Lütfen router sim kartına erişin</string>
+
+    <string name="click_play_music">Oynamak İçin Tıklayın</string>
+    <string name="music_artist">Sanatçı</string>
+    <string name="navi_title">Gemiler</string>
+    <string name="music_title">Müzik</string>
+    <string name="radio_title">Radyo</string>
+    <string name="bt_title">BT</string>
+    <string name="time_example1">PM</string>
+    <string name="time_example2">0:00</string>
+    <string name="lean_line">/</string>
+    <string name="string_divider">:</string>
+    <string name="string_singer">Shenzhen</string>
+    <string name="string_gang">/</string>
+
+    <string name="weather_simple">bulutlu</string>
+    <string name="uninstall_system_app">Sistem uygulamalarını kaldıramıyorum</string>
+    <string name="navi_xy">Navigasyon</string>
+    <string name="music_xy">Müzik</string>
+    <string name="bt_xy">Bluetooth</string>
+    <string name="radio_xy">Radyo</string>
+    <string name="radio_pinglv">dianjibofang</string>
+    <string name="radio_FM">MHz</string>
+    <string name="radio_AM">KHz</string>
+    <string name="settings_xy">Mekan</string>
+    <string name="super_cd_xy">Süper CD</string>
+    <string name="vido">Vido</string>
+
+
+    <string name="wind">Rüzgar hızı--</string>
+    <string name="wind_one">Rüzgar hızı H</string>
+    <string name="wind_two">Rüzgar hızı M</string>
+    <string name="wind_there">Rüzgar hızı L</string>
+    <string name="air">Hava kalitesi--</string>
+    <string name="air_one">Hava kalitesi H</string>
+    <string name="air_two">Hava kalitesi M</string>
+    <string name="air_there">Hava kalitesi L</string>
+
+    <string name="zixun">Bulut bilgileri</string>
+    <string name="yule">Bulut Entainment</string>
+    <string name="fuwu">Bulut Hizmeti</string>
+    <string name="anquan">Bulut güvenliği</string>
+
+    <string name="tianqi">Hava durumu</string>
+    <string name="news">Haberler</string>
+    <string name="gushi">Borsa</string>
+
+    <string name="kuwoyinyue">Koowomusic</string>
+    <string name="ximalaya">Himalayalar</string>
+    <string name="aiqiyi">QIY</string>
+    <string name="shouyiji">Radyo</string>
+
+    <string name="jiyuan">SOS</string>
+    <string name="xiaoxi">BCMS</string>
+    <string name="chexian">Suto sigortası</string>
+
+    <string name="chekuang">Araç durumu</string>
+    <string name="jiluyi"> Araba DVR\'ı</string>
+    <string name="baojing">Alarm</string>
+
+    <string name="main_allapp">AllApp</string>
+    <string name="main_radio">Radyo</string>
+    <string name="main_navi">Gemiler</string>
+    <string name="main_music">Müzik</string>
+    <string name="main_setting">Ortamlar</string>
+    <string name="main_bt">Bluetooth</string>
+
+
+    <string name="widget_music_title">Müzik</string>
+    <string name="widget_radio_title">Radyo</string>
+    <string name="widget_kwplay_title">KwPlay</string>
+    <string name="widget_bt_title">Bt Müzik</string>
+    <string name="widget_music_name">Şarkı Adı</string>
+    <string name="main_music_tv">Müzik</string>
+    <string name="main_navi_tv">Gemiler</string>
+    <string name="main_Radio_tv">Radyo</string>
+    <string name="main_sf_tv">Dış giriş</string>
+    <string name="main_phone_tv">Telefon</string>
+    <string name="main_set_tv">Ortamlar</string>
+
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">KONUM</string>
+    <string name="radio_save">Arama</string>
+    <string name="icon_add_name">Ek Kat</string>
+    <string name="unknow_song_name">Bilinmeyen şarkı adı</string>
+    <string name="unknow_song_artist">Bilinmeyen sanatçı</string>
 </resources>

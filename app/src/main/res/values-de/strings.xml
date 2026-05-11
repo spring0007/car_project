@@ -109,4 +109,111 @@
     <string name="custom_workspace_cling_description_1" msgid="6875529190849858047"></string>
     <string name="custom_workspace_cling_title_2" msgid="5516006164661020362"></string>
     <string name="custom_workspace_cling_description_2" msgid="2758258454975288377"></string>
+
+
+    <string name="brake_warntitle">Warnung vor der Handbremse</string>
+    <string name="moreapp">Mehr App</string>
+    <string name="cdwidgetready">Klicken zum Spielen</string>
+    <string name="low_temp_tips">22~32℃</string>
+    <string name="danyi_temp_tips">25</string>
+    <string name="wind_fx">Ostwind</string>
+    <string name="wind_level">Stufe 2</string>
+    <string name="air_visib_def">Sichtweite: 10 km</string>
+    <string name="onlinenews">Ich versuche, Ihnen heute die neuesten Nachrichten zu laden, bitte warten Sie...</string>
+    <string name="onlinemusic"> Online-Musik </string>
+    <string name="onlineradio">UKW-Radio</string>
+    <string name="navi">Navigation </string>
+    <string name="super_cd">Super-CD</string>
+    <string name="temp_unit">℃</string>
+    <string name="temp_fanwei">12-28℃</string>
+    <string name="weather_city">ShenZhen</string>
+    <string name="city">Stadt- -</string>
+    <string name="listen_news">Online-Nachrichten</string>
+    <string name="Please_access_router_sim_card">Bitte greifen Sie auf die SIM-Karte des Routers zu.</string>
+
+    <string name="click_play_music">Zum Spielen klicken</string>
+    <string name="music_artist">Künstler</string>
+    <string name="navi_title">Schiffe</string>
+    <string name="music_title">Musik</string>
+    <string name="radio_title">Radio</string>
+    <string name="bt_title">BT</string>
+    <string name="time_example1">PM</string>
+    <string name="time_example2">0:00</string>
+    <string name="lean_line">/</string>
+    <string name="string_divider">:</string>
+    <string name="string_singer">Shenzhen</string>
+    <string name="string_gang">/</string>
+
+    <string name="weather_simple">bewölkt</string>
+    <string name="uninstall_system_app">System-Apps kann nicht deinstalliert werden</string>
+    <string name="navi_xy">Navigation</string>
+    <string name="music_xy">Musik</string>
+    <string name="bt_xy">Bluetooth</string>
+    <string name="radio_xy">Radio</string>
+    <string name="radio_pinglv">Dianjibofang</string>
+    <string name="radio_FM">MHz</string>
+    <string name="radio_AM">KHz</string>
+    <string name="settings_xy">Schauplatz</string>
+    <string name="super_cd_xy">Super-CD</string>
+    <string name="vido">Vido</string>
+
+
+    <string name="wind">Windgeschwindigkeit--</string>
+    <string name="wind_one">Windgeschwindigkeit H</string>
+    <string name="wind_two">Windgeschwindigkeit M</string>
+    <string name="wind_there">Windgeschwindigkeit L</string>
+    <string name="air">Luftqualität--</string>
+    <string name="air_one">Luftqualität H</string>
+    <string name="air_two">Luftqualität M</string>
+    <string name="air_there">Luftqualität L</string>
+
+    <string name="zixun">Cloud-Informationen</string>
+    <string name="yule">Wolkenbewahrung</string>
+    <string name="fuwu">Cloud-Dienst</string>
+    <string name="anquan">Cloud-Sicherheit</string>
+
+    <string name="tianqi">Wetter</string>
+    <string name="news">Nachrichten</string>
+    <string name="gushi">Aktienmarkt</string>
+
+    <string name="kuwoyinyue">Koowomusic</string>
+    <string name="ximalaya">Himalaya</string>
+    <string name="aiqiyi">QIY</string>
+    <string name="shouyiji">Radio</string>
+
+    <string name="jiyuan">SOS</string>
+    <string name="xiaoxi">BCMS</string>
+    <string name="chexian">Suto-Versicherung</string>
+
+    <string name="chekuang">Fahrzeugzustand</string>
+    <string name="jiluyi"> Auto-DVR</string>
+    <string name="baojing">Alarm</string>
+
+    <string name="main_allapp">AllApp</string>
+    <string name="main_radio">Radio</string>
+    <string name="main_navi">Schiffe</string>
+    <string name="main_music">Musik</string>
+    <string name="main_setting">Einstellungen</string>
+    <string name="main_bt">Bluetooth</string>
+
+
+    <string name="widget_music_title">Musik</string>
+    <string name="widget_radio_title">Radio</string>
+    <string name="widget_kwplay_title">KwPlay</string>
+    <string name="widget_bt_title">Bt Music</string>
+    <string name="widget_music_name">Songname</string>
+    <string name="main_music_tv">Musik</string>
+    <string name="main_navi_tv">Schiffe</string>
+    <string name="main_Radio_tv">Radio</string>
+    <string name="main_sf_tv">Externe Eingabe</string>
+    <string name="main_phone_tv">Telefon</string>
+    <string name="main_set_tv">Einstellungen</string>
+
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">LAGE</string>
+    <string name="radio_save">Suche</string>
+    <string name="icon_add_name">Hinzufügen zu</string>
+    <string name="unknow_song_name">Unbekannter Songname</string>
+    <string name="unknow_song_artist">Unbekannter Künstler</string>
 </resources>

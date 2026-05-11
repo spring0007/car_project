@@ -111,6 +111,84 @@
     <string name="custom_workspace_cling_description_2" msgid="2758258454975288377"></string>
 
 
+    <string name="brake_warntitle">Cảnh báo phanh tay</string>
+    <string name="moreapp">Ứng dụng khác</string>
+    <string name="cdwidgetready">Bấm để chơi</string>
+    <string name="low_temp_tips">22~32℃</string>
+    <string name="danyi_temp_tips">25</string>
+    <string name="wind_fx">Gió Đông</string>
+    <string name="wind_level">Cấp độ 2</string>
+    <string name="air_visib_def">Tầm nhìn: 10km</string>
+    <string name="onlinenews">Đang cố gắng tải cho bạn những tin tức mới nhất hôm nay, vui lòng đợi...</string>
+    <string name="onlinemusic"> Nhạc trực tuyến </string>
+    <string name="onlineradio">Đài FM</string>
+    <string name="navi">Điều hướng </string>
+    <string name="super_cd">Siêu CD</string>
+    <string name="temp_unit">℃</string>
+    <string name="temp_fanwei">12-28℃</string>
+    <string name="weather_city">Thâm Quyến</string>
+    <string name="city">Thành phố- -</string>
+    <string name="listen_news">Tin tức trực tuyến</string>
+    <string name="Please_access_router_sim_card">Vui lòng truy cập thẻ sim bộ định tuyến</string>
+
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="navi_title">Tàu</string>
+    <string name="music_title">Âm nhạc</string>
+    <string name="radio_title">Đài phát thanh</string>
+    <string name="bt_title">BT</string>
+    <string name="time_example1">Chiều</string>
+    <string name="time_example2">0:00</string>
+    <string name="lean_line">/</string>
+    <string name="string_divider">:</string>
+    <string name="string_singer">Thâm Quyến</string>
+    <string name="string_gang">/</string>
+
+    <string name="weather_simple">nhiều mây</string>
+    <string name="uninstall_system_app">Không thể gỡ cài đặt ứng dụng hệ thống</string>
+    <string name="navi_xy">Điều hướng</string>
+    <string name="music_xy">Âm nhạc</string>
+    <string name="bt_xy">Bluetooth</string>
+    <string name="radio_xy">Đài phát thanh</string>
+    <string name="radio_pinglv">Dianjibofang</string>
+    <string name="radio_FM">MHz</string>
+    <string name="radio_AM">KHz</string>
+    <string name="settings_xy">Cài đặt</string>
+    <string name="super_cd_xy">Siêu CD</string>
+    <string name="vido">Vido</string>
+
+
+    <string name="wind">Tốc độ gió--</string>
+    <string name="wind_one">Tốc độ gió H</string>
+    <string name="wind_two">Tốc độ gió M</string>
+    <string name="wind_there">Tốc độ gió L</string>
+    <string name="air">chất lượng không khí--</string>
+    <string name="air_one">Chất lượng không khí H</string>
+    <string name="air_two">Chất lượng không khí M</string>
+    <string name="air_there">Chất lượng không khí L</string>
+
+    <string name="zixun">Thông tin đám mây</string>
+    <string name="yule">Kết nối đám mây</string>
+    <string name="fuwu">Dịch vụ đám mây</string>
+    <string name="anquan">Bảo mật đám mây</string>
+
+    <string name="tianqi">Thời tiết</string>
+    <string name="news">Tin tức</string>
+    <string name="gushi">Thị trường chứng khoán</string>
+
+    <string name="kuwoyinyue">Âm nhạc Koowo</string>
+    <string name="ximalaya">Dãy Himalaya</string>
+    <string name="aiqiyi">CHẤT LƯỢNG</string>
+    <string name="shouyiji">Đài phát thanh</string>
+
+    <string name="jiyuan">SOS</string>
+    <string name="xiaoxi">BCMS</string>
+    <string name="chexian">Bảo hiểm Suto</string>
+
+    <string name="chekuang">Tình trạng xe</string>
+    <string name="jiluyi"> DVR ô tô</string>
+    <string name="baojing">báo động</string>
+
     <string name="main_allapp">ứng dụng</string>
     <string name="main_radio">Đài</string>
     <string name="main_navi">dẫn đường</string>
@@ -118,12 +196,12 @@
     <string name="main_setting">thiết lập</string>
     <string name="main_bt">Bluetooth</string>
 
+
     <string name="widget_music_title">Âm nhạc</string>
     <string name="widget_radio_title">Đài</string>
     <string name="widget_kwplay_title">Âm nhạc</string>
     <string name="widget_bt_title">Âm nhạc</string>
     <string name="widget_music_name">Tên bài hát</string>
-
     <string name="main_music_tv">âm</string>
     <string name="main_navi_tv">Comment</string>
     <string name="main_Radio_tv">đài</string>
@@ -131,4 +209,11 @@
     <string name="main_phone_tv">Điện</string>
     <string name="main_set_tv">thiết lập</string>
 
+
+    <string name="radio_dx">Chuyển đổi</string>
+    <string name="radio_loc">ĐỊA ĐIỂM</string>
+    <string name="radio_save">Tìm kiếm</string>
+    <string name="icon_add_name">Thêm vào</string>
+    <string name="unknow_song_name">Tên bài hát không rõ</string>
+    <string name="unknow_song_artist">Nghệ sĩ vô danh</string>
 </resources>
