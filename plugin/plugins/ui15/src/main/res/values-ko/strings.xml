@@ -1,0 +1,25 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">알려지지 않은 노래</string>
+    <string name="music_artist">예술가</string>
+    <string name="settings">설정</string>
+    <string name="music">음악</string>
+    <string name="phone">전화</string>
+    <string name="radio">라디오</string>
+    <string name="video">비디오</string>
+    <string name="apps">앱</string>
+
+
+    
+
+
+
+
+</resources>

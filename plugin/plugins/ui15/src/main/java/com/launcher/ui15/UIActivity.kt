@@ -1,17 +1,13 @@
-package com.launcher.yfd_ui3
+package com.launcher.ui15
 
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.graphics.Rect
 import android.location.Location
@@ -26,55 +22,36 @@ import android.os.Looper
 import android.os.Message
 import android.provider.Settings
 import android.text.TextUtils
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.widget.ImageView
-import android.widget.PopupWindow
 import androidx.annotation.RequiresPermission
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.awell.addapp.AddSelectAppCallback
 import com.awell.addapp.AppInfo
 import com.awell.addapp.MyDbHelper
-import com.awell.addapp.ShowPopupI
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
-import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
-import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
-import com.launcher.yfd_ui3.adapter.AppInofAdapter
-import com.launcher.yfd_ui3.adapter.AppPopAdapter
-import com.launcher.yfd_ui3.databinding.UiActivityBinding
-import com.launcher.yfd_ui3.utils.ClickUtils
-import com.launcher.yfd_ui3.utils.FreeformUtils.NAVI_GAODE_PKG
-import com.launcher.yfd_ui3.utils.FreeformUtils.NAVI_GOOGLE_PKG
-import com.launcher.yfd_ui3.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
-import com.launcher.yfd_ui3.utils.FreeformUtils.startFreeformApp
-import com.launcher.yfd_ui3.utils.IconManager
-import com.launcher.yfd_ui3.utils.LogUtil
-import com.launcher.yfd_ui3.utils.SystemUIClient
-import com.launcher.yfd_ui3.utils.SystemUIClient.MUSIC_PKG
-import com.launcher.yfd_ui3.view.FMMarkView
+import com.launcher.ui15.databinding.UiActivityBinding
+import com.launcher.ui15.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
+import com.launcher.ui15.utils.FreeformUtils.startFreeformApp
+import com.launcher.ui15.utils.LogUtil
+import com.launcher.ui15.utils.SystemUIClient
 import kotlinx.coroutines.Runnable
 import java.io.File
-import kotlin.concurrent.thread
 import kotlin.math.abs
 
-class YFD_UIActivity : Activity(), View.OnClickListener {
+class UIActivity : Activity(), View.OnClickListener {
 
-    private val TAG = YFD_UIActivity::class.simpleName
+    private val TAG = UIActivity::class.simpleName
     private lateinit var mViewBinding: UiActivityBinding
 
     lateinit var mediaControl: AwellMediaControl
+    private lateinit var musicWidget: MusicWidget
     private lateinit var locationManager: LocationManager
 
     private val MSG_UPDATE_SPEED = 1
@@ -83,13 +60,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     private var accRecor: Boolean? = null
 
     val PERMISSION_REQUEST_CODE: Int = 100
-
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var appInfoAdapter: AppInofAdapter
-    private lateinit var allAppInfoList: List<AppInfo>
-    private lateinit var showAppInfoList: ArrayList<AppInfo>
-
-    lateinit var popupWindow: PopupWindow
 
     private lateinit var placehodlerInfo: AppInfo
     private lateinit var myDbHelper: MyDbHelper
@@ -133,10 +103,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
         // 设置主题模式，并同步到 IconManager
-        AppsCustomizeControl.setPluginThemeMode(3)
-
-        // 初始化 IconManager，预加载资源
-        IconManager.initialize(this)
+        AppsCustomizeControl.setPluginThemeMode(1)
 
     }
 
@@ -149,7 +116,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 "huang running=>: isFreeformAppRunning()=>${FreeformUtils.isFreeformAppRunning(this)}"
             )
             if (!FreeformUtils.isFreeformAppRunning(this)) {*/
-                updateImagePosition(findViewById(R.id.freeform_image), "onResume")
+            updateImagePosition(findViewById(R.id.freeform_image), "onResume")
             //}
         }
     }
@@ -167,9 +134,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         // 重新发送新的延时任务
         if (checkTopAppLollipop(this))
             handlerFreeform.postDelayed(freeformRunnable, 150)
-
-        // Verify all apps in the list are still installed
-        verifyInstalledApps()
 
     }
 
@@ -206,7 +170,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             systemUIClient.hideFreeform()
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
             systemUIClient.fullScreenFreeform()
-        }else
+        } else
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -215,7 +179,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
         systemUIClient = SystemUIClient(this)
         systemUIClient.bindToSystemUIService(this)
-        appInfoAdapter.setSystemUIClient(systemUIClient)
     }
 
     private fun updateImagePosition(imageView: ImageView, reason: String) {
@@ -263,7 +226,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         viewConfiguration = ViewConfiguration.get(this)
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        if(locationManager!= null)
+        if (locationManager != null)
             locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
     }
 
@@ -271,220 +234,10 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
         clickStartApp()
 
-        initAddAppView()
-
-        initFMScaleView()
-
     }
 
-    private fun initFMScaleView() {
-        // 初始化频率和 AM/FM
-        val freq = "96.5"  // 默认 AM 频率 1143 kHz
-        val fmOrAm = "FM"   // 默认 AM 模式
-        mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq.toString()
-        mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
-        // 先设置模式，再设置频率，确保刻度计算正确
-        mViewBinding.layoutRadioLayout.fmScaleView.post({
-            if ("FM".equals(fmOrAm)) {
-                mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.FM)
-            } else {
-                mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.AM)
-            }
-            mViewBinding.layoutRadioLayout.fmScaleView.setBandFrequency(freq.toFloat())
-        })
-
-    }
-
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun initAddAppView() {
-        showAppInfoList = ArrayList<AppInfo>()
-        allAppInfoList = ArrayList<AppInfo>()
-
-        placehodlerInfo = createMismatchPlaceholder();
-        // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = MyDbHelper(this, "show_app", null, 1)
-        sqLiteDatabase = myDbHelper.writableDatabase
-
-        appInfoAdapter =
-            AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
-
-        linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        mViewBinding.rv.setLayoutManager(linearLayoutManager)
-        mViewBinding.rv.setAdapter(appInfoAdapter)
-
-        Thread {
-            showHostApp()
-        }.start()
-
-    }
-
-    private fun showHostApp() {
-        // 刷新应用列表
-        refreshAppList()
-
-        runOnUiThread {
-            appInfoAdapter.setContentList(showAppInfoList)
-            appInfoAdapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun refreshAppList() {
-        // 获取所有已安装应用
-        allAppInfoList = getAllAppInfo(this, false)
-        // 清空当前显示列表
-        showAppInfoList = ArrayList()
-
-        // 从数据库加载保存的应用
-        val storageAppList = loadAppListFromDatabase()
-
-        // 添加保存的应用到显示列表
-        for (packageName in storageAppList) {
-            val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
-            if (app != null) {
-                showAppInfoList.add(app)
-            }
-        }
-
-        // 如果没有保存的应用，加载默认应用
-        if (showAppInfoList.isEmpty()) {
-            loadDefaultApps()
-        }
-
-        // 保存应用到数据库
-        saveAppListToDatabase()
-
-        // 添加占位符
-        addAppPlaceholder()
-    }
-
-    private fun loadAppListFromDatabase(): List<String> {
-        val storageAppList = ArrayList<String>()
-        val cursor = myDbHelper.writableDatabase.query("showapp", null, null, null, null, null, null)
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range")
-                val packageName = cursor.getString(cursor.getColumnIndex("packagename"))
-                storageAppList.add(packageName)
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", arrayOf(packageName))
-            }
-            cursor.close()
-        }
-        return storageAppList
-    }
-
-    private fun loadDefaultApps() {
-        for (packName in Utils.defaultShowApp) {
-            val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
-            if (appInfo != null) {
-                showAppInfoList.add(appInfo)
-            }
-        }
-    }
-
-    private fun saveAppListToDatabase() {
-        for (storagePac in showAppInfoList) {
-            if (storagePac != null) {
-                val contentValues = ContentValues().apply {
-                    put("packagename", storagePac.package_name)
-                }
-                sqLiteDatabase.insert("showapp", null, contentValues)
-            }
-        }
-    }
-
-    private fun addAppPlaceholder() {
-        // 使用统一的占位符更新方法
-        updateAppPlaceholder(false)
-    }
-
-    val addSelectAppCallback: AddSelectAppCallback = object : AddSelectAppCallback {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun addAppInfo(appInfo: AppInfo) {
-            for (pack in showAppInfoList)
-                if (pack.package_name.equals(appInfo.package_name)) {
-                    popupWindow.dismiss()
-                    showPopupI.hidePopup()
-                    return
-                }
-            showAppInfoList.remove(placehodlerInfo)
-
-            showAppInfoList.add(appInfo)
-            showAppInfoList.add(placehodlerInfo)
-            appInfoAdapter.setContentList(showAppInfoList)
-            appInfoAdapter.notifyDataSetChanged()
-            thread {
-                val contentValues = ContentValues().apply {
-                    put("packagename", appInfo.package_name)
-                }
-                sqLiteDatabase.insert("showapp", null, contentValues)
-            }
-
-
-            showPopupI.hidePopup()
-        }
-
-        override fun removeAppInfo(packageName: String?) {
-            sqLiteDatabase.delete("showapp", "packagename=?", arrayOf(packageName))
-            for (pack in showAppInfoList)
-                if (pack.package_name.equals(packageName)) {
-                    showAppInfoList.remove(pack)
-                    break
-                }
-
-            appInfoAdapter.setContentList(showAppInfoList)
-        }
-
-    }
 
     var lastSpeed: Float = 0F
-
-    private val showPopupI: ShowPopupI = object : ShowPopupI {
-        override fun showPopup() {
-            showPopupAllApp()
-            backgroundAlpha(0.1f)
-        }
-
-        override fun hidePopup() {
-            popupWindow.dismiss()
-        }
-    }
-
-    private fun showPopupAllApp() {
-        val view: View = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null)
-        popupWindow = PopupWindow(
-            view,
-            RecyclerView.LayoutParams.WRAP_CONTENT,
-            RecyclerView.LayoutParams.WRAP_CONTENT
-        )
-
-        popupWindow.isOutsideTouchable = true
-        popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
-
-        allAppInfoList = getAllAppInfo(this, false)
-
-        val rvPop = view.findViewById<RecyclerView>(R.id.rv_pop_allapp)
-        val gridLayoutManager = GridLayoutManager(this, 4)
-        gridLayoutManager.spanCount = 2
-        gridLayoutManager.orientation = RecyclerView.HORIZONTAL
-        val appInfoAdapter = AppPopAdapter(this, allAppInfoList, addSelectAppCallback)
-        rvPop.layoutManager = gridLayoutManager
-        rvPop.adapter = appInfoAdapter
-
-        popupWindow.setOnDismissListener {
-            backgroundAlpha(1.0f)
-        }
-
-        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 10)
-    }
-
-    private fun backgroundAlpha(alpha: Float) {
-        val lp = window.attributes
-        lp.alpha = alpha //0.0-1.0
-        window.attributes = lp
-    }
 
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -507,17 +260,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         } else {
             registerReceiver(receiver, filter)
         }
-        
+
         // 单独注册需要 dataScheme 的广播
-        val packageFilter = IntentFilter()
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
-        packageFilter.addDataScheme("package")
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(receiver, packageFilter, RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(receiver, packageFilter)
-        }
+//        val packageFilter = IntentFilter()
+//        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED)
+//        packageFilter.addDataScheme("package")
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            registerReceiver(receiver, packageFilter, RECEIVER_EXPORTED)
+//        } else {
+//            registerReceiver(receiver, packageFilter)
+//        }
     }
 
     override fun onDestroy() {
@@ -529,9 +282,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
         unregisterCustomerListener()
-        if (mViewBinding.layoutRadioLayout.fmScaleView != null) {
-            mViewBinding.layoutRadioLayout.fmScaleView.release();
-        }
         try {
             mediaControl.unBindDataService(this)
         } catch (e: Exception) {
@@ -540,9 +290,9 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun unregisterCustomerListener() {
-         try {
-             locationManager.removeUpdates(mLocationListener)
-         } catch (e: Exception) {
+        try {
+            locationManager.removeUpdates(mLocationListener)
+        } catch (e: Exception) {
             LogUtil.e("unregisterCustomerListener: removeGpsStatusListener error=>${e.message}")
         }
     }
@@ -559,12 +309,16 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
 
+        musicWidget = mViewBinding.layoutMusicWidget.root
+        musicWidget.setMediaLibrary(mediaControl)
+        musicWidget.setActivity(this, musicWidget)
+
     }
 
 
     private var receiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if(!isResumed){
+            if (!isResumed) {
                 LogUtil.i("onReceive,The current interface is not visible")
                 return
             }
@@ -573,14 +327,14 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {
                     if (intent.getIntExtra("lamplet_state", 0) == 1) {
-                       // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.open)
+                        // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.open)
                     } else {
-                       // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.off)
+                        // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.off)
                     }
                 }
 
                 CommonData.ACTION_ACC_ON -> {
-                  //  mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
+                    //  mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
                     findViewById<ImageView>(R.id.freeform_image).post {
                         if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
                             updateImagePosition(findViewById(R.id.freeform_image), "acc_on")
@@ -608,14 +362,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     if (zlinkStatus == null) {
                         return
                     }
-                    LogUtil.i(
-
-                        "onReceive: mediaControl.getCurrentPkgName()=>${mediaControl.getCurrentPkgName()}"
-                    )
+                    LogUtil.i("onReceive: mediaControl.getCurrentPkgName()=>${mediaControl.getCurrentPkgName()}")
                     if (mediaControl.getCurrentPkgName()?.equals("com.zjinnova.zlink") == true) {
                         if ("REFRESH_JEPG" == zlinkStatus) {
                             updateCarplayImageAlbum()
                         }
+                        musicWidget.setCarPlayData(zlinkStatus, phoneMode)
                     }
                 }
 
@@ -633,26 +385,12 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     val sessionTopPkg = intent.getStringExtra("top_package")
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
+
                 "com.awell.360floatview.fullscreen",
-		        "awellauto.backcar.on" -> {
-                    val freePkg = Settings.System.getString(contentResolver,"freeform_app_package_name")
-                    if("cn.cardoor.zt360".equals(freePkg)) {
-                        // 检查 popupWindow 是否已初始化
-                        if (::popupWindow.isInitialized && popupWindow.isShowing) {
-                            popupWindow.dismiss()
-                        }
+                "awellauto.backcar.on" -> {
+                    val freePkg = Settings.System.getString(contentResolver, "freeform_app_package_name")
+                    if ("cn.cardoor.zt360".equals(freePkg)) {
                         systemUIClient.fullScreenFreeform()
-                    }
-                }
-                Intent.ACTION_PACKAGE_REMOVED -> {
-                    if (!intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) {
-                        var packageName = intent.getDataString()
-                        if (packageName != null) {
-                            // Remove the package scheme prefix
-                            packageName = packageName.replace("package:", "")
-                            // Update the app list to remove the uninstalled app
-                            updateAppListAfterUninstall(packageName)
-                        }
                     }
                 }
             }
@@ -726,18 +464,17 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             override fun updateViewMusicPlay(
                 bundle: Bundle, pkg: String, command: String, mediaType: Int, currentMedia: Int
             ) {
-                runOnUiThread {
-
-                    if ("com.awell.radio" != pkg) {
-                    }
-
+                if ("com.awell.radio" != pkg) {
+                    musicWidget.switchMediaController(
+                        pkg, command, mediaType, currentMedia
+                    )
                 }
             }
 
-            override fun updateViewPlayStatus(
-                bundle: Bundle, status: Boolean, type: Int
-            ) {
-                runOnUiThread {}
+            override fun updateViewPlayStatus(bundle: Bundle, status: Boolean, type: Int) {
+                runOnUiThread {
+                    musicWidget.setCurMusicState(status, type)
+                }
             }
 
             @SuppressLint("UseKtx")
@@ -747,6 +484,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                     val uri = uriStr?.let {
                         Uri.parse(it).takeIf { uri -> uri.scheme != null }
                     }
+                    musicWidget.loadAlbumArtByUri(uri)
                 }
             }
 
@@ -754,46 +492,62 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 bundle: Bundle, songName: String, singerName: String, album: String, type: Int
             ) {
                 runOnUiThread {
+                    musicWidget.setMusicNameTextView(songName, type)
+                    musicWidget.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
-
+                        musicWidget.setMusicNameTextView(
+                            getResources().getString(R.string.click_play_music),
+                            MusicWidget.MUSIC
+                        )
+                        musicWidget.setArtistNameTextView(
+                            getResources().getString(R.string.music_artist),
+                            MusicWidget.MUSIC
+                        )
                     }
 
                     if (MusicWidget.OTHER_MUSIC == type) {
                         if (!TextUtils.isEmpty(songName)) {
+                            musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC)
                         } else {
-
+                            musicWidget.setMusicNameTextView(
+                                getResources().getString(R.string.click_play_music),
+                                MusicWidget.OTHER_MUSIC
+                            )
                         }
                         if (!TextUtils.isEmpty(singerName)) {
-
+                            musicWidget.setArtistNameTextView(
+                                singerName, MusicWidget.OTHER_MUSIC
+                            )
                         } else {
-
+                            musicWidget.setArtistNameTextView(
+                                getResources().getString(R.string.music_artist),
+                                MusicWidget.OTHER_MUSIC
+                            )
                         }
                     }
                 }
             }
 
-            override fun updateViewPlayTime(
-                bundle: Bundle, currentTime: Long, totalTime: Long, type: Int
-            ) {
-                runOnUiThread {
-
-                }
+            override fun updateViewPlayTime( bundle: Bundle, currentTime: Long, totalTime: Long, type: Int ) {
+//                runOnUiThread {
+//
+//                }
             }
 
-            override fun updateViewRadioFreq(bundle: Bundle, fmOrAm: String, freq: String, unit: String ) {
-                runOnUiThread {
-                    runOnUiThread(java.lang.Runnable {
-                        mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq
-                        mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
-                        if (fmOrAm == "FM") {
-                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.FM)
-                        } else {
-                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.AM)
-                        }
-                        mViewBinding.layoutRadioLayout.fmScaleView.setBandFrequency(freq.toFloat())
-                        //mViewBinding.layoutRadioLayout.tvRadioUnit.setText(unit)
-                    })
-                }
+            override fun updateViewRadioFreq(bundle: Bundle, fmOrAm: String, freq: String, unit: String) {
+//                runOnUiThread {
+//                    runOnUiThread(java.lang.Runnable {
+//                        mViewBinding.layoutRadioLayout.tvRadioFreq.text = freq
+//                        mViewBinding.layoutRadioLayout.tvRadioAmFm.text = fmOrAm
+//                        if (fmOrAm == "FM") {
+//                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.FM)
+//                        } else {
+//                            mViewBinding.layoutRadioLayout.fmScaleView.setRadioMode(FMMarkView.RadioMode.AM)
+//                        }
+//                        mViewBinding.layoutRadioLayout.fmScaleView.setBandFrequency(freq.toFloat())
+//                        //mViewBinding.layoutRadioLayout.tvRadioUnit.setText(unit)
+//                    })
+//                }
             }
 
             override fun handleOriginBundle(bundle: Bundle) {
@@ -853,14 +607,15 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 mHandle.sendMessage(msg)
             }
         }
-        override fun onProviderDisabled(provider: String) { }
+
+        override fun onProviderDisabled(provider: String) {}
         override fun onProviderEnabled(provider: String) {}
         override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
     }
 
     private fun clickStartApp() {
 
-        mViewBinding.homeAppMap.setOnClickListener {
+        /*mViewBinding.homeAppMap.setOnClickListener {
             val pkg =
                 Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
             when (pkg) {
@@ -952,16 +707,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 //            startActivity(mIntent)
 //            true
 //        }
-
-
-        mViewBinding.clockHour.setOnClickListener(this)
-        mViewBinding.clockMonth.setOnClickListener(this)
-        mViewBinding.clockData.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.radioLayout.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.ivRadioNext.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.ivRadioPre.setOnClickListener(this)
-       // mViewBinding.layoutRadioLayout.ivRadioPlayPause.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.tvRadioAmFm.setOnClickListener(this)
+*/
 
     }
 
@@ -999,71 +745,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
             }
             startActivity(intent)
         }
-    }
-
-    private fun getAllAppInfo(context: Context, isFilterSystem: Boolean): ArrayList<AppInfo> {
-        val appBeanList: ArrayList<AppInfo> = ArrayList()
-
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-
-        val packageManager = context.packageManager
-        val resolveInfos = packageManager.queryIntentActivities(intent, 0)
-
-        val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
-            try {
-                packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
-            } catch (e: PackageManager.NameNotFoundException) {
-                null
-            }
-        }.distinctBy { it.packageName }
-
-        LogUtil.w("appList size: ${appList.size}")
-
-        // 预计算过滤条件，避免重复计算
-        val needToShowSystemApps = Utils.needToShowPackageName
-        val filterApps = Utils.filterAppPackageName
-        val otherNeedToShow = Utils.otherNeedToShowPackageName
-
-        // 先过滤出需要显示的应用包名列表
-        val needShowPackages = mutableListOf<String>()
-        val packageInfoMap = mutableMapOf<String, PackageInfo>()
-
-        for (p in appList) {
-            val packageName = p.applicationInfo.packageName
-            val flags = p.applicationInfo.flags
-
-            val shouldShow = when {
-                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in needToShowSystemApps -> true
-                (flags and ApplicationInfo.FLAG_SYSTEM) == 0 && packageName !in filterApps -> true
-                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in otherNeedToShow -> true
-                else -> false
-            }
-
-            if (shouldShow) {
-                needShowPackages.add(packageName)
-                packageInfoMap[packageName] = p
-            }
-        }
-
-        LogUtil.w("needShowPackages size: ${needShowPackages.size}")
-
-        // 临时使用普通加载方式 (规避协程问题)
-        for (packageName in needShowPackages) {
-            val bean = AppInfo()
-            bean.setIcon(IconManager.getAppIcon(context, packageName))
-            val p = packageInfoMap[packageName]
-            if (p != null) {
-                bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
-                bean.setPackage_name(packageName)
-                bean.setFlags(p.applicationInfo.flags)
-                appBeanList.add(bean)
-            }
-        }
-
-        LogUtil.w("appBeanList size: ${appBeanList.size}")
-        return appBeanList
     }
 
 
@@ -1139,175 +820,53 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            mViewBinding.layoutRadioLayout.ivRadioNext.id -> {
-                if (ClickUtils.isFastClick()) {
-                    return
-                }
-                mediaControl.sendStrToHost(AwellTool.RADIO.NEXT)
+            mViewBinding.hostAppTv.id,
+            mViewBinding.hostAppIv.id -> {
+                LogUtil.w("freeform_launcher_idle,0")
+                systemUIClient.hideFreeform()
+                Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
+                systemUIClient.fullScreenFreeform()
+                AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
+            }
 
+            mViewBinding.hostSettingIv.id,
+            mViewBinding.hostSetttingTv.id -> {
+
+                startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity")
             }
-            mViewBinding.layoutRadioLayout.ivRadioPre.id -> {
-                if (ClickUtils.isFastClick()) {
-                    return
-                }
-                mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS)
-            }
-//            mViewBinding.layoutRadioLayout.ivRadioPlayPause.id -> {
-//            }
-            mViewBinding.layoutRadioLayout.tvRadioAmFm.id -> {
-                mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
-            }
-            mViewBinding.layoutRadioLayout.radioLayout.id -> {
+
+            mViewBinding.hostRadioIv.id,
+            mViewBinding.hostRadioTv.id -> {
                 startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity")
             }
 
+            mViewBinding.hostMusicIv.id,
+            mViewBinding.hostMusicTv.id -> {
+                val pkg = Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
+                when (pkg) {
+                    "com.awell.localmusic" -> {
+                        systemUIClient.fullScreenFreeform()
+                    }
 
-            mViewBinding.clockHour.id,
-            mViewBinding.clockMonth.id,
-            mViewBinding.clockData.id -> {
-                val intent = Intent(Settings.ACTION_DATE_SETTINGS)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-            }
-        }
-    }
-
-    private fun updateAppListAfterUninstall(packageName: String) {
-        // Remove from showAppInfoList
-        val iterator: MutableIterator<AppInfo?> = showAppInfoList.iterator()
-        while (iterator.hasNext()) {
-            val appInfo = iterator.next()
-            if (appInfo != null && packageName == appInfo.package_name) {
-                iterator.remove()
-                break
-            }
-        }
-
-        // Remove from database
-        sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String?>(packageName))
-
-        // Refresh the adapter
-        runOnUiThread(object : Runnable {
-            override fun run() {
-                if (appInfoAdapter != null) {
-                    appInfoAdapter.setContentList(showAppInfoList)
+                    else -> {
+                        startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity")
+                    }
                 }
             }
-        })
-    }
 
+            mViewBinding.hostVideoIv.id,
+            mViewBinding.hostVideoTv.id -> {
+                startActivity("com.awell.localvideo", "com.awell.localvideo.MainActivity")
+            }
 
-
-    private fun verifyInstalledApps() {
-        if (showAppInfoList == null || showAppInfoList.isEmpty()) return
-
-
-        // 刷新应用列表
-        refreshAppList()
-
-
-        // 检查应用数量是否匹配
-        checkAppCountMatch()
-
-
-        // 刷新适配器
-        if (appInfoAdapter != null) {
-            appInfoAdapter.setContentList(showAppInfoList)
-        }
-    }
-
-    private fun checkAppCountMatch() {
-        // 获取系统中实际应用列表
-        val actualAppList: ArrayList<AppInfo> = getAllAppInfo(this, false)
-        // 获取系统中实际应用数量
-        val actualAppCount = actualAppList.size
-        // 获取当前应用列表中的应用数量
-        val currentAppCount = if (allAppInfoList != null) allAppInfoList.size else 0
-
-
-        // 检查数量是否匹配
-        val countMatches = actualAppCount == currentAppCount
-        // 检查包名是否匹配
-        val packageNamesMatch = countMatches && comparePackageNames(actualAppList as java.util.ArrayList<AppInfo?>?,
-            allAppInfoList as MutableList<AppInfo?>?
-        )
-
-
-        // 检查是否完全匹配
-        if (!countMatches || !packageNamesMatch) {
-            // 数量或包名不匹配，显示不匹配占位符
-            updateAppPlaceholder(true)
-        } else {
-            // 数量和包名都匹配，显示正常占位符
-            updateAppPlaceholder(false)
-        }
-    }
-
-    private fun comparePackageNames(
-        actualAppList: java.util.ArrayList<AppInfo?>?,
-        currentAppList: MutableList<AppInfo?>?
-    ): Boolean {
-        if (actualAppList == null || currentAppList == null) {
-            return false
-        }
-
-
-        // 创建包名集合进行比较
-        val actualPackages: MutableSet<String?> = HashSet<String?>()
-        for (appInfo in actualAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                actualPackages.add(appInfo.package_name)
+            mViewBinding.hostPhoneIv.id,
+            mViewBinding.hostPhoneTv.id -> {
+                val btIntent = Intent("com.awell.bluetooth")
+                btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity")
+                btIntent.putExtra("bt_preference_key", 0)
+                startActivity(btIntent)
             }
         }
-
-        val currentPackages: MutableSet<String?> = HashSet<String?>()
-        for (appInfo in currentAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                currentPackages.add(appInfo.package_name)
-            }
-        }
-
-
-        // 检查两个集合是否相等
-        return actualPackages == currentPackages
-    }
-
-    private fun updateAppPlaceholder(isMismatch: Boolean) {
-        // 移除所有占位符
-        removeAllPlaceholders()
-
-
-        // 添加相应的占位符
-        if (isMismatch) {
-            // 添加不匹配占位符
-            val mismatchPlaceholder = createMismatchPlaceholder()
-            showAppInfoList.add(mismatchPlaceholder)
-        } else {
-            // 添加正常占位符
-            showAppInfoList.add(placehodlerInfo)
-        }
-    }
-
-    private fun removeAllPlaceholders() {
-        for (i in showAppInfoList.indices.reversed()) {
-            val appInfo: AppInfo? = showAppInfoList.get(i)
-            if (appInfo != null) {
-                // 移除正常占位符
-                if (appInfo.getLabel() != null && appInfo.getLabel() == getString(R.string.add_app)) {
-                    showAppInfoList.removeAt(i)
-                } else if ("placeholder_mismatch" == appInfo.package_name) {
-                    showAppInfoList.removeAt(i)
-                }
-            }
-        }
-    }
-
-    private fun createMismatchPlaceholder(): AppInfo {
-        val mismatchPlaceholder = AppInfo()
-        mismatchPlaceholder.setIcon(getDrawable(R.drawable.sf_app_add_icon))
-        mismatchPlaceholder.setLabel(getString(R.string.add_app))
-        mismatchPlaceholder.package_name = "placeholder_mismatch"
-        return mismatchPlaceholder
     }
 
 }

@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui3.utils
+package com.launcher.ui15.utils
 
 import android.app.ActivityManager
 import android.app.ActivityOptions

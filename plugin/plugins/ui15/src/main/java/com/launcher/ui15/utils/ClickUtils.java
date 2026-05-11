@@ -1,4 +1,4 @@
-package com.launcher.yfd_ui3.utils;
+package com.launcher.ui15.utils;
 
 public class ClickUtils {
     private static long lastClickTime = 0;
