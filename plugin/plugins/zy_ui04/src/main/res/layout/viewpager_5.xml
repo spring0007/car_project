@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 水平Guideline，将屏幕垂直平分为两半 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- 垂直Guideline，将屏幕水平分为4等份 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <!--radio - 第一行第一个-->
+    <ImageView
+        android:id="@+id/iv_radio_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/radio_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_radio_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_radio_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_radio_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/tv_radio_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_radio_small"/>
+
+    <!--music - 第一行第二个-->
+    <ImageView
+        android:id="@+id/iv_music_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/music_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_music_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_music_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_music_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_music_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/music"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_music_small"/>
+
+    <!--video - 第一行第三个-->
+    <ImageView
+        android:id="@+id/iv_video_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/video_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_video_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_video_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_video_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_video_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/video"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_video_small"/>
+
+    <!--gallery - 第一行第四个-->
+    <ImageView
+        android:id="@+id/iv_gallery_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/gallery_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_gallery_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_gallery_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_gallery_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_gallery_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gallery"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_gallery_small"/>
+
+    <!--  第二行  -->
+
+    <!-- bt music - 第二行第一个 -->
+    <ImageView
+        android:id="@+id/iv_btmusic_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/bt_music_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_btmusic_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_btmusic_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_btmusic_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_btmusic_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_music"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_btmusic_small"/>
+    <!--filemanager - 第二行第二个-->
+    <ImageView
+        android:id="@+id/iv_filemanager_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/filemanager_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_filemanager_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_filemanager_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_filemanager_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/tv_filemanager_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/file_manager"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_filemanager_small"/>
+
+    <!--setting - 第二行第三个-->
+    <ImageView
+        android:id="@+id/iv_setting_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/setting_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_setting_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_setting_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_setting_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_setting_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_setting_small"/>
+
+<!-- chrome - 第二行第四个 -->
+    <ImageView
+        android:id="@+id/iv_chrome_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/chrome_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_chrome_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_chrome_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_chrome_small"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_chrome_small"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/chrome"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_chrome_small"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

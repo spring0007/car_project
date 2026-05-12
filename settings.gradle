@@ -50,4 +50,5 @@ include ':plugin:plugins:yfd_ui05'
 include ':plugin:plugins:zy_ui01'
 include ':plugin:plugins:zy_ui02'
 include ':plugin:plugins:zy_ui03'
+include ':plugin:plugins:zy_ui04'
 

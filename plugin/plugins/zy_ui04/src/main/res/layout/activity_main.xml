@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityUI4">
+
+    <ImageView
+        android:id="@+id/left_pointer_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left_pointer"
+        app:layout_constraintBottom_toBottomOf="@+id/viewpager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/viewpager" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/viewpager_middle_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/indicator_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="@dimen/viewpager_height_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.10"
+        app:layout_constraintWidth_percent="0.78" />
+
+    <ImageView
+        android:id="@+id/right_pointer_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/right_pointer"
+        app:layout_constraintBottom_toBottomOf="@+id/viewpager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/viewpager" />
+
+    <LinearLayout
+        android:id="@+id/indicator_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/host_bottom_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager">
+
+        <ImageView
+            android:id="@+id/indicator1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/indicato_sel" />
+
+        <ImageView
+            android:id="@+id/indicator2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/indicato_n" />
+        <ImageView
+            android:id="@+id/indicator3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/indicato_n" />
+        <ImageView
+            android:id="@+id/indicator4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/indicato_n" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/host_bottom_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96">
+
+
+        <include
+            android:id="@+id/layout_music_widget"
+            layout="@layout/music_widget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_bt_phone_tv"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--bt phone-->
+        <ImageView
+            android:id="@+id/host_bt_phone_iv"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:clickable="true"
+            android:src="@drawable/host_bt_phone"
+            app:layout_constraintBottom_toTopOf="@id/host_bt_phone_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_bt_phone_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_bt_phone_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/host_bt_phone_tv"
+            style="@style/sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/phone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_apps_tv"
+            app:layout_constraintStart_toEndOf="@+id/layout_music_widget"
+            app:layout_constraintTop_toBottomOf="@+id/host_bt_phone_iv"
+            app:layout_constraintWidth_percent="0.1" />
+
+        <!--apps-->
+        <ImageView
+            android:id="@+id/host_apps_iv"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:clickable="true"
+            android:src="@drawable/host_apps"
+            app:layout_constraintBottom_toTopOf="@id/host_apps_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_apps_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_apps_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/host_apps_tv"
+            style="@style/sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/Apps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_nav_tv"
+            app:layout_constraintStart_toEndOf="@+id/host_bt_phone_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_apps_iv"
+            app:layout_constraintWidth_percent="0.1" />
+
+
+        <!--nav-->
+        <ImageView
+            android:id="@+id/host_nav_iv"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:clickable="true"
+            android:src="@drawable/host_nav"
+            app:layout_constraintBottom_toTopOf="@id/host_nav_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_nav_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_nav_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/host_nav_tv"
+            style="@style/sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_switch_tv"
+            app:layout_constraintStart_toEndOf="@+id/host_apps_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_nav_iv"
+            app:layout_constraintWidth_percent="0.1" />
+
+        <!--switch-->
+        <ImageView
+            android:id="@+id/host_switch_iv"
+            android:layout_width="@dimen/host_icon_size"
+            android:layout_height="@dimen/host_icon_size"
+            android:clickable="true"
+            android:src="@drawable/host_switch"
+            app:layout_constraintBottom_toTopOf="@id/host_switch_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_switch_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_switch_tv"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/host_switch_tv"
+            style="@style/sub_title_tv_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/mode_switching"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/host_nav_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_switch_iv"
+            app:layout_constraintWidth_percent="0.1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

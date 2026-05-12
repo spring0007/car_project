@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="iv_gav_width">15dp</dimen>
+    <item name="viewpager_item_width_percent" type="dimen" format="float">0.25</item>
+
+
+    <dimen name="music_title_icon_width">158dp</dimen>
+    <dimen name="music_title_icon_height">91dp</dimen>
+    <dimen name="music_play_width">88dp</dimen>
+    <dimen name="music_play_height">91dp</dimen>
+    <dimen name="iv_tv_margin_top">15dp</dimen>
+    <dimen name="sub_title_tv_size">26sp</dimen>
+    <dimen name="host_icon_size">90dp</dimen>
+    <dimen name="widget_title_icon_width">280dp</dimen>
+    <dimen name="widget_title_icon_height">266dp</dimen>
+    <dimen name="separator_line_width">10dp</dimen>
+    <dimen name="separator_line_height">332dp</dimen>
+    <dimen name="title_text_size">34sp</dimen>
+    <dimen name="iv_icon_small_width">168dp</dimen>
+    <dimen name="iv_icon_small_height">150dp</dimen>
+    <item name="viewpager_height_parent" type="dimen" format="float">0.65</item>
+</resources>

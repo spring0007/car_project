@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <ImageView
+        android:id="@+id/iv_radio_big"
+        android:layout_width="@dimen/widget_title_icon_width"
+        android:layout_height="@dimen/widget_title_icon_height"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/radio_big"
+        app:layout_constraintBottom_toTopOf="@+id/tv_radio_big"
+        app:layout_constraintEnd_toEndOf="@+id/tv_radio_big"
+        app:layout_constraintStart_toStartOf="@+id/tv_radio_big"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_radio_big"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/radio"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/separator_line1"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_radio_big"
+        app:layout_constraintWidth_percent="0.3" />
+    <!--line-->
+    <ImageView
+        android:id="@+id/separator_line1"
+        android:layout_width="@dimen/separator_line_width"
+        android:layout_height="@dimen/separator_line_height"
+        android:src="@drawable/separator_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_music_big"
+        android:layout_width="@dimen/widget_title_icon_width"
+        android:layout_height="@dimen/widget_title_icon_height"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/music_big"
+        app:layout_constraintBottom_toTopOf="@+id/tv_music_big"
+        app:layout_constraintEnd_toEndOf="@+id/tv_music_big"
+        app:layout_constraintStart_toStartOf="@+id/tv_music_big"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_music_big"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/music"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/separator_line1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_music_big"
+        app:layout_constraintWidth_percent="0.3" />
+
+    <ImageView
+        android:id="@+id/separator_line2"
+        android:layout_width="@dimen/separator_line_width"
+        android:layout_height="@dimen/separator_line_height"
+        android:src="@drawable/separator_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.66"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/iv_video_big"
+        android:layout_width="@dimen/widget_title_icon_width"
+        android:layout_height="@dimen/widget_title_icon_height"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/video_big"
+        app:layout_constraintBottom_toTopOf="@+id/tv_video_big"
+        app:layout_constraintEnd_toEndOf="@+id/tv_video_big"
+        app:layout_constraintStart_toStartOf="@+id/tv_video_big"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_video_big"
+        style="@style/widget_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/video"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/separator_line2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_video_big"
+        app:layout_constraintWidth_percent="0.3" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
