@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_title_icon_width">126dp</dimen>
+    <dimen name="music_title_icon_height">73dp</dimen>
+    <dimen name="music_play_width">70dp</dimen>
+    <dimen name="music_play_height">73dp</dimen>
+    <dimen name="iv_tv_margin_top">12dp</dimen>
+    <dimen name="sub_title_tv_size">21sp</dimen>
+    <dimen name="host_icon_size">72dp</dimen>
+    <dimen name="widget_title_icon_width">224dp</dimen>
+    <dimen name="widget_title_icon_height">213dp</dimen>
+    <dimen name="separator_line_width">8dp</dimen>
+    <dimen name="separator_line_height">266dp</dimen>
+    <dimen name="title_text_size">27sp</dimen>
+    <dimen name="iv_icon_small_width">134dp</dimen>
+    <dimen name="iv_icon_small_height">120dp</dimen>
+    <dimen name="small_title_text_size">18sp</dimen>
+    <item name="viewpager_height_parent" type="dimen" format="float">0.65</item>
+    <item name="host_sub_title_width_percent" type="dimen" format="float">0.15</item>
+</resources>

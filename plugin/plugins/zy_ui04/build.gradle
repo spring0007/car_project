@@ -1,5 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -12,8 +13,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     // 修改 APK 名称
     applicationVariants.all { variant ->
@@ -50,6 +49,9 @@ android {
     }
     aaptOptions {
         additionalParameters '--allow-reserved-package-id', '--package-id', '0x7e'
+    }
+    kotlinOptions {
+        jvmTarget = '11'
     }
 }
 
@@ -101,8 +103,6 @@ dependencies {
 
         implementation(project(':app')) {
         }
-
-        implementation(libs.appcompat)
 
         //app module has
         compileOnly libs.constraintlayout

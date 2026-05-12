@@ -45,7 +45,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
 
     private Context mContext;
     private EarqueeTextView mMusicNameTextView, mArtistNameTextView;
-    private TextView mCurTimeTextView, mTotalTimeTextView;
+    //private TextView mCurTimeTextView, mTotalTimeTextView;
     private ImageView ivLoadnim;
     private ImageView mPlayStateImageView, musicPreIv, musicNextIv;
     private SeekBar mBar = null;
@@ -116,8 +116,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         mBar.setMax(100);
         mBar.setProgress(0);
 
-        mCurTimeTextView = view.findViewById(R.id.music_widget_cur_time_textview);
-        mTotalTimeTextView = view.findViewById(R.id.music_widget_total_time_textview);
+        //mCurTimeTextView = view.findViewById(R.id.music_widget_cur_time_textview);
+        //mTotalTimeTextView = view.findViewById(R.id.music_widget_total_time_textview);
 
         mPlayStateImageView = view.findViewById(R.id.music_widget_play);
         mPlayStateImageView.setOnClickListener(this);

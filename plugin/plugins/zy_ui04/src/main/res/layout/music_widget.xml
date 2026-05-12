@@ -146,7 +146,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <ImageView
+        <com.launcher.zy_ui04.ImageViewTouch
             android:id="@+id/music_widget_play"
             android:layout_width="@dimen/music_play_width"
             android:layout_height="@dimen/music_play_height"
@@ -190,15 +190,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 tools:ignore="ContentDescription" />
-
-            <View
-                android:layout_width="@dimen/iv_gav_width"
-                android:layout_height="1dp" />
-
-
-            <View
-                android:layout_width="@dimen/iv_gav_width"
-                android:layout_height="1dp" />
 
             <ImageView
                 android:id="@+id/music_widget_next"

@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Artis</string>
+    <string name="navigation">Navigasi</string>
+    <string name="Apps">Pusat Aplikasi</string>
+    <string name="radio">Radio</string>
+    <string name="video">Video</string>
+    <string name="phone">Telefon</string>
+    <string name="music">Muzik</string>
+    <string name="unknown_song">Lagu tidak diketahui</string>
+    <string name="settings">Tetapan</string>
+    <string name="mode_switching">Penukaran mod</string>
+    <string name="file_manager">Pengurus fail</string>
+    <string name="gallery">Album foto</string>
+    <string name="bluetooth_music">Muzik Bluetooth</string>
+    <string name="bluetooth_phone">Telefon Bluetooth</string>
+    <string name="audio_input">Input audio</string>
+    <string name="video_input">Input video</string>
+    
+    
+
+    
+
+</resources>

@@ -46,22 +46,22 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_radio_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_radio_small"
         app:layout_constraintStart_toStartOf="@+id/tv_radio_small"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_radio_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/radio"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_radio_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_radio_small"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!--music - 第一行第二个-->
     <ImageView
@@ -75,22 +75,22 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_music_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_music_small"
         app:layout_constraintStart_toStartOf="@+id/tv_music_small"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_music_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/music"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
         app:layout_constraintStart_toStartOf="@+id/guideline_v1"
-        app:layout_constraintTop_toBottomOf="@+id/iv_music_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_music_small"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!--video - 第一行第三个-->
     <ImageView
@@ -104,22 +104,23 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_video_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_video_small"
         app:layout_constraintStart_toStartOf="@+id/tv_video_small"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_video_small"
-        style="@style/widget_title_tv_style"
+
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/video"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
         app:layout_constraintStart_toStartOf="@+id/guideline_v2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_video_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_video_small"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!--gallery - 第一行第四个-->
     <ImageView
@@ -133,22 +134,23 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_gallery_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_gallery_small"
         app:layout_constraintStart_toStartOf="@+id/tv_gallery_small"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_gallery_small"
-        style="@style/widget_title_tv_style"
+
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/gallery"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_v3"
-        app:layout_constraintTop_toBottomOf="@+id/iv_gallery_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_gallery_small"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!--  第二行  -->
 
@@ -164,23 +166,22 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_btmusic_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_btmusic_small"
         app:layout_constraintStart_toStartOf="@+id/tv_btmusic_small"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.5"
         app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_btmusic_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bluetooth_music"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_btmusic_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_btmusic_small"
+        app:layout_constraintWidth_percent="0.2" />
     <!--filemanager - 第二行第二个-->
     <ImageView
         android:id="@+id/iv_filemanager_small"
@@ -193,23 +194,22 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_filemanager_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_filemanager_small"
         app:layout_constraintStart_toStartOf="@+id/tv_filemanager_small"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.5"
         app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_filemanager_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/file_manager"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
         app:layout_constraintStart_toStartOf="@+id/guideline_v1"
-        app:layout_constraintTop_toBottomOf="@+id/iv_filemanager_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_filemanager_small"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!--setting - 第二行第三个-->
     <ImageView
@@ -223,25 +223,24 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_setting_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_setting_small"
         app:layout_constraintStart_toStartOf="@+id/tv_setting_small"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.5"
         app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_setting_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/settings"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
         app:layout_constraintStart_toStartOf="@+id/guideline_v2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_setting_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_setting_small"
+        app:layout_constraintWidth_percent="0.2" />
 
-<!-- chrome - 第二行第四个 -->
+    <!-- chrome - 第二行第四个 -->
     <ImageView
         android:id="@+id/iv_chrome_small"
         android:layout_width="@dimen/iv_icon_small_width"
@@ -253,21 +252,20 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_chrome_small"
         app:layout_constraintEnd_toEndOf="@+id/tv_chrome_small"
         app:layout_constraintStart_toStartOf="@+id/tv_chrome_small"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.5"
         app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 
     <TextView
         android:id="@+id/tv_chrome_small"
-        style="@style/widget_title_tv_style"
+        style="@style/small_title_tv_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/chrome"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_v3"
-        app:layout_constraintTop_toBottomOf="@+id/iv_chrome_small"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_chrome_small"
+        app:layout_constraintWidth_percent="0.2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

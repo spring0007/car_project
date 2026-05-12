@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="Apps">Κέντρο Εφαρμογών</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="video">βίντεο</string>
+    <string name="phone">Τηλέφωνο</string>
+    <string name="music">Μουσική</string>
+    <string name="unknown_song">Άγνωστο τραγούδι</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="mode_switching">Εναλλαγή λειτουργίας</string>
+    <string name="file_manager">Διαχείριση αρχείων</string>
+    <string name="gallery">Άλμπουμ φωτογραφιών</string>
+    <string name="bluetooth_music">Μουσική Bluetooth</string>
+    <string name="bluetooth_phone">Τηλέφωνο Bluetooth</string>
+    <string name="audio_input">Είσοδος ήχου</string>
+    <string name="video_input">Είσοδος βίντεο</string>
+    
+    
+
+    
+
+</resources>

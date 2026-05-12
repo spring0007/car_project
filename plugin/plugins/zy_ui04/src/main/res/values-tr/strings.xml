@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Sanatçı</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="Apps">Uygulama Merkezi</string>
+    <string name="radio">Radyo</string>
+    <string name="video">Video</string>
+    <string name="phone">Telefon</string>
+    <string name="music">Müzik</string>
+    <string name="unknown_song">Bilinmeyen şarkı</string>
+    <string name="settings">Ortamlar</string>
+    <string name="mode_switching">Mod değiştirme</string>
+    <string name="file_manager">Dosya yöneticisi</string>
+    <string name="gallery">Fotoğraf albümü</string>
+    <string name="bluetooth_music">Bluetooth Müzik</string>
+    <string name="bluetooth_phone">Bluetooth telefon</string>
+    <string name="audio_input">Ses girişi</string>
+    <string name="video_input">Video girişi</string>
+    
+    
+
+    
+
+</resources>

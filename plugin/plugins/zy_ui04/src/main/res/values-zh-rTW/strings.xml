@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">藝術家</string>
+    <string name="navigation">導航</string>
+    <string name="Apps">應用程式</string>
+    <string name="radio">廣播</string>
+    <string name="video">影片</string>
+    <string name="phone">電話</string>
+    <string name="music">音樂</string>
+    <string name="unknown_song">未知歌曲</string>
+    <string name="settings">設置</string>
+    <string name="mode_switching">模式切換</string>
+    <string name="file_manager">檔案管理器</string>
+    <string name="gallery">圖集</string>
+    <string name="bluetooth_music">藍牙音樂</string>
+    <string name="bluetooth_phone">藍牙電話</string>
+    <string name="audio_input">音訊輸入</string>
+    <string name="video_input">視訊輸入</string>
+    
+    
+
+    
+
+</resources>

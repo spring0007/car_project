@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">هنرمند</string>
+    <string name="navigation">ناوبری</string>
+    <string name="Apps">مرکز کاربرد</string>
+    <string name="radio">رادیو</string>
+    <string name="video">ویدئو</string>
+    <string name="phone">تلفن</string>
+    <string name="music">موسیقی</string>
+    <string name="unknown_song">آهنگ ناشناخته</string>
+    <string name="settings">محیط ها</string>
+    <string name="mode_switching">تغییر حالت</string>
+    <string name="file_manager">مدیر فایل</string>
+    <string name="gallery">آلبوم عکس</string>
+    <string name="bluetooth_music">موسیقی بلوتوث</string>
+    <string name="bluetooth_phone">تلفن بلوتوث</string>
+    <string name="audio_input">ورودی صوتی</string>
+    <string name="video_input">ورودی ویدئو</string>
+    
+    
+
+    
+
+</resources>

@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Художник</string>
+    <string name="navigation">Навигация</string>
+    <string name="Apps">Центр подачи заявок</string>
+    <string name="radio">Радио</string>
+    <string name="video">Видео</string>
+    <string name="phone">Телефон</string>
+    <string name="music">Музыка</string>
+    <string name="unknown_song">Неизвестная песня</string>
+    <string name="settings">Места действия</string>
+    <string name="mode_switching">Переключение режимов</string>
+    <string name="file_manager">Файловый менеджер</string>
+    <string name="gallery">Фотоальбом</string>
+    <string name="bluetooth_music">Bluetooth-музыка</string>
+    <string name="bluetooth_phone">Bluetooth-телефон</string>
+    <string name="audio_input">Аудиовход</string>
+    <string name="video_input">Видеовход</string>
+    
+    
+
+    
+
+</resources>

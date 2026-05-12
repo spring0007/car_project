@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">アーティスト</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="Apps">アプリケーションセンター</string>
+    <string name="radio">ラジオ</string>
+    <string name="video">ビデオ</string>
+    <string name="phone">電話</string>
+    <string name="music">音楽</string>
+    <string name="unknown_song">不明の曲</string>
+    <string name="settings">舞台設定</string>
+    <string name="mode_switching">モード切り替え</string>
+    <string name="file_manager">ファイルマネージャー</string>
+    <string name="gallery">フォトアルバム</string>
+    <string name="bluetooth_music">Bluetooth Music</string>
+    <string name="bluetooth_phone">Bluetooth電話</string>
+    <string name="audio_input">オーディオ入力</string>
+    <string name="video_input">ビデオ入力</string>
+    
+    
+
+    
+
+</resources>

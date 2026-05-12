@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 水平Guideline，将屏幕垂直平分为两半 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- 垂直Guideline，将屏幕水平分为4等份 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_v3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <!--btphone - 第一行第一个-->
+    <ImageView
+        android:id="@+id/iv_btphone_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/bt_phone_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_btphone_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_btphone_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_btphone_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <TextView
+        android:id="@+id/tv_btphone_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_phone"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_btphone_small"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <!--tv_audio_input_small - 第一行第二个-->
+    <ImageView
+        android:id="@+id/iv_audio_input_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/audio_input_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_audio_input_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_audio_input_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_audio_input_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <TextView
+        android:id="@+id/tv_audio_input_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/audio_input"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_audio_input_small"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <!--easy connnect - 第一行第三个-->
+    <ImageView
+        android:id="@+id/iv_easy_connect_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/easy_connet_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_easy_connect_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_easy_connect_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_easy_connect_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <TextView
+        android:id="@+id/tv_easy_connect_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/easy_connect"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_easy_connect_small"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <!--gallery - 第一行第四个-->
+    <ImageView
+        android:id="@+id/iv_video_input_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/video_input_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_video_input_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_video_input_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_video_input_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+    <TextView
+        android:id="@+id/tv_video_input_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/video_input"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_video_input_small"
+        app:layout_constraintWidth_percent="0.2" />
+
+    <!--  第二行  -->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

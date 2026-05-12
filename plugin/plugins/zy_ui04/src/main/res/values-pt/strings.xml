@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Artista</string>
+    <string name="navigation">Navegação</string>
+    <string name="Apps">Centro de Aplicações</string>
+    <string name="radio">Rádio</string>
+    <string name="video">Vídeo</string>
+    <string name="phone">Telefone</string>
+    <string name="music">Música</string>
+    <string name="unknown_song">Canção desconhecida</string>
+    <string name="settings">Configurações</string>
+    <string name="mode_switching">Comutação de modo</string>
+    <string name="file_manager">Gerenciador de arquivos</string>
+    <string name="gallery">Álbum de fotos</string>
+    <string name="bluetooth_music">Bluetooth Music</string>
+    <string name="bluetooth_phone">Telefone Bluetooth</string>
+    <string name="audio_input">Entrada de áudio</string>
+    <string name="video_input">Entrada de vídeo</string>
+    
+    
+
+    
+
+</resources>

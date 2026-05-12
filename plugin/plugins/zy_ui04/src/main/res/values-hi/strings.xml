@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="Apps">आवेदन केंद्र</string>
+    <string name="radio">रेडियो</string>
+    <string name="video">वीडियो</string>
+    <string name="phone">टेलीफोन</string>
+    <string name="music">राग</string>
+    <string name="unknown_song">अज्ञात गीत</string>
+    <string name="settings">सेटिंग</string>
+    <string name="mode_switching">मोड स्विचिंग</string>
+    <string name="file_manager">फ़ाइल प्रबंधक</string>
+    <string name="gallery">फोटो एलबम</string>
+    <string name="bluetooth_music">ब्लूटूथ संगीत</string>
+    <string name="bluetooth_phone">ब्लूटूथ फोन</string>
+    <string name="audio_input">ऑडियो इनपुट</string>
+    <string name="video_input">वीडियो इनपुट</string>
+    
+    
+
+    
+
+</resources>

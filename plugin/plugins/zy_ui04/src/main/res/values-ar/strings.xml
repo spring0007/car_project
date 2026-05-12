@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">فنان</string>
+    <string name="navigation">الملاحة</string>
+    <string name="Apps">مركز التطبيقات</string>
+    <string name="radio">الراديو</string>
+    <string name="video">الفيديو</string>
+    <string name="phone">الهاتف</string>
+    <string name="music">الموسيقى</string>
+    <string name="unknown_song">أغنية غير معروفة</string>
+    <string name="settings">الإعدادات</string>
+    <string name="mode_switching">تبديل الأنماط</string>
+    <string name="file_manager">مدير الملفات</string>
+    <string name="gallery">ألبوم الصور</string>
+    <string name="bluetooth_music">موسيقى البلوتوث</string>
+    <string name="bluetooth_phone">هاتف البلوتوث</string>
+    <string name="audio_input">إدخال الصوت</string>
+    <string name="video_input">مدخل الفيديو</string>
+    
+    
+
+    
+
+</resources>

@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="Apps">Trung tâm ứng dụng</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="video">Băng hình</string>
+    <string name="phone">Điện thoại</string>
+    <string name="music">Âm nhạc</string>
+    <string name="unknown_song">Bài hát không xác định</string>
+    <string name="settings">Cài đặt</string>
+    <string name="mode_switching">Chuyển đổi chế độ</string>
+    <string name="file_manager">Trình quản lý tệp</string>
+    <string name="gallery">Album ảnh</string>
+    <string name="bluetooth_music">Nhạc Bluetooth</string>
+    <string name="bluetooth_phone">Điện thoại Bluetooth</string>
+    <string name="audio_input">Đầu vào âm thanh</string>
+    <string name="video_input">Đầu vào video</string>
+    
+    
+
+    
+
+</resources>

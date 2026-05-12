@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_radio_big"
         app:layout_constraintEnd_toEndOf="@+id/tv_radio_big"
         app:layout_constraintStart_toStartOf="@+id/tv_radio_big"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/separator_line1" />
 
 
     <TextView
@@ -25,12 +25,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/radio"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/separator_line1"
-        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintBottom_toBottomOf="@+id/separator_line1"
+        app:layout_constraintEnd_toStartOf="@+id/separator_line1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_radio_big"
-        app:layout_constraintWidth_percent="0.3" />
+        app:layout_constraintWidth_percent="0.28" />
     <!--line-->
     <ImageView
         android:id="@+id/separator_line1"
@@ -39,9 +38,10 @@
         android:src="@drawable/separator_line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintHorizontal_bias="0.328"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
 
 
     <ImageView
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_music_big"
         app:layout_constraintEnd_toEndOf="@+id/tv_music_big"
         app:layout_constraintStart_toStartOf="@+id/tv_music_big"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/separator_line1" />
 
 
     <TextView
@@ -63,10 +63,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/music"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/separator_line1"
+        app:layout_constraintEnd_toStartOf="@+id/separator_line2"
         app:layout_constraintStart_toEndOf="@+id/separator_line1"
         app:layout_constraintTop_toBottomOf="@+id/iv_music_big"
-        app:layout_constraintWidth_percent="0.3" />
+        app:layout_constraintWidth_percent="0.28" />
 
     <ImageView
         android:id="@+id/separator_line2"
@@ -77,7 +78,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.66"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
 
 
     <ImageView
@@ -90,8 +92,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tv_video_big"
         app:layout_constraintEnd_toEndOf="@+id/tv_video_big"
         app:layout_constraintStart_toStartOf="@+id/tv_video_big"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="@+id/separator_line2" />
 
     <TextView
         android:id="@+id/tv_video_big"
@@ -99,10 +100,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/video"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/separator_line2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/separator_line2"
         app:layout_constraintTop_toBottomOf="@+id/iv_video_big"
-        app:layout_constraintWidth_percent="0.3" />
+        app:layout_constraintWidth_percent="0.28" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,34 +33,27 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
-        // 在第一个页面中查找并初始化 MusicWidget
-       /* if (position == 0) {
-            View musicWidgetView = holder.itemView.findViewById(R.id.music_widget_layout);
-            if (musicWidgetView instanceof MusicWidget && activity != null) {
-                activity.setMusicWidget((MusicWidget) musicWidgetView);
+        // 为页面中的所有 ImageView 添加触摸效果
+        addTouchEffectToImageViews(holder.itemView);
+    }
+    /**
+     * 递归查找并为所有 ImageView 添加触摸效果
+     */
+    private void addTouchEffectToImageViews(View view) {
+        if (view instanceof ImageView) {
+            TouchEffectUtils.addTouchEffect((ImageView) view);
+        }
+        
+        // 如果是 ViewGroup，递归处理子视图
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                addTouchEffectToImageViews(viewGroup.getChildAt(i));
             }
-            
-            // 直接在 ViewHolder 中更新蓝牙状态，而不是通过 Activity
-            updateBtStatusInViewHolder(holder.itemView);
-        }*/
+        }
     }
     
-    /**
-     * 在 ViewHolder 中直接更新蓝牙状态
-     */
-//    private void updateBtStatusInViewHolder(View itemView) {
-//        TextView btPhoneSubTv = itemView.findViewById(R.id.bt_phone_sub_tv);
-//        if (btPhoneSubTv != null && activity != null) {
-//            int mBTStatus = Settings.System.getInt( activity.getContentResolver(), "awell_bt_status", 0);
-//            Log.d("ViewPagerAdapter", "mBTStatus = " + mBTStatus);
-//
-//            if (mBTStatus == 0 || mBTStatus == 1){
-//                btPhoneSubTv.setText(R.string.no_phone_connected);
-//            } else if (mBTStatus == 2){
-//                btPhoneSubTv.setText(R.string.phone_connected);
-//            }
-//        }
-//    }
+
 
     @Override
     public int getItemViewType(int position) {

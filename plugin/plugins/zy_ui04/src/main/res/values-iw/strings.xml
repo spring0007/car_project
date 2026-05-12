@@ -1,0 +1,27 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="music_artist">אמן</string>
+    <string name="navigation">ניווט</string>
+    <string name="Apps">מרכז יישומים</string>
+    <string name="radio">רדיו</string>
+    <string name="video">וידאו</string>
+    <string name="phone">טלפון</string>
+    <string name="music">מוזיקה</string>
+    <string name="unknown_song">שיר לא ידוע</string>
+    <string name="settings">הגדרות</string>
+    <string name="mode_switching">החלפת מצבים</string>
+    <string name="file_manager">מנהל קבצים</string>
+    <string name="gallery">אלבום תמונות</string>
+    <string name="bluetooth_music">מוזיקת בלוטות\'</string>
+    <string name="bluetooth_phone">טלפון בלוטות\'</string>
+    <string name="audio_input">קלט אודיו</string>
+    <string name="video_input">קלט וידאו</string>
+    
+    
+
+    
+
+</resources>
