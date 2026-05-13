@@ -7,12 +7,12 @@
 
     <string name="click_play_music">未知歌曲</string>
     <string name="music_artist">未知藝術家</string>
-    <string name="add_app">新增</string>
+    <string name="add_app">添加</string>
     <string name="radio">廣播</string>
     <string name="phone_connect">電話已連接</string>
     <string name="blueth">藍牙</string>
 
-    <string name="weather_desc_100">桑尼</string>
+    <string name="weather_desc_100">晴天</string>
     <string name="weather_desc_101">多雲</string>
     <string name="weather_desc_102">少雲</string>
     <string name="weather_desc_103">部分晴朗</string>
@@ -20,10 +20,10 @@
     <string name="weather_desc_300">陣雨</string>
     <string name="weather_desc_301">大陣雨</string>
     <string name="weather_desc_302">雷陣雨</string>
-    <string name="weather_desc_303">嚴重雷陣雨</string>
+    <string name="weather_desc_303">強烈雷陣雨</string>
     <string name="weather_desc_304">雷陣雨伴冰雹</string>
     <string name="weather_desc_305">小雨</string>
-    <string name="weather_desc_306">中度降雨</string>
+    <string name="weather_desc_306">中等降雨</string>
     <string name="weather_desc_307">大雨</string>
     <string name="weather_desc_308">極端降雨</string>
     <string name="weather_desc_309">細雨</string>
@@ -32,21 +32,21 @@
     <string name="weather_desc_312">嚴重風暴</string>
     <string name="weather_desc_313">凍雨</string>
     <string name="weather_desc_400">輕雪</string>
-    <string name="weather_desc_401">中度降雪</string>
+    <string name="weather_desc_401">中等降雪</string>
     <string name="weather_desc_402">大雪</string>
     <string name="weather_desc_403">暴風雪</string>
     <string name="weather_desc_404">冰雹</string>
-    <string name="weather_desc_405">雨與雪</string>
+    <string name="weather_desc_405">雨雪</string>
     <string name="weather_desc_406">陣雨雪</string>
-    <string name="weather_desc_407">雪花紛飛</string>
-    <string name="weather_desc_500">霧</string>
-    <string name="weather_desc_501">關節</string>
-    <string name="weather_desc_502">霧</string>
+    <string name="weather_desc_407">小雪</string>
+    <string name="weather_desc_500">薄霧</string>
+    <string name="weather_desc_501">霧</string>
+    <string name="weather_desc_502">霧霾</string>
     <string name="weather_desc_503">濃霧</string>
-    <string name="weather_desc_504">輕霧</string>
+    <string name="weather_desc_504">輕微霧霾</string>
     <string name="weather_desc_507">沙塵暴</string>
-    <string name="weather_desc_508">強烈沙塵暴</string>
-    <string name="weather_desc_unknown">UNK</string>
+    <string name="weather_desc_508">強烈的沙塵暴</string>
+    <string name="weather_desc_unknown">未知</string>
 
 
     <string name="App">APP</string>
@@ -54,17 +54,17 @@
     <string name="phone">藍牙</string>
     <string name="navigation">導航</string>
     <string name="navi">導航</string>
-    <string name="set">設定</string>
+    <string name="set">設置</string>
     <string name="setting">設置</string>
-    <string name="navigate_for_you_in_real_time">即時導航</string>
+    <string name="navigate_for_you_in_real_time">即時為您導航</string>
     <string name="telephone">電話</string>
     <string name="no_phone_connected">沒有連接電話</string>
-    <string name="hd_video">高清影片</string>
+    <string name="hd_video">高清視頻</string>
     <string name="don_t_watch_while_driving">開車時不要看</string>
     <string name="the_radio_is_not_playing">收音機就像遠方的朋友</string>
     <string name="you_are_listening_to">你正在收聽</string>
-    <string name="system_functions_settings">系統功能設定</string>
-    <string name="bt_music">BT 音樂</string>
+    <string name="system_functions_settings">系統功能設置</string>
+    <string name="bt_music">藍牙音樂</string>
     <string name="unknown_song">未知歌曲</string>
     <string name="weather">天氣</string>
     <string name="no_weather_information_available_at_the_moment">目前沒有天氣資訊</string>

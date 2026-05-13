@@ -12,7 +12,7 @@
     <string name="phone_connect">电话已连接</string>
     <string name="blueth">蓝牙</string>
 
-    <string name="weather_desc_100">桑尼</string>
+    <string name="weather_desc_100">晴天</string>
     <string name="weather_desc_101">多云</string>
     <string name="weather_desc_102">少云</string>
     <string name="weather_desc_103">部分晴朗</string>
@@ -38,9 +38,9 @@
     <string name="weather_desc_404">冰雹</string>
     <string name="weather_desc_405">雨雪</string>
     <string name="weather_desc_406">阵雨雪</string>
-    <string name="weather_desc_407">雪花飘落</string>
-    <string name="weather_desc_500">雾</string>
-    <string name="weather_desc_501">关节</string>
+    <string name="weather_desc_407">小雪</string>
+    <string name="weather_desc_500">薄雾</string>
+    <string name="weather_desc_501">雾</string>
     <string name="weather_desc_502">雾霾</string>
     <string name="weather_desc_503">浓雾</string>
     <string name="weather_desc_504">轻微雾霾</string>
@@ -54,7 +54,7 @@
     <string name="phone">蓝牙</string>
     <string name="navigation">导航</string>
     <string name="navi">导航</string>
-    <string name="set">集合</string>
+    <string name="set">设置</string>
     <string name="setting">设置</string>
     <string name="navigate_for_you_in_real_time">实时为您导航</string>
     <string name="telephone">电话</string>
@@ -64,7 +64,7 @@
     <string name="the_radio_is_not_playing">收音机就像远方的朋友</string>
     <string name="you_are_listening_to">你正在收听</string>
     <string name="system_functions_settings">系统功能设置</string>
-    <string name="bt_music">BT音乐</string>
+    <string name="bt_music">蓝牙音乐</string>
     <string name="unknown_song">未知歌曲</string>
     <string name="weather">天气</string>
     <string name="no_weather_information_available_at_the_moment">目前没有天气信息</string>

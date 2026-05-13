@@ -2,6 +2,7 @@ package com.launcher.yfd_ui4;
 
 import static com.awell.utils.Utils.startWallpaper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -304,40 +305,60 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         mediaControl.unBindDataService(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_music || v.getId() == R.id.tv_music || v.getId() == R.id.item_music ){
-            startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        } else if (v.getId() == R.id.iv_nav || v.getId() == R.id.tv_nav || v.getId() == R.id.item_navi) {
-            String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
-            //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
-            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
-                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-            else{
-                Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
-                if (intent != null) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else {
+        Log.d(TAG, "onClick: v.getId()=" + v.getId());
+        switch (v.getId()) {
+            case R.id.iv_music:
+            case R.id.tv_music:
+            case R.id.item_music:
+                startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
+                break;
+            case R.id.iv_nav:
+            case R.id.tv_nav:
+            case R.id.item_navi: {
+                String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
+                //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+                if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
                     startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                else{
+                    Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
+                    if (intent != null) {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    } else {
+                        startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                    }
                 }
+                break;
             }
-        } else if (v.getId() == R.id.item_weather) {
-            startActivity("com.awell.weather", "com.awell.weather.MainActivity");
-        } else if (v.getId() == R.id.iv_app || v.getId() == R.id.tv_app) {
-            AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-        } else if (v.getId() == R.id.item_radio) {
-            startActivity("com.awell.radio", "com.awell.radio.MainActivity");
-       } else if (v.getId() == R.id.item_car) {
-            startActivity("com.awell.backcar", "com.awell.backcar.MainActivity");
-        } else if (v.getId() == R.id.iv_phone || v.getId() == R.id.tv_phone) {
-            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
-        } else if (v.getId() == R.id.item_video) {
-            startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-        } else if (v.getId() == R.id.iv_setting || v.getId() == R.id.tv_setting || v.getId() == R.id.item_setting) {
-            startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
-        } else if ( v.getId() == R.id.item_phone) {
-            startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+            case R.id.item_weather:
+                startActivity("com.awell.weather", "com.awell.weather.MainActivity");
+                break;
+            case R.id.iv_app:
+            case R.id.tv_app:
+                AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                break;
+            case R.id.item_radio:
+                startActivity("com.awell.radio", "com.awell.radio.MainActivity");
+                break;
+            case R.id.item_car:
+                startActivity("com.awell.canbus","com.awell.canbus.showui.MainActivity");
+                break;
+            case R.id.iv_phone:
+            case R.id.tv_phone:
+            case R.id.item_phone:
+                startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
+                break;
+            case R.id.item_video:
+                startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
+                break;
+            case R.id.iv_setting:
+            case R.id.tv_setting:
+            case R.id.item_setting:
+                startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
+                break;
         }
     }
 
