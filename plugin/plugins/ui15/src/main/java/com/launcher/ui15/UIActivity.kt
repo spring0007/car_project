@@ -327,14 +327,14 @@ class UIActivity : Activity(), View.OnClickListener {
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {
                     if (intent.getIntExtra("lamplet_state", 0) == 1) {
-                        // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.open)
+                         mViewBinding.ivCarIcon.setImageResource(R.drawable.car_light)
                     } else {
-                        // mViewBinding.ivLampSwitchBg.setImageResource(R.drawable.off)
+                         mViewBinding.ivCarIcon.setImageResource(R.drawable.car_default)
                     }
                 }
 
                 CommonData.ACTION_ACC_ON -> {
-                    //  mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
+                      mViewBinding.ivCarIcon.postDelayed({ accRecor = false }, 8 * 1000)
                     findViewById<ImageView>(R.id.freeform_image).post {
                         if (findViewById<ImageView>(R.id.freeform_image).isVisibleOnScreen()) {
                             updateImagePosition(findViewById(R.id.freeform_image), "acc_on")
