@@ -281,7 +281,7 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun loadDefaultApps() {
-        for (packName in Utils.defaultShowApp) {
+        for (packName in Utils.getDefaultShowApp(this)) {
             val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
             if (appInfo != null) {
                 showAppInfoList.add(appInfo)

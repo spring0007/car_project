@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -280,22 +281,33 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             case R.id.tv_chrome_big:
             case R.id.iv_chrome_small:
             case R.id.tv_chrome_small:
-                startActivity("com.android.chrome", "com.google.android.apps.chrome.Main");
+                String url = SystemProperties.get("persist.sys.lz.HOME_PAGE", "http://m.baidu.com");
+                Intent chromeIntent = new Intent(Intent.ACTION_VIEW);
+                chromeIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+                chromeIntent.setData(Uri.parse(url));
+                // 检查是否有应用可以处理此Intent
+                if (chromeIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chromeIntent);
+                }
                 break;
             case R.id.iv_audio_input_big:
             case R.id.tv_audio_input_big:
             case R.id.iv_audio_input_small:
             case R.id.tv_audio_input_small:
+                startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
                 break;
             case R.id.tv_video_input_big:
             case R.id.iv_video_input_big:
             case R.id.tv_video_input_small:
             case R.id.iv_video_input_small:
+                startActivity("com.awell.backcar", "com.awell.backcar.MainActivity");
                 break;
             case R.id.iv_easy_connect_big:
             case R.id.iv_easy_connect_small:
             case R.id.tv_easy_connect_big:
             case R.id.tv_easy_connect_small:
+                startActivity("com.zjinnova.zlink","com.zjinnova.android.zlink.features.main.MainActivity");
+
                 break;
             case R.id.host_nav_iv:
             case R.id.host_nav_tv: {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_artist_text_size">18sp</dimen>
+    <dimen name="music_name_text_size">22sp</dimen>
+    <dimen name="iv_music_image_size">60dp</dimen>
+    <dimen name="host_icon_size">60dp</dimen>
+    <dimen name="recycle_app_width">92dp</dimen>
+    <dimen name="iv_music_play_size">80dp</dimen>
+    <dimen name="text_size">18sp</dimen>
+    <dimen name="app_item_padding">10dp</dimen>
+    <dimen name="iv_app_icon_bg_width">96dp</dimen>
+    <dimen name="iv_app_icon_bg_height">102dp</dimen>
+    <dimen name="recycle_app_icon_width">82dp</dimen>
+    <dimen name="recycle_app_icon_height">86dp</dimen>
+
+</resources>

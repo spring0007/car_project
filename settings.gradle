@@ -37,7 +37,8 @@ include ':plugin:plugins:ui11'
 include ':plugin:plugins:ui12'
 include ':plugin:plugins:ui13'
 include ':plugin:plugins:ui14'
-include ':plugin:plugins:ui15'
+include ':plugin:plugins:ui15' //freeform
+include ':plugin:plugins:ui17' //freeform
 include ':plugin:plugins:ui16'
 include ':plugin:plugins:ui19'
 include ':plugin:plugins:ui20'

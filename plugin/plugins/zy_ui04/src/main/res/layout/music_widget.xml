@@ -14,7 +14,6 @@
             android:focusable="true"
             android:scaleType="fitXY"
             android:src="@drawable/music_title_icon"
-            app:layout_constraintBottom_toTopOf="@+id/music_widget_music_name"
             app:layout_constraintEnd_toStartOf="@+id/music_widget_play"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -152,7 +151,6 @@
             android:layout_height="@dimen/music_play_height"
             android:clickable="true"
             android:src="@drawable/sf_music_bofang"
-            app:layout_constraintBottom_toTopOf="@+id/music_widget_music_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/music_widget_title_icon"
             app:layout_constraintTop_toTopOf="parent"
@@ -167,10 +165,10 @@
             android:focusable="true"
             android:marqueeRepeatLimit="marquee_forever"
             android:text="@string/unknown_song"
+            app:layout_constraintTop_toBottomOf="@+id/music_widget_title_icon"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintEnd_toEndOf="@+id/music_widget_play"
+            app:layout_constraintStart_toStartOf="@+id/music_widget_title_icon"
             tools:ignore="MissingConstraints" />
 
         <!-- 音乐控制 -->

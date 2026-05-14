@@ -21,7 +21,7 @@ object IconManager {
         "com.awell.localvideo" to "zy04_video",
         "com.awell.localmusic" to "zy04_music",
         "com.awell.radio" to "zy04_radio",
-        "com.awell.bluetooth" to "zy04_btphone",
+       // "com.awell.bluetooth" to "zy04_btphone",
         "com.awell.navigation" to "zy04_navi",
         "com.android.browser" to "zy04_liulanqi",
         "com.mediatek.filemanager" to "zy04_wjgl",

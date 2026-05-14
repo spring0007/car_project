@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/app_item_padding"
+    android:paddingBottom="@dimen/app_item_padding"
+    tools:ignore="MissingDefaultResource">
+
+
+
+    <com.awell.ctrlview.CustomRelativeLayout
+        android:id="@+id/app_layout"
+        android:background="@drawable/sf_app_bg"
+        android:layout_width="@dimen/iv_app_icon_bg_width"
+        android:layout_height="@dimen/iv_app_icon_bg_height">
+
+<!--        <ImageView-->
+<!--            android:id="@+id/iv_app_icon_bg"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_width="@dimen/iv_app_icon_bg_width"-->
+<!--            android:layout_height="@dimen/iv_app_icon_bg_height"-->
+<!--            android:src="@drawable/sf_app_bg"/>-->
+
+        <ImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_centerInParent="true"
+            android:layout_width="@dimen/recycle_app_icon_width"
+            android:layout_height="@dimen/recycle_app_icon_height"
+            android:layout_centerHorizontal="true" />
+    </com.awell.ctrlview.CustomRelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="app_name"
+        android:textColor="@color/tv_app_name_color"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textSize="@dimen/text_size" />
+</LinearLayout>

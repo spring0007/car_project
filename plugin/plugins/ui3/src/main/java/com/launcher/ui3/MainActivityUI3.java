@@ -185,7 +185,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     }
 
     private void loadDefaultApps() {
-        for (String packName : Utils.defaultShowApp) {
+        for (String packName : Utils.getDefaultShowApp(this)) {
             AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
             if (appInfo != null) {
                 showAppInfoList.add(appInfo);
