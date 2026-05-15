@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 
-    <style name="Plugin8_Theme" parent="@android:style/Theme.Translucent.NoTitleBar">
+    <style name="Plugin5_Theme" parent="@android:style/Theme.Translucent.NoTitleBar">
         <!-- 关键属性：显示壁纸 -->
         <item name="android:windowShowWallpaper">true</item>
         <!-- 可选：全屏显示 -->
@@ -15,5 +15,9 @@
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+
     </style>
 </resources>

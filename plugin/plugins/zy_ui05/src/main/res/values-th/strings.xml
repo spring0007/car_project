@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="navigation">การเดินเรือ</string>
+    <string name="video">วีดีโอ</string>
+    <string name="click_play_music">ชื่อเพลง</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="unknown">ไม่ทราบ</string>
+    <string name="radio">วิทยุ</string>
+    <string name="phone">โทรศัพท์</string>
+    <string name="setting">การตั้งค่า</string>
+    <string name="Apps">การประยุกต์ใช้:</string>
+
+    
+</resources>

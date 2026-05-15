@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivityUI5">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.519" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.529" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.537" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.97" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.014" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1095" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1376" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.541" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5859" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7623" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.97" />
+
+    <!-- 左侧底部 -->
+    <ImageView
+        android:id="@+id/bottom_icon_iv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_car_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left4"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left1"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
+
+
+    <!-- 左侧图标栏 -->
+    <ImageView
+        android:id="@+id/left_icon_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_left_side"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left2"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+
+    <!-- 主页图标 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="2.5"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left2"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/radio_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            android:src="@drawable/sf_radio" />
+
+        <TextView
+            android:id="@+id/radio_text"
+            style="@style/title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/phone_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            android:src="@drawable/sf_phone" />
+
+        <TextView
+            android:id="@+id/phone_text"
+            style="@style/title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/setting_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            android:src="@drawable/sf_setting" />
+
+        <TextView
+            android:id="@+id/setting_text"
+            style="@style/title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+
+        <ImageView
+            android:id="@+id/apps_icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_gravity="center_horizontal"
+            android:onClick="onClick"
+            android:src="@drawable/sf_all" />
+
+        <TextView
+            android:id="@+id/apps_text"
+            style="@style/title_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Apps" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+
+    <!-- 时间卡片 -->
+    <LinearLayout
+        android:id="@+id/time_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+
+        <TextClock
+            android:id="@+id/time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/time_value_size" />
+
+
+        <TextClock
+            android:id="@+id/date_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:format12Hour="yyyy-MM-dd EEEE"
+            android:format24Hour="yyyy-MM-dd EEEE"
+            android:textColor="@color/white"
+            android:textSize="@dimen/date_text_size" />
+    </LinearLayout>
+
+
+    <!-- 导航卡片 -->
+    <ImageView
+        android:id="@+id/nav_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_nav"
+        app:layout_constraintDimensionRatio="W,269:278"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left5"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top3"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:text="@string/navigation"
+        android:textColor="@color/white"
+        android:textSize="@dimen/nav_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/nav_icon"
+        app:layout_constraintEnd_toEndOf="@+id/nav_icon"
+        app:layout_constraintStart_toStartOf="@+id/nav_icon"
+        app:layout_constraintTop_toTopOf="@+id/nav_icon"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintWidth_percent="0.19" />
+
+    <ImageView
+        android:id="@+id/video_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:src="@drawable/sf_video"
+        app:layout_constraintDimensionRatio="W,267:277"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left6"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top3"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:text="@string/video"
+        android:textColor="@color/white"
+        android:textSize="@dimen/nav_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/video_icon"
+        app:layout_constraintEnd_toEndOf="@+id/video_icon"
+        app:layout_constraintStart_toStartOf="@+id/video_icon"
+        app:layout_constraintTop_toTopOf="@+id/video_icon"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintWidth_percent="0.19" />
+
+    <!-- 音乐卡片 -->
+
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left3"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

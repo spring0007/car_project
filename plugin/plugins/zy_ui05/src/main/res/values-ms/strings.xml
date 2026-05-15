@@ -1,0 +1,14 @@
+<resources>
+
+    <string name="navigation">Navigasi</string>
+    <string name="video">Video</string>
+    <string name="click_play_music">Tajuk lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">Tidak diketahui</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Telefon</string>
+    <string name="setting">Tetapan</string>
+    <string name="Apps">Permohonan:</string>
+
+    
+</resources>

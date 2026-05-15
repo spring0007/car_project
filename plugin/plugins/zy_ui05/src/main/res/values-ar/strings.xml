@@ -1,0 +1,13 @@
+<resources>
+    <string name="navigation">الملاحة</string>
+    <string name="video">الفيديو</string>
+    <string name="click_play_music">عنوان الأغنية</string>
+    <string name="music_artist">فنان</string>
+    <string name="unknown">غير معروف</string>
+    <string name="radio">الراديو</string>
+    <string name="phone">الهاتف</string>
+    <string name="setting">الإعدادات</string>
+    <string name="Apps">التطبيق:</string>
+
+    
+</resources>
