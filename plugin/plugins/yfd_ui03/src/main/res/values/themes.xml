@@ -10,7 +10,7 @@
         <!-- 可选：透明状态栏（API 19+） -->
         <item name="android:windowTranslucentStatus">true</item>
         <!-- 可选：透明导航栏（API 19+） -->
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <!-- 防止内容区域有默认背景 -->
         <item name="android:windowBackground">@android:color/transparent</item>
 
