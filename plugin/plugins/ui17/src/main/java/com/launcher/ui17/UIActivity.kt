@@ -160,6 +160,9 @@ class UIActivity : Activity(), View.OnClickListener {
         if (checkTopAppLollipop(this))
             handlerFreeform.postDelayed(freeformRunnable, 150)
 
+        // Verify all apps in the list are still installed
+        verifyInstalledApps()
+
     }
 
     private fun checkTopAppLollipop(context: Context): Boolean {
@@ -204,6 +207,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         systemUIClient = SystemUIClient(this)
         systemUIClient.bindToSystemUIService(this)
+        appInfoAdapter.setSystemUIClient(systemUIClient)
     }
 
     private fun updateImagePosition(imageView: ImageView, reason: String) {
@@ -1164,7 +1168,7 @@ class UIActivity : Activity(), View.OnClickListener {
         sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String?>(packageName))
 
 // Refresh the adapter
-        runOnUiThread(object : java.lang.Runnable {
+        runOnUiThread(object : Runnable {
             override fun run() {
                 if (appInfoAdapter != null) {
                     appInfoAdapter.setContentList(showAppInfoList)

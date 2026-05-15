@@ -1,7 +1,10 @@
 package com.launcher.ui17.adapter;
 
+import static com.launcher.ui17.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME;
+
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,7 @@ import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
 import com.launcher.ui17.R;
+import com.launcher.ui17.utils.SystemUIClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +29,8 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
 
     private Context mContext;
 
-    private List<AppInfo> contentList = new ArrayList<>();
+    private final List<AppInfo> contentList = new ArrayList<>();
+    private SystemUIClient systemUIClient;
 
     public void setContentList(List<AppInfo> contentList) {
         this.contentList.clear();
@@ -33,8 +38,8 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         notifyDataSetChanged();
     }
 
-    private ShowPopupI showPopupI;
-    private AddSelectAppCallback addSelectAppCallback;
+    private final ShowPopupI showPopupI;
+    private final AddSelectAppCallback addSelectAppCallback;
 
     public AppInofAdapter(Context context, List<AppInfo> contentList, ShowPopupI showPopupI, AddSelectAppCallback addSelectAppCallback) {
         this.contentList.addAll(contentList);
@@ -42,6 +47,11 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         this.showPopupI = showPopupI;
         this.addSelectAppCallback = addSelectAppCallback;
     }
+
+    public void setSystemUIClient(SystemUIClient systemUIClient) {
+        this.systemUIClient = systemUIClient;
+    }
+
 
     @NonNull
     @Override
@@ -70,9 +80,16 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         holder.iv_app_layout.setOnClickListener(vie -> {
             if (appInfo == null || appInfo.package_name == null) return;
             Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
-            if (intent != null) {
-                mContext.startActivity(intent);
+            String pkg = Settings.System.getString(mContext.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
+
+            if (pkg != null && appInfo.package_name.contains(pkg)) {
+                systemUIClient.fullScreenFreeform();
+            } else {
+				if (intent != null) {
+                	mContext.startActivity(intent);
+				}
             }
+
         });
 
         if (position == contentList.size() - 1) {
