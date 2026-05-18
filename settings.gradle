@@ -43,6 +43,8 @@ include ':plugin:plugins:ui16'
 include ':plugin:plugins:ui19'
 include ':plugin:plugins:ui20'
 include ':plugin:plugins:ui21'
+include ':plugin:plugins:ui22' //freeform
+include ':plugin:plugins:ui23'  //freeform
 include ':plugin:plugins:yfd_ui01'
 include ':plugin:plugins:yfd_ui2'
 include ':plugin:plugins:yfd_ui03'

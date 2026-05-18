@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="host_text_style">
+
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/host_icon_text_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:gravity">center_horizontal</item>
+
+
+    </style>
+</resources>

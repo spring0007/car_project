@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Bài hát không xác định</string>
+    <string name="music_artist">Nghệ sĩ</string>
+
+
+    <string name="weather_desc_100">Những ngày nắng</string>
+    <string name="weather_desc_101">Nhiều mây</string>
+    <string name="weather_desc_102">Thiếu Vân</string>
+    <string name="weather_desc_103">Nắng một phần</string>
+    <string name="weather_desc_104">Nhiều mây</string>
+    <string name="weather_desc_300">Vòi hoa sen</string>
+    <string name="weather_desc_301">Mưa lớn</string>
+    <string name="weather_desc_302">Giông bão</string>
+    <string name="weather_desc_303">Giông bão mạnh</string>
+    <string name="weather_desc_304">Giông bão kèm theo mưa đá</string>
+    <string name="weather_desc_305">Mưa nhẹ</string>
+    <string name="weather_desc_306">Lượng mưa vừa phải</string>
+    <string name="weather_desc_307">Mưa lớn</string>
+    <string name="weather_desc_308">Lượng mưa cực lớn</string>
+    <string name="weather_desc_309">Mưa phùn</string>
+    <string name="weather_desc_310">Bão</string>
+    <string name="weather_desc_311">Bão</string>
+    <string name="weather_desc_312">Bão dữ dội</string>
+    <string name="weather_desc_313">Mưa đóng băng</string>
+    <string name="weather_desc_400">Tuyết nhẹ</string>
+    <string name="weather_desc_401">Tuyết rơi vừa phải</string>
+    <string name="weather_desc_402">Tuyết rơi dày</string>
+    <string name="weather_desc_403">Bão tuyết</string>
+    <string name="weather_desc_404">Mưa đá</string>
+    <string name="weather_desc_405">Mưa và tuyết</string>
+    <string name="weather_desc_406">Vòi hoa sen và mưa tuyết</string>
+    <string name="weather_desc_407">Tiểu Tuyết</string>
+    <string name="weather_desc_500">Sương mù</string>
+    <string name="weather_desc_501">sương mù</string>
+    <string name="weather_desc_502">Sương mù</string>
+    <string name="weather_desc_503">Sương mù dày đặc</string>
+    <string name="weather_desc_504">Sương mù nhẹ</string>
+    <string name="weather_desc_507">Bão cát</string>
+    <string name="weather_desc_508">Bão cát dữ dội</string>
+    <string name="weather_desc_unknown">Không xác định</string>
+    <string name="no_weather_information_available_at_the_moment">Hiện không có thông tin thời tiết</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="phone">Điện thoại Bluetooth</string>
+    <string name="brower">Trình duyệt</string>
+    <string name="setting">Cài đặt</string>
+    <string name="music">Âm nhạc</string>
+    <string name="apps">Ứng dụng</string>
+    <string name="no_install_app">Không thể khởi chạy ứng dụng</string>
+    <string name="apps_no_install">Ứng dụng chưa được cài đặt</string>
+
+    
+</resources>

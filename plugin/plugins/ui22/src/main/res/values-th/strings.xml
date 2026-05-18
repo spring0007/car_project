@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">เพลงที่ไม่รู้จัก</string>
+    <string name="music_artist">ศิลปิน</string>
+
+
+    <string name="weather_desc_100">วันที่แดดจ้า</string>
+    <string name="weather_desc_101">มีเมฆมาก</string>
+    <string name="weather_desc_102">เส้าหยุน</string>
+    <string name="weather_desc_103">แดดจัดบางส่วน</string>
+    <string name="weather_desc_104">มีเมฆมาก</string>
+    <string name="weather_desc_300">ฝักบัว</string>
+    <string name="weather_desc_301">ฝนตกหนัก</string>
+    <string name="weather_desc_302">พายุฝนฟ้าคะนอง</string>
+    <string name="weather_desc_303">พายุฝนฟ้าคะนองรุนแรง</string>
+    <string name="weather_desc_304">พายุฝนฟ้าคะนองพร้อมลูกเห็บ</string>
+    <string name="weather_desc_305">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_306">ปริมาณน้ําฝนปานกลาง</string>
+    <string name="weather_desc_307">ฝนตกหนัก</string>
+    <string name="weather_desc_308">ฝนตกหนัก</string>
+    <string name="weather_desc_309">ฝนตกปรอยๆ</string>
+    <string name="weather_desc_310">พายุ</string>
+    <string name="weather_desc_311">พายุ</string>
+    <string name="weather_desc_312">พายุรุนแรง</string>
+    <string name="weather_desc_313">ฝนเยือกแข็ง</string>
+    <string name="weather_desc_400">หิมะตกเล็กน้อย</string>
+    <string name="weather_desc_401">หิมะตกปานกลาง</string>
+    <string name="weather_desc_402">หิมะตกหนัก</string>
+    <string name="weather_desc_403">พายุหิมะ</string>
+    <string name="weather_desc_404">ลูกเห็บ</string>
+    <string name="weather_desc_405">ฝนและหิมะ</string>
+    <string name="weather_desc_406">ฝักบัวและหิมะตก</string>
+    <string name="weather_desc_407">เสี่ยวซู่</string>
+    <string name="weather_desc_500">หมอก</string>
+    <string name="weather_desc_501">หมอก</string>
+    <string name="weather_desc_502">หมอกควัน</string>
+    <string name="weather_desc_503">หมอกหนา</string>
+    <string name="weather_desc_504">หมอกควันเล็กน้อย</string>
+    <string name="weather_desc_507">พายุทราย</string>
+    <string name="weather_desc_508">พายุทรายที่รุนแรง</string>
+    <string name="weather_desc_unknown">ไม่ทราบ</string>
+    <string name="no_weather_information_available_at_the_moment">ขณะนี้ยังไม่มีข้อมูลสภาพอากาศ</string>
+    <string name="navigation">การเดินเรือ</string>
+    <string name="radio">วิทยุ</string>
+    <string name="phone">โทรศัพท์บลูทูธ</string>
+    <string name="brower">เบราว์เซอร์</string>
+    <string name="setting">การตั้งค่า</string>
+    <string name="music">เพลง</string>
+    <string name="apps">การประยุกต์ใช้</string>
+    <string name="no_install_app">ไม่สามารถเปิดแอปได้</string>
+    <string name="apps_no_install">ไม่ได้ติดตั้งแอป</string>
+
+    
+</resources>
