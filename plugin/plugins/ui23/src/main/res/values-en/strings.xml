@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Unknown Song</string>
+    <string name="music_artist">Artist</string>
+
+
+    <string name="weather_desc_100">Sunny days</string>
+    <string name="weather_desc_101">Cloudy</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Partially sunny</string>
+    <string name="weather_desc_104">Cloudy</string>
+    <string name="weather_desc_300">Showers</string>
+    <string name="weather_desc_301">Heavy showers</string>
+    <string name="weather_desc_302">Thunderstorms</string>
+    <string name="weather_desc_303">Strong thunderstorms</string>
+    <string name="weather_desc_304">Thunderstorms with hail</string>
+    <string name="weather_desc_305">Light rain</string>
+    <string name="weather_desc_306">Moderate rainfall</string>
+    <string name="weather_desc_307">Heavy rain</string>
+    <string name="weather_desc_308">Extreme rainfall</string>
+    <string name="weather_desc_309">Drizzle</string>
+    <string name="weather_desc_310">storm</string>
+    <string name="weather_desc_311">Storm</string>
+    <string name="weather_desc_312">Severe storms</string>
+    <string name="weather_desc_313">Freezing rain</string>
+    <string name="weather_desc_400">Light snow</string>
+    <string name="weather_desc_401">moderate snowfall</string>
+    <string name="weather_desc_402">Heavy snowfall</string>
+    <string name="weather_desc_403">Blizzard</string>
+    <string name="weather_desc_404">Hail</string>
+    <string name="weather_desc_405">Rain and snow</string>
+    <string name="weather_desc_406">Showers and snow showers</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">fog</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Dense fog</string>
+    <string name="weather_desc_504">Slight haze</string>
+    <string name="weather_desc_507">Sandstorm</string>
+    <string name="weather_desc_508">Intense sandstorms</string>
+    <string name="weather_desc_unknown">Unknown</string>
+    <string name="no_weather_information_available_at_the_moment">There is currently no weather information</string>
+    <string name="navigation">Navigation</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Bluetooth phone</string>
+    <string name="brower">Browser</string>
+    <string name="setting">Settings</string>
+    <string name="music">Music</string>
+    <string name="apps">Application</string>
+    <string name="no_install_app">Unable to launch the app</string>
+    <string name="apps_no_install">The app is not installed</string>
+
+    
+</resources>

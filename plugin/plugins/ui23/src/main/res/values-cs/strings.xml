@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Neznámá píseň</string>
+    <string name="music_artist">Umělec</string>
+
+
+    <string name="weather_desc_100">Slunečné dny</string>
+    <string name="weather_desc_101">Zataženo</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Částečně slunečné</string>
+    <string name="weather_desc_104">Zataženo</string>
+    <string name="weather_desc_300">Sprchy</string>
+    <string name="weather_desc_301">Silné přeháňky</string>
+    <string name="weather_desc_302">Bouřky</string>
+    <string name="weather_desc_303">Silné bouřky</string>
+    <string name="weather_desc_304">Bouřky s krupobitími</string>
+    <string name="weather_desc_305">Slabý déšť</string>
+    <string name="weather_desc_306">Mírné srážky</string>
+    <string name="weather_desc_307">Silné deště</string>
+    <string name="weather_desc_308">Extrémní srážky</string>
+    <string name="weather_desc_309">Mrholení</string>
+    <string name="weather_desc_310">bouře</string>
+    <string name="weather_desc_311">Bouře</string>
+    <string name="weather_desc_312">Silné bouře</string>
+    <string name="weather_desc_313">Mrznoucí déšť</string>
+    <string name="weather_desc_400">Lehký sníh</string>
+    <string name="weather_desc_401">Mírné sněžení</string>
+    <string name="weather_desc_402">Silné sněžení</string>
+    <string name="weather_desc_403">Blizzard</string>
+    <string name="weather_desc_404">Sláva</string>
+    <string name="weather_desc_405">Déšť a sníh</string>
+    <string name="weather_desc_406">Přeháňky a sněhové přeháňky</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">mlha</string>
+    <string name="weather_desc_502">Mlha</string>
+    <string name="weather_desc_503">Hustá mlha</string>
+    <string name="weather_desc_504">Mírná mlha</string>
+    <string name="weather_desc_507">Písečná bouře</string>
+    <string name="weather_desc_508">Intenzivní písečné bouře</string>
+    <string name="weather_desc_unknown">Neznámé</string>
+    <string name="no_weather_information_available_at_the_moment">V současné době nejsou k dispozici žádné informace o počasí</string>
+    <string name="navigation">Navigace</string>
+    <string name="radio">Rádio</string>
+    <string name="phone">Bluetooth telefon</string>
+    <string name="brower">Prohlížeč</string>
+    <string name="setting">Prostředí</string>
+    <string name="music">Hudba</string>
+    <string name="apps">Aplikace</string>
+    <string name="no_install_app">Nelze spustit aplikaci</string>
+    <string name="apps_no_install">Aplikace není nainstalovaná</string>
+
+    
+</resources>

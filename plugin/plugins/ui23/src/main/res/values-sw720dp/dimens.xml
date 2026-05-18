@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="music_artist_text_size">15sp</dimen>
+    <dimen name="music_name_text_size">19sp</dimen>
+    <dimen name="iv_music_play_size">66dp</dimen>
+    <dimen name="host_icon_text_size">22sp</dimen>
+    <dimen name="host_icon_size">84dp</dimen>
+    <dimen name="font_size_sp">20sp</dimen>
+    <dimen name="app_icon_size">144dp</dimen>
+    <dimen name="radio_text_size">24sp</dimen>
+    <dimen name="radio_freq_text_size">48sp</dimen>
+    <dimen name="music_image_size">40dp</dimen>
+    <dimen name="weather_date_text_size">24sp</dimen>
+    <dimen name="weather_temp_text_size">50sp</dimen>
+    <dimen name="weather_desc_text_size">22sp</dimen>
+    <dimen name="weather_icon_size">24dp</dimen>
+    <dimen name="weather_city_text_size">20sp</dimen>
+    <dimen name="weather_temp_icon_size">100dp</dimen>
+
+
+    <item name="host_tv_width_percent" type="dimen" format="float">0.11</item>
+</resources>

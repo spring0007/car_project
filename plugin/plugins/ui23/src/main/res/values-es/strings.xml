@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Canción desconocida</string>
+    <string name="music_artist">Artista</string>
+
+
+    <string name="weather_desc_100">Días soleados</string>
+    <string name="weather_desc_101">Nublado</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Parcialmente soleado</string>
+    <string name="weather_desc_104">Nublado</string>
+    <string name="weather_desc_300">Lluvias</string>
+    <string name="weather_desc_301">Chubascos intensos</string>
+    <string name="weather_desc_302">Tormentas eléctricas</string>
+    <string name="weather_desc_303">Tormentas fuertes</string>
+    <string name="weather_desc_304">Tormentas con granizo</string>
+    <string name="weather_desc_305">Lluvia ligera</string>
+    <string name="weather_desc_306">Precipitaciones moderadas</string>
+    <string name="weather_desc_307">Lluvias intensas</string>
+    <string name="weather_desc_308">Precipitaciones extremas</string>
+    <string name="weather_desc_309">Llovizna</string>
+    <string name="weather_desc_310">tormenta</string>
+    <string name="weather_desc_311">Tormenta</string>
+    <string name="weather_desc_312">Tormentas severas</string>
+    <string name="weather_desc_313">Lluvia helada</string>
+    <string name="weather_desc_400">Nieve ligera</string>
+    <string name="weather_desc_401">Nevada moderada</string>
+    <string name="weather_desc_402">Fuertes nevadas</string>
+    <string name="weather_desc_403">Ventisca</string>
+    <string name="weather_desc_404">Gran</string>
+    <string name="weather_desc_405">Lluvia y nieve</string>
+    <string name="weather_desc_406">Chubascos y chubascos de nieve</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">niebla</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Niebla densa</string>
+    <string name="weather_desc_504">Ligera neblina</string>
+    <string name="weather_desc_507">Tormenta de arena</string>
+    <string name="weather_desc_508">Tormentas de arena intensas</string>
+    <string name="weather_desc_unknown">Desconocido</string>
+    <string name="no_weather_information_available_at_the_moment">Actualmente no hay información meteorológica</string>
+    <string name="navigation">Navegación</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Teléfono Bluetooth</string>
+    <string name="brower">Navegador</string>
+    <string name="setting">Escenarios</string>
+    <string name="music">Música</string>
+    <string name="apps">Aplicación</string>
+    <string name="no_install_app">No se puede iniciar la app</string>
+    <string name="apps_no_install">La app no está instalada</string>
+
+    
+</resources>
