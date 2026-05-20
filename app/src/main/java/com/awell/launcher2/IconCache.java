@@ -401,7 +401,7 @@ public class IconCache {
         if (pkg == null || pkg.isEmpty()) {
             return null;
         }
-        LogUtil.i("mThemeMode="+this.mThemeMode);
+        //LogUtil.i("mThemeMode="+this.mThemeMode);
         switch (mThemeMode) {
             case 0:
                 if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))

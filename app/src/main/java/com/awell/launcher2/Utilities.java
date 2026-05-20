@@ -208,7 +208,7 @@ public final class Utilities {
             // no intrinsic size --> use default size
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
-            LogUtil.i("sIconSizeSame=" + sIconSizeSame);
+            //LogUtil.i("sIconSizeSame=" + sIconSizeSame);
             if (!sIconSizeSame) {
                 width = sIconTextureWidth / 3 * 2;
                 height = sIconTextureHeight / 3 * 2;
@@ -246,7 +246,7 @@ public final class Utilities {
             if (!sIconSizeSame) { //不同图标大小,绘制背景,
 
                 int iconResId = getIconResource(sThemeMode);
-                LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode);
+                //LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
                     

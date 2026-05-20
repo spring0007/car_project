@@ -61,12 +61,25 @@ public class AppsCustomizeTabHost extends TabHost implements LauncherTransitiona
     public AppsCustomizeTabHost(Context context, AttributeSet attrs) {
         super(context, attrs);
         mLayoutInflater = LayoutInflater.from(context);
+        setPadding(0,getStatusBarHeight(context),0,0);
         mRelayoutAndMakeVisible = new Runnable() {
             public void run() {
                 mTabs.requestLayout();
                 mTabsContainer.setAlpha(1f);
             }
         };
+    }
+
+    private int getStatusBarHeight( Context context) {
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        int mStatusBarHeight=0;
+        if (resourceId > 0) {
+            mStatusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
+        }else
+            mStatusBarHeight = context.getResources().getDimensionPixelSize(R.dimen.status_bar_height);
+
+
+        return mStatusBarHeight;
     }
 
     /**

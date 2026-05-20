@@ -1754,10 +1754,12 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         }
         Log.i(TAG, "show_app cursor");
         // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoLis.size() == 0) for (String packName : Utils.defaultShowApp) {
-            AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-            if (appInfo != null) {
-                showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
+        if (showAppInfoLis.size() == 0) {
+            for (String packName : Utils.getDefaultShowApp(this)) {
+                AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
+                if (appInfo != null) {
+                    showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
+                }
             }
         }
         // 添加到数据库

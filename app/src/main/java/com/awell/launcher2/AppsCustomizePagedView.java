@@ -640,11 +640,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
         }
 
-        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
+        //if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
             mCustomPageLayoutHeightGap = -1;
-        } else {
+        /*} else {
             mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
-        }
+        }*/
        // LogUtil.d("onDataReady: config applied - mCustomPageLayoutWidthGap=" + mCustomPageLayoutWidthGap
         //        + ", mCustomPageLayoutHeightGap=" + mCustomPageLayoutHeightGap);
 
@@ -652,14 +652,12 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         mWidgetSpacingLayout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
         
         // 如果设置了自定义 Cell 尺寸，则直接设置到 PagedViewCellLayout
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 ) {
-            int cellWidthPx = (int) (mAppsCustomizeConfig.getCellWidthDp());
-            mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
-        }
-
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 ) {
-            int cellHeightPx = (int) (mAppsCustomizeConfig.getCellHeightDp());
-            mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() <=0 ) {
+            mWidgetSpacingLayout.setCustomCellWidth(mAppsCustomizeConfig.getCellWidthDp());
+        } else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() <=0 ) {
+            mWidgetSpacingLayout.setCustomCellHeight(mAppsCustomizeConfig.getCellHeightDp());
+        }else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() >0 ) {
+            mWidgetSpacingLayout.setCustomCellDimensions(mAppsCustomizeConfig.getCellWidthDp() ,mAppsCustomizeConfig.getCellHeightDp());
         }
 
         mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
@@ -1308,21 +1306,20 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
         }
 
-        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
+        //if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
             mCustomPageLayoutHeightGap = -1;
-        } else {
+        /*} else {
             mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
-        }
+          }*/
       //  LogUtil.d("setupPage: mCustomWidthGap=" + mCustomPageLayoutWidthGap + ", mCustomHeightGap=" + mCustomPageLayoutHeightGap);
 
         // 如果是自定义样式且设置了自定义 Cell 尺寸，则应用到每个页面
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 ) {
-            int cellWidthPx = (int) (mAppsCustomizeConfig.getCellWidthDp());
-            mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
-        }
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 ) {
-            int cellHeightPx = (int) (mAppsCustomizeConfig.getCellHeightDp());
-            mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() <=0 ) {
+            mWidgetSpacingLayout.setCustomCellWidth(mAppsCustomizeConfig.getCellWidthDp());
+        } else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() <=0 ) {
+            mWidgetSpacingLayout.setCustomCellHeight(mAppsCustomizeConfig.getCellHeightDp());
+        }else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() >0 ) {
+            mWidgetSpacingLayout.setCustomCellDimensions(mAppsCustomizeConfig.getCellWidthDp() ,mAppsCustomizeConfig.getCellHeightDp());
         }
 
         layout.setPageViewIconBackgroundResource(mPageBackgroundResId);

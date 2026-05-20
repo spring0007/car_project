@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class Utils {
@@ -210,6 +211,30 @@ public class Utils {
     }
 
     /**
+     * 根据系统语言获取默认显示的应用列表
+     * 中文使用 defaultShowApp_ch，其他语言使用 defaultShowApp
+     *
+     * @param context 上下文
+     * @return 默认应用数组
+     */
+    public static String[] getDefaultShowApp(Context context) {
+        if (context == null) {
+            return defaultShowApp;
+        }
+        
+        Locale locale = context.getResources().getConfiguration().locale;
+        String language = locale.getLanguage();
+        
+        // 如果是中文，使用中文默认列表
+        if ("zh".equalsIgnoreCase(language)) {
+            return defaultShowApp_ch;
+        }
+        
+        // 其他语言使用默认列表
+        return defaultShowApp;
+    }
+
+    /**
      * 默认显示的应用
      */
     public static String[] defaultShowApp = {
@@ -219,6 +244,13 @@ public class Utils {
             "com.android.chrome",
             "com.awell.localmusic"};
 
+    public static String[] defaultShowApp_ch = {
+            "com.awell.localmusic",
+            "com.awell.localvideo",
+            "com.awell.radio",
+            "com.awell.bluetooth",
+            "com.awell.canbus"
+    };
 
     /**
      * 默认显示的应用

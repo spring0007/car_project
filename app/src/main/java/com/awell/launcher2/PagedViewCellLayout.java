@@ -119,7 +119,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         if (heightPx > 0) {
             mCellHeight = mOriginalCellHeight= heightPx;// 关键：同时更新原始值，防止 onMeasure 中被覆盖
             mChildren.setCellDimensions(mCellWidth, mCellHeight);
-            //LogUtil.d("setCustomCellHeight: " + heightPx);
+            LogUtil.d("setCustomCellHeight: " + heightPx);
             requestLayout();
         }
     }
@@ -177,7 +177,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     public void setPageViewIconBackgroundResource(int backgroundResId) {
         // 优化：如果背景资源 ID 未变化，跳过设置
         if (backgroundResId == mCurrentBackgroundResId) {
-            LogUtil.d("setPageViewIconBackgroundResource: skipped - background unchanged (resId=" + backgroundResId + ")");
+            //LogUtil.d("setPageViewIconBackgroundResource: skipped - background unchanged (resId=" + backgroundResId + ")");
             return;
         }
         
@@ -194,7 +194,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
                 }
             }
             mCurrentBackgroundResId = backgroundResId; // 更新缓存
-            LogUtil.d("setPageViewIconBackgroundResource: resId=" + backgroundResId + ", applied to " + childCount + " icons");
+            //LogUtil.d("setPageViewIconBackgroundResource: resId=" + backgroundResId + ", applied to " + childCount + " icons");
         }
     }
 
@@ -511,10 +511,10 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
     }
 
     public void calculateCellCount(int width, int height, int maxCellCountX, int maxCellCountY) {
-        LogUtil.d("calculateCellCount: width = " + width + ", height = " + height + ", maxCellCountX = " + maxCellCountX + ", maxCellCountY = " + maxCellCountY);
+        //LogUtil.d("calculateCellCount: width = " + width + ", height = " + height + ", maxCellCountX = " + maxCellCountX + ", maxCellCountY = " + maxCellCountY);
         mCellCountX = Math.min(maxCellCountX, estimateCellHSpan(width));
         mCellCountY = Math.min(maxCellCountY, estimateCellVSpan(height));
-        LogUtil.i("calculateCellCount: mCellCountX = " + mCellCountX + ", mCellCountY = " + mCellCountY);
+        //LogUtil.i("calculateCellCount: mCellCountX = " + mCellCountX + ", mCellCountY = " + mCellCountY);
 //        mCellCountY = 3;
         requestLayout();
     }

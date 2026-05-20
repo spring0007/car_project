@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 import com.awell.launcher.library.R;
+import com.awell.utils.LogUtil;
 
 /**
  * An icon on a PagedView, specifically for items in the launcher's paged view
@@ -91,6 +92,8 @@ public class PagedViewIcon extends TextView {
         setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
         setCompoundDrawablePadding(drawablePadding);
         setCompoundDrawablesWithIntrinsicBounds(null, new FastBitmapDrawable(mIcon), null, null);
+        // 去掉阴影：半径设为0，颜色设为透明
+        setShadowLayer(0, 0, 0, Color.TRANSPARENT);
 //        }
         setTag(info);
 
@@ -128,10 +131,15 @@ public class PagedViewIcon extends TextView {
         else
             setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
 
-        if(textColor > 0)
+        if(textColor != Color.TRANSPARENT) {
             setTextColor(textColor);
-        else
+            // 去掉阴影：半径设为0，颜色设为透明
+            setShadowLayer(0, 0, 0, Color.TRANSPARENT);
+        }else {
             setTextColor(Color.WHITE);
+        }
+
+        LogUtil.i("drawablePadding ="+ drawablePadding+",textOrientation="+textOrientation);
 
         setCompoundDrawablePadding(drawablePadding);
         if(textOrientation==1)
