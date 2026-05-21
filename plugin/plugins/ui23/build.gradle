@@ -68,7 +68,6 @@ if (isPlugin) {
 }
 
 dependencies {
-    implementation libs.protolite.well.known.types
 
 
     /** compileOnly or implementation */

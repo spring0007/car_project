@@ -132,25 +132,26 @@ class UIActivity : Activity(), View.OnClickListener {
         
         // 设置主题模式，并同步到 IconManager
        // AppsCustomizeControl.setAppIconSize(getResources().getDimensionPixelSize(R.dimen.app_icon_size))
-        val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)//126
+        //val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)//126
+        val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)
+        val cellWidth = resources.getDimensionPixelSize(R.dimen.cell_width_dp)
         val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
-         val config = AppsCustomizeConfig(
-             iconSize = icSize,
-             iconOffsetX = (cellHeight-icSize-3)/2,
-             iconTextPadding = resources.getDimensionPixelSize(R.dimen.app_icon_text_padding) +(cellHeight-icSize-4)/2,
-             columnCount = 3,
-             rowCount = 4,
-             autoWidthGap = true,
-             autoHeightGap = true,
-             fontSizeSp = resources.getDimensionPixelSize(R.dimen.font_size_sp), // 20
-             textOrientation = 2,
-             textGravity = Gravity.CENTER_VERTICAL or Gravity.START,
-             fontColor = Color.WHITE,
-             cellWidthDp = resources.getDimensionPixelSize(R.dimen.cell_width_dp), //358
-             cellHeightDp = cellHeight,
-             backgroundTheme = 1
-
-        )
+        val config = AppsCustomizeConfig.Builder()
+            .setIconSize(resources.getDimensionPixelSize(R.dimen.app_icon_size))
+            .setIconOffsetX((cellHeight - icSize) / 2)
+            .setIconTextPadding(resources.getDimensionPixelSize(R.dimen.app_icon_text_padding) + (cellHeight - icSize - 4) / 2)
+            .setColumnCount(3)
+            .setRowCount(4)
+            .setAutoWidthGap(true)
+            .setAutoHeightGap(true)
+            .setFontSizeSp(resources.getDimensionPixelSize(R.dimen.font_size_sp)) // 20
+            .setTextOrientation(2)
+            .setTextGravity(Gravity.CENTER_VERTICAL or Gravity.START)
+            .setFontColor(Color.WHITE)
+            .setCellWidthDp(cellWidth) //358
+            .setCellHeightDp(cellHeight)
+            .setBackgroundTheme(1)
+            .build()
 
                 
         AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui03")
@@ -159,6 +160,8 @@ class UIActivity : Activity(), View.OnClickListener {
         IconManager.initialize(this)
 
     }
+
+
 
     override fun onResume() {
         super.onResume()

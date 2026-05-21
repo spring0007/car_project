@@ -124,12 +124,11 @@ class UIActivity : Activity(), View.OnClickListener {
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
         val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
-        val config = AppsCustomizeConfig(
-            iconSize = icSize,
-            fontColor = Color.BLACK,
-            fontSizeSp = resources.getDimensionPixelSize(R.dimen.font_size_sp), // 20
-
-        )
+        val config = AppsCustomizeConfig.Builder()
+            .setIconSize(icSize)
+            .setFontColor(Color.BLACK)
+            .setFontSizeSp(resources.getDimensionPixelSize(R.dimen.font_size_sp)) // 20
+            .build()
 
 
         AppsCustomizeControl.setPluginThemeMode(0xff ,false,false , IconManager.getPackageIconMap(), "apple_other_app3_square", "com.launcher.ui22")
@@ -968,6 +967,7 @@ class UIActivity : Activity(), View.OnClickListener {
                 Log.i(TAG, "loadWeatherData: huang info=>" + weatherInfo)
                 handler!!.post(java.lang.Runnable {
                     if (weatherInfo != null) {
+                        mViewBinding.weatherIvInfoHide?.visibility = View.GONE
                         mViewBinding.weaterTvTemp.text = weatherInfo.temperature + "℃"
                         val weather: String = (WeatherTextMapper.description(this, weatherInfo.condCode))
                         mViewBinding.weaterTvTemp.visibility = View.VISIBLE
@@ -975,6 +975,7 @@ class UIActivity : Activity(), View.OnClickListener {
                         mViewBinding.tvWeatherDesc.visibility = View.VISIBLE
                         mViewBinding.tvWeatherDesc.text = weather
                         WeatherIconLoader.getWeatherIcon(mViewBinding.weatherIvInfo, weatherInfo.condCode)
+                        mViewBinding.weatherIvInfo.visibility = View.VISIBLE
 
                         mViewBinding.tvWeatherCity.text = weatherInfo.location
                         mViewBinding.tvWeatherCity.visibility = View.VISIBLE
@@ -986,7 +987,8 @@ class UIActivity : Activity(), View.OnClickListener {
                         mViewBinding.weatherDate.visibility = View.VISIBLE
 
                     } else {
-                        mViewBinding.weatherIvInfo.setImageResource(R.drawable.weather_na)
+                        mViewBinding.weatherIvInfoHide?.visibility = View.VISIBLE
+                        mViewBinding.weatherIvInfo.visibility = View.GONE
                         mViewBinding.tvWeatherCity.visibility = View.GONE
                         mViewBinding.tvWeatherDesc.visibility = View.GONE
                         mViewBinding.ivWeatherIcon.visibility = View.GONE

@@ -133,6 +133,18 @@
             app:layout_constraintVertical_bias="0.86" />
 
 
+        <ImageView
+            android:id="@+id/weather_iv_info_hide"
+            android:layout_width="@dimen/weather_temp_icon_size"
+            android:layout_height="@dimen/weather_temp_icon_size"
+            android:src="@drawable/weather_na"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--左下 收音机-->
