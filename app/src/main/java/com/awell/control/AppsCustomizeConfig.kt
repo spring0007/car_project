@@ -252,43 +252,5 @@ data class AppsCustomizeConfig(
         @JvmStatic
         fun createDefault(): AppsCustomizeConfig = AppsCustomizeConfig()
 
-        /**
-         * 大图标模式预设
-         */
-        @JvmStatic
-        fun largeIconMode(mContext: Context): AppsCustomizeConfig = AppsCustomizeConfig(
-            iconSize = 120,
-        )
-
-        /**
-         * 密集布局模式预设
-         */
-        @JvmStatic
-        fun denseLayoutMode(): AppsCustomizeConfig = AppsCustomizeConfig(
-            columnCount = 8,
-            rowCount = 3,
-        )
-
-        /**
-         * 自定义网格模式预设
-         * @param columns 列数
-         * @param rows 行数
-         */
-        @JvmStatic
-        fun customGridMode(columns: Int = 4, rows: Int = 3): AppsCustomizeConfig =
-            AppsCustomizeConfig(
-                columnCount = columns,
-                rowCount = rows,
-            )
-
-        /**
-         * 紧凑模式预设（小图标 + 多列）
-         */
-        @JvmStatic
-        fun compactMode(): AppsCustomizeConfig = AppsCustomizeConfig(
-            iconSize = 80,
-            columnCount = 7,
-            rowCount = 3,
-        )
     }
 }

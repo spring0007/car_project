@@ -401,6 +401,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             resetAllAppAttributes();
             return;
         }
+        if(configObj.getIconSize()<=0)
+            mAppIconSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
         mAppsCustomizeConfig = configObj;
         if(configObj.getBackgroundTheme() <=0){
             mPageBackgroundResId = 0;
@@ -652,12 +654,17 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         mWidgetSpacingLayout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
         
         // 如果设置了自定义 Cell 尺寸，则直接设置到 PagedViewCellLayout
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() <=0 ) {
-            mWidgetSpacingLayout.setCustomCellWidth(mAppsCustomizeConfig.getCellWidthDp());
-        } else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() <=0 ) {
-            mWidgetSpacingLayout.setCustomCellHeight(mAppsCustomizeConfig.getCellHeightDp());
-        }else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() >0 ) {
-            mWidgetSpacingLayout.setCustomCellDimensions(mAppsCustomizeConfig.getCellWidthDp() ,mAppsCustomizeConfig.getCellHeightDp());
+        if (mAppsCustomizeConfig != null) {
+            int cellWidthPx = mAppsCustomizeConfig.getCellWidthDp();
+            int cellHeightPx = mAppsCustomizeConfig.getCellHeightDp();
+
+            if (cellWidthPx > 0 && cellHeightPx > 0) {
+                mWidgetSpacingLayout.setCustomCellDimensions(cellWidthPx, cellHeightPx);
+            } else if (cellWidthPx > 0) {
+                mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
+            } else if (cellHeightPx > 0) {
+                mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+            }
         }
 
         mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
@@ -1314,12 +1321,17 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
       //  LogUtil.d("setupPage: mCustomWidthGap=" + mCustomPageLayoutWidthGap + ", mCustomHeightGap=" + mCustomPageLayoutHeightGap);
 
         // 如果是自定义样式且设置了自定义 Cell 尺寸，则应用到每个页面
-        if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() <=0 ) {
-            mWidgetSpacingLayout.setCustomCellWidth(mAppsCustomizeConfig.getCellWidthDp());
-        } else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() <=0 ) {
-            mWidgetSpacingLayout.setCustomCellHeight(mAppsCustomizeConfig.getCellHeightDp());
-        }else if (mAppsCustomizeConfig!=null  && mAppsCustomizeConfig.getCellHeightDp() > 0 && mAppsCustomizeConfig.getCellWidthDp() >0 ) {
-            mWidgetSpacingLayout.setCustomCellDimensions(mAppsCustomizeConfig.getCellWidthDp() ,mAppsCustomizeConfig.getCellHeightDp());
+        if (mAppsCustomizeConfig != null) {
+            int cellWidthPx = mAppsCustomizeConfig.getCellWidthDp();
+            int cellHeightPx = mAppsCustomizeConfig.getCellHeightDp();
+
+            if (cellWidthPx > 0 && cellHeightPx > 0) {
+                mWidgetSpacingLayout.setCustomCellDimensions(cellWidthPx, cellHeightPx);
+            } else if (cellWidthPx > 0) {
+                mWidgetSpacingLayout.setCustomCellWidth(cellWidthPx);
+            } else if (cellHeightPx > 0) {
+                mWidgetSpacingLayout.setCustomCellHeight(cellHeightPx);
+            }
         }
 
         layout.setPageViewIconBackgroundResource(mPageBackgroundResId);
@@ -1903,15 +1915,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         int customCellWidth = 0;
         int customCellHeight = 0;
         if (mAppsCustomizeConfig != null) {
-            Resources res = getResources();
-            float density = res.getDisplayMetrics().density;
+            //Resources res = getResources();
+            //float density = res.getDisplayMetrics().density;
             
             // 支持单独设置宽度、高度或同时设置
             if (mAppsCustomizeConfig.getCellWidthDp() > 0) {
-                customCellWidth = (int) (mAppsCustomizeConfig.getCellWidthDp() * density);
+                customCellWidth = (int) (mAppsCustomizeConfig.getCellWidthDp() );
             }
             if (mAppsCustomizeConfig.getCellHeightDp() > 0) {
-                customCellHeight = (int) (mAppsCustomizeConfig.getCellHeightDp() * density);
+                customCellHeight = (int) (mAppsCustomizeConfig.getCellHeightDp());
             }
          //   LogUtil.d("syncPages: will apply custom cell dimensions - width=" + customCellWidth + ", height=" + customCellHeight);
         }

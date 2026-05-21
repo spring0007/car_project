@@ -127,7 +127,7 @@ public class PagedViewIcon extends TextView {
 //        
 
         if(textSize > 0)
-            setTextSize(textSize);
+            setTextSize(android.util.TypedValue.COMPLEX_UNIT_PX,textSize);
         else
             setTextSize(mContext.getResources().getInteger(R.integer.pageview_app_icon_text_size));
 
