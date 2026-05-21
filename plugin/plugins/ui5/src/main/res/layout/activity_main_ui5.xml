@@ -94,9 +94,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@drawable/ui5_line_bg"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.295"
+        app:layout_constraintHeight_percent="0.2917"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
