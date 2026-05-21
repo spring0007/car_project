@@ -67,11 +67,14 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
     private AppsCustomizeConfig getAppsCustomizeConfig() {
         int iconSize = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_size);
         int iconPadding = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_padding);
+        int cellHeight = (int) getResources().getDimensionPixelSize(R.dimen.cell_height);
         return new AppsCustomizeConfig.Builder()
                 .setCustomStyle(true)
                 .setIconSize(iconSize)
                 .setIconTextPadding(iconPadding)
+                .setCellHeightDp(cellHeight)
                 .setColumnCount(5)
+                .setTextLine(1)
                 .setAutoWidthGap(true)
                 .build();
     }
@@ -183,7 +186,10 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-            musicWidget.setCurMusicState(status, type);
+            if (type == MusicWidget.MUSIC) {
+                musicWidget.setCurMusicState(status, type);
+            }
+
 
         }
 
@@ -194,15 +200,17 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
-            if(MusicWidget.MUSIC == type) {
-                musicWidget.setMusicNameTextView(songName, type);
-                musicWidget.setArtistNameTextView(singerName, type);
-            }else
-            /*if ("NO_MUSIC_LIST".equals(songName)
+            if(MusicWidget.MUSIC != type)
+                return;
+
+            if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
-                    && "NO_MUSIC_LIST".equals(album)) */{
+                    && "NO_MUSIC_LIST".equals(album)){
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
+            }else {
+                musicWidget.setMusicNameTextView(songName, type);
+                musicWidget.setArtistNameTextView(singerName, type);
             }
         }
 
