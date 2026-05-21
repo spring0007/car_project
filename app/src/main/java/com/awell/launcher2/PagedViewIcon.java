@@ -113,7 +113,7 @@ public class PagedViewIcon extends TextView {
     @SuppressLint("ResourceType")
     public void applyFromApplicationInfoWithBitmap(ApplicationInfo info, boolean scaleUp,
                                                     PagedViewIcon.PressedCallback cb, int drawablePadding,
-                                                    Bitmap scaledBitmap ,int textSize ,int textColor,int textOrientation ,int textGravity) {
+                                                    Bitmap scaledBitmap ,int textSize ,int textColor, int textLine,int textOrientation ,int textGravity) {
         mIcon = scaledBitmap != null ? scaledBitmap : info.iconBitmap;
         mPressedCallback = cb;
         setText(info.title);
@@ -139,7 +139,12 @@ public class PagedViewIcon extends TextView {
             setTextColor(Color.WHITE);
         }
 
-        LogUtil.i("drawablePadding ="+ drawablePadding+",textOrientation="+textOrientation);
+        if(textLine>0)
+            setMaxLines(textLine);
+        else
+            setMaxLines(2);
+
+        //LogUtil.i("drawablePadding ="+ drawablePadding+",textOrientation="+textOrientation);
 
         setCompoundDrawablePadding(drawablePadding);
         if(textOrientation==1)

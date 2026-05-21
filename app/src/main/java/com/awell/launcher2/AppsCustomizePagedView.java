@@ -1373,9 +1373,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
             Bitmap scaledIcon = scaleBitmapIfNeeded(info.iconBitmap, mAppIconSize);
             if(mAppsCustomizeConfig!=null)
-                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppsCustomizeConfig.getIconTextPadding(), scaledIcon, mAppsCustomizeConfig.getFontSizeSp(), mAppsCustomizeConfig.getFontColor(), mAppsCustomizeConfig.getTextOrientation(), mAppsCustomizeConfig.getTextGravity());
+                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppsCustomizeConfig.getIconTextPadding(), scaledIcon, mAppsCustomizeConfig.getFontSizeSp(),
+                        mAppsCustomizeConfig.getFontColor(), mAppsCustomizeConfig.getTextLine(), mAppsCustomizeConfig.getTextOrientation(), mAppsCustomizeConfig.getTextGravity());
             else
-                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppIconPadding, scaledIcon, 0, 0,0, 0);
+                icon.applyFromApplicationInfoWithBitmap(info, true, this, mAppIconPadding, scaledIcon, 0, 0,0, 0,0);
             
             // 应用图标水平偏移量配置
             if(mAppsCustomizeConfig != null && (mAppsCustomizeConfig.getIconOffsetX() != 0 || mAppsCustomizeConfig.getIconOffsetY() !=0)) {
@@ -1901,11 +1902,17 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         // 保存自定义 Cell 尺寸信息（如果有的话）
         int customCellWidth = 0;
         int customCellHeight = 0;
-        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getCellWidthDp() > 0 && mAppsCustomizeConfig.getCellHeightDp() > 0) {
+        if (mAppsCustomizeConfig != null) {
             Resources res = getResources();
             float density = res.getDisplayMetrics().density;
-            customCellWidth = (int) (mAppsCustomizeConfig.getCellWidthDp() * density);
-            customCellHeight = (int) (mAppsCustomizeConfig.getCellHeightDp() * density);
+            
+            // 支持单独设置宽度、高度或同时设置
+            if (mAppsCustomizeConfig.getCellWidthDp() > 0) {
+                customCellWidth = (int) (mAppsCustomizeConfig.getCellWidthDp() * density);
+            }
+            if (mAppsCustomizeConfig.getCellHeightDp() > 0) {
+                customCellHeight = (int) (mAppsCustomizeConfig.getCellHeightDp() * density);
+            }
          //   LogUtil.d("syncPages: will apply custom cell dimensions - width=" + customCellWidth + ", height=" + customCellHeight);
         }
 
@@ -1913,10 +1920,15 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             PagedViewCellLayout layout = new PagedViewCellLayout(context);
             
             // 如果有自定义 Cell 尺寸，立即应用到新创建的页面上
+            // 支持单独设置宽度、高度或同时设置
             if (customCellWidth > 0 && customCellHeight > 0) {
                 layout.setCustomCellDimensions(customCellWidth, customCellHeight);
-            //    LogUtil.d("syncPages: applied custom dimensions to page " + i);
+            } else if (customCellWidth > 0) {
+                layout.setCustomCellWidth(customCellWidth);
+            } else if (customCellHeight > 0) {
+                layout.setCustomCellHeight(customCellHeight);
             }
+            //    LogUtil.d("syncPages: applied custom dimensions to page " + i);
             
             setupPage(layout);
             addView(layout);

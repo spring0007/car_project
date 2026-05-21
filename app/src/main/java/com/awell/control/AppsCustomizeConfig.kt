@@ -77,6 +77,7 @@ data class AppsCustomizeConfig(
     // ========== 字体配置 ==========
     val fontSizeSp: Int = -1,             // 字体大小（sp），-1 表示默认
     val fontColor: Int = -1,              // 字体颜色（ARGB），-1 表示默认
+    val textLine:Int = -1,                 //字体行数, 默认小于0   两行
 
     // ========== Cell 配置 ==========
     val cellWidthDp: Int = -1,            // Cell 宽度（dp），-1 表示默认
@@ -167,6 +168,12 @@ data class AppsCustomizeConfig(
          * -1 表示默认
          */
         private var fontColor: Int = -1
+
+        /**
+         * 字体行数
+         * -1 默认两行
+         */
+        private var textLine: Int = -1
         
         /**
          * Cell 宽度（dp）
@@ -209,6 +216,7 @@ data class AppsCustomizeConfig(
         fun setRowCount(value: Int) = apply { this.rowCount = value }
         fun setFontSizeSp(value: Int) = apply { this.fontSizeSp = value }
         fun setFontColor(value: Int) = apply { this.fontColor = value }
+        fun setTextLine(value: Int) = apply { this.textLine = value }
         fun setCellWidthDp(value: Int) = apply { this.cellWidthDp = value }
         fun setCellHeightDp(value: Int) = apply { this.cellHeightDp = value }
         fun setAutoWidthGap(value: Boolean) = apply { this.autoWidthGap = value }
@@ -227,6 +235,7 @@ data class AppsCustomizeConfig(
             rowCount,
             fontSizeSp,
             fontColor,
+            textLine,
             cellWidthDp,
             cellHeightDp,
             autoWidthGap,
