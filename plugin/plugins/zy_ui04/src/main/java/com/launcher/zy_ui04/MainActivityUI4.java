@@ -78,12 +78,14 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         // 设置主题模式,并同步到 IconManager
         int  iconSize = getResources().getDimensionPixelSize(R.dimen.cell_icon_size); //126
         int fontSize = getResources().getDimensionPixelSize(R.dimen.cell_font_size);
+        int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
 
         AppsCustomizeConfig config = new AppsCustomizeConfig.Builder()
                 .setColumnCount(5)
                 .setRowCount(2)
                 .setFontSizeSp(fontSize)
                 .setAutoHeightGap(true)
+                .setCellWidthDp(cellWidth)
                 //.setCellWidthDp(iconWidth)
                 //.setCellHeightDp(iconHeight)
                 .setIconSize(iconSize).build();

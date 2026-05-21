@@ -21,6 +21,7 @@
     <string name="video_input">Video Input</string>
     <string name="chrome" translatable="false">Chrome</string>
     <string name="easy_connect" translatable="false">Easy Connect</string>
+    <string name="zlink" >ZLINK</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>

@@ -15,6 +15,7 @@
     <dimen name="iv_icon_small_width">134dp</dimen>
     <dimen name="iv_icon_small_height">120dp</dimen>
     <dimen name="small_title_text_size">18sp</dimen>
+    <dimen name="cell_width">168dp</dimen>
     <item name="viewpager_height_parent" type="dimen" format="float">0.65</item>
     <item name="host_sub_title_width_percent" type="dimen" format="float">0.15</item>
 </resources>
