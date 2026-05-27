@@ -1,0 +1,21 @@
+<resources>
+    
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="add_app">आगे कहना</string>
+    <string name="radio">रेडियो</string>
+    <string name="no_install_app">ऐप लॉन्च करने में असमर्थ</string>
+    <string name="apps_no_install">ऐप इंस्टॉल नहीं है</string>
+
+
+    
+
+
+
+
+</resources>

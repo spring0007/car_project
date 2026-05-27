@@ -1,0 +1,21 @@
+<resources>
+    
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="add_app">Thêm</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="no_install_app">Không thể khởi chạy ứng dụng</string>
+    <string name="apps_no_install">Ứng dụng chưa được cài đặt</string>
+
+
+    
+
+
+
+
+</resources>

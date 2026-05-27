@@ -1,0 +1,21 @@
+<resources>
+    
+    
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">לחץ להפעלה</string>
+    <string name="music_artist">אמן</string>
+    <string name="add_app">הוסף</string>
+    <string name="radio">רדיו</string>
+    <string name="no_install_app">לא ניתן להפעיל את האפליקציה</string>
+    <string name="apps_no_install">האפליקציה לא מותקנת</string>
+
+
+    
+
+
+
+
+</resources>

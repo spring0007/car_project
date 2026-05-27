@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name" translatable="false">LauncherUI24</string>
+    <string name="ui_key" translatable="false">LauncherUI24</string>
+
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    <string name="ui_clazz" translatable="false">com.launcher.ui24.UIActivity</string>
+
+    <string name="click_play_music">Click  To Play</string>
+    <string name="music_artist">Artist</string>
+    <string name="add_app">Add</string>
+    <string name="radio">Radio</string>
+    <string name="no_install_app">Unable to launch the app</string>
+    <string name="apps_no_install">The app is not installed</string>
+
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+        <item>wallpaper_01</item>
+        <item>wallpaper_02</item>
+        <item>wallpaper_03</item>
+    </string-array>
+
+
+
+
+</resources>
