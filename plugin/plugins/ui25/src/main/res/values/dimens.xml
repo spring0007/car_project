@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="gpsSpeed_size">46sp</dimen>
+    <dimen name="gpsSpeedUnit_size">26sp</dimen>
+
+
+
+    <dimen name="recycle_app_icon_size">99dp</dimen>
+    <dimen name="app_icon_bg_size">99dp</dimen>
+    <dimen name="app_name_text_size">20sp</dimen>
+    <dimen name="text_20sp">20sp</dimen>
+    <dimen name="text_24sp">24sp</dimen>
+    <dimen name="text_48sp">48sp</dimen>
+    <dimen name="radio_marginend">30dp</dimen>
+    <dimen name="tv_app_margin_top">10dp</dimen>
+    <dimen name="iv_music_play_size">70dp</dimen>
+
+
+    <dimen name="music_artist_text_size">16sp</dimen>
+    <dimen name="iv_radio_image_size">50dp</dimen>
+    <dimen name="text_16sp">16sp</dimen>
+    <dimen name="text_40sp">40sp</dimen>
+    <dimen name="host_cell_size">50dp</dimen>
+    <dimen name="home_bottom_height">90dp</dimen>
+    <dimen name="iv_radio_icon_width">68dp</dimen>
+    <dimen name="iv_radio_icon_height">74dp</dimen>
+    <dimen name="music_icon_size">30dp</dimen>
+
+</resources>
