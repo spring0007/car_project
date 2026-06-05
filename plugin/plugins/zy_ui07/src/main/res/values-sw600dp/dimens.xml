@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_name_text_size">19sp</dimen>
+    <dimen name="host_cell_size">58dp</dimen>
+    <dimen name="time_font_size1">40sp</dimen>
+    <dimen name="date_font_size1">19sp</dimen>
+    <dimen name="ic_logo_width">117dp</dimen>
+    <dimen name="ic_logo_height">39dp</dimen>
+    <dimen name="font_size">16dp</dimen>
+    <dimen name="cell_height">124dp</dimen>
+    <dimen name="icon_size">88dp</dimen>
+    <dimen name="text_padding">8dp</dimen>
+    <dimen name="bt_music_tv_size">19sp</dimen>
+    <dimen name="bt_icon_size">54dp</dimen>
+    <dimen name="card_width">240dp</dimen>
+    <dimen name="card_height">118dp</dimen>
+    <dimen name="iv_navi_icon_size">22dp</dimen>
+    <dimen name="tv_radio_freq">38sp</dimen>
+    <dimen name="tv_radio_unit">19sp</dimen>
+    <dimen name="tv_radio_title_padding">16dp</dimen>
+    <dimen name="music_play_width">66dp</dimen>
+    <dimen name="music_play_height">45dp</dimen>
+    <dimen name="img_song_art_bg_size">54dp</dimen>
+    <dimen name="img_song_art_size">26dp</dimen>
+    <dimen name="artist_text_size">18sp</dimen>
+
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">點擊播放</string>
+    <string name="music_artist">藝術家</string>
+    <string name="bt_music">藍牙音樂</string>
+    <string name="navigation">導航</string>
+    <string name="radio">收音機</string>
+    <string name="music">音樂</string>
+
+    
+
+</resources>

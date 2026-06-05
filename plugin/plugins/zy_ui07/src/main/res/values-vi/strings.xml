@@ -1,0 +1,15 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="bt_music">Nhạc Bluetooth</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="radio">Đài phát thanh</string>
+    <string name="music">Âm nhạc</string>
+
+    
+
+</resources>

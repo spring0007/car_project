@@ -1,0 +1,15 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="bt_music">ब्लूटूथ संगीत</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="radio">रेडियो</string>
+    <string name="music">राग</string>
+
+    
+
+</resources>

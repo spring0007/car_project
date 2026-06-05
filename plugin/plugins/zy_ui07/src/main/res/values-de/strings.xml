@@ -1,0 +1,15 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+    
+    <string name="click_play_music">Zum Spielen klicken</string>
+    <string name="music_artist">Künstler</string>
+    <string name="bt_music">Bluetooth-Musik</string>
+    <string name="navigation">Navigation</string>
+    <string name="radio">Radio</string>
+    <string name="music">Musik</string>
+
+    
+
+</resources>

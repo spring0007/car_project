@@ -57,4 +57,6 @@ include ':plugin:plugins:zy_ui02'
 include ':plugin:plugins:zy_ui03'
 include ':plugin:plugins:zy_ui04'
 include ':plugin:plugins:zy_ui05'
+include ':plugin:plugins:zy_ui06'
+include ':plugin:plugins:zy_ui07'
 
