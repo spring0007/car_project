@@ -82,6 +82,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
                 .setAutoWidthGap(true)
                 .setColumnCount(5)
 				.setTextLine(1)
+                .setIconSize((int) getResources().getDimensionPixelSize(R.dimen.app_icon_size))
 				.setCellHeightDp((int) getResources().getDimensionPixelSize(R.dimen.cell_height))
                 .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
                 .build();

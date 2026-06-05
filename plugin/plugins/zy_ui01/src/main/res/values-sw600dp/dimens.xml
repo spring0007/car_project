@@ -9,6 +9,8 @@
     <dimen name="viewpager_item_width">238dp</dimen>
     <dimen name="viewpager_item_height">372dp</dimen>
     <dimen name="tv_font_size">36sp</dimen>
+
+    <dimen name="app_icon_padding">10dp</dimen>
     <dimen name="music_iv_size">35dp</dimen>
     <dimen name="tv_title_size">22sp</dimen>
     <dimen name="tv_music_size">22sp</dimen>
@@ -16,5 +18,6 @@
     <dimen name="tv_temper_size">28sp</dimen>
     <dimen name="tv_scope_size">18sp</dimen>
     <dimen name="tv_width" format="float">0.185</dimen>
-    <dimen name="cell_height">152dp</dimen>
+    <dimen name="cell_height">164dp</dimen>
+    <dimen name="app_icon_size">119dp</dimen>
 </resources>

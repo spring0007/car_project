@@ -18,6 +18,7 @@
     <dimen name="tv_temper_size">35sp</dimen>
     <dimen name="tv_scope_size">22sp</dimen>
     <dimen name="tv_width" format="float">0.185</dimen>
-    <dimen name="cell_height">190dp</dimen>
+    <dimen name="cell_height">205dp</dimen>
+    <dimen name="app_icon_size">149dp</dimen>
 
 </resources>
