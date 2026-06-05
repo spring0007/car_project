@@ -84,5 +84,5 @@
     <dimen name="workspace_height_gap_land">0dp</dimen>
     <dimen name="workspace_height_gap_port">24dp</dimen>
 
-    <integer name="pageview_app_icon_text_size">24</integer>
+    <integer name="pageview_app_icon_text_size">19</integer>
 </resources>

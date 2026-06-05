@@ -440,8 +440,9 @@ public class IconCache {
                 return PACKAGE_ICON_MAP_YFD_2.get(pkg);
             case 0xff:
                 // Plugin 模式：从插件动态获取资源 ID
-                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
-                    return null;
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)){
+                    return PluginIconManager.getPluginIconResId(IconPkgMap.AIR_NAME);
+                }
                 return PluginIconManager.getPluginIconResId(pkg);
             default:
                 if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
