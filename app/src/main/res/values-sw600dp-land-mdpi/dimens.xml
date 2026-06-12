@@ -26,7 +26,7 @@
     <dimen name="apps_customize_pageLayoutWidthGap">45dp</dimen>
     <dimen name="apps_customize_pageLayoutHeightGap">45dp</dimen>
     <dimen name="apps_customize_pageLayoutPaddingTop">0dp</dimen>
-    <dimen name="apps_customize_pageLayoutPaddingBottom">14dp</dimen>
+    <dimen name="apps_customize_pageLayoutPaddingBottom">0dp</dimen>
 
     <!-- QSB -->
     <dimen name="qsb_bar_height">82dp</dimen>

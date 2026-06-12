@@ -47,6 +47,9 @@
     <integer name="apps_customize_maxCellCountX">-1</integer>
     <integer name="apps_customize_maxCellCountY">-1</integer>
     <dimen name="all_apps_button_vertical_padding">4dip</dimen>
+    <dimen name="apps_customize_pageLayoutPaddingTop">0dp</dimen>
+    <dimen name="apps_customize_pageLayoutPaddingBottom">0dp</dimen>
+
 
     <!-- dimensions for the wallpaper picker wallpaper thumbnail width -->
     <dimen name="wallpaper_chooser_grid_width">196dp</dimen>
