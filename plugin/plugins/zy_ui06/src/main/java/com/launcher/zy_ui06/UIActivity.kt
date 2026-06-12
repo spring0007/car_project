@@ -11,6 +11,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -42,6 +43,7 @@ import com.awell.addapp.AddSelectAppCallback
 import com.awell.addapp.AppInfo
 import com.awell.addapp.MyDbHelper
 import com.awell.addapp.ShowPopupI
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -73,7 +75,6 @@ class UIActivity : Activity(), View.OnClickListener {
     private var accRecor: Boolean? = null
 
     val PERMISSION_REQUEST_CODE: Int = 100
-    //private lateinit var appInfoAdapter: AppInofAdapter
     private lateinit var allAppInfoList: List<AppInfo>
 
     lateinit var popupWindow: PopupWindow
@@ -90,6 +91,12 @@ class UIActivity : Activity(), View.OnClickListener {
     private var isEventConsumedByChild = false
     private var isLongPressPossible = false
     private var isResumed = false
+    //应用代号
+    private var APP_NUMBER = 0
+    //默认包名
+    private val defaultPackageNum0 = "com.awell.navigation"
+    private val defaultPackageNum1 = "com.awell.localvideo"
+    private lateinit var customizeConfig : AppsCustomizeConfig
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +110,8 @@ class UIActivity : Activity(), View.OnClickListener {
 
         initView()
         // 通过配置对象直接应用
-        val savedThemeResId = getThemeResId(getSavedThemeId())
+        val themeId = getSavedThemeId()
+        val savedThemeResId = getThemeResId(themeId)
         setStyleTheme(savedThemeResId)
 
         initMediaMusic()
@@ -115,34 +123,27 @@ class UIActivity : Activity(), View.OnClickListener {
         initBroadcastReceiver()
 
         AppsCustomizeControl.setActivity(this)
-        AppsCustomizeControl.setPluginThemeMode(1);
         
         // 设置主题模式，并同步到 IconManager
-       // AppsCustomizeControl.setAppIconSize(getResources().getDimensionPixelSize(R.dimen.app_icon_size))
-        //val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)//126
-   /*     val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)
+        val cellHeight = resources.getDimensionPixelSize(R.dimen.cell_height_dp)
         val cellWidth = resources.getDimensionPixelSize(R.dimen.cell_width_dp)
-        val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
-        val config = AppsCustomizeConfig.Builder()
+        //val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
+        customizeConfig = AppsCustomizeConfig.Builder()
             .setIconSize(resources.getDimensionPixelSize(R.dimen.app_icon_size))
-            .setIconOffsetX((cellHeight - icSize) / 2)
-            .setIconTextPadding(resources.getDimensionPixelSize(R.dimen.app_icon_text_padding) + (cellHeight - icSize - 4) / 2)
-            .setColumnCount(3)
-            .setRowCount(4)
+            .setIconTextPadding(resources.getDimensionPixelSize(R.dimen.app_icon_text_padding))
+            .setColumnCount(5)
+            .setRowCount(2)
             .setAutoWidthGap(true)
             .setAutoHeightGap(true)
             .setFontSizeSp(resources.getDimensionPixelSize(R.dimen.font_size_sp)) // 20
-            .setTextOrientation(2)
-            .setTextGravity(Gravity.CENTER_VERTICAL or Gravity.START)
             .setFontColor(Color.WHITE)
             .setCellWidthDp(cellWidth) //358
             .setCellHeightDp(cellHeight)
-            .setBackgroundTheme(1)
             .build()
 
                 
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui06")
-        AppsCustomizeControl.applyAppsCustomizeConfig(config)*/
+        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
+        AppsCustomizeControl.applyAppsCustomizeConfig(customizeConfig)
         // 初始化 IconManager，预加载资源
         IconManager.initialize(this)
 
@@ -244,13 +245,6 @@ class UIActivity : Activity(), View.OnClickListener {
             false
         }
     }
-
-
-    //应用代号
-    private var APP_NUMBER = 0
-    //默认包名
-    private val defaultPackageNum0 = "com.awell.navigation"
-    private val defaultPackageNum1 = "com.awell.localvideo"
 
     private fun startActivityByPkg(appNumber:Int,defaultPackage:String) {
         var pkg = Settings.System.getString(contentResolver,"launcher_app_icon_$appNumber")
@@ -1119,6 +1113,8 @@ class UIActivity : Activity(), View.OnClickListener {
         //刷新快捷方式图标
         IconManager.currentThemeMode = themeId
         setShortCutDrawable()
+        AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
+        AppsCustomizeControl.applyAppsCustomizeConfig(customizeConfig)
 
     }
 
@@ -1211,6 +1207,16 @@ class UIActivity : Activity(), View.OnClickListener {
             else -> R.drawable.ic_home_layout_bg0
         }
     }
-
-
+    private fun getAppTheme(appNumber:Int): Map<String, String> {
+        return when (appNumber) {
+            0 -> IconManager.PACKAGE_ICON_MAP_ONE
+            1 -> IconManager.PACKAGE_ICON_MAP_TWO
+            2 -> IconManager.PACKAGE_ICON_MAP_THREE
+            3 -> IconManager.PACKAGE_ICON_MAP_FOUR
+            4 -> IconManager.PACKAGE_ICON_MAP_FIVE
+            5 -> IconManager.PACKAGE_ICON_MAP_SIX
+            6 -> IconManager.PACKAGE_ICON_MAP_SEVEN
+            else -> IconManager.PACKAGE_ICON_MAP_ONE
+        }
+    }
 }

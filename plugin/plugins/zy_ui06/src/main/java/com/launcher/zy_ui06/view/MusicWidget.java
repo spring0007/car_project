@@ -314,7 +314,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
             } else {
-                mMusicNameTextView.setText(getResources().getString(R.string.click_play_music));
+                mMusicNameTextView.setText(/*getResources().getString(R.string.click_play_music)*/"");
             }
         }
     }

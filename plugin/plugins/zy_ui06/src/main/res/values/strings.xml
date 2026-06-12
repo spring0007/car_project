@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name" translatable="false">LauncherUI_C6</string>
-    <!--主题app和系统会使用到-->
     <string name="ui_key" translatable="false">LauncherUI_C6</string>
     <string name="ui_clazz" translatable="false">com.launcher.zy_ui06.UIActivity</string>
 
     <string name="click_play_music">Click  To Play</string>
     <string name="music_artist">Artist</string>
-    <string name="add_app">Add App</string>
-    <string name="radio">收音机</string>
-    <string name="music">音乐</string>
+    <string name="radio">Radio</string>
+    <string name="music">Music</string>
 
 
     <string-array name="wallpapers" translatable="false">
@@ -17,7 +15,6 @@
         <item>wallpaper_02</item>
         <item>wallpaper_03</item>
         <item>wallpaper_04</item>
-        <item>wallpaper_05</item>
     </string-array>
 
 

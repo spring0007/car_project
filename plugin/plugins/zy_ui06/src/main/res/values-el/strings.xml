@@ -1,0 +1,18 @@
+<resources>
+    
+    <!--主题app和系统会使用到-->
+    
+    
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="music">Μουσική</string>
+
+
+    
+
+
+
+
+</resources>

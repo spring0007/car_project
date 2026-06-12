@@ -10,6 +10,7 @@ public class ClickUtils {
         if (currentTime - lastClickTime < MIN_CLICK_DELAY_TIME) {
             return true;
         }
+
         lastClickTime = currentTime;
         return false;
     }

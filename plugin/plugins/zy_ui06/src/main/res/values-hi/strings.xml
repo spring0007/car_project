@@ -1,0 +1,18 @@
+<resources>
+    
+    <!--主题app和系统会使用到-->
+    
+    
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="radio">रेडियो</string>
+    <string name="music">राग</string>
+
+
+    
+
+
+
+
+</resources>

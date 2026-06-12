@@ -1,0 +1,18 @@
+<resources>
+    
+    <!--主题app和系统会使用到-->
+    
+    
+
+    <string name="click_play_music">คลิกเพื่อเล่น</string>
+    <string name="music_artist">ศิลปิน</string>
+    <string name="radio">วิทยุ</string>
+    <string name="music">เพลง</string>
+
+
+    
+
+
+
+
+</resources>
