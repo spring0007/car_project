@@ -35,7 +35,7 @@ object IconManager {
         "com.autonavi.amapauto" to "zy04_navi",
         // "com.tima.carnet.vt" to "zy04_zlink",
         //"net.easyconn" to "zy04_zlink",
-        "com.zjinnova.zlink" to "zy04_zlink",
+        "com.zjinnova.zlink" to "zy04_easy_connet",
         "com.awell.awellmanual" to "zy04_manual",
         // "com.google.android.apps.maps" to "zy04_googlemap",
         "com.google.android.youtube" to "zy04_youtube",

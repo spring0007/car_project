@@ -20,7 +20,9 @@
     <string name="audio_input">Audioeingang</string>
     <string name="video_input">Videoeingang</string>
     
+    <string name="easy_connect" >Einfache Verbindung</string>
     
+    <string name="eq">Soundeffekte</string>
 
     
 

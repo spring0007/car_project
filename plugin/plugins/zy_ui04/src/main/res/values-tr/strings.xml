@@ -20,7 +20,9 @@
     <string name="audio_input">Ses girişi</string>
     <string name="video_input">Video girişi</string>
     
+    <string name="easy_connect" >Easy Connect</string>
     
+    <string name="eq">Ses efektleri</string>
 
     
 

@@ -121,15 +121,16 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         // 根据当前页面组加载不同的页面配置
         if (currentPageGroup == PAGE_GROUP_DEFAULT) {
-            // 默认组：包含 viewpager_1 和 viewpager_2
+            // 默认组：包含 viewpager_5
+            pageDataList.add(new PageData(R.layout.viewpager_5));
+            pageDataList.add(new PageData(R.layout.viewpager_6));
+
+        } else {
+            // 切换组：包含 viewpager_1 和 viewpager_2
             pageDataList.add(new PageData(R.layout.viewpager_1));
             pageDataList.add(new PageData(R.layout.viewpager_2));
             pageDataList.add(new PageData(R.layout.viewpager_3));
             pageDataList.add(new PageData(R.layout.viewpager_4));
-        } else {
-            // 切换组：包含 viewpager_5
-            pageDataList.add(new PageData(R.layout.viewpager_5));
-            pageDataList.add(new PageData(R.layout.viewpager_6));
         }
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this);

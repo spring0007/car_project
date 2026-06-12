@@ -20,8 +20,9 @@
     <string name="audio_input">Audio Input</string>
     <string name="video_input">Video Input</string>
     <string name="chrome" translatable="false">Chrome</string>
-    <string name="easy_connect" translatable="false">Easy Connect</string>
-    <string name="zlink" >ZLINK</string>
+    <string name="easy_connect" >Easy Connect</string>
+    <string name="zlink" translatable="false" >ZLINK</string>
+    <string name="eq">EQ</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
