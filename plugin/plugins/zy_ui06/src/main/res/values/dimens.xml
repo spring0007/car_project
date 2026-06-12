@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_50sp">50sp</dimen>
+
+    <dimen name="app_icon_bg_size">124dp</dimen>
+
+    <dimen name="music_name_text_size">28sp</dimen>
+    <dimen name="music_artist_text_size">20sp</dimen>
+    <dimen name="iv_radio_icon_size">152dp</dimen>
+    <dimen name="shortcut_tv_size">24sp</dimen>
+    <dimen name="ll_item_margin">25dp</dimen>
+    <dimen name="app_icon_size">90dp</dimen>
+    <dimen name="cell_width_dp">358dp</dimen>
+    <dimen name="cell_height_dp">126dp</dimen>
+    <dimen name="font_size_sp">20sp</dimen>
+    <dimen name="app_icon_text_padding">30dp</dimen>
+
+    <dimen name="recycle_app_item_margin">14dp</dimen>
+
+
+    <dimen name="hotset_size">98dp</dimen>
+    <dimen name="iv_radio_image_size">60dp</dimen>
+    <dimen name="music_play_size">60dp</dimen>
+    <dimen name="clockTime_size">45sp</dimen>
+    <dimen name="clockData_size">18sp</dimen>
+    <dimen name="tv_radio_freq_text_size">20sp</dimen>
+    <dimen name="tv_radio_title_size">26sp</dimen>
+    <dimen name="iv_nav_icon_size">154dp</dimen>
+    <dimen name="gpsSpeed_size">42sp</dimen>
+    <dimen name="gpsSpeedUnit_size">16sp</dimen>
+    <dimen name="iv_color_size">82dp</dimen>
+    <dimen name="select_color_width">550dp</dimen>
+    <dimen name="select_color_height">282dp</dimen>
+    <dimen name="recycle_app_icon_size">146dp</dimen>
+    <dimen name="recycle_app_item_width">200dp</dimen>
+
+
+</resources>

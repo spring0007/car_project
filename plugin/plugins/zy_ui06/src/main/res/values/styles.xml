@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme0" >
+        <item name="all_app_bg">@drawable/ic_allapp</item>
+        <item name="bt_app_bg">@drawable/ic_btphone</item>
+        <item name="setting_app_bg">@drawable/ic_setting</item>
+        <item name="eq_app_bg">@drawable/ic_eq</item>
+        <item name="ui_theme_bg">@drawable/ic_bg</item>
+        <item name="music_bg">@drawable/ic_music_normal</item>
+        <item name="navi_bg">@drawable/ic_navi_normal</item>
+        <item name="radio_bg">@drawable/ic_radio_normal</item>
+        <item name="video_bg">@drawable/ic_video_normal</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed</item>
+
+    </style>
+
+
+
+    <style name="AppTheme1" >
+        <item name="all_app_bg">@drawable/ic_allapp_1</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_1</item>
+        <item name="setting_app_bg">@drawable/ic_setting_1</item>
+        <item name="eq_app_bg">@drawable/ic_eq_1</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_1</item>
+        <item name="music_bg">@drawable/ic_music_normal_1</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_1</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_1</item>
+        <item name="video_bg">@drawable/ic_video_normal_1</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_1</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_1</item>
+
+    </style>
+
+
+    <style name="AppTheme2"  >
+        <item name="all_app_bg">@drawable/ic_allapp_2</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_2</item>
+        <item name="setting_app_bg">@drawable/ic_setting_2</item>
+        <item name="eq_app_bg">@drawable/ic_eq_2</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_2</item>
+        <item name="music_bg">@drawable/ic_music_normal_2</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_2</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_2</item>
+        <item name="video_bg">@drawable/ic_video_normal_2</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_2</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_2</item>
+
+    </style>
+
+    <style name="AppTheme3">
+        <item name="all_app_bg">@drawable/ic_allapp_3</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_3</item>
+        <item name="setting_app_bg">@drawable/ic_setting_3</item>
+        <item name="eq_app_bg">@drawable/ic_eq_3</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_3</item>
+        <item name="music_bg">@drawable/ic_music_normal_3</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_3</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_3</item>
+        <item name="video_bg">@drawable/ic_video_normal_3</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_3</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_3</item>
+    </style>
+
+    <style name="AppTheme4">
+        <item name="all_app_bg">@drawable/ic_allapp_4</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_4</item>
+        <item name="setting_app_bg">@drawable/ic_setting_4</item>
+        <item name="eq_app_bg">@drawable/ic_eq_4</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_4</item>
+        <item name="music_bg">@drawable/ic_music_normal_4</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_4</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_4</item>
+        <item name="video_bg">@drawable/ic_video_normal_4</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_4</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_4</item>
+    </style>
+    <style name="AppTheme5"  >
+        <item name="all_app_bg">@drawable/ic_allapp_5</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_5</item>
+        <item name="setting_app_bg">@drawable/ic_setting_5</item>
+        <item name="eq_app_bg">@drawable/ic_eq_5</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_5</item>
+        <item name="music_bg">@drawable/ic_music_normal_5</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_5</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_5</item>
+        <item name="video_bg">@drawable/ic_video_normal_5</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_5</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_5</item>
+    </style>
+    <style name="AppTheme6">
+        <item name="all_app_bg">@drawable/ic_allapp_6</item>
+        <item name="bt_app_bg">@drawable/ic_btphone_6</item>
+        <item name="setting_app_bg">@drawable/ic_setting_6</item>
+        <item name="eq_app_bg">@drawable/ic_eq_6</item>
+        <item name="ui_theme_bg">@drawable/ic_bg_6</item>
+        <item name="music_bg">@drawable/ic_music_normal_6</item>
+        <item name="navi_bg">@drawable/ic_navi_normal_6</item>
+        <item name="radio_bg">@drawable/ic_radio_normal_6</item>
+        <item name="video_bg">@drawable/ic_video_normal_6</item>
+        <!--播放按钮-->
+        <item name="play_btn">@drawable/ic_play_pressed_6</item>
+        <item name="pause_btn">@drawable/ic_pause_pressed_6</item>
+    </style>
+
+
+</resources>

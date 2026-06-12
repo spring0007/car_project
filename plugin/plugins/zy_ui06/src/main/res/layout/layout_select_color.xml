@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B3000000"
+    android:clickable="true"  >
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/select_dialog_main"
+    android:layout_width="@dimen/select_color_width"
+    android:layout_gravity="center"
+    android:layout_height="@dimen/select_color_height"
+    android:background="@drawable/ic_home_layout_bg0">
+
+    <CheckBox
+        android:id="@+id/iv_color1"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_1"
+        android:button="@null"
+        android:tag="0"
+        app:layout_constraintBottom_toTopOf="@+id/iv_color5"
+        app:layout_constraintEnd_toStartOf="@+id/iv_color2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/iv_color2"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_2"
+        android:button="@null"
+        android:tag="1"
+        app:layout_constraintEnd_toStartOf="@+id/iv_color3"
+        app:layout_constraintStart_toEndOf="@+id/iv_color1"
+        app:layout_constraintTop_toTopOf="@+id/iv_color1" />
+
+    <CheckBox
+        android:id="@+id/iv_color3"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_3"
+        android:button="@null"
+        android:tag="2"
+        app:layout_constraintEnd_toStartOf="@+id/iv_color4"
+        app:layout_constraintStart_toEndOf="@+id/iv_color2"
+        app:layout_constraintTop_toTopOf="@+id/iv_color1" />
+
+    <CheckBox
+        android:id="@+id/iv_color4"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_4"
+        android:button="@null"
+        android:tag="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_color3"
+        app:layout_constraintTop_toTopOf="@+id/iv_color1" />
+
+    <CheckBox
+        android:id="@+id/iv_color5"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_5"
+        android:button="@null"
+        android:tag="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/iv_color1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_color1" />
+
+    <CheckBox
+        android:id="@+id/iv_color6"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_6"
+        android:button="@null"
+        android:tag="5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/iv_color2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_color2" />
+
+    <CheckBox
+        android:id="@+id/iv_color7"
+        android:layout_width="@dimen/iv_color_size"
+        android:layout_height="@dimen/iv_color_size"
+        android:background="@drawable/color_7"
+        android:button="@null"
+        android:tag="6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/iv_color3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_color3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

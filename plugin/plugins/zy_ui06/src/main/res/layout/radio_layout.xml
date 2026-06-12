@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/radio_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_radio_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_sc_light"
+        android:gravity="start"
+        android:text="@string/radio"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv_radio_title_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.66" />
+
+
+    <TextView
+        android:id="@+id/tv_radio_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/harmonyos_sans_sc_light"
+        android:gravity="start"
+        android:text="87.5  MHZ"
+        android:textColor="@color/white"
+        android:textSize="@dimen/tv_radio_freq_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ll_radio_control" />
+
+    <RelativeLayout
+        android:id="@+id/ll_radio_control"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.975"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_radio_pre"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:scaleType="fitXY"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_pre" />
+
+
+        <ImageView
+            android:id="@+id/iv_radio_next"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:layout_alignParentEnd="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_next"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

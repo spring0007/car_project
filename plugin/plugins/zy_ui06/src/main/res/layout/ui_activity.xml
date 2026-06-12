@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UIActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="tv_title_margintop" />
+
+    <ImageView
+        android:id="@+id/iv_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/ui_icon"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hot_set_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom1"
+        app:layout_constraintWidth_percent="0.86">
+
+        <ImageView
+            android:id="@+id/home_app_bluetooth"
+            android:layout_width="@dimen/hotset_size"
+            android:layout_height="@dimen/hotset_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_btphone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/home_app_eq"
+            android:layout_width="@dimen/hotset_size"
+            android:layout_height="@dimen/hotset_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_eq"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ll_time"
+            app:layout_constraintStart_toEndOf="@+id/home_app_bluetooth"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!--  time  -->
+        <LinearLayout
+            android:id="@+id/ll_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/home_app_all_app"
+            app:layout_constraintStart_toEndOf="@+id/home_app_eq"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.19">
+
+            <TextClock
+                android:id="@+id/clock_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/roboto_regular"
+                android:format12Hour="hh:mm"
+                android:format24Hour="HH:mm"
+                android:gravity="bottom"
+                android:text="12:50"
+                android:textColor="@color/white"
+                android:textSize="@dimen/clockTime_size" />
+
+            <TextClock
+                android:id="@+id/clockData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/roboto_regular"
+                android:format12Hour="yyyy-MM-dd EEEE"
+                android:format24Hour="yyyy-MM-dd EEEE"
+                android:gravity="bottom"
+                android:text="2026-04-16"
+                android:textColor="@color/white"
+                android:textSize="@dimen/clockData_size" />
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/home_app_all_app"
+            android:layout_width="@dimen/hotset_size"
+            android:layout_height="@dimen/hotset_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_allapp_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/home_app_setting"
+            app:layout_constraintStart_toEndOf="@+id/ll_time"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/home_app_setting"
+            android:layout_width="@dimen/hotset_size"
+            android:layout_height="@dimen/hotset_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_setting"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--左边顶部-->
+    <com.launcher.zy_ui06.view.ImageViewTouch
+        android:id="@+id/iv_radio_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_radio_normal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top" />
+
+    <include
+        android:id="@+id/layout_radio_layout"
+        layout="@layout/radio_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_radio_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_radio_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_radio_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_radio_bg" />
+
+
+    <!--左边中上-->
+    <com.launcher.zy_ui06.view.ImageViewTouch
+        android:id="@+id/iv_nav_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        android:src="@drawable/ic_navi_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_3"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_2"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_3"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_2"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top2">
+
+        <ImageView
+            android:id="@+id/iv_nav_icon"
+            android:layout_width="@dimen/iv_nav_icon_size"
+            android:layout_height="@dimen/iv_nav_icon_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/zy060_navi"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.27" />
+
+        <TextView
+            android:id="@+id/tv_nav_title"
+            android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:gravity="center"
+            android:text="导航"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/tv_radio_title_size"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@+id/iv_nav_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--右边中上-->
+    <com.launcher.zy_ui06.view.ImageViewTouch
+        android:id="@+id/iv_video_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_video_normal"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_5"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top2" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_5"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top2">
+
+        <ImageView
+            android:id="@+id/iv_video_icon"
+            android:layout_width="@dimen/iv_nav_icon_size"
+            android:layout_height="@dimen/iv_nav_icon_size"
+            android:scaleType="fitXY"
+            android:src="@drawable/zy060_video"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.27" />
+
+        <TextView
+            android:id="@+id/tv_video_title"
+            android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:gravity="center"
+            android:text="视频"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/tv_radio_title_size"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@+id/iv_video_icon" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <!--右边-->
+    <com.launcher.zy_ui06.view.ImageViewTouch
+        android:id="@+id/iv_music_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_music_normal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_6"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top" />
+
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_music_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_music_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_music_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_music_bg" />
+
+    <TextView
+        android:id="@+id/tv_gps_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/gpsSpeed_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top4"/>
+
+    <TextView
+        android:id="@+id/tv_gps_speed_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="KM/h"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/gpsSpeedUnit_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_gps_speed"/>
+
+    <!--中间底部-->
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top5"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top6"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_7"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_8"
+        android:id="@+id/host_switch" />
+
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/home_bottom_"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:scaleType="fitXY"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_4"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_1"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/guideline_top2"-->
+<!--        app:layout_constraintVertical_bias="1.0" />-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/rv"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_marginStart="@dimen/recycle_app_item_margin"-->
+<!--        android:layout_marginEnd="@dimen/recycle_app_item_margin"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/home_bottom_"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/home_bottom_"-->
+<!--        app:layout_constraintHeight_default="percent"-->
+<!--        app:layout_constraintHeight_percent="0.21"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/home_bottom_"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/home_bottom_" />-->
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.17" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.207" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.683" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4675" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5837" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7606" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.82" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.96" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0210" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1484" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1625" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2828" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7171" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8375" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8515" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3804" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6203" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9781" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

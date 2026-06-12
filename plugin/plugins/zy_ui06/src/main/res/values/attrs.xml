@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--start-->
+
+    <!-- 主题背景 -->
+    <attr name="ui_theme_bg" format="reference" />
+    <attr name="eq_app_bg" format="reference" />
+    <attr name="all_app_bg" format="reference" />
+    <attr name="bt_app_bg" format="reference" />
+    <attr name="setting_app_bg" format="reference" />
+    <!--音乐背景-->
+    <attr name="music_bg" format="reference"/>
+    <!--导航背景-->
+    <attr name="navi_bg" format="reference"/>
+    <!--radio bg-->
+    <attr name="radio_bg" format="reference"/>
+    <attr name="video_bg" format="reference"/>
+    <!--播放按钮-->
+    <attr name="play_btn" format="reference"/>
+    <attr name="pause_btn" format="reference"/>
+
+
+
+</resources>
