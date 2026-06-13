@@ -7,17 +7,11 @@
     tools:context=".UIActivity"
     tools:ignore="MissingDefaultResource">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="tv_title_margintop" />
-
     <ImageView
         android:id="@+id/iv_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ui_icon"
+        android:src="@drawable/ic_bg"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,6 +125,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="fitXY"
+        android:onClick="onClick"
         android:src="@drawable/ic_radio_normal"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
         app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
@@ -142,10 +137,10 @@
         layout="@layout/radio_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_radio_bg"
-        app:layout_constraintEnd_toEndOf="@+id/iv_radio_bg"
-        app:layout_constraintStart_toStartOf="@+id/iv_radio_bg"
-        app:layout_constraintTop_toTopOf="@+id/iv_radio_bg" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"/>
 
 
     <!--左边中上-->
@@ -253,29 +248,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
     <!--右边-->
-    <com.launcher.zy_ui06.view.ImageViewTouch
-        android:id="@+id/iv_music_bg"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_music_normal"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_6"
-        app:layout_constraintTop_toTopOf="@+id/guideline_top" />
 
     <include
         android:id="@+id/layout_music_widget"
         layout="@layout/music_widget"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/iv_music_bg"
-        app:layout_constraintEnd_toEndOf="@+id/iv_music_bg"
-        app:layout_constraintStart_toStartOf="@+id/iv_music_bg"
-        app:layout_constraintTop_toTopOf="@+id/iv_music_bg" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_6"
+        app:layout_constraintTop_toTopOf="@+id/guideline_top"/>
 
     <TextView
         android:id="@+id/tv_gps_speed"

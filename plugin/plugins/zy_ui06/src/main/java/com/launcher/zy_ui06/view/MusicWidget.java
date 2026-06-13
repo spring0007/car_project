@@ -132,7 +132,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         musicNextIv.setOnClickListener(this);
 
         // MusicWidget 本身就是根视图，直接设置点击监听器
-        setOnClickListener(this);
+        //setOnClickListener(this);
+        view.findViewById(R.id.iv_music_bg).setOnClickListener(this);
 
         ivLoadnim = view.findViewById(R.id.img_song_art);
         //ivLoadnim.setOnClickListener(this);
@@ -226,7 +227,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendTogglePlayPause();
             }
-        } else if (id == R.id.layout_music_widget) {
+        } else if (id == R.id.iv_music_bg) {
             if (currentMedia == MUSIC) {
                 startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
             } else if (currentMedia == BT) {

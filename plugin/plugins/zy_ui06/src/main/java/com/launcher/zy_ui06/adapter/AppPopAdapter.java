@@ -58,6 +58,9 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
             notifyDataSetChanged();
             return true;
         });*/
+        if((position +1)%4 == 0 || position == contentList.size()-1)
+            holder.line.setVisibility(View.GONE);
+        else holder.line.setVisibility(View.VISIBLE);
 
         holder.ll_item.setOnClickListener(vie -> {
             /*Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
@@ -78,12 +81,14 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
         private RelativeLayout ll_item;
         private ImageView iv_app_icon;
         private TextView tv_app_name;
+        private View line;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ll_item = itemView.findViewById(R.id.ll_item);
             iv_app_icon = itemView.findViewById(R.id.iv_app_icon);
             tv_app_name = itemView.findViewById(R.id.tv_app_name);
+            line = itemView.findViewById(R.id.line);
         }
     }
 }

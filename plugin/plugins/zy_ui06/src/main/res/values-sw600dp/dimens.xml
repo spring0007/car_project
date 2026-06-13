@@ -15,15 +15,16 @@
     <dimen name="iv_color_size">66dp</dimen>
     <dimen name="select_color_width">440dp</dimen>
     <dimen name="select_color_height">226dp</dimen>
-    <dimen name="recycle_app_icon_size">117dp</dimen>
+    <dimen name="recycle_app_icon_size">48dp</dimen>
     <dimen name="recycle_app_item_width">160dp</dimen>
+    <dimen name="recycle_app_item_height">96dp</dimen>
     <dimen name="app_icon_size">117dp</dimen>
     <dimen name="cell_width_dp">197dp</dimen>
     <dimen name="cell_height_dp">184dp</dimen>
     <dimen name="font_size_sp">24sp</dimen>
     <dimen name="app_icon_text_padding">24dp</dimen>
     <dimen name="shortcut_tv_size">19sp</dimen>
-
+    <dimen name="ll_height">480dp</dimen>
 
 
 </resources>

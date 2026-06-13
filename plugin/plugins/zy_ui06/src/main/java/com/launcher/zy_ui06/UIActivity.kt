@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
@@ -37,11 +36,9 @@ import android.widget.PopupWindow
 import androidx.annotation.RequiresPermission
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.awell.addapp.AddSelectAppCallback
 import com.awell.addapp.AppInfo
-import com.awell.addapp.MyDbHelper
 import com.awell.addapp.ShowPopupI
 import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
@@ -149,13 +146,10 @@ class UIActivity : Activity(), View.OnClickListener {
 
     }
 
-
-
     override fun onResume() {
         super.onResume()
         LogUtil.i("onResume")
         isResumed = true
-
         initAddAppView()
 
     }
@@ -167,7 +161,12 @@ class UIActivity : Activity(), View.OnClickListener {
 
     }
 
-
+    override fun onStop() {
+        super.onStop()
+        if ( ::popupWindow.isInitialized &&  popupWindow.isShowing) {
+            popupWindow.dismiss()
+        }
+    }
 
     /**
      * 初始化长按切换壁纸和监听gps速度变化
@@ -248,8 +247,10 @@ class UIActivity : Activity(), View.OnClickListener {
 
     private fun startActivityByPkg(appNumber:Int,defaultPackage:String) {
         var pkg = Settings.System.getString(contentResolver,"launcher_app_icon_$appNumber")
-        if (TextUtils.isEmpty(pkg))
+        if (TextUtils.isEmpty(pkg) || !isAppInstalled(pkg)) {
             pkg = defaultPackage
+            saveAppInfo(appNumber,pkg)
+        }
 
         var intent =packageManager.getLaunchIntentForPackage(pkg)
         startActivity( intent)
@@ -259,10 +260,12 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun getAppInfo(appNumber:Int):String {
         var pkg = Settings.System.getString(contentResolver,"launcher_app_icon_$appNumber")
         if (TextUtils.isEmpty(pkg) || !isAppInstalled(pkg)) {
-            if(appNumber == 0)
+            if(appNumber == 0) {
                 pkg = defaultPackageNum0
-            else
+            }else {
                 pkg = defaultPackageNum1
+            }
+            saveAppInfo(appNumber,pkg)
         }
 
         return pkg
@@ -300,10 +303,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
             //appInfoAdapter.setContentList(showAppInfoList)
         }
-
     }
-
-    var lastSpeed: Float = 0F
 
     private val showPopupI: ShowPopupI = object : ShowPopupI {
         override fun showPopup() {
@@ -327,7 +327,8 @@ class UIActivity : Activity(), View.OnClickListener {
         popupWindow = PopupWindow(
             view,
             WindowManager.LayoutParams.MATCH_PARENT  ,
-           WindowManager.LayoutParams.MATCH_PARENT
+           WindowManager.LayoutParams.MATCH_PARENT,
+            true
         )
 
         popupWindow.isOutsideTouchable = true
@@ -342,7 +343,7 @@ class UIActivity : Activity(), View.OnClickListener {
         gridLayoutManager.orientation = RecyclerView.VERTICAL
         
         // 添加垂直方向间隔（50dp）- 只在行与行之间有间隔
-        val verticalSpacing = (40 * resources.displayMetrics.density).toInt()
+        val verticalSpacing = (20 * resources.displayMetrics.density).toInt()
         rvPop.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = verticalSpacing
@@ -507,6 +508,17 @@ class UIActivity : Activity(), View.OnClickListener {
                         if (packageName != null) {
                             // Remove the package scheme prefix
                             packageName = packageName.replace("package:", "")
+                            getAppInfo(0)?.let {
+                                if (it == packageName) {
+                                    saveAppInfo(0, defaultPackageNum0)
+                                }
+                            }
+                            getAppInfo(1)?.let {
+                                if (it == packageName) {
+                                    saveAppInfo(1, defaultPackageNum1)
+                                }
+                            }
+
                             // Update the app list to remove the uninstalled app
                             //updateAppListAfterUninstall(packageName)
                         }
@@ -630,7 +642,7 @@ class UIActivity : Activity(), View.OnClickListener {
                     musicWidget.setArtistNameTextView(singerName, type)
                     if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
                         musicWidget.setMusicNameTextView(
-                            getResources().getString(R.string.click_play_music), MusicWidget.MUSIC
+                            /*getResources().getString(R.string.click_play_music)*/ "", MusicWidget.MUSIC
                         )
                         musicWidget.setArtistNameTextView(
                             getResources().getString(R.string.music_artist), MusicWidget.MUSIC
@@ -642,7 +654,7 @@ class UIActivity : Activity(), View.OnClickListener {
                             musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC)
                         } else {
                             musicWidget.setMusicNameTextView(
-                                getResources().getString(R.string.click_play_music),
+                                /*getResources().getString(R.string.click_play_music)*/"",
                                 MusicWidget.OTHER_MUSIC
                             )
                         }
@@ -748,24 +760,6 @@ class UIActivity : Activity(), View.OnClickListener {
 //            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity")
 //        }
 
-
-
-        mViewBinding.homeAppSetting.setOnClickListener {
-            startActivity(
-                "com.awell.carsetting", "com.awell.carsetting.MainActivity"
-            )
-        }
-
-        mViewBinding.homeAppAllApp.setOnClickListener {
-            AppsCustomizeControl.showApps(findViewById(android.R.id.content));
-        }
-
-        mViewBinding.homeAppBluetooth.setOnClickListener {
-            startActivity(
-                "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
-            )
-        }
-
         mViewBinding.ivNavBg.setOnLongClickListener{
             APP_NUMBER = 0
             showPopupI.showPopup()
@@ -778,26 +772,15 @@ class UIActivity : Activity(), View.OnClickListener {
             return@setOnLongClickListener true
         }
 
-//        mViewBinding.freeformFullScreen.setOnClickListener(this)
-//        mViewBinding.freeformFullScreen.setOnLongClickListener {
-//            cancelLongPressDetection()
-//            val mIntent = Intent()
-//            mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//            mIntent.setPackage("com.awell.carsetting")
-//            mIntent.component =
-//                ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
-//            mIntent.putExtra("SelectDefaultId", 3)
-//            mIntent.putExtra("SelectDefaultFragment", 30)
-//            startActivity(mIntent)
-//            true
-//        }
-
-
         mViewBinding.llTime.setOnClickListener(this)
-        mViewBinding.layoutRadioLayout.radioLayout.setOnClickListener(this)
+        //mViewBinding.layoutRadioLayout.radioLayout.setOnClickListener(this)
         mViewBinding.layoutRadioLayout.ivRadioNext.setOnClickListener(this)
         mViewBinding.layoutRadioLayout.ivRadioPre.setOnClickListener(this)
-       // mViewBinding.layoutRadioLayout.ivRadioPlayPause.setOnClickListener(this)
+        mViewBinding.homeAppSetting.setOnClickListener(this)
+        mViewBinding.homeAppAllApp.setOnClickListener(this)
+        mViewBinding.homeAppBluetooth.setOnClickListener(this)
+        mViewBinding.homeAppEq.setOnClickListener(this)
+
 
     }
 
@@ -839,21 +822,24 @@ class UIActivity : Activity(), View.OnClickListener {
 
         val packageManager = context.packageManager
         val resolveInfos = packageManager.queryIntentActivities(intent, 0)
-
+        val needToBlockApps = mutableListOf<String?>(
+             "com.awell.localmusic", "com.awell.radio","com.awell.launcher.host", "com.android.inputmethod.latin", "com.iflytek.inputmethod.pad"
+         );
         val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
             try {
                 packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
             } catch (e: PackageManager.NameNotFoundException) {
                 null
             }
-        }.distinctBy { it.packageName }
+        }.distinctBy { it.packageName }.filter { it.packageName !in needToBlockApps }
 
         LogUtil.w("appList size: ${appList.size}")
 
         // 预计算过滤条件，避免重复计算
-        val needToShowSystemApps = Utils.needToShowPackageName
-        val filterApps = Utils.filterAppPackageName
-        val otherNeedToShow = Utils.otherNeedToShowPackageName
+        //val needToShowSystemApps =Utils.needToShowPackageName
+        //val filterApps = Utils.filterAppPackageName
+        //val otherNeedToShow = Utils.otherNeedToShowPackageName
+
 
         // 先过滤出需要显示的应用包名列表
         val needShowPackages = mutableListOf<String>()
@@ -861,19 +847,21 @@ class UIActivity : Activity(), View.OnClickListener {
 
         for (p in appList) {
             val packageName = p.applicationInfo.packageName
-            val flags = p.applicationInfo.flags
+            //val flags = p.applicationInfo.flags
 
-            val shouldShow = when {
+            /* val shouldShow = when {
+
                 (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in needToShowSystemApps -> true
                 (flags and ApplicationInfo.FLAG_SYSTEM) == 0 && packageName !in filterApps -> true
                 (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in otherNeedToShow -> true
                 else -> false
             }
 
-            if (shouldShow) {
+
+            if (shouldShow) {*/
                 needShowPackages.add(packageName)
                 packageInfoMap[packageName] = p
-            }
+            //}
         }
 
         LogUtil.w("needShowPackages size: ${needShowPackages.size}")
@@ -967,17 +955,14 @@ class UIActivity : Activity(), View.OnClickListener {
         startWallpaper()
     }
 
-    override fun onClick(v: View?) {
+    override fun onClick(v: View) {
 
+        when (v.id) {
 
-
-        when (v?.id) {
-//            mViewBinding.freeformFullScreen.id -> {
-//                systemUIClient.fullScreenFreeform()
-//            }
-            mViewBinding.layoutRadioLayout.radioLayout.id -> {
+            mViewBinding.ivRadioBg.id -> {
                 startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity")
             }
+
             mViewBinding.layoutRadioLayout.ivRadioNext.id -> {
                 if (ClickUtils.isFastClick()) {
                     return
@@ -997,13 +982,11 @@ class UIActivity : Activity(), View.OnClickListener {
 //                mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
 //            }
 
-
             mViewBinding.llTime.id-> {
                 val intent = Intent(Settings.ACTION_DATE_SETTINGS)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             }
-
             mViewBinding.hostSwitch.id -> {
                 if (ClickUtils.isFastClickFiveSecond()) {//5秒内快速点击无效, 防止重复切换主题壁纸
                    return
@@ -1016,6 +999,23 @@ class UIActivity : Activity(), View.OnClickListener {
             mViewBinding.ivVideoBg.id -> {
                 startActivityByPkg(1,defaultPackageNum1)
             }
+            mViewBinding.homeAppSetting.id -> {
+                startActivity(
+                    "com.awell.carsetting", "com.awell.carsetting.MainActivity"
+                )
+            }
+            mViewBinding.homeAppAllApp.id -> {
+                AppsCustomizeControl.showApps(findViewById(android.R.id.content));
+            }
+            mViewBinding.homeAppBluetooth.id -> {
+                startActivity(
+                    "com.awell.bluetooth", "com.awell.bluetooth.MainActivity"
+                )
+            }
+            mViewBinding.homeAppEq.id -> {
+                startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
+            }
+
         }
     }
 
@@ -1054,7 +1054,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
             ThemeImageMapping(R.attr.radio_bg, mViewBinding.ivRadioBg),
             ThemeImageMapping(R.attr.navi_bg, mViewBinding.ivNavBg),
-            ThemeImageMapping(R.attr.music_bg, mViewBinding.ivMusicBg),
+            ThemeImageMapping(R.attr.music_bg, mViewBinding.layoutMusicWidget.ivMusicBg),
             ThemeImageMapping(R.attr.video_bg, mViewBinding.ivVideoBg),
 
         )
@@ -1161,27 +1161,13 @@ class UIActivity : Activity(), View.OnClickListener {
         val ivColor6 = view.findViewById<CheckBox>(R.id.iv_color6)
         val ivColor7 = view.findViewById<CheckBox>(R.id.iv_color7)
         when (colorId) {
-            0 -> {
-                ivColor1.isChecked = true
-            }
-            1 -> {
-                ivColor2.isChecked = true
-            }
-            2 -> {
-                ivColor3.isChecked = true
-            }
-            3 -> {
-                ivColor4.isChecked = true
-            }
-            4 -> {
-                ivColor5.isChecked = true
-            }
-            5 -> {
-                ivColor6.isChecked = true
-            }
-            6 -> {
-                ivColor7.isChecked = true
-            }
+            0 -> {  ivColor1.isChecked = true }
+            1 -> { ivColor2.isChecked = true }
+            2 -> { ivColor3.isChecked = true }
+            3 -> { ivColor4.isChecked = true }
+            4 -> { ivColor5.isChecked = true }
+            5 -> { ivColor6.isChecked = true }
+            6 -> { ivColor7.isChecked = true }
         }
         listOf(ivColor1, ivColor2, ivColor3,ivColor4,ivColor5,ivColor6,ivColor7).forEach { checkBox ->
             checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
