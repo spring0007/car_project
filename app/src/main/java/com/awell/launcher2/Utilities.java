@@ -133,6 +133,7 @@ public final class Utilities {
             case 3:
                 return R.drawable.sf_other_app3_circle;
             case 4:
+            case 6:
                 return R.drawable.ic_other_app3;
             case 5:
                 return R.drawable.zy2_other_app3;

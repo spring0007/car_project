@@ -79,7 +79,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private var handler: Handler? = null
     private var startX = 0f
     private var startY = 0f
-    private var viewConfiguration: ViewConfiguration? = null
+    private val viewConfiguration by lazy { ViewConfiguration.get(this) }
     private lateinit var musicWidget: MusicWidget
     private lateinit var mediaControl: AwellMediaControl
     private var mMediaListener = MediaNotificationListener()
@@ -174,7 +174,6 @@ class UIActivity : Activity(), View.OnClickListener {
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun initTouchAndSpeedListener() {
         handler = Handler(Looper.getMainLooper())
-        viewConfiguration = ViewConfiguration.get(this)
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if(locationManager!= null)
@@ -192,30 +191,19 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun initAddAppView() {
         allAppInfoList = ArrayList<AppInfo>()
         IconManager.currentThemeMode = getSavedThemeId()
-        var appInfo = getAppInfo(0)
-        var appName = getAppNameByPackageName(appInfo);
-        var drawable = IconManager.getAppIcon(this,appInfo)
-
-        mViewBinding.ivNavIcon.setImageDrawable(drawable )
-        mViewBinding.tvNavTitle.text = appName
-
-        appInfo = getAppInfo(1)
-        appName = getAppNameByPackageName(appInfo);
-        drawable = IconManager.getAppIcon(this,appInfo)
-
-        mViewBinding.ivVideoIcon.setImageDrawable(drawable)
-        mViewBinding.tvVideoTitle.text = appName
-
-
+        updateShortcutView(0, mViewBinding.ivNavIcon, mViewBinding.tvNavTitle)
+        updateShortcutView(1, mViewBinding.ivVideoIcon, mViewBinding.tvVideoTitle)
     }
-    private fun setShortCutDrawable(){
-        var appInfo = getAppInfo(0)
-        var drawable = IconManager.getAppIcon(this,appInfo)
-        mViewBinding.ivNavIcon.setImageDrawable(drawable )
 
-        appInfo = getAppInfo(1)
-        drawable = IconManager.getAppIcon(this,appInfo)
-        mViewBinding.ivVideoIcon.setImageDrawable(drawable)
+    private fun updateShortcutView(appNumber: Int, iconView: android.widget.ImageView, titleView: android.widget.TextView) {
+        val pkg = getAppInfo(appNumber)
+        iconView.setImageDrawable(IconManager.getAppIcon(this, pkg))
+        titleView.text = getAppNameByPackageName(pkg)
+    }
+
+    private fun setShortCutDrawable(){
+        updateShortcutView(0, mViewBinding.ivNavIcon, mViewBinding.tvNavTitle)
+        updateShortcutView(1, mViewBinding.ivVideoIcon, mViewBinding.tvVideoTitle)
     }
 
 
@@ -399,6 +387,7 @@ class UIActivity : Activity(), View.OnClickListener {
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
         unregisterCustomerListener()
+        mHandle.removeCallbacksAndMessages(null)
         try {
             mediaControl.unBindDataService(this)
         } catch (e: Exception) {

@@ -568,9 +568,10 @@ class UIActivity : Activity(), View.OnClickListener {
             }
 
             R.id.hotset_video -> {
-                startActivity(
+                /*startActivity(
                     "com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity"
-                )
+                )*/
+                startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity")
             }
 
             R.id.iv_main_xiaodeng, R.id.rl_car, R.id.hotset_navi -> {

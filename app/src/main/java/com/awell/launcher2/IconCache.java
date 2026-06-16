@@ -23,6 +23,7 @@ import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_YFD_2;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_CIRCLE;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_1;
 import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_2;
+import static com.awell.launcher2.IconPkgMap.PACKAGE_ICON_MAP_ZY_3;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -409,8 +410,9 @@ public class IconCache {
                 return PACKAGE_ICON_MAP_DARK.get(pkg);
                 //return mHomePackageIcon_116_lehang_2_dark[index];
             case 1:
-                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
-                    return null;
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)){
+                    return PACKAGE_ICON_MAP_DEFAULT.get(IconPkgMap.AIR_NAME);
+                }
                 return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
                 //return mHomePackageIcon_116_lehang_2[index];
             case 2:
@@ -434,6 +436,11 @@ public class IconCache {
                     return PACKAGE_ICON_MAP_ZY_2.get(IconPkgMap.AIR_NAME);
                 }
                 return PACKAGE_ICON_MAP_ZY_2.get(pkg);
+            case 6:
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)) {
+                    return PACKAGE_ICON_MAP_ZY_3.get(IconPkgMap.AIR_NAME);
+                }
+                return PACKAGE_ICON_MAP_ZY_3.get(pkg);
             case 100:
                 if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
                     return null;
@@ -445,8 +452,9 @@ public class IconCache {
                 }
                 return PluginIconManager.getPluginIconResId(pkg);
             default:
-                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME))
-                    return null;
+                if (pkg.equals(IconPkgMap.CANBUS_NAME) && className.contains(IconPkgMap.AIR_NAME)){
+                    return PACKAGE_ICON_MAP_DEFAULT.get(IconPkgMap.AIR_NAME);
+                }
                 return PACKAGE_ICON_MAP_DEFAULT.get(pkg);
                 //return mHomePackageIcon_116_lehang_2[index];
         }

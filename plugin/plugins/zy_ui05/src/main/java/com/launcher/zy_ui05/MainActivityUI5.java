@@ -76,7 +76,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         //AppsCustomizeControl.INSTANCE.setActivity(this);
         //AppsCustomizeControl.INSTANCE.setPluginThemeMode(100);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4,false);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(6,false);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
                 .setAutoWidthGap(true)
                 .setColumnCount(5)
