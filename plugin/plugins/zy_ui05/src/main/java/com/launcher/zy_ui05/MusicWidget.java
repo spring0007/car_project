@@ -123,6 +123,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         musicPreIv.setOnClickListener(this);
         musicNextIv = view.findViewById(R.id.music_widget_next);
         musicNextIv.setOnClickListener(this);
+        findViewById(R.id.ll_play_layout_music).setOnClickListener(this);
 
         view.findViewById(R.id.layout_music_widget).setOnClickListener(this);
       //  view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);

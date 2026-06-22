@@ -34,8 +34,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public class Utils {
@@ -259,47 +261,48 @@ public class Utils {
     /**
      * 需要更换应用icon的应用包名
      */
-    public static final String[] mHomePackName = {
-            "com.awell.localvideo"
-            , "com.awell.localmusic"
-            , "com.awell.radio"
-            , "com.awell.bluetooth"
-//            , "com.awell.navigation"
-//            , "com.android.dialer"
-//            , "com.android.calculator2"
-            , "com.android.browser"
-            //           , "com.android.calendar"
-            //           , "com.android.soundrecorder"
-            //           , "com.android.deskclock"
-//            , "com.android.gallery3d"
-            , "com.mediatek.filemanager"
-            , "com.android.documentsui"
-            , "com.awell.carsetting"
-            , "com.awell.backcar"
-            , "cn.kuwo.kwmusiccar"
-//			, "com.awell.soundeffect"
-            , "com.awell.eqselect"
-            , "com.awell.canbus"
-            , "com.awell.canbus2"
-            , "com.android.mms"
-            , "com.autonavi.amapauto"
-            , "com.txznet.txzsetting"
-        //    , "com.tima.carnet.vt"
-         //   , "net.easyconn"
-            , "com.zjinnova.zlink"
-            , "com.awell.awellmanual"
-            , "com.google.android.apps.maps"
-            , "com.google.android.youtube"
-            , "com.android.vending"
-            , "com.android.chrome"
-            , "com.tinyapp.smartcar"
-            , "com.awell.update"
-//            , "com.google.android.googlequicksearchbox"
-            , "com.kugou.android.auto"
-            , "com.qiyi.video.pad"
-            , "com.tencent.qqmusic"
-            , "com.tencent.qqlive.audiobox"
-    };
+    public static final Map<String, Integer> mHomePackName = new HashMap<>();
+    static {
+        mHomePackName.put( "com.awell.localvideo",R.drawable.sf_video );
+                mHomePackName.put("com.awell.localmusic",R.drawable.sf_music );
+                mHomePackName.put("com.awell.radio",R.drawable.sf_radio );
+                mHomePackName.put("com.awell.bluetooth",R.drawable.sf_bt );
+                //mHomePackName.put("com.awell.navigation",R.drawable.sf_navi );
+//            mHomePackName.put("com.android.dialer",R.drawable.sf_iphone );
+//            mHomePackName.put("com.android.calculator2",R.drawable.sf_jisuanqi );
+                mHomePackName.put( "com.android.browser",R.drawable.sf_liulanqi );
+            //           mHomePackName.put( "com.android.calendar",R.drawable.sf_rili );
+            //           mHomePackName.put( "com.android.soundrecorder",R.drawable.sf_luyinji );
+            //           mHomePackName.put( "com.android.deskclock",R.drawable.sf_shizhong );
+//             mHomePackName.put( "com.android.gallery3d",R.drawable.sf_tuku );
+                mHomePackName.put( "com.mediatek.filemanager",R.drawable.sf_wjgl );
+                mHomePackName.put( "com.android.documentsui",R.drawable.sf_download );
+                mHomePackName.put( "com.awell.carsetting",R.drawable.sf_shezhi );
+                mHomePackName.put( "com.awell.backcar",R.drawable.sf_wjsr );
+                //mHomePackName.put( "cn.kuwo.kwmusiccar",R.drawable.kuwoyinyue );
+//			 mHomePackName.put( "com.awell.soundeffect",R.drawable.sf_jhq );
+                mHomePackName.put( "com.awell.eqselect",R.drawable.sf_jhq );
+                mHomePackName.put( "com.awell.canbus",R.drawable.sf_yuanche );
+                mHomePackName.put( "com.awell.canbus2",R.drawable.sf_yuanche );
+                mHomePackName.put( "com.android.mms",R.drawable.sf_message );
+                mHomePackName.put( "com.autonavi.amapauto",R.drawable.sf_navi );
+                mHomePackName.put( "com.txznet.txzsetting",R.drawable.sf_ggvoice );
+        //     mHomePackName.put( "com.tima.carnet.vt",R.drawable.sf_zlink );
+         //    mHomePackName.put( "net.easyconn",R.drawable.sf_zlink );
+                mHomePackName.put( "com.zjinnova.zlink",R.drawable.sf_zlink );
+                mHomePackName.put( "com.awell.awellmanual",R.drawable.sf_manual );
+                mHomePackName.put( "com.google.android.apps.maps",R.drawable.sf_googlemap );
+                mHomePackName.put( "com.google.android.youtube",R.drawable.sf_youtube );
+                mHomePackName.put( "com.android.vending",R.drawable.sf_playstore );
+                mHomePackName.put( "com.android.chrome",R.drawable.sf_safri );
+                mHomePackName.put( "com.tinyapp.smartcar",R.drawable.sf_ggvoice );
+                mHomePackName.put( "com.awell.update",R.drawable.sf_store );
+//             mHomePackName.put( "com.google.android.googlequicksearchbox",R.drawable.sf_gg );
+                mHomePackName.put( "com.kugou.android.auto",R.drawable.sf_kugou );
+                mHomePackName.put( "com.qiyi.video.pad",R.drawable.sf_aiqitv );
+                mHomePackName.put( "com.tencent.qqmusic",R.drawable.sf_qqyinyue );
+                mHomePackName.put( "com.tencent.qqlive.audiobox",R.drawable.sf_tenxuntv);
+    }
 
     /**
      * 保存加载的插件文件路径
@@ -309,89 +312,89 @@ public class Utils {
     /**
      * 需要更换应用icon的资源文件
      */
-    public static final int mHomeIcon[] = {
-            R.drawable.sf_video
-            , R.drawable.sf_music
-            , R.drawable.sf_radio
-            , R.drawable.sf_bt
+//    public static final int mHomeIcon[] = {
+//            R.drawable.sf_video
+//            , R.drawable.sf_music
+//            , R.drawable.sf_radio
+//            , R.drawable.sf_bt
+////            , R.drawable.sf_navi
+////            , R.drawable.sf_iphone
+////            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_liulanqi
+////            , R.drawable.sf_rili       //
+////            , R.drawable.sf_luyinji     //
+////            , R.drawable.sf_shizhong    //
+////            , R.drawable.sf_tuku        //
+//            , R.drawable.sf_wjgl
+//            , R.drawable.sf_download
+//            , R.drawable.sf_shezhi
+//            , R.drawable.sf_wjsr
+//            , R.drawable.kuwoyinyue
+//            , R.drawable.sf_jhq
+//            , R.drawable.sf_yuanche
+//            , R.drawable.sf_yuanche
+//            , R.drawable.sf_message
 //            , R.drawable.sf_navi
-//            , R.drawable.sf_iphone
-//            , R.drawable.sf_jisuanqi
-            , R.drawable.sf_liulanqi
-//            , R.drawable.sf_rili       //
-//            , R.drawable.sf_luyinji     //
-//            , R.drawable.sf_shizhong    //
-//            , R.drawable.sf_tuku        //
-            , R.drawable.sf_wjgl
-            , R.drawable.sf_download
-            , R.drawable.sf_shezhi
-            , R.drawable.sf_wjsr
-            , R.drawable.kuwoyinyue
-            , R.drawable.sf_jhq
-            , R.drawable.sf_yuanche
-            , R.drawable.sf_yuanche
-            , R.drawable.sf_message
-            , R.drawable.sf_navi
-            , R.drawable.sf_ggvoice
-            , R.drawable.sf_zlink
-            , R.drawable.sf_zlink
-            , R.drawable.sf_zlink
-            , R.drawable.sf_manual
-            , R.drawable.sf_googlemap
-            , R.drawable.sf_youtube
-            , R.drawable.sf_playstore
-            , R.drawable.sf_safri
 //            , R.drawable.sf_ggvoice
-            , R.drawable.sf_store
-            , R.drawable.sf_gg
-            , R.drawable.sf_kugou
-            , R.drawable.sf_aiqitv
-            , R.drawable.sf_qqyinyue
-            , R.drawable.sf_tenxuntv
-
-    };
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_manual
+//            , R.drawable.sf_googlemap
+//            , R.drawable.sf_youtube
+//            , R.drawable.sf_playstore
+//            , R.drawable.sf_safri
+////            , R.drawable.sf_ggvoice
+//            , R.drawable.sf_store
+//            , R.drawable.sf_gg
+//            , R.drawable.sf_kugou
+//            , R.drawable.sf_aiqitv
+//            , R.drawable.sf_qqyinyue
+//            , R.drawable.sf_tenxuntv
+//
+//    };
 
     /**
      * 需要更换应用icon的资源文件
      */
-    public static final int mHomeIcon2[] = {
-            R.drawable.sf_video
-            , R.drawable.sf_music
-            , R.drawable.sf_radio
-            , R.drawable.sf_bt
-//            , R.drawable.h_navi
-            , R.drawable.sf_iphone
-            , R.drawable.sf_jisuanqi
-            , R.drawable.sf_liulanqi
-//            , R.drawable.h_rili       //
-//            , R.drawable.h_luyinji     //
-//            , R.drawable.h_shizhong    //
-//            , R.drawable.h_tuku        //
-            , R.drawable.sf_wjgl
-            , R.drawable.sf_download
-            , R.drawable.sf_shezhi
-            , R.drawable.sf_wjsr
-            , R.drawable.kuwoyinyue
-            , R.drawable.sf_jhq
-            , R.drawable.sf_yuanche
-            , R.drawable.sf_yuanche
-            , R.drawable.sf_message
-            , R.drawable.sf_navi
-            , R.drawable.sf_ggvoice
-            , R.drawable.sf_zlink
-            , R.drawable.sf_zlink
-            , R.drawable.sf_zlink
-            , R.drawable.sf_manual
-            , R.drawable.sf_googlemap
-            , R.drawable.sf_youtube
-            , R.drawable.sf_playstore
-            , R.drawable.sf_safri
-            , R.drawable.sf_ggvoice
-            , R.drawable.sf_store
-            , R.drawable.sf_gg
-            , R.drawable.sf_kugou
-
-    };
+//    public static final int mHomeIcon2[] = {
+//            R.drawable.sf_video
+//            , R.drawable.sf_music
+//            , R.drawable.sf_radio
+//            , R.drawable.sf_bt
+////            , R.drawable.h_navi
+//            , R.drawable.sf_iphone
+//            , R.drawable.sf_jisuanqi
+//            , R.drawable.sf_liulanqi
+////            , R.drawable.h_rili       //
+////            , R.drawable.h_luyinji     //
+////            , R.drawable.h_shizhong    //
+////            , R.drawable.h_tuku        //
+//            , R.drawable.sf_wjgl
+//            , R.drawable.sf_download
+//            , R.drawable.sf_shezhi
+//            , R.drawable.sf_wjsr
+//            , R.drawable.kuwoyinyue
+//            , R.drawable.sf_jhq
+//            , R.drawable.sf_yuanche
+//            , R.drawable.sf_yuanche
+//            , R.drawable.sf_message
+//            , R.drawable.sf_navi
+//            , R.drawable.sf_ggvoice
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_zlink
+//            , R.drawable.sf_manual
+//            , R.drawable.sf_googlemap
+//            , R.drawable.sf_youtube
+//            , R.drawable.sf_playstore
+//            , R.drawable.sf_safri
+//            , R.drawable.sf_ggvoice
+//            , R.drawable.sf_store
+//            , R.drawable.sf_gg
+//            , R.drawable.sf_kugou
+//
+//    };
 
     public static final Set<String> mAppLevel_1 = Set.of(
             "com.awell.localmusic"

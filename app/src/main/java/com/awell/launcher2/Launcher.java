@@ -1896,11 +1896,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
         for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            for (int i = 0; i < Utils.mHomePackName.length; i++) {
-                if (Utils.mHomePackName[i].equals(str)) {
-                    a.setIcon(getResources().getDrawable(Utils.mHomeIcon[i]));
-                    break;
-                }
+            Integer iconRes = Utils.mHomePackName.get(str); // 假设值是资源ID（int）
+            if (iconRes != null) {
+                a.setIcon(getResources().getDrawable(iconRes));
             }
         }
         return appBeanList;

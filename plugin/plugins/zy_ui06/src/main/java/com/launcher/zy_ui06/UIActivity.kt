@@ -1102,7 +1102,7 @@ class UIActivity : Activity(), View.OnClickListener {
         //刷新快捷方式图标
         IconManager.currentThemeMode = themeId
         setShortCutDrawable()
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
+        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
         AppsCustomizeControl.applyAppsCustomizeConfig(customizeConfig)
 
     }
