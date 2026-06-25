@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">LauncherUI4</string><!-- app 名称 -->
+
+    <string name="ui_key" translatable="false">LauncherUI4</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui4.MainActivityUI4</string>
+
+
+    <string name="click_play_music">Click To Play</string>
+    <string name="music_artist">Artist</string>
+    <string name="radio">Radio</string>
+    <string name="add_app">Add</string>
+
+
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+        <item>wallpaper_01</item>
+        <item>wallpaper_02</item>
+        <item>wallpaper_03</item>
+    </string-array>
+
+</resources>

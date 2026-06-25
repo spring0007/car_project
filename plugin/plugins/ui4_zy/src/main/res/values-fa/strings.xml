@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">لانچرUI4</string><!-- app 名称 -->
+
+    
+    
+
+
+    <string name="click_play_music">کلیک کنید برای پخش</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="radio">رادیو</string>
+    <string name="add_app">افزودن</string>
+
+
+
+    
+
+</resources>
