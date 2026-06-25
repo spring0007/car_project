@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <ImageView
         android:id="@+id/img_music_bg"
         android:layout_width="match_parent"
@@ -85,26 +84,25 @@
         android:layout_height="4dp"
         android:progressDrawable="@drawable/seekbar_color"
         android:thumb="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/ll_play_layout_music"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img_song_art_bg"
         app:layout_constraintTop_toBottomOf="@+id/music_artist"
-        app:layout_constraintVertical_bias="0.63"
+        app:layout_constraintVertical_bias="0.55"
         app:layout_constraintWidth_percent="0.55" />
 
     <LinearLayout
         android:id="@+id/ll_play_layout_music"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/ll_height"
         android:background="@drawable/sf_music_bg1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:weightSum="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.25"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_music_bg">
+
+        app:layout_constraintStart_toStartOf="parent">
 
         <View
             android:layout_width="0dp"

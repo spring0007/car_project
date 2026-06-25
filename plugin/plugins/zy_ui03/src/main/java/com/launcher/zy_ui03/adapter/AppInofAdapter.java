@@ -100,6 +100,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
                 showPopupI.showPopup();
             });
 
+            holder.ll_item.setOnLongClickListener(view -> false);
 
 //            Log.e("getwidth"," width = " + holder.ll_item.getLayoutParams().width);
             /*RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(65,65);

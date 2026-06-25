@@ -204,9 +204,9 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         int id = v.getId();
         Log.i(TAG, "onClick: huang currentMedia=>" + currentMedia);
         if (id == R.id.music_widget_next) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.NEXT);
-            } else if (currentMedia == BT) {
+          /*  } else if (currentMedia == BT) {
                 mediaControl.sendStrToHost(AwellTool.BT.NEXT);
             } else if (currentMedia == KUMUSIC) {
                 mediaControl.sendNextToHost();
@@ -214,11 +214,11 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 mediaControl.sendNextToHost();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendNextToHost();
-            }
+            }*/
         } else if (id == R.id.music_widget_pre) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.PREVIOUS);
-            } else if (currentMedia == BT) {
+           /* } else if (currentMedia == BT) {
                 mediaControl.sendStrToHost(AwellTool.BT.PREVIOUS);
             } else if (currentMedia == KUMUSIC) {
                 mediaControl.sendPreToHost();
@@ -226,15 +226,15 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 mediaControl.sendPreToHost();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendPreToHost();
-            }
+            }*/
         } else if (id == R.id.music_widget_play) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 if (musicState) {
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PAUSE);
                 } else {
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PLAY);
                 }
-            } else if (currentMedia == BT) {
+           /* } else if (currentMedia == BT) {
                 if (mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
                     mediaControl.sendStrToHost(AwellTool.BT.PAUSE);
                 } else {
@@ -246,11 +246,11 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 mediaControl.sendTogglePlayPause();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendTogglePlayPause();
-            }
+            }*/
         } else if (id == R.id.layout_music_widget) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-            } else if (currentMedia == BT) {
+          /*  } else if (currentMedia == BT) {
                 try {
                     Intent btIntent = new Intent("com.awell.bluetooth");
                     btIntent.setClassName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
@@ -262,7 +262,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 }
             } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
                 launchAppByPackageName(mContext, currentPlayingPackage);
-            }
+            }*/
         }
     }
 
@@ -463,15 +463,15 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         Log.i(TAG, "switchMediaController: mediaType = " + mediaType + ", curMedia= " + curMedia);
 
         if ("start".equals(status)) {
-            currentPlayingPackage = packName;
-            if (packName.contains("localmusic")) {
+           // currentPlayingPackage = packName;
+           // if (packName.contains("localmusic")) {
                 currentMedia = MUSIC;
-            } else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
+           /* } else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
                     && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
             } else if (mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-            }
+            }*/
             setCurMusicState(true);
             setImageIcon(currentMedia);
         }

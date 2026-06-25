@@ -16,5 +16,6 @@
     <dimen name="space_width">2dp</dimen>
     <dimen name="space_height">50dp</dimen>
     <dimen name="app_icon_padding">10dp</dimen>
+    <dimen name="ll_height">61dp</dimen>
 
 </resources>

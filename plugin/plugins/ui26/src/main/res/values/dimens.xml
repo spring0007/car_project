@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_name_text_size">24sp</dimen>
+
+
+    <dimen name="text_padding">10dp</dimen>
+    <dimen name="bt_music_tv_size">24sp</dimen>
+    <dimen name="bt_icon_size">68dp</dimen>
+    <dimen name="card_width">300dp</dimen>
+    <dimen name="card_height">148dp</dimen>
+    <dimen name="iv_navi_icon_size">28dp</dimen>
+    <dimen name="tv_radio_freq">48sp</dimen>
+    <dimen name="tv_radio_unit">24sp</dimen>
+    <dimen name="tv_radio_title_padding">20dp</dimen>
+
+
+    <dimen name="artist_text_size">20sp</dimen>
+
+    <dimen name="font_size">20dp</dimen>
+    <dimen name="cell_height">210dp</dimen>
+    <dimen name="icon_size">146dp</dimen>
+    <dimen name="host_cell_size">82dp</dimen>
+    <dimen name="recycle_app_icon_size">84dp</dimen>
+    <dimen name="app_icon_bg_size">84dp</dimen>
+    <dimen name="recycle_app_width">110dp</dimen>
+    <dimen name="iv_radio_size">83dp</dimen>
+    <dimen name="time_font_size1">60sp</dimen>
+    <dimen name="date_font_size1">28sp</dimen>
+    <dimen name="img_song_art_size">160dp</dimen>
+    <dimen name="music_play_width">83dp</dimen>
+    <dimen name="music_play_height">83dp</dimen>
+    <dimen name="music_play_size">92dp</dimen>
+    <dimen name="radio_bg_size">156dp</dimen>
+    <dimen name="tv_radio_freq_unit_size">20sp</dimen>
+    <dimen name="tv_radio_freq_size">40sp</dimen>
+    <dimen name="tv_amfm_size">20sp</dimen>
+
+</resources>

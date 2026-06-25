@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.519" />
+        app:layout_constraintGuide_percent="0.534" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top2"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.537" />
+        app:layout_constraintGuide_percent="0.547" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1095" />
+        app:layout_constraintGuide_percent="0.1395" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left2"
@@ -76,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5859" />
+        app:layout_constraintGuide_percent="0.539" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left5"
@@ -109,6 +109,18 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline_left4"
         app:layout_constraintStart_toEndOf="@+id/guideline_left1"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
+
+    <View android:layout_width="0dp"
+        android:id="@+id/car_nav"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.10"
+        app:layout_constraintHeight_percent="0.22"
+        android:onClick="onClick"
+        app:layout_constraintStart_toStartOf="@+id/bottom_icon_iv"
+        app:layout_constraintEnd_toEndOf="@+id/bottom_icon_iv"
+        app:layout_constraintTop_toTopOf="@+id/bottom_icon_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_icon_iv"
+        />
 
 
     <!-- 左侧图标栏 -->
@@ -291,8 +303,9 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="onClick"
+        android:scaleType="fitXY"
         android:src="@drawable/sf_video"
-        app:layout_constraintDimensionRatio="W,267:277"
+        app:layout_constraintDimensionRatio="W,269:278"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toEndOf="@+id/guideline_left6"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top3"/>

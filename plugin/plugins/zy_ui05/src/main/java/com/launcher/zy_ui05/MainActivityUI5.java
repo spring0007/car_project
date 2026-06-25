@@ -73,8 +73,6 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
 
         clickApp();
 
-        //AppsCustomizeControl.INSTANCE.setActivity(this);
-        //AppsCustomizeControl.INSTANCE.setPluginThemeMode(100);
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(6,false);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
@@ -241,7 +239,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
             intent.setComponent(new ComponentName("com.awell.bluetooth", "com.awell.bluetooth.MainActivity"));
             intent.putExtra("bt_preference_key", 0);
             startActivityIntent(intent);
-        }else if (v.getId() == binding.navIcon.getId()) {
+        }else if (v.getId() == binding.navIcon.getId() || v.getId() == binding.carNav.getId()) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
             if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
@@ -341,20 +339,22 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
         @Override
         public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
-            if (!"com.awell.radio".equals(pkg)) {
+            if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
             }
         }
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-            musicWidget.setCurMusicState(status, type);
+            if (type == MusicWidget.MUSIC) {
+                musicWidget.setCurMusicState(status, type);
+            }
 
         }
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
-            runOnUiThread(() -> {
+           /* runOnUiThread(() -> {
                 String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
                 Uri uri = null;
                 if (uriStr != null) {
@@ -365,7 +365,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                 }
                 Log.i(TAG, "updateViewMusicPlayImage: huang uri=>" + uri);
                 musicWidget.loadAlbumArtByUri(uri);
-            });
+            });*/
         }
 
         @Override
@@ -377,19 +377,9 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                     && "NO_MUSIC_LIST".equals(album)) {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
-            }
-
-            if (MusicWidget.OTHER_MUSIC == type) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
-                }
-                if (!TextUtils.isEmpty(singerName)) {
-                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
-                }
+            }else {
+                musicWidget.setMusicNameTextView(songName, type);
+                musicWidget.setArtistNameTextView(singerName, type);
             }
         }
 
@@ -422,29 +412,29 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
     private Handler handler;
 
     /**
-     * ��дֻΪ����������ֽѡ��
+     * 重写只为长按弹出壁纸选择
      */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        // ������ View �����¼�
+        // 先让子 View 处理事件
         boolean consumed = super.dispatchTouchEvent(ev);
 
         switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                // ����״̬
+                // 重置状态
                 isEventConsumedByChild = false;
                 isLongPressPossible = true;
 
-                // ��¼������ʼλ��
+                // 记录触摸起始位置
                 startX = ev.getRawX();
                 startY = ev.getRawY();
 
-                // �����������
+                // 启动长按检测
                 startLongPressDetection();
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                // ����Ƿ��ƶ�������ֵ
+                // 检查是否移动超过阈值
                 float dx = Math.abs(ev.getRawX() - startX);
                 float dy = Math.abs(ev.getRawY() - startY);
                 float touchSlop = 0f;
@@ -463,7 +453,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                 break;
         }
 
-        // ��¼�¼��Ƿ��� View ����
+        // 记录事件是否被子 View 消费
         if (ev.getActionMasked() == MotionEvent.ACTION_DOWN) {
             isEventConsumedByChild = consumed;
         }
@@ -477,7 +467,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         cancelLongPressDetection();
 
         longPressRunnable = () -> {
-            // ֻ���¼�û�б������ҳ�������ʱ�Ŵ���
+            // 只有事件没有被消费且长按可能时才触发
             if (!isEventConsumedByChild && isLongPressPossible) {
                 handleLongPressAction();
             }
