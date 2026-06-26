@@ -534,7 +534,7 @@ class UIActivity : Activity(), View.OnClickListener {
         CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
         val unitData = unit[0].toInt()
         if (unitData == 0) {
-            mViewBinding.tvGpsSpeedUnit.text = "KM/h"
+            mViewBinding.tvGpsSpeedUnit.text = "km/h"
         } else if (unitData == 1) {
             mViewBinding.tvGpsSpeedUnit.text = "mph"
         }
@@ -705,7 +705,7 @@ class UIActivity : Activity(), View.OnClickListener {
                             val unitData = unit[0].toInt()
                             if (unitData == 0) {
                                 mViewBinding.tvGpsSpeed.text = speedKm
-                                mViewBinding.tvGpsSpeedUnit.text = "KM/h"
+                                mViewBinding.tvGpsSpeedUnit.text = "km/h"
                             } else if (unitData == 1) {
                                 mViewBinding.tvGpsSpeed.text = speedMile
                                 mViewBinding.tvGpsSpeedUnit.text = "mph"
@@ -1003,6 +1003,22 @@ class UIActivity : Activity(), View.OnClickListener {
             }
             mViewBinding.homeAppEq.id -> {
                 startActivity("com.awell.eqselect", "com.awell.eqselect.MainActivity");
+            }
+            mViewBinding.tvGpsSpeedUnit.id -> {
+                if (ClickUtils.isFastClick()) {
+                    return
+                }
+                val unit = ByteArray(1)
+                CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
+                val unitData = unit[0].toInt()
+                if (unitData == 0) {//km/h
+                    mViewBinding.tvGpsSpeedUnit.text = "mph"
+                    unit[0]=1
+                } else if (unitData == 1) {//mph
+                    mViewBinding.tvGpsSpeedUnit.text = "km/h"
+                    unit[0]=0
+                }
+                CommonData.writeDataToMeta( unit, BIN_DATA_SPEED_UNIT)
             }
 
         }

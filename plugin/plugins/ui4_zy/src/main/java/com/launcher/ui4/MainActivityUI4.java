@@ -463,7 +463,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     }
 
     private void loadDefaultApps() {
-        String [] defaultApps = {"com.autonavi.amapauto","com.awell.bluetooth", "com.awell.carsetting"};//定制apk显示
+        String [] defaultApps = {/*"com.autonavi.amapauto",*/ "com.awell.navigation","com.awell.bluetooth", "com.awell.carsetting"};//定制apk显示
         for (String packName : defaultApps/*Utils.getDefaultShowApp(this)*/) {
             AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
             if (appInfo != null) {
@@ -619,11 +619,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             bean.setPackage_name(packName);
             int flags = p.applicationInfo.flags;
             bean.setFlags(flags);
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(packName)) {
+            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && ( "com.awell.navigation".equals(packName) || Utils.needToShowPackageName.contains(packName) ||Utils.otherNeedToShowPackageName.contains(packName))) {
                 appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(packName)) {
-                appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(packName)) {
+            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && (!Utils.filterAppPackageName.contains(packName))) {
                 appBeanList.add(bean);
             }
         }

@@ -52,7 +52,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
 
         musicWidgetBinding = binding.layoutMusicWidget;
-        musicWidget = musicWidgetBinding.musicWidgetLayout;
+        musicWidget = musicWidgetBinding.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
 
@@ -64,8 +64,10 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         int fontSize = getResources().getDimensionPixelSize(R.dimen.font_size);
         int iconSize = getResources().getDimensionPixelSize(R.dimen.icon_size);
+        int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
         int cellHeight = getResources().getDimensionPixelSize(R.dimen.cell_height);
         int textPadding = getResources().getDimensionPixelSize(R.dimen.text_padding);
+
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeConfig config = new AppsCustomizeConfig.Builder()
@@ -76,7 +78,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
                 .setAutoHeightGap(true)
                 .setIconTextPadding(textPadding)
                 .setTextLine(1)
-               // .setCellWidthDp(cellWidth)
+                .setCellWidthDp(cellWidth)
                 //.setCellWidthDp(iconWidth)
                 .setCellHeightDp(cellHeight)
                 .setIconSize(iconSize).build();
@@ -254,28 +256,22 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
         @Override
         public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
-            if (!"com.awell.radio".equals(pkg) && (!"com.awell.bluetooth".contains(pkg)) && (!"/system/bin/gocsdk".contains(pkg))) {
+            if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
             }
         }
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-            if(type == MusicWidget.BT){
-                if (status) {
-                    binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
-                } else {
-                    binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
-                }
-
-            }else
+            if (type == MusicWidget.MUSIC) {
                 musicWidget.setCurMusicState(status, type);
+            }
 
         }
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
-            runOnUiThread(() -> {
+           /* runOnUiThread(() -> {
                 String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
                 Uri uri = null;
                 if (uriStr != null) {
@@ -286,7 +282,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
                 }
                 LogUtil.i("updateViewMusicPlayImage: uri=>" + uri);
                 musicWidget.loadAlbumArtByUri(uri);
-            });
+            });*/
 
         }
 
@@ -295,7 +291,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
             if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
-                    && "NO_MUSIC_LIST".equals(album) || MusicWidget.BT == type) {
+                    && "NO_MUSIC_LIST".equals(album)) {
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.music), MusicWidget.MUSIC);
                // musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView("", MusicWidget.MUSIC);
@@ -303,26 +299,6 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             }else{
                 musicWidget.setMusicNameTextView(songName, type);
                 musicWidget.setArtistNameTextView(singerName, type);
-            }
-
-            if(MusicWidget.BT == type && !"NO_MUSIC_LIST".equals(songName)){
-                binding.tvBtMusic.setText(songName);
-            }else {
-                binding.tvBtMusic.setText(R.string.bt_music);
-            }
-
-
-            if (MusicWidget.OTHER_MUSIC == type) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setMusicNameTextView(getResources().getString(R.string.music), MusicWidget.OTHER_MUSIC);
-                }
-                if (!TextUtils.isEmpty(singerName)) {
-                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setArtistNameTextView("", MusicWidget.OTHER_MUSIC);
-                }
             }
         }
 

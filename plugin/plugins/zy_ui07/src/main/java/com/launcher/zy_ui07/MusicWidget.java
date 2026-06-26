@@ -126,8 +126,8 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         musicNextIv = view.findViewById(R.id.music_widget_next);
         musicNextIv.setOnClickListener(this);
 
-        view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
-        view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
+        findViewById(R.id.layout_music_widget).setOnClickListener(this);
+        //view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
         ivLoadnim = view.findViewById(R.id.img_song_art);
         ivLoadnim.setOnClickListener(this);
@@ -176,54 +176,54 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         int id = v.getId();
         LogUtil.i("onClick: huang currentMedia=>" + currentMedia);
         if (id == R.id.music_widget_next) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.NEXT);
-           // } else if (currentMedia == BT) {
-           //     mediaControl.sendStrToHost(AwellTool.BT.NEXT);
+           /* } else if (currentMedia == BT) {
+                mediaControl.sendStrToHost(AwellTool.BT.NEXT);
             } else if (currentMedia == KUMUSIC) {
                 mediaControl.sendNextToHost();
             } else if (currentMedia == CARPLAY) {
                 mediaControl.sendNextToHost();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendNextToHost();
-            }
+            }*/
         } else if (id == R.id.music_widget_pre) {
-            if (currentMedia == MUSIC) {
+           //if (currentMedia == MUSIC) {
                 mediaControl.sendStrToHost(AwellTool.MUSIC.PREVIOUS);
-           // } else if (currentMedia == BT) {
-           //     mediaControl.sendStrToHost(AwellTool.BT.PREVIOUS);
+           /* } else if (currentMedia == BT) {
+                mediaControl.sendStrToHost(AwellTool.BT.PREVIOUS);
             } else if (currentMedia == KUMUSIC) {
                 mediaControl.sendPreToHost();
             } else if (currentMedia == CARPLAY) {
                 mediaControl.sendPreToHost();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendPreToHost();
-            }
+            }*/
         } else if (id == R.id.music_widget_play) {
-            if (currentMedia == MUSIC) {
+           // if (currentMedia == MUSIC) {
                 if (musicState) {
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PAUSE);
                 } else {
                     mediaControl.sendStrToHost(AwellTool.MUSIC.PLAY);
                 }
-           // } else if (currentMedia == BT) {
-           //     if (mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
-           //         mediaControl.sendStrToHost(AwellTool.BT.PAUSE);
-           //     } else {
-           //         mediaControl.sendStrToHost(AwellTool.BT.PLAY);
-           //     }
+           /* } else if (currentMedia == BT) {
+                if (mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
+                    mediaControl.sendStrToHost(AwellTool.BT.PAUSE);
+                } else {
+                    mediaControl.sendStrToHost(AwellTool.BT.PLAY);
+                }
             } else if (currentMedia == KUMUSIC) {
                 mediaControl.sendTogglePlayPause();
             } else if (currentMedia == CARPLAY) {
                 mediaControl.sendTogglePlayPause();
             } else if (currentMedia == OTHER_MUSIC) {
                 mediaControl.sendTogglePlayPause();
-            }
-        } else if (id == R.id.ll_name_layout_music
-                || id == R.id.img_song_art
+            }*/
+        } else if (id == R.id.layout_music_widget
+               /* || id == R.id.img_song_art
                 || id == R.id.img_song_art_bg
-                || id == R.id.music_widget_seekbars) {
-            if (currentMedia == MUSIC) {
+                || id == R.id.music_widget_seekbars*/) {
+           // if (currentMedia == MUSIC) {
                 startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
             /*} else if (currentMedia == BT) {
                 try {
@@ -234,10 +234,10 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
                 } catch (ActivityNotFoundException e) {
                     LogUtil.e("Activity not found: " + e.getMessage());
                     // 可以提示用户安装目标应用
-                }*/
+                }
             } else if (currentMedia == OTHER_MUSIC && !TextUtils.isEmpty(currentPlayingPackage)) {
                 launchAppByPackageName(mContext, currentPlayingPackage);
-            }
+            }*/
         }
     }
 
@@ -420,15 +420,15 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         LogUtil.e("switchMediaController: mediaType = " + mediaType + ", curMedia= " + curMedia);
 
         if ("start".equals(status)) {
-            currentPlayingPackage = packName;
-            if (packName.contains("localmusic")) {
+            //currentPlayingPackage = packName;
+            //if (packName.contains("localmusic")) {
                 currentMedia = MUSIC;
-            } else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
+            /*} else if ((packName.contains("com.awell.bluetooth") || packName.contains("/system/bin/gocsdk"))
                     && mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = BT;
             } else if (mediaType == AudioManager.STREAM_MUSIC) {
                 currentMedia = OTHER_MUSIC;
-            }
+            }*/
             setCurMusicState(true);
             setImageIcon(currentMedia);
         }

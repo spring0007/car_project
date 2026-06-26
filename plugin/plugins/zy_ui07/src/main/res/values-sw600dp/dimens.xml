@@ -6,10 +6,10 @@
     <dimen name="date_font_size1">19sp</dimen>
     <dimen name="ic_logo_width">117dp</dimen>
     <dimen name="ic_logo_height">39dp</dimen>
-    <dimen name="font_size">16dp</dimen>
-    <dimen name="cell_height">124dp</dimen>
+    <dimen name="font_size">21dp</dimen>
+    <dimen name="cell_height">160dp</dimen>
     <dimen name="icon_size">88dp</dimen>
-    <dimen name="text_padding">8dp</dimen>
+    <dimen name="text_padding">40dp</dimen>
     <dimen name="bt_music_tv_size">19sp</dimen>
     <dimen name="bt_icon_size">54dp</dimen>
     <dimen name="card_width">240dp</dimen>
@@ -23,5 +23,6 @@
     <dimen name="img_song_art_bg_size">54dp</dimen>
     <dimen name="img_song_art_size">26dp</dimen>
     <dimen name="artist_text_size">18sp</dimen>
+    <dimen name="cell_width">198dp</dimen>
 
 </resources>
