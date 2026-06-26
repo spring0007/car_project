@@ -73,5 +73,13 @@ public class CommonData {
 //        LogUtil.i("!!!!!  " + ToolClass.bytesToHexString(data,data.length));
     }
 
+    public static void writeDataToMeta(byte[] send,int offset){
+        try {
+            getAwellApi().awellmetafile_write(send,offset,send.length,1);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -422,7 +422,7 @@ class AwellMediaControl() {
     }
 
     private fun handleOtherMusicStatus(bundle: Bundle) {
-val musicStatus = bundle.getSafeBoolean(AwellTool.VALUE_M1, false)
+        val musicStatus = bundle.getSafeBoolean(AwellTool.VALUE_M1, false)
         mediaViewModel?.updatePlayStatus(bundle, musicStatus, MusicWidget.OTHER_MUSIC)
         updateMusicView?.updateViewPlayStatus(
             bundle,
