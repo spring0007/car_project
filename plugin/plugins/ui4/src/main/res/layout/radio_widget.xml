@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/sf_radio_bg"
     android:orientation="horizontal"
     android:id="@+id/radio_layout">
@@ -20,8 +20,9 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/radio"
-            android:textSize="22sp"
+            android:textSize="@dimen/radio_tv_size"
             android:textColor="@color/half_white"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
             android:gravity="center"/>
         <com.awell.ctrlview.FrequencyTextView
             android:id="@+id/tv_radio_freq"

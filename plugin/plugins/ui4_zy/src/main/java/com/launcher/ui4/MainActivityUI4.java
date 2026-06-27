@@ -13,8 +13,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -46,9 +48,11 @@ import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
+import com.awell.launcher2.DrawableStateProxyView;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 import com.launcher.ui4.databinding.ActivityMainUi4NewBinding;
 import com.launcher.ui4.databinding.MusicWidgetBinding;
@@ -541,7 +545,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     };
 
-    PopupWindow popupWindow;
+    private PopupWindow popupWindow;
 
     /**
      * popupwindow列表显示所有已安装应用
@@ -628,9 +632,14 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            Integer iconRes = Utils.mHomePackName.get(str); // 假设值是资源ID（int）
-            if (iconRes != null) {
-                a.setIcon(getResources().getDrawable(iconRes));
+            Integer iconRes = Utils.mHomePackName.get(str);
+
+            if (iconRes != null && iconRes!=0 ) {
+                try {
+                    a.setIcon(getApplicationContext().getResources().getDrawable(iconRes));
+                } catch (Exception e) {
+                    Log.w(TAG, "加载自定义图标失败: " + str);
+                }
             }
         }
         return appBeanList;
@@ -1001,7 +1010,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     private AppInfo createMismatchPlaceholder() {
         AppInfo mismatchPlaceholder = new AppInfo();
-        mismatchPlaceholder.setIcon(getDrawable(R.drawable.sf_app_add_icon));
+        mismatchPlaceholder.setIcon(getApplicationContext().getDrawable(R.drawable.sf_app_add_icon));
         mismatchPlaceholder.setLabel(getString(R.string.add_app));
         mismatchPlaceholder.package_name = "placeholder_mismatch";
         return mismatchPlaceholder;

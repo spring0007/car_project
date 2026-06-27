@@ -1,29 +1,22 @@
 <com.launcher.ui4.MusicWidget xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/music_widget_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_music_widget">
-
+    android:id="@+id/layout_music_widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_music_widget" >
         <LinearLayout
             android:id="@+id/ll_name_layout_music"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/rl_music_ablum_container"
-            app:layout_constraintTop_toTopOf="@+id/rl_music_ablum_container"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.26"
+            app:layout_constraintTop_toTopOf="parent">
             <!--歌曲名-->
             <!--<TextView
                 android:id="@+id/music_widget_music_name"
@@ -44,7 +37,7 @@
             <com.awell.launcher2.EarqueeTextView
                 android:id="@+id/music_widget_music_name"
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:fontFamily="@font/harmonyos_sans_sc_bold"
@@ -53,23 +46,21 @@
                 android:singleLine="true"
                 android:text="@string/click_play_music"
                 android:textColor="@android:color/white"
-                android:textSize="36sp" />
+                android:textSize="@dimen/music_name_tx_size" />
             <!-- 歌手名 -->
             <com.awell.launcher2.EarqueeTextView
                 android:id="@+id/music_artist"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:ellipsize="marquee"
                 android:focusable="true"
                 android:fontFamily="@font/harmonyos_sans_sc_light"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
                 android:singleLine="true"
                 android:text="@string/music_artist"
                 android:textColor="@android:color/white"
-                android:textSize="23sp" />
+                android:textSize="@dimen/music_artist_txsize" />
             <!-- 进度条  style="@style/volume_SeekBar"  -->
             <RelativeLayout
                 android:id="@+id/ll_time_layout_music"
@@ -125,7 +116,9 @@
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.2">
+            app:layout_constraintVertical_bias="0.2"
+            android:visibility="gone"
+            >
 
             <RelativeLayout
                 android:id="@+id/rl_music_ablum_bg"
@@ -221,5 +214,4 @@
             app:layout_constraintTop_toBottomOf="@+id/ll_control_layout_music"
             app:layout_constraintVertical_bias="0.3"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.launcher.ui4.MusicWidget>

@@ -278,7 +278,7 @@
         android:onClick="onClick"
         android:scaleType="fitXY"
         android:src="@drawable/sf_nav"
-        app:layout_constraintDimensionRatio="W,269:278"
+        app:layout_constraintDimensionRatio="W,268:278"
         app:layout_constraintStart_toEndOf="@+id/guideline_left3"
         app:layout_constraintEnd_toStartOf="@+id/guideline_left5"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top3"/>
@@ -305,7 +305,7 @@
         android:onClick="onClick"
         android:scaleType="fitXY"
         android:src="@drawable/sf_video"
-        app:layout_constraintDimensionRatio="W,269:278"
+        app:layout_constraintDimensionRatio="W,268:278"
         app:layout_constraintEnd_toStartOf="@+id/guideline_right"
         app:layout_constraintStart_toEndOf="@+id/guideline_left6"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top3"/>

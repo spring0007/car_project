@@ -36,7 +36,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6"/>
+        app:layout_constraintGuide_percent="0.61"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.63"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.32"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
@@ -58,13 +71,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.65"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6763"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.98"/>
+        app:layout_constraintGuide_percent="0.9666"/>
 
     <ImageView
         android:id="@+id/music_widget_bg_iv"
@@ -93,8 +112,7 @@
         android:layout_height="0dp"
         android:src="@drawable/sf_car_bg"
         android:scaleType="fitXY"
-        android:layout_marginStart="@dimen/car_iv_start"
-        app:layout_constraintStart_toStartOf="@id/guideline_left2"
+        app:layout_constraintStart_toStartOf="@id/guideline_left5"
         app:layout_constraintEnd_toEndOf="@id/guideline_right"
         app:layout_constraintTop_toTopOf="@id/guideline_top1"
         app:layout_constraintBottom_toBottomOf="@id/guideline_top2"/>
@@ -133,9 +151,8 @@
         android:background="@drawable/sf_rv_bg"
         app:layout_constraintStart_toStartOf="@+id/guideline_left1"
         app:layout_constraintEnd_toEndOf="@id/guideline_left3"
-        app:layout_constraintTop_toTopOf="@id/guideline_top2"
-        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-        android:layout_marginTop="@dimen/car_iv_start">
+        app:layout_constraintTop_toTopOf="@id/guideline_top3"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
         <ImageView
             android:id="@+id/hotset_allapp"
             android:layout_width="@dimen/hotset_allapp_width"
@@ -152,9 +169,11 @@
             android:id="@+id/rv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/hotset_allapp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/hotset_allapp"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -163,11 +182,10 @@
         layout="@layout/radio_widget"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/car_iv_start"
-        android:layout_marginTop="@dimen/car_iv_start"
-        app:layout_constraintTop_toTopOf="@id/guideline_top2"
+
+        app:layout_constraintTop_toTopOf="@id/guideline_top3"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-        app:layout_constraintStart_toStartOf="@id/guideline_left3"
+        app:layout_constraintStart_toStartOf="@id/guideline_left4"
         app:layout_constraintEnd_toEndOf="@id/guideline_right"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

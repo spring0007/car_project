@@ -262,7 +262,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
         }
     };
 
-    PopupWindow popupWindow;
+    private PopupWindow popupWindow;
 
     /**
      * popupwindow列表显示所有已安装应用
@@ -351,9 +351,14 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
         for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            Integer iconRes = Utils.mHomePackName.get(str); // 假设值是资源ID（int）
-            if (iconRes != null) {
-                a.setIcon(getResources().getDrawable(iconRes));
+            Integer iconRes = Utils.mHomePackName.get(str);
+
+            if (iconRes != null && iconRes!=0 ) {
+                try {
+                    a.setIcon(getApplicationContext().getResources().getDrawable(iconRes));
+                } catch (Exception e) {
+                    Log.w(TAG, "加载自定义图标失败: " + str);
+                }
             }
         }
         return appBeanList;
@@ -764,7 +769,7 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
 
     private AppInfo createMismatchPlaceholder() {
         AppInfo mismatchPlaceholder = new AppInfo();
-        mismatchPlaceholder.setIcon(getDrawable(R.drawable.sf_app_add_icon));
+        mismatchPlaceholder.setIcon(getApplicationContext().getDrawable(R.drawable.sf_app_add_icon));
         mismatchPlaceholder.setLabel(getString(R.string.add_app));
         mismatchPlaceholder.package_name = "placeholder_mismatch";
         return mismatchPlaceholder;
