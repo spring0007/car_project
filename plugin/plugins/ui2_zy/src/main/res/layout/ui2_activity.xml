@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".UI2Activity"
+    tools:ignore="MissingDefaultResource">
+
+    <ImageView
+        android:id="@+id/iv_anim_speed_road"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/rainbow_01"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.58" />
+
+    <ImageView
+        android:id="@+id/ivLampSwitchBg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintDimensionRatio="1:0.8"
+        app:layout_constraintWidth_percent="0.18"
+        android:src="@drawable/off"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.64" />
+
+    <include
+        android:id="@+id/include_car_speed"
+        layout="@layout/speed_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_line_right1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_line_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.70"/>
+
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/widget_layout_music_plugin2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/guide_line_right1"
+        app:layout_constraintStart_toStartOf="@+id/guide_line_left1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.08" />
+
+    <TextClock
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:format12Hour="h:mm"
+        android:format24Hour="HH:mm"
+        android:gravity="bottom|start"
+        android:shadowColor="#66000000"
+        android:shadowDx="0"
+        android:shadowDy="6"
+        android:shadowRadius="6"
+        android:text="00:00"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/time_text_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextClock
+        android:id="@+id/ampm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:format12Hour="a"
+        android:format24Hour=""
+        android:shadowColor="#66000000"
+        android:shadowDx="0"
+        android:shadowDy="5"
+        android:shadowRadius="6"
+        android:text="AM"
+        android:textColor="@android:color/white"
+        android:textSize="32sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/time"
+        app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toEndOf="@+id/time"
+        app:layout_constraintTop_toTopOf="@+id/time" />
+
+
+    <TextClock
+        android:id="@+id/page2_date_m"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_weight="1"
+        android:format12Hour="EEE MMM d"
+        android:format24Hour="EEE MMM d"
+        android:gravity="top|start"
+        android:shadowColor="#66000000"
+        android:shadowDx="0"
+        android:shadowDy="5"
+        android:shadowRadius="6"
+        android:text="5月18日"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/time_week_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/time"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/time"
+        app:layout_constraintVertical_bias="0" />
+
+
+    <!-- 链头 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+        >
+    <ImageView
+        android:id="@+id/hotset_navi"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_navi"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/hotset_video"
+        />
+
+    <!-- 链节点1 -->
+    <ImageView
+        android:id="@+id/hotset_video"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_video"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hotset_navi"
+        app:layout_constraintEnd_toStartOf="@id/hotset_setting"
+        />
+
+    <!-- 链节点2 -->
+    <ImageView
+        android:id="@+id/hotset_setting"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_setting"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hotset_video"
+        app:layout_constraintEnd_toStartOf="@id/hotset_allapp"
+        />
+
+    <!-- 链节点3 -->
+    <ImageView
+        android:id="@+id/hotset_allapp"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_all_app"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hotset_setting"
+        app:layout_constraintEnd_toStartOf="@id/hotset_radio"
+        />
+
+    <!-- 链节点4 -->
+    <ImageView
+        android:id="@+id/hotset_radio"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_radio"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hotset_allapp"
+        app:layout_constraintEnd_toStartOf="@id/hotset_bluetooth"
+
+        />
+
+    <!-- 链尾 -->
+    <ImageView
+        android:id="@+id/hotset_bluetooth"
+        android:layout_width="@dimen/hotset_app_size"
+        android:layout_height="@dimen/hotset_app_size"
+        android:scaleType="fitCenter"
+        android:src="@drawable/hotset_bt"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/hotset_radio"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.92" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

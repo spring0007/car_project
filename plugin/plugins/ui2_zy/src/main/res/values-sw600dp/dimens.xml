@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_text_size">85sp</dimen>
+    <dimen name="time_week_size">30sp</dimen>
+    <dimen name="music_iv_size">80dp</dimen>
+    <dimen name="music_bg_size">144dp</dimen>
+    <dimen name="music_widget_iv_size">24dp</dimen>
+    <dimen name="music_widget_play_iv_width">23dp</dimen>
+    <dimen name="music_widget_play_iv_height">29dp</dimen>
+    <dimen name="hotset_app_size">42dp</dimen>
+</resources>
