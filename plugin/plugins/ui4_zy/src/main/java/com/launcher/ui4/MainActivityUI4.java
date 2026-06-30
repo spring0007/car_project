@@ -44,6 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
+import com.awell.addapp.AppListStorage;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeControl;
@@ -64,24 +65,25 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
   //  private ActivityMainUi4Binding binding;
     private ActivityMainUi4NewBinding binding;
-    private MusicWidgetBinding musicWidgetBinding;
+    //private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
     private final int MSG_UPDATE_SPEED = 1;
     private final int MSG_CLEAR_SPEED = 2;
-    private Handler mHandlerSpeed = null;
+    //private Handler mHandlerSpeed = null;
     private boolean accRecor;
-    private final int SPEEDHOME = 20;
+    //private final int SPEEDHOME = 20;
     private View contentView;
 
 
-    private LocationManager mLocationManager;
-    private LocationListener mLocationListener;
+    //private LocationManager mLocationManager;
+    //private LocationListener mLocationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +95,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
 
-        musicWidgetBinding = binding.layoutMusicWidget;
-        musicWidget = musicWidgetBinding.layoutMusicWidget;
+        //musicWidgetBinding = binding.layoutMusicWidget;
+        musicWidget = binding.layoutMusicWidget.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
 
@@ -104,51 +106,51 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         initLongTouch();
         initAddAppView();
 
-        initLocationListener();
+        //initLocationListener();
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        /*if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             handler.removeMessages(SPEEDHOME);
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
-        updateSpeedUnitText();
+        updateSpeedUnitText();*/
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
 
     }
 
-    private void initLocationListener() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationListener = new LocationListener() {
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            @Override
-            public void onLocationChanged(Location location) {
-
-                if (location != null && location.hasSpeed()) {
-
-                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
-                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
-                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
-
-
-                    Message msg = mHandlerSpeed.obtainMessage();
-                    msg.what = MSG_UPDATE_SPEED;
-                    msg.arg1 = speed;
-                    msg.arg2 = speedMile;
-                    mHandlerSpeed.sendMessage(msg);
-                }
-            }
-        };
-    }
+//    private void initLocationListener() {
+//        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        mLocationListener = new LocationListener() {
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//            }
+//
+//            public void onProviderEnabled(String provider) {
+//            }
+//
+//            public void onProviderDisabled(String provider) {
+//            }
+//
+//            @Override
+//            public void onLocationChanged(Location location) {
+//
+//                if (location != null && location.hasSpeed()) {
+//
+//                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+//                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+//                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
+//                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+//
+//
+//                    Message msg = mHandlerSpeed.obtainMessage();
+//                    msg.what = MSG_UPDATE_SPEED;
+//                    msg.arg1 = speed;
+//                    msg.arg2 = speedMile;
+//                    mHandlerSpeed.sendMessage(msg);
+//                }
+//            }
+//        };
+//    }
 
     private void initClickEvent() {
         contentView = findViewById(android.R.id.content);
@@ -174,13 +176,13 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 0x10 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            handler.removeMessages(SPEEDHOME);
-            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+            //handler.removeMessages(SPEEDHOME);
+            //handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
     }
 
     private void initLongTouch() {
-        handler = new Handler(Looper.getMainLooper()) {
+       /* handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -195,70 +197,70 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                         break;
                 }
             }
-        };
+        };*/
         viewConfiguration = ViewConfiguration.get(this);
     }
 
-    @SuppressLint("HandlerLeak")
-    private void speedhome() {
-        Log.i(TAG, "speed come in");
-        mHandlerSpeed = new Handler() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case MSG_UPDATE_SPEED:
-                        int speed = msg.arg1;
-                        binding.carSpeedTv.setText("" + speed);
-                        /**
-                         * gps车速
-                         */
-                        int speed_km = msg.arg1;
-                        int speed_mile = msg.arg2;
-                        Log.i(TAG, "accRecor = " + accRecor);
-                        if (!accRecor) {
-                            byte[] unit = new byte[1];
-                            CommonData.readDataToMeta(unit, 0x84);
-                            int unitData = unit[0];
-                            Log.e(TAG, "unit Data = " + unitData);
-                            if (unitData == 0) {
-                                binding.carSpeedTv.setText(speed_km + "");
-                                binding.carSpeedUnitTv.setText("KM/h");
-                            } else if (unitData == 1) {
-                                binding.carSpeedTv.setText(speed_mile + "");
-                                binding.carSpeedUnitTv.setText("mph");
-                            }
-//                            if (animationDrawableTwo != null) {
-//                                if (speed_km > 0 || speed_mile > 0) {
-//                                    animationDrawableTwo.start();
-//                                } else {
-//                                    animationDrawableTwo.stop();
-//                                }
+//    @SuppressLint("HandlerLeak")
+//    private void speedhome() {
+//        Log.i(TAG, "speed come in");
+//        mHandlerSpeed = new Handler() {
+//            @SuppressLint("SetTextI18n")
+//            @Override
+//            public void handleMessage(Message msg) {
+//                switch (msg.what) {
+//                    case MSG_UPDATE_SPEED:
+//                        int speed = msg.arg1;
+//                        binding.carSpeedTv.setText("" + speed);
+//                        /**
+//                         * gps车速
+//                         */
+//                        int speed_km = msg.arg1;
+//                        int speed_mile = msg.arg2;
+//                        Log.i(TAG, "accRecor = " + accRecor);
+//                        if (!accRecor) {
+//                            byte[] unit = new byte[1];
+//                            CommonData.readDataToMeta(unit, 0x84);
+//                            int unitData = unit[0];
+//                            Log.e(TAG, "unit Data = " + unitData);
+//                            if (unitData == 0) {
+//                                binding.carSpeedTv.setText(speed_km + "");
+//                                binding.carSpeedUnitTv.setText("KM/h");
+//                            } else if (unitData == 1) {
+//                                binding.carSpeedTv.setText(speed_mile + "");
+//                                binding.carSpeedUnitTv.setText("mph");
 //                            }
-                        }
-                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
-                        break;
-                    case MSG_CLEAR_SPEED:
-                        binding.carSpeedTv.setText("" + 0);
-//                        if (animationDrawableTwo != null) {
-//                            animationDrawableTwo.stop();
+////                            if (animationDrawableTwo != null) {
+////                                if (speed_km > 0 || speed_mile > 0) {
+////                                    animationDrawableTwo.start();
+////                                } else {
+////                                    animationDrawableTwo.stop();
+////                                }
+////                            }
 //                        }
-                        break;
-                }
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
-        } else {
-            Log.e(TAG, "LocationManager is null, cannot request location updates");
-        }
-    }
+//                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
+//                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
+//                        break;
+//                    case MSG_CLEAR_SPEED:
+//                        binding.carSpeedTv.setText("" + 0);
+////                        if (animationDrawableTwo != null) {
+////                            animationDrawableTwo.stop();
+////                        }
+//                        break;
+//                }
+//            }
+//        };
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        if (mLocationManager != null) {
+//            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+//        } else {
+//            Log.e(TAG, "LocationManager is null, cannot request location updates");
+//        }
+//    }
 
     private void updateSpeedUnitText() {
         byte[] unit = new byte[1];
@@ -376,12 +378,11 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
-    private LinearLayoutManager linearLayoutManager;
     private AppInofAdapter appInfoAdapter;
     private List<AppInfo> allAppInfoList, showAppInfoList;
     private AppInfo placehodlerInfo;
-    private MyDbHelper myDbHelper;
-    private SQLiteDatabase sqLiteDatabase;
+    //private MyDbHelper myDbHelper;
+    //private SQLiteDatabase sqLiteDatabase;
 
     private void initAddAppView() {
 
@@ -391,12 +392,12 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         placehodlerInfo = createMismatchPlaceholder();
 
         // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = new MyDbHelper(this, "show_app", null, 1);
-        sqLiteDatabase = myDbHelper.getWritableDatabase();
+        //myDbHelper = new MyDbHelper(this, "show_app", null, 1);
+        //sqLiteDatabase = myDbHelper.getWritableDatabase();
 
 //        findViewById(R.id.rl_content_view).setOnClickListener(v -> hidePopup());
         appInfoAdapter = new AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.rv.setLayoutManager(linearLayoutManager);
         binding.rv.setAdapter(appInfoAdapter);
 
@@ -417,20 +418,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             @Override
             public void run() {
                 appInfoAdapter.setContentList(showAppInfoList);
-                appInfoAdapter.notifyDataSetChanged();
+                //appInfoAdapter.notifyDataSetChanged();
             }
         });
     }
 
     private void refreshAppList() {
+        LogUtil.i("start ,refreshAppList");
         // 获取所有已安装应用
         allAppInfoList = getAllAppInfo(this, false);
         // 清空当前显示列表
         showAppInfoList = new ArrayList<>();
-        
-        // 从数据库加载保存的应用
-        List<String> storageAppList = loadAppListFromDatabase();
-        
+
+        // 从 SharedPreferences 加载保存的应用 — 替代 loadAppListFromDatabase()
+        List<String> storageAppList = AppListStorage.load(this);
         // 添加保存的应用到显示列表
         for (String packageName : storageAppList) {
             AppInfo app = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
@@ -438,32 +439,25 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 showAppInfoList.add(app);
             }
         }
-        
         // 如果没有保存的应用，加载默认应用
         if (showAppInfoList.isEmpty()) {
             loadDefaultApps();
         }
-        
-        // 保存应用到数据库
-        saveAppListToDatabase();
-        
-        // 添加占位符
+        // 保存应用到 SharedPreferences — 替代 saveAppListToDatabase()
+        saveAppListToPref();
         addAppPlaceholder();
+        LogUtil.i("end ,refreshAppList");
     }
 
-    private List<String> loadAppListFromDatabase() {
-        List<String> storageAppList = new ArrayList<>();
-        Cursor cursor = myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
-                storageAppList.add(packageName);
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
+    // 新增：写入 SP
+    private void saveAppListToPref() {
+        List<String> packageNames = new ArrayList<>();
+        for (AppInfo app : showAppInfoList) {
+            if (app != null) {
+                packageNames.add(app.package_name);
             }
-            cursor.close();
         }
-        return storageAppList;
+        AppListStorage.save(this, packageNames);
     }
 
     private void loadDefaultApps() {
@@ -476,7 +470,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
-    private void saveAppListToDatabase() {
+/*    private void saveAppListToDatabase() {
         for (AppInfo storagePac : showAppInfoList) {
             if (storagePac != null) {
                 ContentValues contentValues = new ContentValues();
@@ -484,7 +478,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 sqLiteDatabase.insert("showapp", null, contentValues);
             }
         }
-    }
+    }*/
 
     private void addAppPlaceholder() {
         // 使用统一的占位符更新方法
@@ -510,35 +504,32 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             for (AppInfo pack : showAppInfoList)
                 if (pack.package_name.equals(appInfo.package_name)) {
                     if (popupWindow != null) popupWindow.dismiss();
-
                     showPopupI.hidePopup();
                     return;
                 }
             showAppInfoList.remove(placehodlerInfo);
-
             showAppInfoList.add(appInfo);
             showAppInfoList.add(placehodlerInfo);
             appInfoAdapter.setContentList(showAppInfoList);
-            appInfoAdapter.notifyDataSetChanged();
+            //appInfoAdapter.notifyDataSetChanged();
 
-            new Thread(() -> {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("packagename", appInfo.package_name);
-                sqLiteDatabase.insert("showapp", null, contentValues);
-            }).start();
+            // 替代 sqLiteDatabase.insert() — 无需新线程，SP.apply() 本身就是异步
+            AppListStorage.addItem(MainActivityUI4.this, appInfo.package_name);
 
             showPopupI.hidePopup();
         }
 
+
         @Override
         public void removeAppInfo(String packageName) {
-            sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
+            // 替代 sqLiteDatabase.delete()
+            AppListStorage.removeItem(MainActivityUI4.this, packageName);
+
             for (AppInfo pcka : showAppInfoList)
                 if (pcka.package_name.equals(packageName)) {
                     showAppInfoList.remove(pcka);
                     break;
                 }
-
             if (appInfoAdapter != null) {
                 appInfoAdapter.setContentList(showAppInfoList);
             }
@@ -561,8 +552,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         allAppInfoList = getAllAppInfo(this, false);
 
         RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
-        gridLayoutManager.setSpanCount(2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        //gridLayoutManager.setSpanCount(2);
         gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         AppPopAdapter appInofAdapter = new AppPopAdapter(this, allAppInfoList, addSelectAppCallback);
         rvPop.setLayoutManager(gridLayoutManager);
@@ -617,7 +608,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         for (PackageInfo p : appList) {
             bean = new AppInfo();
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager));
+           // bean.setIcon(p.applicationInfo.loadIcon(packageManager));
             bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
             String packName = p.applicationInfo.packageName;
             bean.setPackage_name(packName);
@@ -630,18 +621,22 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             }
         }
 
-        for (AppInfo a : appBeanList) {
+        /*for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            Integer iconRes = Utils.mHomePackName.get(str);
+            Integer iconRes = ImageManager.mHomePackName.getOrDefault(str ,0);
 
-            if (iconRes != null && iconRes!=0 ) {
+            if (iconRes != null && iconRes != 0) {
                 try {
-                    a.setIcon(getApplicationContext().getResources().getDrawable(iconRes));
-                } catch (Exception e) {
-                    Log.w(TAG, "加载自定义图标失败: " + str);
+                    // 关键修改：使用主应用的 Context 加载资源
+                    //@SuppressLint("UseCompatLoadingForDrawables") Drawable icon = getResources().getDrawable(iconRes,getTheme());
+                    a.setIcon(getResources().getDrawable(iconRes,getTheme()));
+                } catch (Resources.NotFoundException e) {
+                    LogUtil.w( "加载自定义图标失败: " + str);
                 }
             }
-        }
+        }*/
+
+
         return appBeanList;
     }
 
@@ -664,6 +659,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
 
         cleanListener();
 
@@ -671,20 +670,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     }
 
     private void cleanListener() {
-        if (mHandlerSpeed != null) {
-            mHandlerSpeed.removeCallbacksAndMessages(null);
-            mHandlerSpeed = null;
-        }
+//        if (mHandlerSpeed != null) {
+//            mHandlerSpeed.removeCallbacksAndMessages(null);
+//            mHandlerSpeed = null;
+//        }
 
-        if (mLocationManager != null && mLocationListener != null) {
-            try {
-                mLocationManager.removeUpdates(mLocationListener);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-            mLocationManager = null;
-            mLocationListener = null;
-        }
+//        if (mLocationManager != null && mLocationListener != null) {
+//            try {
+//                mLocationManager.removeUpdates(mLocationListener);
+//            } catch (SecurityException e) {
+//                e.printStackTrace();
+//            }
+//            mLocationManager = null;
+//            mLocationListener = null;
+//        }
 
         if (binding != null) {
             binding = null;
@@ -894,9 +893,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             }
         }
 
-        // Remove from database
-        sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-
+        // 从 SharedPreferences 中移除
+        AppListStorage.removeItem(this, packageName);
         // Refresh the adapter
         runOnUiThread(new Runnable() {
             @Override
@@ -917,7 +915,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     private void verifyInstalledApps() {
         if (showAppInfoList == null || showAppInfoList.isEmpty()) return;
-        
+        LogUtil.i("start ,verifyInstalledApps--111");
         // 刷新应用列表
         refreshAppList();
         
@@ -928,6 +926,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         if (appInfoAdapter != null) {
             appInfoAdapter.setContentList(showAppInfoList);
         }
+        LogUtil.i("start ,verifyInstalledApps--444");
     }
 
     private void checkAppCountMatch() {
@@ -1008,9 +1007,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private AppInfo createMismatchPlaceholder() {
         AppInfo mismatchPlaceholder = new AppInfo();
-        mismatchPlaceholder.setIcon(getApplicationContext().getDrawable(R.drawable.sf_app_add_icon));
+        mismatchPlaceholder.setIcon(getResources().getDrawable(R.drawable.sf_app_add_icon));
         mismatchPlaceholder.setLabel(getString(R.string.add_app));
         mismatchPlaceholder.package_name = "placeholder_mismatch";
         return mismatchPlaceholder;

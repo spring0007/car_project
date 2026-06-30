@@ -1,6 +1,8 @@
 package com.launcher.ui4;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
+import com.awell.utils.LogUtil;
 
 import java.util.List;
 
@@ -45,7 +48,30 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AppInfo appInfo = contentList.get(position);
-        holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+
+
+        Integer icon_bg =ImageManager.mHomePackName.getOrDefault(appInfo.package_name ,0);
+        //LogUtil.i("packgae="+appInfo.package_name+ ",icon_bg = " + icon_bg);
+        if (icon_bg != null &&icon_bg != 0) {
+            holder.iv_app_icon.setImageResource(icon_bg);
+        } else {
+
+            try {
+                // 获取 PackageManager 实例
+                PackageManager pm = mContext.getPackageManager();
+                // 直接通过包名获取图标 Drawable 对象
+                Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                // 将图标设置到 ImageView 中
+                holder.iv_app_icon.setImageDrawable(icon);
+            } catch (PackageManager.NameNotFoundException e) {
+                // 如果包名不存在，会抛出此异常
+                e.printStackTrace();
+                // 可以在这里设置一个默认图标
+                holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+            }
+
+
+        }
         holder.tv_app_name.setText(appInfo.getLabel());
 
         //String pckName = appInfo.getPackage_name();

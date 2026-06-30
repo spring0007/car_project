@@ -2,6 +2,8 @@ package com.launcher.ui3;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +48,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return  new ViewHolder(view);
     }
 
     @Override
@@ -55,9 +56,27 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
 
         AppInfo appInfo = contentList.get(position);
         if (appInfo == null) return;
-        holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+
+        if ("placeholder_mismatch".equals(appInfo.package_name)){
+            holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
+        }else {
+            Integer icon_bg =ImageManager.mHomePackName.getOrDefault(appInfo.package_name ,0);
+            if (icon_bg != null &&icon_bg != 0) {
+                holder.iv_app_icon.setImageResource(icon_bg);
+            } else {
+
+                try {
+                    PackageManager pm = mContext.getPackageManager();
+                    Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                    holder.iv_app_icon.setImageDrawable(icon);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                }
+            }
+        }
         holder.tv_app_name.setText(appInfo.getLabel());
-        holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
+        //holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
 
         holder.iv_app_layout.setOnLongClickListener(view -> {
             contentList.remove(position);

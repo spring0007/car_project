@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -42,6 +43,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
+import com.awell.addapp.AppListStorage;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeControl;
@@ -49,6 +51,7 @@ import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 import com.launcher.ui4.databinding.ActivityMainUi4NewBinding;
 import com.launcher.ui4.databinding.MusicWidgetBinding;
@@ -65,7 +68,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
   //  private ActivityMainUi4Binding binding;
     private ActivityMainUi4NewBinding binding;
-    private MusicWidgetBinding musicWidgetBinding;
+    //private MusicWidgetBinding musicWidgetBinding;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
     private final int MSG_UPDATE_SPEED = 1;
@@ -89,8 +92,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         mediaControl.bindDataService(this);
         mediaControl.setUpdateMusicView(mediaImpl);
 
-        musicWidgetBinding = binding.layoutMusicWidget;
-        musicWidget = musicWidgetBinding.layoutMusicWidget;
+        //musicWidgetBinding = binding.layoutMusicWidget;
+        musicWidget = binding.layoutMusicWidget.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
 
@@ -372,12 +375,11 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
-    private LinearLayoutManager linearLayoutManager;
     private AppInofAdapter appInfoAdapter;
     private List<AppInfo> allAppInfoList, showAppInfoList;
     private AppInfo placehodlerInfo;
-    private MyDbHelper myDbHelper;
-    private SQLiteDatabase sqLiteDatabase;
+    //private MyDbHelper myDbHelper;
+    //private SQLiteDatabase sqLiteDatabase;
 
     private void initAddAppView() {
 
@@ -387,12 +389,12 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         placehodlerInfo = createMismatchPlaceholder();
 
         // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = new MyDbHelper(this, "show_app", null, 1);
-        sqLiteDatabase = myDbHelper.getWritableDatabase();
+        //myDbHelper = new MyDbHelper(this, "show_app", null, 1);
+        //sqLiteDatabase = myDbHelper.getWritableDatabase();
 
 //        findViewById(R.id.rl_content_view).setOnClickListener(v -> hidePopup());
         appInfoAdapter = new AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.rv.setLayoutManager(linearLayoutManager);
         binding.rv.setAdapter(appInfoAdapter);
 
@@ -413,7 +415,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             @Override
             public void run() {
                 appInfoAdapter.setContentList(showAppInfoList);
-                appInfoAdapter.notifyDataSetChanged();
+                //appInfoAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -423,10 +425,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         allAppInfoList = getAllAppInfo(this, false);
         // 清空当前显示列表
         showAppInfoList = new ArrayList<>();
-        
-        // 从数据库加载保存的应用
-        List<String> storageAppList = loadAppListFromDatabase();
-        
+
+        // 从 SharedPreferences 加载保存的应用 — 替代 loadAppListFromDatabase()
+        List<String> storageAppList = AppListStorage.load(this);
         // 添加保存的应用到显示列表
         for (String packageName : storageAppList) {
             AppInfo app = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
@@ -439,27 +440,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         if (showAppInfoList.isEmpty()) {
             loadDefaultApps();
         }
-        
-        // 保存应用到数据库
-        saveAppListToDatabase();
-        
-        // 添加占位符
+        // 保存应用到 SharedPreferences — 替代 saveAppListToDatabase()
+        saveAppListToPref();
         addAppPlaceholder();
     }
 
-    private List<String> loadAppListFromDatabase() {
-        List<String> storageAppList = new ArrayList<>();
-        Cursor cursor = myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
-                storageAppList.add(packageName);
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
+    // 新增：写入 SP
+    private void saveAppListToPref() {
+        List<String> packageNames = new ArrayList<>();
+        for (AppInfo app : showAppInfoList) {
+            if (app != null) {
+                packageNames.add(app.package_name);
             }
-            cursor.close();
         }
-        return storageAppList;
+        AppListStorage.save(this, packageNames);
     }
 
     private void loadDefaultApps() {
@@ -471,7 +465,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
-    private void saveAppListToDatabase() {
+/*    private void saveAppListToDatabase() {
         for (AppInfo storagePac : showAppInfoList) {
             if (storagePac != null) {
                 ContentValues contentValues = new ContentValues();
@@ -479,7 +473,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 sqLiteDatabase.insert("showapp", null, contentValues);
             }
         }
-    }
+    }*/
 
     private void addAppPlaceholder() {
         // 使用统一的占位符更新方法
@@ -514,20 +508,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             showAppInfoList.add(appInfo);
             showAppInfoList.add(placehodlerInfo);
             appInfoAdapter.setContentList(showAppInfoList);
-            appInfoAdapter.notifyDataSetChanged();
+            //appInfoAdapter.notifyDataSetChanged();
 
-            new Thread(() -> {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("packagename", appInfo.package_name);
-                sqLiteDatabase.insert("showapp", null, contentValues);
-            }).start();
+            // 替代 sqLiteDatabase.insert() — 无需新线程，SP.apply() 本身就是异步
+            AppListStorage.addItem(MainActivityUI4.this, appInfo.package_name);
 
             showPopupI.hidePopup();
         }
 
+
         @Override
         public void removeAppInfo(String packageName) {
-            sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
+            // 替代 sqLiteDatabase.delete()
+            AppListStorage.removeItem(MainActivityUI4.this, packageName);
+
             for (AppInfo pcka : showAppInfoList)
                 if (pcka.package_name.equals(packageName)) {
                     showAppInfoList.remove(pcka);
@@ -556,8 +550,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         allAppInfoList = getAllAppInfo(this, false);
 
         RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
-        gridLayoutManager.setSpanCount(2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        //gridLayoutManager.setSpanCount(2);
         gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         AppPopAdapter appInofAdapter = new AppPopAdapter(this, allAppInfoList, addSelectAppCallback);
         rvPop.setLayoutManager(gridLayoutManager);
@@ -612,7 +606,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
         for (PackageInfo p : appList) {
             bean = new AppInfo();
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager));
+           // bean.setIcon(p.applicationInfo.loadIcon(packageManager));
             bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
             String packName = p.applicationInfo.packageName;
             bean.setPackage_name(packName);
@@ -627,18 +621,22 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             }
         }
 
-        for (AppInfo a : appBeanList) {
+        /*for (AppInfo a : appBeanList) {
             String str = a.getPackage_name();
-            Integer iconRes = Utils.mHomePackName.get(str);
+            Integer iconRes = ImageManager.mHomePackName.getOrDefault(str ,0);
 
-            if (iconRes != null && iconRes!=0 ) {
+            if (iconRes != null && iconRes != 0) {
                 try {
-                    a.setIcon(getApplicationContext().getResources().getDrawable(iconRes));
-                } catch (Exception e) {
-                    Log.w(TAG, "加载自定义图标失败: " + str);
+                    // 关键修改：使用主应用的 Context 加载资源
+                    //@SuppressLint("UseCompatLoadingForDrawables") Drawable icon = getResources().getDrawable(iconRes,getTheme());
+                    a.setIcon(getResources().getDrawable(iconRes,getTheme()));
+                } catch (Resources.NotFoundException e) {
+                    LogUtil.w( "加载自定义图标失败: " + str);
                 }
             }
-        }
+        }*/
+
+
         return appBeanList;
     }
 
@@ -661,6 +659,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
 
         cleanListener();
 
@@ -899,9 +901,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             }
         }
 
-        // Remove from database
-        sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-
+        // 从 SharedPreferences 中移除
+        AppListStorage.removeItem(this, packageName);
         // Refresh the adapter
         runOnUiThread(new Runnable() {
             @Override
@@ -1013,9 +1014,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private AppInfo createMismatchPlaceholder() {
         AppInfo mismatchPlaceholder = new AppInfo();
-        mismatchPlaceholder.setIcon(getApplicationContext().getDrawable(R.drawable.sf_app_add_icon));
+        mismatchPlaceholder.setIcon(getResources().getDrawable(R.drawable.sf_app_add_icon));
         mismatchPlaceholder.setLabel(getString(R.string.add_app));
         mismatchPlaceholder.package_name = "placeholder_mismatch";
         return mismatchPlaceholder;

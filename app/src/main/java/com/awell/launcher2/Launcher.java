@@ -2030,21 +2030,21 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     }
 
     int[] hotset_moshiID = {R.drawable.hotset_moshi, R.drawable.hotset_moshi1};
-    int[] sf_widget_musicID = {R.drawable.sf_widget_music_bg, R.drawable.sf_widget_music_bg_n};
+ //   int[] sf_widget_musicID = {R.drawable.sf_widget_music_bg, R.drawable.sf_widget_music_bg_n};
     int[] date_bgID = {R.drawable.date_bg, R.drawable.date_bg_n};
     int[] radio_bar_icon_bgID = {R.drawable.radio_bar_icon_bg, R.drawable.radio_bar_icon_bg_n};
     int[] sf_radio_preID = {R.drawable.sf_radio_pre, R.drawable.sf_radio_pre_n};
     int[] sf_radio_nextID = {R.drawable.sf_radio_next, R.drawable.sf_radio_next_n};
-    int[] date_bg_tvID = {Color.parseColor("#D5D7DD"), Color.parseColor("#141414")};
+//    int[] date_bg_tvID = {Color.parseColor("#D5D7DD"), Color.parseColor("#141414")};
     int[] textColorId = {Color.parseColor("#99ffffff"), Color.parseColor("#99ffffff")};
-    int[] textColorId1 = {Color.WHITE, Color.BLACK};
-    int[] sf_time_bg_mainID = {R.drawable.sf_time_bg_main, R.drawable.sf_time_bg_main_n};
-    int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
-    //    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
-    int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
-    int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
-    int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
-    int[] sf_add2_dID = {R.drawable.sf_add2_d, R.drawable.sf_add2_n};
+//    int[] textColorId1 = {Color.WHITE, Color.BLACK};
+//    int[] sf_time_bg_mainID = {R.drawable.sf_time_bg_main, R.drawable.sf_time_bg_main_n};
+//    int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
+//    //    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
+//    int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
+//    int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
+//    int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
+//    int[] sf_add2_dID = {R.drawable.sf_add2_d, R.drawable.sf_add2_n};
 
     private void dayNightImages(int dayNight) {
         hotset_moshi.setImageResource(hotset_moshiID[dayNight]);

@@ -98,9 +98,14 @@ object AppsCustomizeControl {
         setPluginThemeMode(themeMode ,refresh,iconSizeSame ,null, null, "")
     }
 
-    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,
-        iconMap: Map<String, String>?, defaultPluginBgName: String? = null, pluginPackageName: String
-    ) {
+
+    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
+                             defaultPluginBgName: String? = null, pluginPackageName: String){
+        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,0)
+    }
+
+    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
+         defaultPluginBgName: String? = null, pluginPackageName: String,indicatorPanel: Int ) {
 
 
         // 设置 Plugin 配置
@@ -113,6 +118,8 @@ object AppsCustomizeControl {
 
         mIconCache.setPluginThemeMode(themeMode)
         Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
+       // if( mAppsCustomizeContent?.pageIndication != null)
+       //     mAppsCustomizeContent?.pageIndication?.setIndicatorStyle(indicatorPanel)
 
 
         // 立即执行重置（旧 Plugin 只会调用这个方法，不会再调用 applyAppsCustomizeConfig）
@@ -166,8 +173,8 @@ object AppsCustomizeControl {
             //如果启用了 Plugin 图标映射表，则主题模式设置为默认值 (1)，不与其他主题冲突
             setPluginThemeMode(0xff ,false,false ,iconMap, defaultPluginBgName, pluginPackageName)  // 使用plugin图标,并不刷新属性
             
-            LogUtil.i( "setPluginIconMap: 成功设置 Plugin 图标映射表")
-            LogUtil.i( "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
+           // LogUtil.i( "setPluginIconMap: 成功设置 Plugin 图标映射表")
+           // LogUtil.i( "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
         } catch (e: Exception) {
             LogUtil.e( "setPluginIconMap: 设置图标映射表失败", e)
             setPluginThemeMode(1) // 使用普通图标
