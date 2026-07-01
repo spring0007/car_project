@@ -102,7 +102,7 @@ object IconManager {
      * @param packageName 包名
      * @return Drawable 带主题背景的图标
      */
-    fun getAppIcon(context: Context, packageName: String): Drawable {
+     fun getAppIcon(context: Context, packageName: String): Drawable {
         if (packageName.isEmpty()) {
             throw IllegalArgumentException("Package name cannot be empty")
         }

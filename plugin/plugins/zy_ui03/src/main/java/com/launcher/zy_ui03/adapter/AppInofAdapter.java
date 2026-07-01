@@ -2,6 +2,8 @@ package com.launcher.zy_ui03.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,7 @@ import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
 import com.launcher.zy_ui03.R;
-
+import com.launcher.zy_ui03.utils.IconManager;
 
 
 import java.util.ArrayList;
@@ -73,7 +75,30 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
 
         AppInfo appInfo = contentList.get(position);
         if (appInfo == null) return;
-        holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+
+        if ("placeholder_mismatch".equals(appInfo.package_name)){
+            holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+        }else {
+            Drawable icon_bg = IconManager.INSTANCE.getAppIcon(mContext, appInfo.package_name);
+            if (icon_bg != null ) {
+                holder.iv_app_icon.setImageDrawable(icon_bg);
+            } else {
+
+                try {
+                    // 获取 PackageManager 实例
+                    PackageManager pm = mContext.getPackageManager();
+                    // 直接通过包名获取图标 Drawable 对象
+                    Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                    // 将图标设置到 ImageView 中
+                    holder.iv_app_icon.setImageDrawable(icon);
+                } catch (PackageManager.NameNotFoundException e) {
+                    // 如果包名不存在，会抛出此异常
+                    e.printStackTrace();
+                    // 可以在这里设置一个默认图标
+                   // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                }
+            }
+        }
         holder.tv_app_name.setText(appInfo.getLabel());
         holder.tv_app_name.setTextColor(appNameTextColor); // 应用主题颜色
 
