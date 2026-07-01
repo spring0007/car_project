@@ -41,6 +41,25 @@ class AppsCustomizeIndicatorPanel(context: Context) : View(context) {
 
 
     }
+    fun setIndicatorStyle( style : Int){
+        when (style) {
+            1 -> {
+                val bmp = resources.getDrawable(R.drawable.mui101_ic_pageindicator_default) as BitmapDrawable
+                mBmpBackground = bmp.bitmap
+                val bmpDraw = resources.getDrawable(R.drawable.mui101_ic_pageindicator_current) as BitmapDrawable
+                mBmpSelect = bmpDraw.bitmap
+            }
+            /*2 -> {
+                val bmp = resources.getDrawable(R.drawable.dot_nor2) as BitmapDrawable
+            }*/
+            else -> {
+                val bmp = resources.getDrawable(R.drawable.dot_nor3) as BitmapDrawable
+                mBmpBackground = bmp.bitmap
+                val bmpDraw = resources.getDrawable(R.drawable.dot_sel3) as BitmapDrawable
+                mBmpSelect = bmpDraw.bitmap
+            }
+        }
+    }
 
 
     override fun onDraw(canvas: Canvas?) {

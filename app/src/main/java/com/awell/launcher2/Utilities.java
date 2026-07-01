@@ -64,13 +64,13 @@ public final class Utilities {
     private static int sThemeMode = 0;
     private static boolean sIconSizeSame = false;
 
-    private static int[] sfOtherBG = {
-            R.drawable.sf_other_app1
-            , R.drawable.sf_other_app1
-            , R.drawable.sf_other_app3
-            , R.drawable.sf_other_app4
-            , R.drawable.sf_other_app5
-    };
+//    private static int[] sfOtherBG = {
+//            R.drawable.sf_other_app1
+//            , R.drawable.sf_other_app1
+//            , R.drawable.sf_other_app3
+//            , R.drawable.sf_other_app4
+//            , R.drawable.sf_other_app5
+//    };
 
 
     static {
@@ -126,8 +126,8 @@ public final class Utilities {
         switch (themeMode) {
             case 0:
                 return R.drawable.sf_other_app3_dark;
-            case 1:
-                return R.drawable.sf_other_app3;
+            //case 1:
+            //    return R.drawable.sf_other_app3;
             case 2:
                 return R.drawable.sf_other_app3_yellow;
             case 3:
