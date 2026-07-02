@@ -14,7 +14,6 @@ import com.awell.launcher2.AppsCustomizeTabHost
 import com.awell.launcher2.IconCache
 import com.awell.launcher2.LauncherModel
 import com.awell.launcher2.PluginIconManager
-import com.awell.launcher2.Utilities
 import com.awell.ui.AppsCustomizeIndicatorPanel
 import com.awell.utils.LogUtil
 import java.lang.ref.WeakReference
@@ -116,8 +115,8 @@ object AppsCustomizeControl {
         PluginIconManager.setIconMap(iconMap)
 
 
-        mIconCache.setPluginThemeMode(themeMode)
-        Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
+        mIconCache.setPluginThemeMode(themeMode ,iconSizeSame)
+        //Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
        // if( mAppsCustomizeContent?.pageIndication != null)
        //     mAppsCustomizeContent?.pageIndication?.setIndicatorStyle(indicatorPanel)
 

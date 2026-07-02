@@ -46,7 +46,7 @@ import com.awell.utils.LogUtil;
  */
 public final class Utilities {
     @SuppressWarnings("unused")
-    static Boolean FLAG = true;
+    //static Boolean FLAG = true;
     private static final String TAG = "Launcher.Utilities";
 
     private static int sIconWidth = -1;
@@ -61,7 +61,7 @@ public final class Utilities {
     private static final Rect sOldBounds = new Rect();
     private static final Canvas sCanvas = new Canvas();
 
-    private static int sThemeMode = 0;
+    private static int sThemeMode = 1;
     private static boolean sIconSizeSame = false;
 
 //    private static int[] sfOtherBG = {
@@ -71,7 +71,6 @@ public final class Utilities {
 //            , R.drawable.sf_other_app4
 //            , R.drawable.sf_other_app5
 //    };
-
 
     static {
         sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,
@@ -107,19 +106,14 @@ public final class Utilities {
         }
     }
 
-    public static void setPluginThemeMode(int themeMode,  Context context) {
-        setPluginThemeMode(themeMode, false, context);
+    public static void setPluginThemeMode(int themeMode) {
+        setPluginThemeMode(themeMode, false);
     }
 
-
-    public static void setPluginThemeMode(int themeMode, boolean iconSizeSame, Context context) {
-        if (sThemeMode != themeMode) {
+    public static void setPluginThemeMode(int themeMode, boolean iconSizeSame) {
             sThemeMode = themeMode;
-            LogUtil.d("setPluginThemeMode, themeMode=" + themeMode);
-        }
-        if (sIconSizeSame!= iconSizeSame) {
             sIconSizeSame = iconSizeSame;
-        }
+        LogUtil.d("setPluginThemeMode, themeMode=" + themeMode + ", iconSizeSame=" + iconSizeSame);
     }
 
     private static int getIconResource(int themeMode) {
@@ -127,7 +121,7 @@ public final class Utilities {
             case 0:
                 return R.drawable.sf_other_app3_dark;
             //case 1:
-            //    return R.drawable.sf_other_app3;
+            //    return R.drawable.sf_other_bg_app3;
             case 2:
                 return R.drawable.sf_other_app3_yellow;
             case 3:
@@ -143,7 +137,7 @@ public final class Utilities {
                 // 从 Plugin 获取默认背景资源 ID
                 return PluginIconManager.getPluginDefaultBackgroundResId();
             default:
-                return R.drawable.sf_other_app3;
+                return R.drawable.sf_other_bg_app3;
         }
     }
 
@@ -152,9 +146,8 @@ public final class Utilities {
      */
     static Bitmap createIconBitmap(Drawable icon, Context context, String packageName) {
 
-        int sourceWidth = icon.getIntrinsicWidth();
-        int sourceHeight = icon.getIntrinsicHeight();
-
+        //int sourceWidth = icon.getIntrinsicWidth();
+        //int sourceHeight = icon.getIntrinsicHeight();
         synchronized (sCanvas) { // we share the statics :-(
             if (sIconWidth == -1) {
                 initStatics(context);
@@ -164,7 +157,7 @@ public final class Utilities {
                 synchronized (packageName) {
                     if (packageName.equals(IconCache.mHomePackageName_lehang[i])) {
                         //BitmapDrawable bd = (BitmapDrawable) icon;
-                        FLAG = false;
+                        //FLAG = false;
 //    						return bd.getBitmap();
                         return drawableToBitmap(icon, sIconTextureWidth, sIconTextureHeight);
                     }
@@ -242,12 +235,11 @@ public final class Utilities {
                 canvas.drawRect(left, top, left + width, top + height, debugPaint);
             }
 
-
             //增加图标背景图片 OWL - 仅在需要时加载当前主题的图片
             if (!sIconSizeSame) { //不同图标大小,绘制背景,
 
                 int iconResId = getIconResource(sThemeMode);
-                //LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode);
+                LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode+ " ,packageName=" + packageName);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
                     
@@ -429,13 +421,5 @@ public final class Utilities {
             }
         }
         return -1;
-    }
-
-    public static boolean issIconSizeSame() {
-        return sIconSizeSame;
-    }
-
-    public static void setsIconSizeSame(boolean sIconSizeSame) {
-        Utilities.sIconSizeSame = sIconSizeSame;
     }
 }

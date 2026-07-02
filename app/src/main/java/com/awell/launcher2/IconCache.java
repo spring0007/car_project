@@ -352,6 +352,7 @@ public class IconCache {
     private int mThemeMode = 0;
     private static final String PREFS_NAME = "theme_preferences";
     private static final String KEY_THEME_MODE = "theme_mode";
+    private static final String KEY_ICON_SAME = "icon_sizesame";
 
     public IconCache(Context context) {
         ActivityManager activityManager =
@@ -364,21 +365,24 @@ public class IconCache {
         // 恢复之前保存的主题模式，避免 ACC OFF/ON 后被重置为 0
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         mThemeMode = prefs.getInt(KEY_THEME_MODE, 0);
+        boolean iconSizeSame = prefs.getBoolean(KEY_ICON_SAME, false);
 
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
+        Utilities.setPluginThemeMode(mThemeMode ,iconSizeSame);
     }
 
-    public void setPluginThemeMode(int themeMode) {
+    public void setPluginThemeMode(int themeMode , boolean iconSizeSame) {
         // 当themeMode发生变化时
         if (this.mThemeMode != themeMode || themeMode == 0xff) {
             LogUtil.d( "setPluginThemeMode: themeMode changed to " + themeMode + " from " + this.mThemeMode);
             this.mThemeMode = themeMode;
 
-            
             // 保存主题模式到 SharedPreferences，避免 ACC OFF/ON 后被重置
             SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             prefs.edit().putInt(KEY_THEME_MODE, themeMode).apply();
+            prefs.edit().putBoolean(KEY_ICON_SAME, iconSizeSame).apply();
+            Utilities.setPluginThemeMode(themeMode, iconSizeSame);
 
             // 清除缓存，这样下次获取图标时会重新加载
             flush();
@@ -561,7 +565,7 @@ public class IconCache {
 
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0) {
-                Utilities.FLAG = false;
+                //Utilities.FLAG = false;
 
                 // 判断是否为 Plugin 资源（themeMode=0xff）
                 if (mThemeMode == 0xff) {
