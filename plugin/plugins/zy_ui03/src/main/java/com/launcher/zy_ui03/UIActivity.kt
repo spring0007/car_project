@@ -863,6 +863,19 @@ class UIActivity : Activity(), View.OnClickListener {
 
         val packageManager = context.packageManager
         val resolveInfos = packageManager.queryIntentActivities(intent, 0)
+        // 获取所有输入法包名
+        val imePackages = mutableSetOf<String>()
+        val imeIntent = Intent("android.view.InputMethod")
+        val imeServices = packageManager.queryIntentServices(imeIntent, 0)
+        imeServices.forEach { imePackages.add(it.serviceInfo.packageName) }
+
+        // 获取所有launcher包名（CATEGORY_HOME）
+        val launcherPackages = mutableSetOf<String>()
+        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val homeActivities = packageManager.queryIntentActivities(homeIntent, 0)
+        homeActivities.forEach { launcherPackages.add(it.activityInfo.packageName) }
+
+        val noNeedToShow = Utils.notDisplayedPackageName
 
         val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
             try {
@@ -871,37 +884,24 @@ class UIActivity : Activity(), View.OnClickListener {
                 null
             }
         }.distinctBy { it.packageName }
+            .filter { pkgInfo ->
+            val pkg = pkgInfo.packageName
+            !imePackages.contains(pkg) && !launcherPackages.contains(pkg) && !noNeedToShow.contains(pkg)
+        }
 
         //LogUtil.w("appList size: ${appList.size}")
 
-        // 预计算过滤条件，避免重复计算
-        val needToShowSystemApps = Utils.needToShowPackageName
-        val filterApps = Utils.filterAppPackageName
-        val otherNeedToShow = Utils.otherNeedToShowPackageName
-
-        // 先过滤出需要显示的应用包名列表
-       // val needShowPackages = mutableListOf<String>()
-       // val packageInfoMap = mutableMapOf<String, PackageInfo>()
-
         for (p in appList) {
-            val packageName = p.applicationInfo.packageName
-            val flags = p.applicationInfo.flags
+            //val packageName = p.applicationInfo.packageName
+            //val flags = p.applicationInfo.flags
+            //LogUtil.i("packageName=${p.applicationInfo.packageName}")
+            val bean = AppInfo()
+            //bean.setIcon(IconManager.getAppIcon(context, packageName))
+            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
+            bean.setPackage_name( p.applicationInfo.packageName)
+            bean.setFlags(p.applicationInfo.flags)
+            appBeanList.add(bean)
 
-            val shouldShow = when {
-                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in needToShowSystemApps -> true
-                (flags and ApplicationInfo.FLAG_SYSTEM) == 0 && packageName !in filterApps -> true
-                (flags and ApplicationInfo.FLAG_SYSTEM) != 0 && packageName in otherNeedToShow -> true
-                else -> false
-            }
-
-            if (shouldShow) {
-                val bean = AppInfo()
-                //bean.setIcon(IconManager.getAppIcon(context, packageName))
-                bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
-                bean.setPackage_name(packageName)
-                bean.setFlags(p.applicationInfo.flags)
-                appBeanList.add(bean)
-            }
         }
 
         LogUtil.w("appBeanList size: ${appBeanList.size}")
@@ -1069,7 +1069,8 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun loadDefaultAppsInto(target: MutableList<AppInfo>, allApps: MutableList<AppInfo>) {
-        for (packName  in Utils.getDefaultShowApp(this)) {
+        val defaultApps = arrayOf<String>("com.google.android.apps.maps", "com.awell.eqselect", "com.awell.bluetooth", "com.awell.localmusic")
+        for (packName  in defaultApps) {
             val appInfo = Utils.getAppInfoFromPackage(packName, allApps)
             if (appInfo != null) target.add(appInfo)
         }

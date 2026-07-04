@@ -239,7 +239,7 @@ public final class Utilities {
             if (!sIconSizeSame) { //不同图标大小,绘制背景,
 
                 int iconResId = getIconResource(sThemeMode);
-                LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode+ " ,packageName=" + packageName);
+                //LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode+ " ,packageName=" + packageName);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
                     

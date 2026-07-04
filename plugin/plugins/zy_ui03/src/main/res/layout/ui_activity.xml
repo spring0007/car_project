@@ -28,7 +28,8 @@
         android:layout_height="@dimen/all_app_size"
         android:scaleType="fitCenter"
         android:src="@drawable/hotset_all_app_white"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintTop_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/home_left_"
         app:layout_constraintStart_toStartOf="@+id/home_left_"
          />
@@ -319,7 +320,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.97" />
+        app:layout_constraintGuide_percent="0.76" />
 
 
     <androidx.constraintlayout.widget.Guideline

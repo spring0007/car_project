@@ -177,6 +177,14 @@ public class Utils {
     );
     /*com.android.dreams.basic*/
 
+
+    // 不需要显示的应用
+    public static List<String>  notDisplayedPackageName = Arrays.asList(
+            /*"com.google.android.googlequicksearchbox",*/"com.google.android.apps.googleassistant",
+            "com.android.gallery3d","com.google.android.healthconnect.controller",
+            "com.android.traceur","com.awell.platformservice"
+    );
+
     /**
      * 需要显示的应用
      */
