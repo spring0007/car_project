@@ -207,6 +207,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.hotset_music:
+            case R.id.iv_music_bg:
                 startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
                 break;
             case R.id.hotset_sound_eq:

@@ -235,7 +235,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <com.launcher.zy_ui07.ImageViewTouch
         android:id="@+id/iv_music_bg"
         android:layout_width="@dimen/card_width"
         android:layout_height="@dimen/card_height"
@@ -269,7 +269,7 @@
         app:layout_constraintStart_toEndOf="@+id/iv_music_bg"
         app:layout_constraintTop_toTopOf="@+id/guideline_top1" />
 
-    <ImageView
+    <com.launcher.zy_ui07.ImageViewTouch
         android:id="@+id/iv_radio_bg"
         android:layout_width="@dimen/card_width"
         android:layout_height="@dimen/card_height"
