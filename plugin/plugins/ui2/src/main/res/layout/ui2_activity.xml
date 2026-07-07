@@ -61,7 +61,7 @@
         app:layout_constraintGuide_percent="0.70"/>
 
     <include
-        android:id="@+id/include_widget_music"
+        android:id="@+id/layout_music_widget"
         layout="@layout/widget_layout_music_plugin2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

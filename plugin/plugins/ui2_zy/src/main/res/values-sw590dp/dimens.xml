@@ -5,5 +5,7 @@
     <dimen name="time_week_size">48sp</dimen>
     <dimen name="music_iv_size">160dp</dimen>
     <dimen name="music_bg_size">260dp</dimen>
+    <dimen name="progress_size">238dp</dimen>
+    <dimen name="artises_iv_size">240dp</dimen>
 
 </resources>

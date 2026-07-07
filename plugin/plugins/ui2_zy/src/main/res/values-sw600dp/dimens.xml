@@ -4,8 +4,10 @@
     <dimen name="time_week_size">30sp</dimen>
     <dimen name="music_iv_size">80dp</dimen>
     <dimen name="music_bg_size">144dp</dimen>
-    <dimen name="music_widget_iv_size">24dp</dimen>
-    <dimen name="music_widget_play_iv_width">23dp</dimen>
-    <dimen name="music_widget_play_iv_height">29dp</dimen>
+    <dimen name="music_widget_iv_size">56dp</dimen>
+    <dimen name="music_widget_play_iv_width">56dp</dimen>
+    <dimen name="music_widget_play_iv_height">56dp</dimen>
     <dimen name="hotset_app_size">42dp</dimen>
+    <dimen name="progress_size">190dp</dimen>
+    <dimen name="artises_iv_size">192dp</dimen>
 </resources>

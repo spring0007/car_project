@@ -45,7 +45,7 @@ import cn.kuwo.autosdk.api.PlayState;
 import cn.kuwo.autosdk.api.PlayerStatus;
 import cn.kuwo.base.bean.Music;*/
 
-public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListener {
+public class MusicWidgetPlugin2 extends LinearLayout implements OnClickListener {
     private static final String TAG = "MusicWidgetLog";
 
     private Context mContext;
@@ -109,16 +109,16 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
     private void findViews(Context context, View view) {
         this.mContext = context;
         ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
+        ll_control_layout_music.setOnClickListener(this);
         ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
         ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
         view.findViewById(R.id.music_widget_rl).setOnClickListener(this);
 
         mMusicNameTextView = view.findViewById(R.id.music_widget_music_name);
 
-        mArtistNameTextView = view.findViewById(R.id.music_artist);
 
         mBar = view.findViewById(R.id.music_widget_seekbars);
-        mBar.setOnClickListener(this);
+        //mBar.setOnClickListener(this);
         mBar.setMax(100);
         mBar.setProgress(0);
 
@@ -132,12 +132,12 @@ public class MusicWidgetPlugin2 extends RelativeLayout implements OnClickListene
         musicNextIv = view.findViewById(R.id.music_widget_next);
         musicNextIv.setOnClickListener(this);
 
-  	findViewById(R.id.layout_music_widget).setOnClickListener(this);
+  	    findViewById(R.id.layout_music_widget).setOnClickListener(this);
         //view.findViewById(R.id.ll_name_layout_music).setOnClickListener(this);
         //view.findViewById(R.id.img_song_art_bg).setOnClickListener(this);
 
         ivLoadnim = view.findViewById(R.id.img_song_art);
-        ivLoadnim.setOnClickListener(this);
+        //ivLoadnim.setOnClickListener(this);
         mObjectAnimator = ObjectAnimator.ofFloat(ivLoadnim, "rotation", 0f, 360f);
         mObjectAnimator.setInterpolator(new LinearInterpolator());
         stopLoadAnim();

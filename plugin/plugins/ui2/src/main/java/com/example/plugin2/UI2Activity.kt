@@ -246,8 +246,7 @@ class UI2Activity : Activity() {
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
 
-        llMusic =
-            findViewById<MusicWidgetPlugin2>(mViewBinding.includeWidgetMusic.musicWidgetLayout.id)
+        llMusic = mViewBinding.layoutMusicWidget.layoutMusicWidget
 
         llMusic.setMediaLibrary(mediaControl)
 //        llMusic.setMediaNotificationListener(mMediaListener)

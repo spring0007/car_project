@@ -30,7 +30,6 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresPermission
 import androidx.core.graphics.toColorInt
 import com.awell.control.AppsCustomizeControl
-import com.awell.control.AppsCustomizeControl.setPluginThemeMode
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
@@ -111,7 +110,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         initBroadcastReceiver()
         AppsCustomizeControl.setActivity(this)
-        setPluginThemeMode(1)
+        AppsCustomizeControl.setPluginThemeMode(1)
 
 
     }
