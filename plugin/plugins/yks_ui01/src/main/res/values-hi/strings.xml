@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">लॉन्चरUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">सुप्रभात</string>
+    <string name="good_afternoon">नमस्कार</string>
+    <string name="voice">आवाज</string>
+    <string name="settings">सेट अप</string>
+    <string name="navigation">नेविगेशन</string>
+    <string name="four_monitoring">चार-चैनल निगरानी</string>
+    <string name="more_apps">अधिक आवेदन</string>
+    <string name="asas">उन्नत ड्राइवर सहायता प्रणाली</string>
+
+    
+
+</resources>

@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.204" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6527" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7027" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.380" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4319" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.889" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.242" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.486" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.727" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.978" />
+
+
+
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_navigation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_navigation"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+    
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/navigation"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingStart="@dimen/padding_"
+        android:paddingEnd="@dimen/padding_"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top1"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top2"
+        android:textSize="@dimen/tv_card_size"
+        android:fontFamily="@font/opposans_m"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"/>
+
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_monitoring"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        android:src="@drawable/sf_monitoring"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left2"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left1"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/four_monitoring"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingStart="@dimen/padding_"
+        android:paddingEnd="@dimen/padding_"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left2"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left1"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top1"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top2"
+        android:textSize="@dimen/tv_card_size"
+        android:fontFamily="@font/opposans_m"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"/>
+
+
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_adas"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_adas"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/iv_apps"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/asas"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingStart="@dimen/padding_"
+        android:paddingEnd="@dimen/padding_"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top3"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top4"
+        android:textSize="@dimen/tv_card_size"
+        android:fontFamily="@font/opposans_m"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"/>
+
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_apps"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/sf_apps"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_adas"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="@string/more_apps"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:paddingStart="@dimen/padding_"
+        android:paddingEnd="@dimen/padding_"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left3"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top1"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top2"
+        android:textSize="@dimen/tv_card_size"
+        android:fontFamily="@font/opposans_m"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_left"
+        android:orientation="vertical"
+        android:gravity="center_vertical|start">
+
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginTop="@dimen/tv_time_top"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/good_morning"
+            android:textColor="@color/time_color"
+            android:textSize="@dimen/tc_date_size" />
+
+
+        <TextClock
+            android:id="@+id/tc_time"
+            android:layout_width="@dimen/tc_time_width"
+            android:layout_height="wrap_content"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:layout_marginTop="@dimen/tc_time_top"
+            android:fontFamily="@font/fontquan_xinyilogoti_regular"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/time_font_size" />
+        <TextClock
+            android:id="@+id/tc_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="MM-dd  |  EEEE"
+            android:format24Hour="MM-dd  |  EEEE"
+            android:text="5月18日 | 星期五"
+            android:textColor="@color/time_color"
+            android:textSize="@dimen/tc_date_size"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:layout_marginTop="@dimen/tc_time_top"/>
+
+    </LinearLayout>
+    
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.717"
+        app:layout_constraintHeight_percent="0.144"
+        android:background="@drawable/sf_bottom_bg">
+
+        <ImageView
+            android:id="@+id/iv_bluetooth"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/bottom_iv_size"
+            android:layout_height="@dimen/bottom_iv_size"
+            android:src="@drawable/sf_bluetooth"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintVertical_bias="@dimen/bottom_iv_vertical_bias"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            />
+
+        <ImageView
+            android:id="@+id/iv_music"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/bottom_iv_size"
+            android:layout_height="@dimen/bottom_iv_size"
+            android:src="@drawable/sf_music"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_bluetooth"
+            app:layout_constraintEnd_toStartOf="@+id/iv_radio"
+            app:layout_constraintVertical_bias="@dimen/bottom_iv_vertical_bias"
+            />
+
+        <ImageView
+            android:id="@+id/iv_radio"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/bottom_iv_size"
+            android:layout_height="@dimen/bottom_iv_size"
+            android:src="@drawable/sf_radio"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_music"
+            app:layout_constraintEnd_toStartOf="@+id/iv_off_screen"
+            app:layout_constraintVertical_bias="@dimen/bottom_iv_vertical_bias"  />
+
+
+
+
+        <ImageView
+            android:id="@+id/iv_off_screen"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/bottom_iv_size"
+            android:layout_height="@dimen/bottom_iv_size"
+            android:src="@drawable/sf_off_screen"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_radio"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.79"
+            app:layout_constraintVertical_bias="@dimen/bottom_iv_vertical_bias" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/iv_left_"
+        android:layout_width="@dimen/bottom_iv_app_width"
+        android:layout_height="@dimen/bottom_iv_app_height"
+        android:src="@drawable/sf_app_bottom"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="@+id/bottom_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_layout"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_layout"/>
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_voice"
+        android:layout_width="@dimen/bottom_iv_app_size"
+        android:layout_height="@dimen/bottom_iv_app_size"
+        android:src="@drawable/sf_voice"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="@+id/iv_left_"
+        app:layout_constraintBottom_toTopOf="@+id/iv_left_"
+        app:layout_constraintStart_toStartOf="@+id/iv_left_" />
+    <TextView
+        android:id="@+id/tv_voice"
+        android:layout_width="@dimen/bottom_iv_app_size"
+        android:layout_height="wrap_content"
+        android:text="@string/voice"
+        android:onClick="onClick"
+        android:textColor="@color/white"
+        android:textSize="@dimen/bottom_tv_size"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:fontFamily="@font/harmonyos_sans_sc_regular"
+        app:layout_constraintStart_toStartOf="@+id/iv_voice"
+        app:layout_constraintEnd_toEndOf="@+id/iv_voice"
+        app:layout_constraintTop_toBottomOf="@+id/iv_voice" />
+
+
+    <ImageView
+        android:id="@+id/iv_right_"
+        android:layout_width="@dimen/bottom_iv_app_width"
+        android:layout_height="@dimen/bottom_iv_app_height"
+        android:src="@drawable/sf_app_bottom"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="@+id/bottom_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_layout"
+        app:layout_constraintStart_toEndOf="@+id/bottom_layout"/>
+    <com.launcher.yks_ui01.ImageViewTouch
+        android:id="@+id/iv_setting"
+        android:layout_width="@dimen/bottom_iv_app_size"
+        android:layout_height="@dimen/bottom_iv_app_size"
+        android:src="@drawable/sf_setting"
+        android:scaleType="fitXY"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toEndOf="@+id/iv_right_"
+        app:layout_constraintBottom_toTopOf="@+id/iv_right_"
+        app:layout_constraintStart_toStartOf="@+id/iv_right_" />
+    <TextView
+        android:id="@+id/tv_setting"
+        android:layout_width="@dimen/bottom_iv_app_size"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:onClick="onClick"
+        android:textColor="@color/white"
+        android:textSize="@dimen/bottom_tv_size"
+        android:fontFamily="@font/harmonyos_sans_sc_regular"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="@+id/iv_setting"
+        app:layout_constraintEnd_toEndOf="@+id/iv_setting"
+        app:layout_constraintTop_toBottomOf="@+id/iv_setting" />
+    
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>

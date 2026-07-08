@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Доброе утро</string>
+    <string name="good_afternoon">Добрый день</string>
+    <string name="voice">Голос</string>
+    <string name="settings">Настройка</string>
+    <string name="navigation">Навигация</string>
+    <string name="four_monitoring">Четырёхканальное наблюдение</string>
+    <string name="more_apps">Дополнительные применения</string>
+    <string name="asas">Продвинутые системы помощи водителю</string>
+
+    
+
+</resources>

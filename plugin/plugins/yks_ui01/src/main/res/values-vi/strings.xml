@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="voice">Giọng nói</string>
+    <string name="settings">Thành lập</string>
+    <string name="navigation">Điều hướng</string>
+    <string name="four_monitoring">Giám sát bốn kênh</string>
+    <string name="more_apps">Các ứng dụng khác</string>
+    <string name="asas">Hệ thống hỗ trợ người lái tiên tiến</string>
+
+    
+
+</resources>

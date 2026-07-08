@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">בוקר טוב</string>
+    <string name="good_afternoon">צהריים טובים</string>
+    <string name="voice">קול</string>
+    <string name="settings">הכנה</string>
+    <string name="navigation">ניווט</string>
+    <string name="four_monitoring">מעקב בארבעה ערוצים</string>
+    <string name="more_apps">יישומים נוספים</string>
+    <string name="asas">מערכות סיוע מתקדמות לנהג</string>
+
+    
+
+</resources>

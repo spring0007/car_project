@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Dobré ráno</string>
+    <string name="good_afternoon">Dobrý den</string>
+    <string name="voice">Hlas</string>
+    <string name="settings">Nastavení</string>
+    <string name="navigation">Navigace</string>
+    <string name="four_monitoring">Čtyřkanálové sledování</string>
+    <string name="more_apps">Další aplikace</string>
+    <string name="asas">Pokročilé asistenční systémy řidiče</string>
+
+    
+
+</resources>

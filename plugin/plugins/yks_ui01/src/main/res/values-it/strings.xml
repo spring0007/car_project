@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Buongiorno</string>
+    <string name="good_afternoon">Buon pomeriggio</string>
+    <string name="voice">Voce</string>
+    <string name="settings">Configurazione</string>
+    <string name="navigation">Navigazione</string>
+    <string name="four_monitoring">Sorveglianza a quattro canali</string>
+    <string name="more_apps">Altre applicazioni</string>
+    <string name="asas">Sistemi avanzati di assistenza alla guida</string>
+
+    
+
+</resources>

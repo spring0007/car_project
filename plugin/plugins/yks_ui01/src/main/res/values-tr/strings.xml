@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Günaydın</string>
+    <string name="good_afternoon">İyi günler</string>
+    <string name="voice">Ses</string>
+    <string name="settings">Kurulum</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="four_monitoring">Dört kanallı gözetim</string>
+    <string name="more_apps">Daha fazla uygulama</string>
+    <string name="asas">Gelişmiş sürücü destek sistemleri</string>
+
+    
+
+</resources>

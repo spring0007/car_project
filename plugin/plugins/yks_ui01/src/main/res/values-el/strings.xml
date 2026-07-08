@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">Καλημέρα</string>
+    <string name="good_afternoon">Καλό απόγευμα</string>
+    <string name="voice">Φωνή</string>
+    <string name="settings">Ρύθμιση</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="four_monitoring">Επιτήρηση τεσσάρων καναλιών</string>
+    <string name="more_apps">Περισσότερες εφαρμογές</string>
+    <string name="asas">Προηγμένα συστήματα υποβοήθησης οδηγού</string>
+
+    
+
+</resources>

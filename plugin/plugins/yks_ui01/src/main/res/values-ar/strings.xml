@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">LauncherUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">صباح الخير</string>
+    <string name="good_afternoon">مساء الخير</string>
+    <string name="voice">الصوت</string>
+    <string name="settings">الإعداد</string>
+    <string name="navigation">الملاحة</string>
+    <string name="four_monitoring">المراقبة بأربع قنوات</string>
+    <string name="more_apps">تطبيقات إضافية</string>
+    <string name="asas">أنظمة مساعدة السائق المتقدمة</string>
+
+    
+
+</resources>

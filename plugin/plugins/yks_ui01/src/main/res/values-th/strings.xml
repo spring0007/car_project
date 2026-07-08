@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ตัวเรียกใช้งาน UI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">อรุณสวัสดิ์</string>
+    <string name="good_afternoon">สวัสดีตอนบ่าย</string>
+    <string name="voice">เสียง</string>
+    <string name="settings">การติดตั้ง</string>
+    <string name="navigation">การเดินเรือ</string>
+    <string name="four_monitoring">การเฝ้าระวังสี่ช่องสัญญาณ</string>
+    <string name="more_apps">แอปพลิเคชั่นเพิ่มเติม</string>
+    <string name="asas">ระบบช่วยเหลือผู้ขับขี่ขั้นสูง</string>
+
+    
+
+</resources>

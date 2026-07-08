@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ランチャーUI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">おはようございます</string>
+    <string name="good_afternoon">こんにちは</string>
+    <string name="voice">声</string>
+    <string name="settings">セットアップ</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="four_monitoring">4チャンネル監視</string>
+    <string name="more_apps">さらなる応用例</string>
+    <string name="asas">高度な運転支援システム</string>
+
+    
+
+</resources>

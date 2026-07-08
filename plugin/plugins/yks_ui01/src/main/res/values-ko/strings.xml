@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">런처UI1</string><!-- app 名称 -->
+
+    
+    
+
+    <string name="good_morning">좋은 아침입니다</string>
+    <string name="good_afternoon">안녕하세요</string>
+    <string name="voice">음성</string>
+    <string name="settings">설정</string>
+    <string name="navigation">항해</string>
+    <string name="four_monitoring">4채널 감시</string>
+    <string name="more_apps">더 많은 응용</string>
+    <string name="asas">첨단 운전자 보조 시스템</string>
+
+    
+
+</resources>

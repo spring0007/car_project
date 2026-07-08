@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="time_font_size">52sp</dimen>
+    <dimen name="bottom_iv_size">60dp</dimen>
+    <dimen name="tc_date_size">17sp</dimen>
+    <dimen name="bottom_iv_app_width">159dp</dimen>
+    <dimen name="bottom_iv_app_height">44dp</dimen>
+    <dimen name="bottom_iv_app_size">70dp</dimen>
+    <dimen name="bottom_tv_size">17sp</dimen>
+    <dimen name="tv_card_size">24sp</dimen>
+    <dimen name="tc_time_width">190dp</dimen>
+    <dimen name="tv_time_top">8dp</dimen>
+    <dimen name="tc_time_top">20dp</dimen>
+    <dimen name="padding_">30dp</dimen>
+    <dimen name="app_icon_size">104dp</dimen>
+    <dimen name="app_icon_padding">15dp</dimen>
+    <dimen name="cell_width">140dp</dimen>
+    <dimen name="cell_height">145dp</dimen>
+    <dimen name="font_size">18dp</dimen>
+    <item name="bottom_iv_vertical_bias" type="dimen" format="float">0.772</item>
+
+</resources>
