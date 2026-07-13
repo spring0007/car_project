@@ -8,6 +8,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,7 +60,6 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
         setContentView(binding.getRoot());
 
         initLongTouch();
-
         clickApp();
 
         int fontSize = getResources().getDimensionPixelSize(R.dimen.font_size);
@@ -257,21 +257,39 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
         @Override
         public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
+
             if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
+            }else if ((pkg.contains("com.awell.bluetooth") || pkg.contains("/system/bin/gocsdk") && mediaType == AudioManager.STREAM_MUSIC)) {
+                LogUtil.d("updateViewMusicPlay ,pkg=" + pkg + " command=" + command + " mediaType=" + mediaType + " currentMedia=" + currentMedia+" bundle="+bundle.toString());
+                if ("start".equals(command)){
+                    binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
+                }else{
+                    binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
+                }
             }
+               // musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
         }
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
+
             if (type == MusicWidget.MUSIC) {
                 musicWidget.setCurMusicState(status, type);
+            }else if(type == MusicWidget.BT){
+                LogUtil.d("updateViewPlayStatus ,status"  + status + " type=" + type +",bundle = "+ bundle.toString());
+                if (status) {
+                    binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
+                } else {
+                    binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
+                }
             }
 
         }
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
+            LogUtil.d("updateViewMusicPlayImage ,bundle=" + bundle.toString());
            /* runOnUiThread(() -> {
                 String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
                 Uri uri = null;
@@ -289,7 +307,6 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
-
             if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
                     && "NO_MUSIC_LIST".equals(album)) {

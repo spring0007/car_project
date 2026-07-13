@@ -172,7 +172,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        LogUtil.i("onClick v.getId() " + v.getId());
+        //LogUtil.i("onClick v.getId() " + v.getId());
         int id = v.getId();
         LogUtil.i("onClick: huang currentMedia=>" + currentMedia);
         if (id == R.id.music_widget_next) {
@@ -259,9 +259,9 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     public void resumeLoadAnim() {
-        LogUtil.e("resumeLoadAnim--objectAnimator = " + mObjectAnimator);
+       // LogUtil.e("resumeLoadAnim--objectAnimator = " + mObjectAnimator);
        // if (mObjectAnimator != null && mObjectAnimator.isPaused()) {
-            LogUtil.e("resumeLoadAnim");
+            //LogUtil.e("resumeLoadAnim");
         if (mObjectAnimator.isPaused()) {
             mObjectAnimator.resume();
         } else {
@@ -272,7 +272,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
 
     public void startLoadAnim() {
 
-        LogUtil.e("startLoadAnim--objectAnimator = " + mObjectAnimator);
+        //LogUtil.e("startLoadAnim--objectAnimator = " + mObjectAnimator);
         if (mObjectAnimator != null) {
             mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
             mObjectAnimator.setRepeatMode(ObjectAnimator.RESTART);
@@ -287,7 +287,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         boolean isboot = true;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
-                LogUtil.e("packagename11 = " + pkg);
+                //LogUtil.e("packagename11 = " + pkg);
                 if (!pkg.equals(IconCache.WorkSpacePackageName[index])) {
                     isboot = false;
                     break;
@@ -305,7 +305,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     public void setMusicNameTextView(String musicname, int flag) {
-        LogUtil.d("setMusicNameTextView: flag= " + flag + " musicname=" + musicname + " currentMedia=" + currentMedia);
+        //LogUtil.d("setMusicNameTextView: flag= " + flag + " musicname=" + musicname + " currentMedia=" + currentMedia);
         if (mMusicNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(musicname)) {
                 mMusicNameTextView.setText(musicname);
@@ -316,7 +316,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        LogUtil.e("setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
+        //LogUtil.e("setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
         if (mArtistNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(artistName)) {
                 mArtistNameTextView.setText(artistName);
@@ -372,7 +372,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
     }
 
     public void setCurMusicState(boolean musicState, int flag) {
-        LogUtil.e("flag = " + flag + "--currentMedia=" + currentMedia);
+        //LogUtil.e("flag = " + flag + "--currentMedia=" + currentMedia);
 
         if (currentMedia == flag) {
             setCurMusicState(musicState);
@@ -389,7 +389,7 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
         this.musicState = musicState;
         if (musicState) {
             if (currentMedia <= BT && mObjectAnimator != null) {
-                LogUtil.e("setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
+               // LogUtil.e("setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
                 if (!mObjectAnimator.isRunning()) {
                     startLoadAnim();
                 } else {

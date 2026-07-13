@@ -324,7 +324,7 @@
                 android:id="@+id/tv_radio_freq_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="MHZ"
+                android:text="MHz"
                 android:textColor="@color/white"
                 android:textSize="@dimen/tv_radio_unit" />
         </LinearLayout>

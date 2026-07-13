@@ -586,21 +586,11 @@ class UIActivity : Activity(), View.OnClickListener {
             ) {
                 runOnUiThread {
 
-                    if ("com.awell.radio" != pkg) {
+                    if ("com.awell.localmusic".equals(pkg) ) {
                         musicWidget.switchMediaController(
                             pkg, command, mediaType, currentMedia
                         )
                     }
-
-//                    if ("com.awell.radio" == pkg) {
-//                        if ("start" == command) {
-//                            mRadioLayout.waveformView.startAnimation()
-//                            //mWaveformView.startAnimation()
-//                        } else if ("stop" == command) {
-//                            mRadioLayout.waveformView.stopAnimation()
-//                            //mWaveformView.stopAnimation()
-//                        }
-//                    }
                 }
             }
 
@@ -608,7 +598,8 @@ class UIActivity : Activity(), View.OnClickListener {
                 bundle: Bundle, status: Boolean, type: Int
             ) {
                 runOnUiThread {
-                    musicWidget.setCurMusicState(status, type)
+                    if (type == MusicWidget.MUSIC)
+                        musicWidget.setCurMusicState(status, type)
                 }
             }
 
@@ -627,37 +618,48 @@ class UIActivity : Activity(), View.OnClickListener {
                 bundle: Bundle, songName: String, singerName: String, album: String, type: Int
             ) {
                 runOnUiThread {
-                    musicWidget.setMusicNameTextView(songName, type)
-                    musicWidget.setArtistNameTextView(singerName, type)
-                    if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
-                        musicWidget.setMusicNameTextView(
-                            /*getResources().getString(R.string.click_play_music)*/ "", MusicWidget.MUSIC
-                        )
-                        musicWidget.setArtistNameTextView(
-                            getResources().getString(R.string.music_artist), MusicWidget.MUSIC
-                        )
-                    }
 
-                    if (MusicWidget.OTHER_MUSIC == type) {
-                        if (!TextUtils.isEmpty(songName)) {
-                            musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC)
-                        } else {
-                            musicWidget.setMusicNameTextView(
-                                /*getResources().getString(R.string.click_play_music)*/"",
-                                MusicWidget.OTHER_MUSIC
-                            )
-                        }
-                        if (!TextUtils.isEmpty(singerName)) {
-                            musicWidget.setArtistNameTextView(
-                                singerName, MusicWidget.OTHER_MUSIC
-                            )
-                        } else {
-                            musicWidget.setArtistNameTextView(
-                                getResources().getString(R.string.music_artist),
-                                MusicWidget.OTHER_MUSIC
-                            )
-                        }
+                    if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
+                        musicWidget.setMusicNameTextView("",MusicWidget.MUSIC)
+                        musicWidget.setArtistNameTextView(
+                            getResources().getString(R.string.music_artist),
+                            MusicWidget.MUSIC
+                        )
+                    }else{
+                        musicWidget.setMusicNameTextView(songName, type)
+                        musicWidget.setArtistNameTextView(singerName, type)
                     }
+//                    musicWidget.setMusicNameTextView(songName, type)
+//                    musicWidget.setArtistNameTextView(singerName, type)
+//                    if ("NO_MUSIC_LIST" == songName && "NO_MUSIC_LIST" == singerName && "NO_MUSIC_LIST" == album) {
+//                        musicWidget.setMusicNameTextView(
+//                            /*getResources().getString(R.string.click_play_music)*/ "", MusicWidget.MUSIC
+//                        )
+//                        musicWidget.setArtistNameTextView(
+//                            getResources().getString(R.string.music_artist), MusicWidget.MUSIC
+//                        )
+//                    }
+//
+//                    if (MusicWidget.OTHER_MUSIC == type) {
+//                        if (!TextUtils.isEmpty(songName)) {
+//                            musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC)
+//                        } else {
+//                            musicWidget.setMusicNameTextView(
+//                                /*getResources().getString(R.string.click_play_music)*/"",
+//                                MusicWidget.OTHER_MUSIC
+//                            )
+//                        }
+//                        if (!TextUtils.isEmpty(singerName)) {
+//                            musicWidget.setArtistNameTextView(
+//                                singerName, MusicWidget.OTHER_MUSIC
+//                            )
+//                        } else {
+//                            musicWidget.setArtistNameTextView(
+//                                getResources().getString(R.string.music_artist),
+//                                MusicWidget.OTHER_MUSIC
+//                            )
+//                        }
+//                    }
                 }
             }
 

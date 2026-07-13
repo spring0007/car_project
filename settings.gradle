@@ -23,6 +23,7 @@ dependencyResolutionManagement {
 rootProject.name = "Launcher2_awell"
 include ':app', ':AwellLibrary'
 include ':plugin:plugins:ui1'
+include ':plugin:plugins:ui1_zy'
 include ':launcher'
 include ':plugin:plugins:ui2'
 include ':plugin:plugins:ui2_zy'
