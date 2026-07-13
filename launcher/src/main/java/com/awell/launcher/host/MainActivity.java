@@ -27,6 +27,7 @@ import com.awell.launcher.host.databinding.SelectLauncherLayoutBinding;
 import com.awell.launcher2.Launcher;
 import com.awell.launcher2.LauncherApplication;
 
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 import com.qihoo360.replugin.RePlugin;
 import com.qihoo360.replugin.model.PluginInfo;
@@ -82,7 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: huang launcher main activity create==>");
+        LogUtil.i( "onCreate: huang launcher main activity create==>");
 
         binding = SelectLauncherLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -110,7 +111,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     private void initInstallThread() {
         if (!isInstalling.compareAndSet(false, true)) {
-            Log.w(TAG, "initInstallThread: already installing, skip duplicate call");
+            LogUtil.w( "initInstallThread: already installing, skip duplicate call");
             return;
         }
         new Thread(() -> {
@@ -133,24 +134,26 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (info != null) {
                 //retryCount = 0;
                 String packageName = info.getPackageName();
-                Log.i(TAG, "realStartPlugin: huang start plugin info==" + info + ", clazz==>" + clazz + ",packageName==>" + packageName);
+                LogUtil.i("realStartPlugin: huang start plugin info==" + info + ", clazz==>" + clazz + ",packageName==>" + packageName);
                 long startTime = System.currentTimeMillis();
                 Intent intent = RePlugin.createIntent(packageName, clazz);
                 
                 // 验证生成的 Intent 是否有效
                 if (intent == null || intent.getComponent() == null) {
-                    Log.e(TAG, "realStartPlugin: huang create intent failed, will reinstall plugin");
+                    LogUtil.e( "realStartPlugin: huang create intent failed, will reinstall plugin");
                     scheduleRetryOrFallback();
                     return;
                 }
 
                 intent.putExtra("boot", isFirstBoot);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                if (!"mt6755".equals(Build.HARDWARE)) {
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                }
                 RePlugin.startActivity(MainActivity.this, intent);
                 
                 long endTime = System.currentTimeMillis();
                 if (D) {
-                    Log.i(TAG, "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
+                    LogUtil.i( "realStartPlugin: huang start plugin spend time=>" + (endTime - startTime));
                 }
 
                 // 延迟销毁宿主，确保插件有机会显示，避免因插件启动失败导致宿主被提前杀死
@@ -158,11 +161,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             } else {
                 // 插件信息为空 ↑ 说明安装仍未成功
-                Log.e(TAG, "realStartPlugin: plugin info is null, will reinstall");
+                LogUtil.e( "realStartPlugin: plugin info is null, will reinstall");
                 scheduleRetryOrFallback();
             }
         } catch (Exception e) {
-            Log.e(TAG, "realStartPlugin: exception " + e.getMessage(), e);
+            LogUtil.e("realStartPlugin: exception " + e.getMessage(), e);
             scheduleRetryOrFallback();
         }
     }
@@ -172,12 +175,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     private void scheduleRetryOrFallback() {
         if (retryCount >= MAX_RETRY) {
-            Log.e(TAG, "Max retry reached, fallback to internal launcher");
+            LogUtil.e( "Max retry reached, fallback to internal launcher");
             fallbackToInternalLauncher();
             return;
         }
         retryCount++;
-        Log.w(TAG, "scheduleRetryOrFallback: retry count=" + retryCount);
+        LogUtil.w("scheduleRetryOrFallback: retry count=" + retryCount);
         
         // 优化2: 重试前检查插件是否已在运行，避免无效重试
         /*String apkName = SystemProperties.get(LAUNCHER_KEY, DEFAULT_KEY).replace(".apk", "");
@@ -201,7 +204,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     private void fallbackToInternalLauncher() {
         runOnUiThread(() -> {
-            Log.w(TAG, "fallbackToInternalLauncher: starting internal Launcher");
+            LogUtil.w("fallbackToInternalLauncher: starting internal Launcher");
             startInternalLauncher();
             isInstalling.set(false); // 释放锁，允许后续重置
         });
@@ -217,7 +220,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             D = false;
         }
         if (D)
-            Log.i(TAG, "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
+            LogUtil.i( "onResume: huang resume start plugin isFirstBoot==>" + isFirstBoot);
         if (!isFirstBoot) {
             String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
             Message message = buildPluginMsg(apkClazz);
@@ -227,7 +230,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             if (!isInstalling.get()) {
                 initInstallThread();
             } else {
-                Log.d(TAG, "onResume: installation already in progress, skip duplicate trigger");
+                LogUtil.d( "onResume: installation already in progress, skip duplicate trigger");
             }
         }
     }
@@ -251,7 +254,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //        launcherApplication.setStartStatus(null);
 		//mainHandle.removeCallbacks(finishHostRunnable);
         if (D) {
-            Log.i(TAG, "onDestroy: huang launcher main activity destroy==>");
+            LogUtil.i( "onDestroy: huang launcher main activity destroy==>");
         }
     }
 
@@ -284,7 +287,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 );
                 method.invoke(this, service, userHandle);
                 if (D) {
-                    Log.i(TAG, "startGpsService: huang start service=>" + service);
+                    LogUtil.i( "startGpsService: huang start service=>" + service);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -301,7 +304,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onNewIntent(intent);
         //startPluginActivity();
         if (isInstalling.get()) {
-            Log.d(TAG, "onNewIntent: installation in progress, skip");
+            LogUtil.d( "onNewIntent: installation in progress, skip");
             return;
         }
 
@@ -310,7 +313,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Intent pluginIntent = RePlugin.createIntent(info.getPackageName(), apkClazz);
             pluginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             RePlugin.startActivity(this, pluginIntent);
-            Log.d(TAG, "onNewIntent: startActivity");
+            LogUtil.d( "onNewIntent: startActivity");
         }
     }
 
@@ -318,7 +321,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onBackPressed() {
         //super.onBackPressed();
         if (D) {
-            Log.i(TAG, "onBackPressed: huang Intercept back==>");
+            LogUtil.i( "onBackPressed: huang Intercept back==>");
         }
     }
 
@@ -337,7 +340,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         String testApk = apkName + ".apk";
         String testApkPath = mExternalPluginPath + apkName + File.separator + testApk;
-        Log.i(TAG, "startPluginActivity: huang apkName=" + apkName + ", apkClazz=" + apkClazz + ", path=" + testApkPath);
+        LogUtil.i( "startPluginActivity: huang apkName=" + apkName + ", apkClazz=" + apkClazz + ", path=" + testApkPath);
         simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
     }
 
@@ -355,7 +358,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         File sourceApk = new File(path);
         if (!sourceApk.exists() || sourceApk.length() < 1024) {
-            Log.e(TAG, "simulateInstallExternalPlugin: source APK invalid: " + path);
+            LogUtil.e( "simulateInstallExternalPlugin: source APK invalid: " + path);
             // 直接判定为失败，交由上层重试或降级
             mainHandle.sendMessage(buildFailMessage());
             return;
@@ -374,7 +377,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (pluginName.equals(lastCheckedPluginName)) {
             if (lastPluginValid && info != null) {
                 existingPlugin = info;
-                Log.i(TAG, "simulateInstallExternalPlugin: huang using cached plugin info");
+                LogUtil.i( "simulateInstallExternalPlugin: huang using cached plugin info");
             }
         } else {
             existingPlugin = RePlugin.getPluginInfo(pluginName);
@@ -384,14 +387,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
         
         if (existingPlugin != null && info != null) {
             if (retryCount > 0) {
-                Log.w(TAG, "simulateInstallExternalPlugin: retry attempt, force reinstall");
+                LogUtil.w( "simulateInstallExternalPlugin: retry attempt, force reinstall");
                 // 清除缓存信息，强制走安装流程
                 info = null;
                 lastPluginValid = false;
                 // 删除已复制的文件
                 FileUtils.deleteQuietly(new File(pluginFilePath));
             } else {
-                Log.i(TAG, "simulateInstallExternalPlugin: huang plugin already installed, skip install");
+                LogUtil.i( "simulateInstallExternalPlugin: huang plugin already installed, skip install");
                 // 使用已有的info，不重新安装
                 Utils.setPluginApkFilePath(path);
                 Message message = buildPluginMsg(clazz);
@@ -403,19 +406,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
         // 优化5: 检查本地文件是否已存在且完整，避免重复复制
         File copiedFile = new File(pluginFilePath);
         if (copiedFile.exists() && copiedFile.length() == sourceApk.length()) {
-            Log.i(TAG, "simulateInstallExternalPlugin: huang local file exists and is valid, try install directly");
+            LogUtil.i( "simulateInstallExternalPlugin: huang local file exists and is valid, try install directly");
             // 文件已存在且大小一致，直接尝试安装
         } else {
             if (copiedFile.exists()) {
                 if (D) {
-                    Log.i(TAG, "simulateInstallExternalPlugin: huang delete incomplete existing file==>");
+                    LogUtil.i( "simulateInstallExternalPlugin: huang delete incomplete existing file==>");
                 }
                 FileUtils.deleteQuietly(copiedFile);
             }
                 
             // 开始复制
             if (!copyAssetsFileToAppFiles(path, pluginFileName)) {
-                Log.e(TAG, "simulateInstallExternalPlugin: copy failed");
+                LogUtil.e( "simulateInstallExternalPlugin: copy failed");
                 mainHandle.sendMessage(buildFailMessage());
                 return;
             }
@@ -423,7 +426,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             // 验证复制后的文件完整性
             copiedFile = new File(pluginFilePath);
             if (!copiedFile.exists() || copiedFile.length() != sourceApk.length()) {
-                Log.e(TAG, "simulateInstallExternalPlugin: copied file validation failed, expected=" + 
+                LogUtil.e( "simulateInstallExternalPlugin: copied file validation failed, expected=" +
                       sourceApk.length() + ", actual=" + (copiedFile.exists() ? copiedFile.length() : 0));
                 mainHandle.sendMessage(buildFailMessage());
                 return;
@@ -434,15 +437,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
         
         try {
             // 尝试安装插件
-            Log.i(TAG, "simulateInstallExternalPlugin: huang start install, path=" + pluginFilePath + ", size=" + copiedFile.length());
+            LogUtil.i( "simulateInstallExternalPlugin: huang start install, path=" + pluginFilePath + ", size=" + copiedFile.length());
             long installStartTime = System.currentTimeMillis();
             info = RePlugin.install(pluginFilePath);
             long installEndTime = System.currentTimeMillis();
             
             if (info == null) {
-                Log.e(TAG, "simulateInstallExternalPlugin: huang install plugin failed after " + (installEndTime - installStartTime) + "ms, file may be corrupted or signature mismatch");
-                Log.e(TAG, "simulateInstallExternalPlugin: huang source apk path=" + path + ", size=" + sourceApk.length());
-                Log.e(TAG, "simulateInstallExternalPlugin: huang copied apk path=" + pluginFilePath + ", size=" + copiedFile.length());
+                LogUtil.e( "simulateInstallExternalPlugin: huang install plugin failed after " + (installEndTime - installStartTime) + "ms, file may be corrupted or signature mismatch");
+                LogUtil.e( "simulateInstallExternalPlugin: huang source apk path=" + path + ", size=" + sourceApk.length());
+                LogUtil.e( "simulateInstallExternalPlugin: huang copied apk path=" + pluginFilePath + ", size=" + copiedFile.length());
                 
                 // 更新缓存状态
                 lastPluginValid = false;
@@ -454,22 +457,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     PackageInfo copiedInfo = pm.getPackageArchiveInfo(pluginFilePath, PackageManager.GET_SIGNATURES);
                     
                     if (sourceInfo != null && copiedInfo != null) {
-                        Log.e(TAG, "simulateInstallExternalPlugin: huang source package=" + sourceInfo.packageName + 
+                        LogUtil.e( "simulateInstallExternalPlugin: huang source package=" + sourceInfo.packageName +
                               ", copied package=" + copiedInfo.packageName);
                     }
                 } catch (Exception sigEx) {
-                    Log.e(TAG, "simulateInstallExternalPlugin: huang signature check error", sigEx);
+                    LogUtil.e( "simulateInstallExternalPlugin: huang signature check error", sigEx);
                 }
                 
                 // 安装失败,删除损坏的文件
                 FileUtils.deleteQuietly(pluginFile);
             } else {
-                Log.i(TAG, "simulateInstallExternalPlugin: huang install success in " + (installEndTime - installStartTime) + "ms, plugin info=" + info);
+                LogUtil.i( "simulateInstallExternalPlugin: huang install success in " + (installEndTime - installStartTime) + "ms, plugin info=" + info);
                 // 更新缓存状态
                 lastPluginValid = true;
             }
         } catch (Exception e) {
-            Log.e(TAG, "simulateInstallExternalPlugin: huang install exception: " + e.getMessage(), e);
+            LogUtil.e( "simulateInstallExternalPlugin: huang install exception: " + e.getMessage(), e);
             // 发生异常,删除可能损坏的文件
             FileUtils.deleteQuietly(pluginFile);
             info = null;
@@ -492,7 +495,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             PackageInfo pkgInfo = pm.getPackageArchiveInfo(apkPath, 0);
             return pkgInfo != null ? pkgInfo.packageName : null;
         } catch (Exception e) {
-            Log.e(TAG, "getPackageNameFromApk: error", e);
+            LogUtil.e( "getPackageNameFromApk: error", e);
             return null;
         }
     }
@@ -518,7 +521,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         int buffsize = 16384; // 优化3: 增大缓冲区到16KB，减少IO次数
         File srcFile = new File(assetFileName);
         if (!srcFile.exists()) {
-            Log.e(TAG, "copyAssetsFileToAppFiles: source file not found: " + assetFileName);
+            LogUtil.e( "copyAssetsFileToAppFiles: source file not found: " + assetFileName);
             return false;
         }
         
@@ -543,31 +546,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
             fos.getFD().sync();
             
             long endTime = System.currentTimeMillis();
-            Log.d(TAG, "copyAssetsFileToAppFiles: copy success in " + (endTime - startTime) + "ms, total bytes=" + totalBytes + ", source size=" + srcFile.length());
+            LogUtil.d( "copyAssetsFileToAppFiles: copy success in " + (endTime - startTime) + "ms, total bytes=" + totalBytes + ", source size=" + srcFile.length());
             
             // 验证文件大小是否一致
             File destFile = new File(getFilesDir(), newFileName);
             if (destFile.length() != srcFile.length()) {
-                Log.e(TAG, "copyAssetsFileToAppFiles: file size mismatch! source=" + srcFile.length() + 
+                LogUtil.e( "copyAssetsFileToAppFiles: file size mismatch! source=" + srcFile.length() +
                       ", dest=" + destFile.length());
                 return false;
             }
             
             return true;
         } catch (Exception e) {
-            Log.e(TAG, "copyAssetsFileToAppFiles: error", e);
+            LogUtil.e( "copyAssetsFileToAppFiles: error", e);
             return false;
         } finally {
             // 确保资源被正确关闭
             try {
                 if (fos != null) fos.close();
             } catch (Exception e) {
-                Log.e(TAG, "copyAssetsFileToAppFiles: error closing fos", e);
+                LogUtil.e( "copyAssetsFileToAppFiles: error closing fos", e);
             }
             try {
                 if (is != null) is.close();
             } catch (Exception e) {
-                Log.e(TAG, "copyAssetsFileToAppFiles: error closing is", e);
+                LogUtil.e( "copyAssetsFileToAppFiles: error closing is", e);
             }
         }
     }
@@ -576,19 +579,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
         @Override
         public void startPitActivityResult(String plugin, String activity, boolean result) {
-            Log.i(TAG, "startPitActivityResult: plugin=" + plugin + ", activity=" + activity + ", result=" + result);
+            LogUtil.i( "startPitActivityResult: plugin=" + plugin + ", activity=" + activity + ", result=" + result);
 
             if (result) {
-                Log.i(TAG, "startPitActivityResult: plugin started successfully");
+                LogUtil.i( "startPitActivityResult: plugin started successfully");
                 retryCount = 0;
                 isFirstBoot = false;
                 lastFailedPlugin="";
             } else {
-                Log.w(TAG, "startPitActivityResult: huang plugin start failed, will retry");
+                LogUtil.w( "startPitActivityResult: huang plugin start failed, will retry");
                 isFirstBoot = false;
                 String failKey = plugin + "@" + activity;
                 if (failKey.equals(lastFailedPlugin)) {
-                    Log.w(TAG, "startPitActivityResult: duplicate callback ignored");
+                    LogUtil.w( "startPitActivityResult: duplicate callback ignored");
                     return;
                 }
                 lastFailedPlugin = failKey;
@@ -598,11 +601,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, DEFAULT_CLAZZ);
                 
                 if ("com.awell.launcher.host.MainActivity".equals(topActivity) || apkClazz.equals(activity)) {
-                    Log.i(TAG, "startPitActivityResult: huang top is "+topActivity+", retry with current info");
+                    LogUtil.i( "startPitActivityResult: huang top is "+topActivity+", retry with current info");
                     // 使用当前的info和clazz重试
                      scheduleRetryOrFallback();
                 } else {
-                    Log.i(TAG, "startPitActivityResult: huang top activity changed to: " + topActivity + ", no need to retry");
+                    LogUtil.i( "startPitActivityResult: huang top activity changed to: " + topActivity + ", no need to retry");
                 }
             }
         }
@@ -618,12 +621,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 String packageName = topActivity.getPackageName();
                 String className = topActivity.getClassName();
 
-                Log.d(TAG, "getTopActivity: huang Package: " + packageName + ", Class: " + className);
+                LogUtil.d( "getTopActivity: huang Package: " + packageName + ", Class: " + className);
 
                 return className;
             }
         } catch (Exception e) {
-            Log.e(TAG, "getTopActivity: huang error=>" + e.getMessage());
+            LogUtil.e( "getTopActivity: huang error=>" + e.getMessage());
         }
         return null;
     }

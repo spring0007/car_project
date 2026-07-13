@@ -100,22 +100,39 @@ object AppsCustomizeControl {
 
     fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
                              defaultPluginBgName: String? = null, pluginPackageName: String){
-        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,0)
+        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,0,0)
     }
 
+    fun setPluginThemeMode(themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false, iconMap: Map<String, String>?,
+                           defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int ){
+        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,iconCropWidth,0)
+    }
+
+    fun setPluginThemeMode(themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false, iconMap: Map<String, String>?,
+                           defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int , indicatorPanel: Int ){
+        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,iconCropWidth,0,0)
+    }
+
+    /**
+     * 设置 Plugin 主题模式
+     * @param themeMode 主题模式值
+     * @param refresh 是否立即刷新应用图标属性
+     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
+     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
+     * @param iconMap 图标映射表
+     * @param defaultPluginBgName 默认 Plugin 背景替换图片名称
+     * @param pluginPackageName Plugin 包名
+     * @param pluginBgSize 背景替换图片大小
+     *  @param indicatorPanel 翻页指示器样式
+     */
     fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
-         defaultPluginBgName: String? = null, pluginPackageName: String,indicatorPanel: Int ) {
+         defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int, iconCropHeight:Int,indicatorPanel: Int  ) {
 
-
+        //PluginIconManager.reset()
         // 设置 Plugin 配置
-        PluginIconManager.setPluginPackageName(pluginPackageName)
-        PluginIconManager.setDefaultPluginBgName(defaultPluginBgName)
+        PluginIconManager.setPluginConfig(iconMap,pluginPackageName,defaultPluginBgName )
 
-        // 设置图标映射表
-        PluginIconManager.setIconMap(iconMap)
-
-
-        mIconCache.setPluginThemeMode(themeMode ,iconSizeSame)
+        mIconCache.setPluginThemeMode(themeMode ,iconSizeSame, iconCropWidth ,iconCropHeight )
         //Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
        // if( mAppsCustomizeContent?.pageIndication != null)
        //     mAppsCustomizeContent?.pageIndication?.setIndicatorStyle(indicatorPanel)
@@ -346,7 +363,7 @@ object AppsCustomizeControl {
 
         // Remove the progress bar entirely; we could also make it GONE
         // but better to remove it since we know it's not going to be used
-        val progressBar =
+        /*val progressBar =
             mAppsCustomizeTabHost?.findViewById<View>(R.id.apps_customize_progress_bar)
         if (progressBar != null) {
             (progressBar.parent as ViewGroup).removeView(progressBar)
@@ -356,12 +373,12 @@ object AppsCustomizeControl {
             // disappear-- otherwise, it just looks like the progress bar froze
             // which doesn't look great
             mAppsCustomizeTabHost?.post(setAllAppsRunnable)
-        } else {
+        } else {*/
             // If we did not initialize the spinner in onCreate, then we can
             // directly set the
             // list of applications without waiting for any progress bars views
             // to be hidden.
             setAllAppsRunnable.run()
-        }
+       // }
     }
 }

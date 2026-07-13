@@ -61,7 +61,7 @@ import android.content.Context
  */
 data class AppsCustomizeConfig(
     // ========== 样式配置 ==========
-    val customStyle: Boolean= false, // 自定义样式，true 表示自定义样式,每行的图标数量固定 ;false 表示默认样式 ,每行的图标数量默认为7个,根据不同的分辨率自动适配图标数量
+    //val customStyle: Boolean= false, // 自定义样式，true 表示自定义样式,每行的图标数量固定 ;false 表示默认样式 ,每行的图标数量默认为7个,根据不同的分辨率自动适配图标数量
     // ========== 图标配置 ==========
     val iconSize: Int = -1,               // 图标大小（像素），-1 表示默认
     val iconTextPadding: Int = 0,       // 图标文本内边距（像素）
@@ -108,7 +108,7 @@ data class AppsCustomizeConfig(
          * 自定义样式
          * true=固定图标数量; false=自动适配
          */
-        private var customStyle: Boolean = false
+        //private var customStyle: Boolean = false
         
         /**
          * 图标大小（像素）
@@ -205,7 +205,7 @@ data class AppsCustomizeConfig(
          */
         private var backgroundTheme: Int = -1
 
-        fun setCustomStyle(value: Boolean) = apply { this.customStyle = value }
+        //fun setCustomStyle(value: Boolean) = apply { this.customStyle = value }
         fun setIconSize(value: Int) = apply { this.iconSize = value }
         fun setIconTextPadding(value: Int) = apply { this.iconTextPadding = value }
         fun setIconOffsetX(value: Int) = apply { this.iconOffsetX = value }
@@ -224,7 +224,7 @@ data class AppsCustomizeConfig(
         fun setBackgroundTheme(value: Int) = apply { this.backgroundTheme = value }
 
         fun build(): AppsCustomizeConfig = AppsCustomizeConfig(
-            customStyle,
+            //customStyle,
             iconSize,
             iconTextPadding,
             iconOffsetX,

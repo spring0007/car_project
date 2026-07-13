@@ -152,6 +152,7 @@ import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
 import com.awell.ui.AppsCustomizeIndicatorPanel;
 import com.awell.utils.CommonData;
+import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 
 import java.io.DataInputStream;
@@ -536,6 +537,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         }
         updateSpeedUnitText();
         Log.i(TAG, "onCreate end ...");
+        AppsCustomizeControl.INSTANCE.setActivity(this);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
 
         Intent serviceIntent = new Intent(this, MediaNotificationListener.class);
         startForegroundService(serviceIntent);
@@ -5148,7 +5151,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     public void dumpDebugLogsToConsole() {
         for (int i = 0; i < sDumpLogs.size(); i++) {
-            Log.d(TAG, "  " + sDumpLogs.get(i));
+            LogUtil.d( "  " + sDumpLogs.get(i));
         }
 
     }
@@ -5157,7 +5160,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         byte[] unit = new byte[1];
         CommonData.readDataToMeta(unit, 0x84);
         int unitData = unit[0];
-        Log.e(TAG, "unit Data = " + unitData);
+        LogUtil.e("unit Data = " + unitData);
         if (tvGPSSpeedUnit != null) {
             if (unitData == 0) {
                 tvGPSSpeedUnit.setText("KM/h");
@@ -5169,7 +5172,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     public void updateGotoPageButtonStatus() {
         if (mState == State.WORKSPACE) {
-            Log.i(TAG, "onResume()=====mState=" + mState + ",updateGotoPageButtonStatus");
+            LogUtil.i( "onResume()=====mState=" + mState + ",updateGotoPageButtonStatus");
         } else if (mState == State.APPS_CUSTOMIZE) {
 
         }
@@ -5198,7 +5201,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            Log.i(TAG, "mainReceiver:" + action);
+            LogUtil.i( "mainReceiver:" + action);
             switch (action) {
                 case CommonData.BROADCAST_LAMP_SWITCH:
                     if (intent.getIntExtra("lamplet_state", 0) == 1)
@@ -5221,16 +5224,22 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                 case "com.zjinnova.zlink":
                     String zlinStatus = intent.getStringExtra("status");
                     String phoneMode = intent.getStringExtra("phoneMode");
-                    Log.d(TAG, "zlinStatus:" + zlinStatus);
+                    LogUtil.d("zlinStatus:" + zlinStatus);
                     if (zlinStatus == null) {
                         return;
                     }
                     llMusic.getCarPlayData(zlinStatus, phoneMode);
                     break;
                 case "android.launcher.show.allApp":
-                    Log.d(TAG, "mainReceiver:" + intent.getAction());
+                    LogUtil.d( "mainReceiver:" + intent.getAction());
                     canbus_set_dis = getCanBusState();
-                    mModel.startLoader(true, -1);
+                    //仅在数据未加载且无LoaderTask运行时启动新加载
+                    if (!mModel.isAllAppsLoaded()) {
+                        if (!mModel.isLoaderRunning()) {
+                            mModel.startLoaderIfNeeded(true);
+                        }
+                        // 如果已有LoaderTask在运行，让它继续执行
+                    }
                     showAllApps(true);
                     break;
                 case "CANBUS_CHANGE_SPEED_Unit":
@@ -5239,7 +5248,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                 case "top_session_package_change":
                     String sessionTopPkg = intent.getStringExtra("top_package");
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
-                    Log.d(TAG, "88888-top_session_package_change:" + sessionTopPkg);
+                    LogUtil.d("88888-top_session_package_change:" + sessionTopPkg);
                     break;
             }
 
@@ -5257,7 +5266,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         boolean isboot = true;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
-                Log.d(TAG, "packagename11=" + packName);
+                LogUtil.d("packagename11=" + packName);
                 if (!packName.equals(IconCache.WorkSpacePackageName[index])) {
                     isboot = false;
                     break;
@@ -5320,7 +5329,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             return true;
         } catch (PackageManager.NameNotFoundException e) {
             //e.printStackTrace();
-            Log.i(TAG,"Exception = " + e.toString());
+            LogUtil.i("Exception = " + e.toString());
         }
         return false;
     }

@@ -36,6 +36,8 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
@@ -353,6 +355,8 @@ public class IconCache {
     private static final String PREFS_NAME = "theme_preferences";
     private static final String KEY_THEME_MODE = "theme_mode";
     private static final String KEY_ICON_SAME = "icon_sizesame";
+    private static final String KEY_ICON_CROP_WIDTH_SIZE = "icon_crop_width_size";
+    private static final String KEY_ICON_CROP_HEIGHT_SIZE = "icon_crop_height_size";
 
     public IconCache(Context context) {
         ActivityManager activityManager =
@@ -366,24 +370,36 @@ public class IconCache {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         mThemeMode = prefs.getInt(KEY_THEME_MODE, 0);
         boolean iconSizeSame = prefs.getBoolean(KEY_ICON_SAME, false);
+        int iconCropWidthSize =  prefs.getInt(KEY_ICON_CROP_WIDTH_SIZE, 0);
+        int iconCropHeightSize =  prefs.getInt(KEY_ICON_CROP_HEIGHT_SIZE, 0);
 
         // need to set mIconDpi before getting default icon
         mDefaultIcon = makeDefaultIcon();
-        Utilities.setPluginThemeMode(mThemeMode ,iconSizeSame);
+        Utilities.setPluginThemeMode(mThemeMode ,iconSizeSame,iconCropWidthSize,iconCropHeightSize );
     }
 
-    public void setPluginThemeMode(int themeMode , boolean iconSizeSame) {
+    public void setPluginThemeMode(int themeMode , boolean iconSizeSame , int iconCropWidthSize ,int iconCropHeightSize) {
         // 当themeMode发生变化时
         if (this.mThemeMode != themeMode || themeMode == 0xff) {
             LogUtil.d( "setPluginThemeMode: themeMode changed to " + themeMode + " from " + this.mThemeMode);
+            // 开机首次设置（从 0 → 1），此时缓存尚未加载任何数据，跳过 flush + reload
+            boolean isFirstBootTheme = (this.mThemeMode == 0 && mCache.isEmpty());
+
             this.mThemeMode = themeMode;
 
             // 保存主题模式到 SharedPreferences，避免 ACC OFF/ON 后被重置
             SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
             prefs.edit().putInt(KEY_THEME_MODE, themeMode).apply();
             prefs.edit().putBoolean(KEY_ICON_SAME, iconSizeSame).apply();
-            Utilities.setPluginThemeMode(themeMode, iconSizeSame);
+            prefs.edit().putInt(KEY_ICON_CROP_WIDTH_SIZE, iconCropWidthSize).apply();
+            prefs.edit().putInt(KEY_ICON_CROP_HEIGHT_SIZE, iconCropHeightSize).apply();
 
+            Utilities.setPluginThemeMode(themeMode, iconSizeSame, iconCropWidthSize, iconCropHeightSize);
+            //关键优化：开机首次设置跳过 flush + reload
+            if (isFirstBootTheme) {
+                LogUtil.d("setPluginThemeMode: first boot, skip flush+reload, themeMode=" + themeMode);
+                return;  // ← 跳过下面所有重量级操作
+            }
             // 清除缓存，这样下次获取图标时会重新加载
             flush();
             // 通知LauncherModel刷新图标 - 需要通过LauncherApplication获取
@@ -479,7 +495,16 @@ public class IconCache {
             d = null;
         }
 
-        return (d != null) ? d : getFullResDefaultActivityIcon();
+        if (d != null) {
+            return d;
+        }
+
+        // 避免递归：直接判断是否是默认图标再次失败，用ColorDrawable兜底
+        if (resources == Resources.getSystem() && iconId == android.R.mipmap.sym_def_app_icon) {
+            return new ColorDrawable(Color.TRANSPARENT);  // 最终兜底
+        }
+
+        return getFullResDefaultActivityIcon();
     }
 
     public Drawable getFullResIcon(String packageName, int iconId) {
@@ -561,23 +586,16 @@ public class IconCache {
             String packageName = info.activityInfo.applicationInfo.packageName;
             String className = info.activityInfo.name;
             application.title = entry.title;
-            boolean customIconSet = false;
-
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0) {
-                //Utilities.FLAG = false;
 
                 // 判断是否为 Plugin 资源（themeMode=0xff）
                 if (mThemeMode == 0xff) {
                     // Plugin 模式：使用插件的 Resources 加载
-                    String pluginPkg = PluginIconManager.getPluginPackageName();
-                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(pluginPkg);
-                    if (pluginContext != null) {
-                        bmp = getFullResIcon(pluginContext.getResources(), iconResId);
-                    } else {
-                        LogUtil.w( "getTitleAndIcon: 无法获取插件 Context，使用默认图标");
-                        bmp = getFullResDefaultActivityIcon();
-                    }
+                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(PluginIconManager.getPluginPackageName());
+                    bmp = (pluginContext != null)
+                            ? getFullResIcon(pluginContext.getResources(), iconResId)
+                            : getFullResDefaultActivityIcon();
                 } else {
                     // 普通模式：使用主应用的 Resources 加载
                     bmp = getFullResIcon(mContext.getResources(), iconResId);
@@ -585,30 +603,7 @@ public class IconCache {
                 
                 application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
                 entry.icon = application.iconBitmap;
-                customIconSet = true;
-            }/*else {
-                bmp = getFullResIcon(info);
-                application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
-                entry.icon = application.iconBitmap;
-                customIconSet = true;
-            }*/
-
-
-//            for (int i = 0; i < mHomePackageIcon_116_lehang_2.length; i++) {
-//                Utilities.FLAG = false;
-//                if (packageName.contains(mHomePackageName_lehang[i])) {
-//                    bmp = getFullResIcon(mContext.getResources(), getIconResource(i));
-//                    application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
-//                    entry.icon = application.iconBitmap;
-//                    customIconSet = true;
-//                    break;
-//                }
-////                else {
-////                    application.iconBitmap = entry.icon;
-////                }
-//            }
-
-            if (!customIconSet) {
+            }else  {
                 application.iconBitmap = entry.icon;
             }
         }

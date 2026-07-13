@@ -52,6 +52,7 @@ import android.widget.Toast;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.library.R;
 import com.awell.launcher2.InstallWidgetReceiver.WidgetMimeTypeHandlerData;
+import com.awell.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
@@ -72,7 +73,6 @@ import java.util.Set;
  * for the Launcher.
  */
 public class LauncherModel extends BroadcastReceiver {
-    static final boolean DEBUG_LOADERS = true;
     static final String TAG = "Launcher.Model";
 
     private static final int ITEMS_CHUNK = 6; // batch size for the workspace icons
@@ -371,7 +371,7 @@ public class LauncherModel extends BroadcastReceiver {
                             // the list of Folders.
                             String msg = "item: " + item + " container being set to: " +
                                     item.container + ", not in the list of folders";
-                            Log.e(TAG, msg);
+                            LogUtil.e(msg);
 
                         }
                     }
@@ -608,8 +608,8 @@ public class LauncherModel extends BroadcastReceiver {
                         + item.id + " (" + container + ", " + screen + ", " + cellX + ", "
                         + cellY + ")";
 
-                Log.d(TAG, transaction);
-                Log.i(TAG, "run: huang transaction=>" + transaction);
+                LogUtil.d(transaction);
+                LogUtil.i("run: huang transaction=>" + transaction);
                 cr.insert(notify ? LauncherSettings.Favorites.CONTENT_URI :
                         LauncherSettings.Favorites.CONTENT_URI_NO_NOTIFICATION, values);
 
@@ -631,7 +631,7 @@ public class LauncherModel extends BroadcastReceiver {
                                     // Adding an item to a folder that doesn't exist.
                                     String msg = "adding item: " + item + " to a folder that " +
                                             " doesn't exist";
-                                    Log.e(TAG, msg);
+                                    LogUtil.e(msg);
                                 }
                             }
                             break;
@@ -697,7 +697,7 @@ public class LauncherModel extends BroadcastReceiver {
                                     // think they are contained by that folder.
                                     String msg = "deleting a folder (" + item + ") which still " +
                                             "contains items (" + info + ")";
-                                    Log.e(TAG, msg);
+                                    LogUtil.e(msg);
 
                                 }
                             }
@@ -765,7 +765,7 @@ public class LauncherModel extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (DEBUG_LOADERS) Log.d(TAG, "onReceive intent=" + intent);
+        LogUtil.d("onReceive intent=" + intent);
         final String action = intent.getAction();
 
         if (Intent.ACTION_PACKAGE_CHANGED.equals(action)
@@ -825,7 +825,7 @@ public class LauncherModel extends BroadcastReceiver {
             // above for ACTION_LOCALE_CHANGED
             Configuration currentConfig = context.getResources().getConfiguration();
             if (mPreviousConfigMcc != currentConfig.mcc) {
-                Log.d(TAG, "Reload apps on config change. curr_mcc:"
+                LogUtil.d("Reload apps on config change. curr_mcc:"
                         + currentConfig.mcc + " prevmcc:" + mPreviousConfigMcc);
                 forceReload();
             }
@@ -844,7 +844,7 @@ public class LauncherModel extends BroadcastReceiver {
 
     private void forceReload() {
         //resetLoadedState(true, true);
-        Log.i(TAG, "forceReload: huang force reload =>");
+        LogUtil.i("forceReload: huang force reload =>");
         resetLoadedState(true, false);
 
         // Do this here because if the launcher activity is running it will be restarted.
@@ -901,9 +901,7 @@ public class LauncherModel extends BroadcastReceiver {
 
     public void startLoader(boolean isLaunching, int synchronousBindPage) {
         synchronized (mLock) {
-            if (DEBUG_LOADERS) {
-                Log.d(TAG, "startLoader isLaunching=" + isLaunching);
-            }
+            LogUtil.d("startLoader isLaunching=" + isLaunching);
 
             // Clear any deferred bind-runnables from the synchronized load process
             // We must do this before any loading/binding is scheduled below.
@@ -945,6 +943,31 @@ public class LauncherModel extends BroadcastReceiver {
 
     public boolean isAllAppsLoaded() {
         return mAllAppsLoaded;
+    }
+
+    public boolean isLoaderRunning() {
+        synchronized (mLock) {
+            return mLoaderTask != null && mIsLoaderTaskRunning;
+        }
+    }
+
+    /**
+     * 仅在数据未加载且无LoaderTask运行时启动加载
+     * 避免在用户点击"全部应用"时杀死已有的加载任务
+     */
+    public void startLoaderIfNeeded(boolean isLaunching) {
+        synchronized (mLock) {
+            if (mAllAppsLoaded && mWorkspaceLoaded) {
+                LogUtil.d("startLoaderIfNeeded: data already loaded, skipping");
+                return;
+            }
+            if (mLoaderTask != null && mIsLoaderTaskRunning) {
+                LogUtil.d("startLoaderIfNeeded: loader already running, skipping");
+                return;
+            }
+        }
+        // 没有正在运行的加载器且数据未就绪，启动一个新加载
+        startLoader(isLaunching, -1);
     }
 
     boolean isLoadingWorkspace() {
@@ -989,9 +1012,8 @@ public class LauncherModel extends BroadcastReceiver {
             mIsLoadingAndBindingWorkspace = true;
 
             // Load the workspace
-            if (DEBUG_LOADERS) {
-                Log.d(TAG, "loadAndBindWorkspace mWorkspaceLoaded=" + mWorkspaceLoaded);
-            }
+            LogUtil.d("loadAndBindWorkspace mWorkspaceLoaded=" + mWorkspaceLoaded);
+
 
             if (!mWorkspaceLoaded) {
                 loadWorkspace();
@@ -1012,15 +1034,13 @@ public class LauncherModel extends BroadcastReceiver {
             // This way we don't start loading all apps until the workspace has settled
             // down.
             synchronized (LoaderTask.this) {
-                final long workspaceWaitTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
+                final long workspaceWaitTime = SystemClock.uptimeMillis();
 
                 mHandler.postIdle(new Runnable() {
                     public void run() {
                         synchronized (LoaderTask.this) {
                             mLoadAndBindStepFinished = true;
-                            if (DEBUG_LOADERS) {
-                                Log.d(TAG, "done with previous binding step");
-                            }
+                            LogUtil.d("done with previous binding step");
                             LoaderTask.this.notify();
                         }
                     }
@@ -1033,11 +1053,10 @@ public class LauncherModel extends BroadcastReceiver {
                         // Ignore
                     }
                 }
-                if (DEBUG_LOADERS) {
-                    Log.d(TAG, "waited "
+                LogUtil.d("waited "
                             + (SystemClock.uptimeMillis() - workspaceWaitTime)
                             + "ms for previous step to finish binding");
-                }
+
             }
         }
 
@@ -1092,17 +1111,17 @@ public class LauncherModel extends BroadcastReceiver {
                 // Elevate priority when Home launches for the first time to avoid
                 // starving at boot time. Staring at a blank home is not cool.
                 synchronized (mLock) {
-                    if (DEBUG_LOADERS) Log.d(TAG, "Setting thread priority to " +
+                    LogUtil.d("Setting thread priority to " +
                             (mIsLaunching ? "DEFAULT" : "BACKGROUND"));
                     android.os.Process.setThreadPriority(mIsLaunching
                             ? Process.THREAD_PRIORITY_DEFAULT : Process.THREAD_PRIORITY_BACKGROUND);
                 }
                 if (loadWorkspaceFirst) {
-                    if (DEBUG_LOADERS) Log.d(TAG, "step 1: loading workspace");
+                    LogUtil.d("step 1: loading workspace");
                     //huangxw
                     //loadAndBindWorkspace();
                 } else {
-                    if (DEBUG_LOADERS) Log.d(TAG, "step 1: special: loading all apps");
+                    LogUtil.d("step 1: special: loading all apps");
                     loadAndBindAllApps();
                 }
 
@@ -1114,18 +1133,18 @@ public class LauncherModel extends BroadcastReceiver {
                 // settled down.
                 synchronized (mLock) {
                     if (mIsLaunching) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "Setting thread priority to BACKGROUND");
+                        LogUtil.d("Setting thread priority to BACKGROUND");
                         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                     }
                 }
-                waitForIdle();
+                //waitForIdle();
 
                 // second step
                 if (loadWorkspaceFirst) {
-                    if (DEBUG_LOADERS) Log.d(TAG, "step 2: loading all apps");
+                    LogUtil.d("step 2: loading all apps");
                     loadAndBindAllApps();
                 } else {
-                    if (DEBUG_LOADERS) Log.d(TAG, "step 2: special: loading workspace");
+                    LogUtil.d("step 2: special: loading workspace");
                     //huangxw
                     //loadAndBindWorkspace();
                 }
@@ -1138,7 +1157,7 @@ public class LauncherModel extends BroadcastReceiver {
 
 
             // Update the saved icons if necessary
-            if (DEBUG_LOADERS) Log.d(TAG, "Comparing loaded icons to database icons");
+            LogUtil.d("Comparing loaded icons to database icons");
             synchronized (sBgLock) {
                 for (Object key : sBgDbIconCache.keySet()) {
                     updateSavedIcon(mContext, (ShortcutInfo) key, sBgDbIconCache.get(key));
@@ -1188,7 +1207,7 @@ public class LauncherModel extends BroadcastReceiver {
                     return null;
                 }
                 if (callbacks == null) {
-                    Log.w(TAG, "no mCallbacks");
+                    LogUtil.w("no mCallbacks");
                     return null;
                 }
 
@@ -1222,10 +1241,10 @@ public class LauncherModel extends BroadcastReceiver {
             // Check if any workspace icons overlap with each other
             for (int x = item.cellX; x < (item.cellX + item.spanX); x++) {
                 for (int y = item.cellY; y < (item.cellY + item.spanY); y++) {
-                    Log.i(TAG, "checkItemPlacement: huang containerIndex=>" + containerIndex + " x=>" + x + " y=>" + y);
-                    Log.i(TAG, "checkItemPlacement: huang occupied=>" + Arrays.deepToString(occupied));
+                    LogUtil.i("checkItemPlacement: huang containerIndex=>" + containerIndex + " x=>" + x + " y=>" + y);
+                    LogUtil.i("checkItemPlacement: huang occupied=>" + Arrays.deepToString(occupied));
                     if (occupied[containerIndex][x][y] != null) {
-                        Log.e(TAG, "Error loading shortcut " + item
+                        LogUtil.e("Error loading shortcut " + item
                                 + " into cell (" + containerIndex + "-" + item.screen + ":"
                                 + x + "," + y
                                 + ") occupied by "
@@ -1244,7 +1263,7 @@ public class LauncherModel extends BroadcastReceiver {
         }
 
         private void loadWorkspace() {
-            final long t = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
+            final long t = SystemClock.uptimeMillis();
 
             final Context context = mContext;
             final ContentResolver contentResolver = context.getContentResolver();
@@ -1257,7 +1276,7 @@ public class LauncherModel extends BroadcastReceiver {
             if (launcherProvider != null) {
                 launcherProvider.loadDefaultFavoritesIfNecessary(0);
             } else {
-                Log.e(TAG, "LauncherProvider is null, cannot load default favorites");
+                LogUtil.e("LauncherProvider is null, cannot load default favorites");
             }
 
             synchronized (sBgLock) {
@@ -1331,8 +1350,8 @@ public class LauncherModel extends BroadcastReceiver {
                                     } catch (URISyntaxException e) {
                                         continue;
                                     }
-                                    Log.i(TAG, "loadWorkspace: huang uri=>" + LauncherSettings.Favorites.CONTENT_URI);
-                                    Log.i(TAG, "loadWorkspace: huang itemType =>" + itemType);
+                                    LogUtil.i("loadWorkspace: huang uri=>" + LauncherSettings.Favorites.CONTENT_URI);
+                                    LogUtil.i("loadWorkspace: huang itemType =>" + itemType);
                                     if (itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION) {
                                         info = getShortcutInfo(manager, intent, context, c, iconIndex,
                                                 titleIndex, mLabelCache);
@@ -1362,7 +1381,7 @@ public class LauncherModel extends BroadcastReceiver {
                                         info.screen = c.getInt(screenIndex);
                                         info.cellX = c.getInt(cellXIndex);
                                         info.cellY = c.getInt(cellYIndex);
-                                        Log.i(TAG, "loadWorkspace: huang info=>" + info);
+                                        LogUtil.i("loadWorkspace: huang info=>" + info);
                                         // check & update map of what's occupied
                                         if (!checkItemPlacement(occupied, info)) {
                                             break;
@@ -1391,7 +1410,7 @@ public class LauncherModel extends BroadcastReceiver {
                                         // was uninstalled), or the db row was somehow screwed up.
                                         // Delete it.
                                         id = c.getLong(idIndex);
-                                        Log.e(TAG, "Error loading shortcut " + id + ", removing it");
+                                        LogUtil.e("Error loading shortcut " + id + ", removing it");
                                         contentResolver.delete(LauncherSettings.Favorites.getContentUri(
                                                 id, false), null, null);
                                     }
@@ -1436,7 +1455,7 @@ public class LauncherModel extends BroadcastReceiver {
                                             provider.provider.getPackageName() == null)) {
                                         String log = "Deleting widget that isn't installed anymore: id="
                                                 + id + " appWidgetId=" + appWidgetId;
-                                        Log.e(TAG, log);
+                                        LogUtil.e(log);
                                         itemsToRemove.add(id);
                                     } else {
                                         appWidgetInfo = new LauncherAppWidgetInfo(appWidgetId,
@@ -1454,7 +1473,7 @@ public class LauncherModel extends BroadcastReceiver {
                                         container = c.getInt(containerIndex);
                                         if (container != LauncherSettings.Favorites.CONTAINER_DESKTOP &&
                                                 container != LauncherSettings.Favorites.CONTAINER_HOTSEAT) {
-                                            Log.e(TAG, "Widget found where container != " +
+                                            LogUtil.e("Widget found where container != " +
                                                     "CONTAINER_DESKTOP nor CONTAINER_HOTSEAT - ignoring!");
                                             continue;
                                         }
@@ -1470,7 +1489,7 @@ public class LauncherModel extends BroadcastReceiver {
                                     break;
                             }
                         } catch (Exception e) {
-                            Log.w(TAG, "Desktop items loading interrupted:", e);
+                            LogUtil.e("Desktop items loading interrupted:", e);
                         }
                     }
                 } finally {
@@ -1482,35 +1501,33 @@ public class LauncherModel extends BroadcastReceiver {
                             LauncherSettings.Favorites.CONTENT_URI);
                     // Remove dead items
                     for (long id : itemsToRemove) {
-                        if (DEBUG_LOADERS) {
-                            Log.d(TAG, "Removed id = " + id);
-                        }
+                        LogUtil.d("Removed id = " + id);
                         // Don't notify content observers
                         try {
                             client.delete(LauncherSettings.Favorites.getContentUri(id, false),
                                     null, null);
                         } catch (RemoteException e) {
-                            Log.w(TAG, "Could not remove id = " + id);
+                            LogUtil.w("Could not remove id = " + id);
                         }
                     }
                 }
 
-                if (DEBUG_LOADERS) {
-                    Log.d(TAG, "loaded workspace in " + (SystemClock.uptimeMillis() - t) + "ms");
-                    Log.d(TAG, "workspace layout: ");
-                    for (int y = 0; y < mCellCountY; y++) {
-                        String line = "";
-                        for (int s = 0; s < Launcher.SCREEN_COUNT; s++) {
-                            if (s > 0) {
-                                line += " | ";
-                            }
-                            for (int x = 0; x < mCellCountX; x++) {
-                                line += ((occupied[s][x][y] != null) ? "#" : ".");
-                            }
+
+                LogUtil.d("loaded workspace in " + (SystemClock.uptimeMillis() - t) + "ms");
+                LogUtil.d("workspace layout: ");
+                for (int y = 0; y < mCellCountY; y++) {
+                    String line = "";
+                    for (int s = 0; s < Launcher.SCREEN_COUNT; s++) {
+                        if (s > 0) {
+                            line += " | ";
                         }
-                        Log.d(TAG, "[ " + line + " ]");
+                        for (int x = 0; x < mCellCountX; x++) {
+                            line += ((occupied[s][x][y] != null) ? "#" : ".");
+                        }
                     }
+                    LogUtil.d("[ " + line + " ]");
                 }
+
             }
         }
 
@@ -1720,7 +1737,7 @@ public class LauncherModel extends BroadcastReceiver {
             final Callbacks oldCallbacks = mCallbacks.get();
             if (oldCallbacks == null) {
                 // This launcher has exited and nobody bothered to tell us.  Just bail.
-                Log.w(TAG, "LoaderTask running with no launcher");
+                LogUtil.w("LoaderTask running with no launcher");
                 return;
             }
 
@@ -1803,10 +1820,8 @@ public class LauncherModel extends BroadcastReceiver {
                     }
 
                     // If we're profiling, ensure this is the last thing in the queue.
-                    if (DEBUG_LOADERS) {
-                        Log.d(TAG, "bound workspace in "
+                    LogUtil.d("bound workspace in "
                                 + (SystemClock.uptimeMillis() - t) + "ms");
-                    }
 
                     mIsLoadingAndBindingWorkspace = false;
                 }
@@ -1819,9 +1834,7 @@ public class LauncherModel extends BroadcastReceiver {
         }
 
         private void loadAndBindAllApps() {
-            if (DEBUG_LOADERS) {
-                Log.d(TAG, "loadAndBindAllApps mAllAppsLoaded=" + mAllAppsLoaded);
-            }
+            LogUtil.d("loadAndBindAllApps mAllAppsLoaded=" + mAllAppsLoaded);
             if (!mAllAppsLoaded) {
                 loadAllAppsByBatch();
                 synchronized (LoaderTask.this) {
@@ -1839,7 +1852,7 @@ public class LauncherModel extends BroadcastReceiver {
             final Callbacks oldCallbacks = mCallbacks.get();
             if (oldCallbacks == null) {
                 // This launcher has exited and nobody bothered to tell us.  Just bail.
-                Log.w(TAG, "LoaderTask running with no launcher (onlyBindAllApps)");
+                LogUtil.w("LoaderTask running with no launcher (onlyBindAllApps)");
                 return;
             }
 
@@ -1853,10 +1866,8 @@ public class LauncherModel extends BroadcastReceiver {
                     if (callbacks != null) {
                         callbacks.bindAllApplications(list);
                     }
-                    if (DEBUG_LOADERS) {
-                        Log.d(TAG, "bound all " + list.size() + " apps from cache in "
+                    LogUtil.d("bound all " + list.size() + " apps from cache in "
                                 + (SystemClock.uptimeMillis() - t) + "ms");
-                    }
                 }
             };
             boolean isRunningOnMainThread = !(sWorkerThread.getThreadId() == Process.myTid());
@@ -1868,14 +1879,11 @@ public class LauncherModel extends BroadcastReceiver {
         }
 
         private void loadAllAppsByBatch() {
-            final long t = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
+            final long t =SystemClock.uptimeMillis();
 
-            // Don't use these two variables in any of the callback runnables.
-            // Otherwise we hold a reference to them.
             final Callbacks oldCallbacks = mCallbacks.get();
             if (oldCallbacks == null) {
-                // This launcher has exited and nobody bothered to tell us.  Just bail.
-                Log.w(TAG, "LoaderTask running with no launcher (loadAllAppsByBatch)");
+                LogUtil.w("LoaderTask running with no launcher (loadAllAppsByBatch)");
                 return;
             }
 
@@ -1883,117 +1891,76 @@ public class LauncherModel extends BroadcastReceiver {
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
             final PackageManager packageManager = mContext.getPackageManager();
-            List<ResolveInfo> apps = null;
 
-            int N = Integer.MAX_VALUE;
+            mBgAllAppsList.clear();
+            final long qiaTime = SystemClock.uptimeMillis() ;
+            final List<ResolveInfo> apps = packageManager.queryIntentActivities(mainIntent, 0);
+            LogUtil.d("queryIntentActivities took "
+                        + (SystemClock.uptimeMillis() - qiaTime) + "ms");
+            if (apps == null || apps.size() == 0) {
+                return;
+            }
+            final int N = apps.size();
+            LogUtil.d("queryIntentActivities got " + N + " apps");
 
-            int startIndex;
-            int i = 0;
-            int batchSize = -1;
-            while (i < N && !mStopped) {
-                if (i == 0) {
-                    mBgAllAppsList.clear();
-                    final long qiaTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
-                    apps = packageManager.queryIntentActivities(mainIntent, 0);
-                    if (DEBUG_LOADERS) {
-                        Log.d(TAG, "queryIntentActivities took "
-                                + (SystemClock.uptimeMillis() - qiaTime) + "ms");
-                    }
-                    if (apps == null) {
-                        return;
-                    }
-                    N = apps.size();
-                    if (DEBUG_LOADERS) {
-                        Log.d(TAG, "queryIntentActivities got " + N + " apps");
-                    }
-                    if (N == 0) {
-                        // There are no apps?!?
-                        return;
-                    }
-                    if (mBatchSize == 0) {
-                        batchSize = N;
-                    } else {
-                        batchSize = mBatchSize;
-                    }
 
-                    final long sortTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
-                    Collections.sort(apps,
-                            new LauncherModel.ShortcutNameComparator(packageManager, mLabelCache));
-                    if (DEBUG_LOADERS) {
-                        Log.d(TAG, "sort took "
-                                + (SystemClock.uptimeMillis() - sortTime) + "ms");
-                    }
-                }
+            final long sortTime =  SystemClock.uptimeMillis();
+            HashMap<Object, CharSequence> labelCache = new HashMap<Object, CharSequence>();
+            Collections.sort(apps,
+                    new LauncherModel.ShortcutNameComparator(packageManager, labelCache));
+            LogUtil.d("sort took "
+                        + (SystemClock.uptimeMillis() - sortTime) + "ms");
 
-                final long t2 = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
+            // 单线程全速处理：避免 IconCache 内部锁的竞争
+            final long t2 = SystemClock.uptimeMillis();
+            for (int idx = 0; idx < N && !mStopped; idx++) {
+                mBgAllAppsList.add(new ApplicationInfo(packageManager,
+                        apps.get(idx), mIconCache, null));
+            }
 
-                startIndex = i;
-                for (int j = 0; i < N && j < batchSize; j++) {
-                    // This builds the icon bitmaps.
-                    mBgAllAppsList.add(new ApplicationInfo(packageManager, apps.get(i),
-                            mIconCache, mLabelCache));
-                    i++;
-                }
+            // 排除指定包名
+            String[] excludePackageArray = mContext.getResources()
+                    .getStringArray(R.array.excludePackageList);
+            for (String pkg : excludePackageArray) {
+                mBgAllAppsList.removeSpecificSettings(pkg);
+            }
 
-                String[] excludePackageArray = mContext.getResources().getStringArray(R.array.excludePackageList);
-                int applength = excludePackageArray.length;
-                for (int kk = 0; kk < applength; kk++) {
-                    mBgAllAppsList.removeSpecificSettings(excludePackageArray[kk]);
-                }
+            LogUtil.d("batch of " + mBgAllAppsList.data.size()
+                        + " icons processed in "
+                        + (SystemClock.uptimeMillis() - t2) + "ms");
 
-                final boolean first = i <= batchSize;
-                final Callbacks callbacks = tryGetCallbacks(oldCallbacks);
-                final ArrayList<ApplicationInfo> added = mBgAllAppsList.added;
-                mBgAllAppsList.added = new ArrayList<ApplicationInfo>();
+            final boolean first = true;
+            final Callbacks callbacks = tryGetCallbacks(oldCallbacks);
+            final ArrayList<ApplicationInfo> added = mBgAllAppsList.added;
+            mBgAllAppsList.added = new ArrayList<ApplicationInfo>();
 
-                mHandler.post(() -> {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
                     final long t1 = SystemClock.uptimeMillis();
-                    Log.i(TAG, "loadAllAppsByBatch: huang call backs=>" + callbacks + " first=>" + first);
                     if (callbacks != null) {
-                        if (first) {
-                            callbacks.bindAllApplications(added);
-                        } else {
-                            callbacks.bindAppsAdded(added);
-                        }
-                        if (DEBUG_LOADERS) {
-                            Log.d(TAG, "bound " + added.size() + " apps in "
+                        callbacks.bindAllApplications(added);
+                        LogUtil.d("bound " + added.size() + " apps in "
                                     + (SystemClock.uptimeMillis() - t1) + "ms");
-                        }
                     } else {
-                        Log.i(TAG, "not binding apps: no Launcher activity");
-                    }
-                });
-
-                if (DEBUG_LOADERS) {
-                    Log.d(TAG, "batch of " + (i - startIndex) + " icons processed in "
-                            + (SystemClock.uptimeMillis() - t2) + "ms");
-                }
-
-                if (mAllAppsLoadDelay > 0 && i < N) {
-                    try {
-                        if (DEBUG_LOADERS) {
-                            Log.d(TAG, "sleeping for " + mAllAppsLoadDelay + "ms");
-                        }
-                        Thread.sleep(mAllAppsLoadDelay);
-                    } catch (InterruptedException exc) {
+                        LogUtil.i("not binding apps: no Launcher activity");
                     }
                 }
-            }
+            });
 
-            if (DEBUG_LOADERS) {
-                Log.d(TAG, "cached all " + N + " apps in "
-                        + (SystemClock.uptimeMillis() - t) + "ms"
-                        + (mAllAppsLoadDelay > 0 ? " (including delay)" : ""));
-            }
+            LogUtil.d("cached all " + N + " apps in "
+                        + (SystemClock.uptimeMillis() - t) + "ms");
         }
+
+
 
         public void dumpState() {
             synchronized (sBgLock) {
-                Log.d(TAG, "mLoaderTask.mContext=" + mContext);
-                Log.d(TAG, "mLoaderTask.mIsLaunching=" + mIsLaunching);
-                Log.d(TAG, "mLoaderTask.mStopped=" + mStopped);
-                Log.d(TAG, "mLoaderTask.mLoadAndBindStepFinished=" + mLoadAndBindStepFinished);
-                Log.d(TAG, "mItems size=" + sBgWorkspaceItems.size());
+                LogUtil.d("mLoaderTask.mContext=" + mContext);
+                LogUtil.d("mLoaderTask.mIsLaunching=" + mIsLaunching);
+                LogUtil.d("mLoaderTask.mStopped=" + mStopped);
+                LogUtil.d("mLoaderTask.mLoadAndBindStepFinished=" + mLoadAndBindStepFinished);
+                LogUtil.d("mItems size=" + sBgWorkspaceItems.size());
             }
         }
     }
@@ -2026,20 +1993,20 @@ public class LauncherModel extends BroadcastReceiver {
             switch (mOp) {
                 case OP_ADD:
                     for (String aPackage : packages) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.addPackage " + aPackage);
+                        LogUtil.d("mAllAppsList.addPackage " + aPackage);
                         mBgAllAppsList.addPackage(context, aPackage);
                     }
                     break;
                 case OP_UPDATE:
                     for (String aPackage : packages) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.updatePackage " + aPackage);
+                        LogUtil.d("mAllAppsList.updatePackage " + aPackage);
                         mBgAllAppsList.updatePackage(context, aPackage);
                     }
                     break;
                 case OP_REMOVE:
                 case OP_UNAVAILABLE:
                     for (String aPackage : packages) {
-                        if (DEBUG_LOADERS) Log.d(TAG, "mAllAppsList.removePackage " + aPackage);
+                        LogUtil.d("mAllAppsList.removePackage " + aPackage);
                         mBgAllAppsList.removePackage(aPackage);
                     }
                     break;
@@ -2068,7 +2035,7 @@ public class LauncherModel extends BroadcastReceiver {
 
             final Callbacks callbacks = mCallbacks != null ? mCallbacks.get() : null;
             if (callbacks == null) {
-                Log.w(TAG, "Nobody to tell about the new app.  Launcher is probably loading.");
+                LogUtil.w("Nobody to tell about the new app.  Launcher is probably loading.");
                 return;
             }
 
@@ -2077,10 +2044,10 @@ public class LauncherModel extends BroadcastReceiver {
                 mHandler.post(new Runnable() {
                     public void run() {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
-                        Log.i(TAG, "loadAllAppsByBatch: huang call backs=>" + callbacks + " addedFinal=>" + addedFinal);
+                        LogUtil.i("loadAllAppsByBatch: huang call backs=>" + callbacks + " addedFinal=>" + addedFinal);
                         if (callbacks == cb) {
                             callbacks.bindAppsAdded(addedFinal);
-                            Log.i("MMM", "packageName=bindAppsAdded=");
+                            LogUtil.i("packageName=bindAppsAdded,1");
                         }
                     }
                 });
@@ -2092,7 +2059,7 @@ public class LauncherModel extends BroadcastReceiver {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
                         if (callbacks == cb) {
                             callbacks.bindAppsUpdated(modifiedFinal);
-                            Log.i("MMM", "packageName=modified=");
+                            LogUtil.i("packageName=modified ,22");
                         }
                     }
                 });
@@ -2104,7 +2071,7 @@ public class LauncherModel extends BroadcastReceiver {
                         Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
                         if (callbacks == cb) {
                             callbacks.bindAppsRemoved(removedPackageNames, permanent);
-                            Log.i("MMM", "packageName=removedPackageNames=");
+                            LogUtil.i("packageName=removedPackageNames,3");
                         }
                     }
                 });
@@ -2116,7 +2083,7 @@ public class LauncherModel extends BroadcastReceiver {
                     Callbacks cb = mCallbacks != null ? mCallbacks.get() : null;
                     if (callbacks == cb) {
                         callbacks.bindPackagesUpdated();
-                        Log.i("MMM", "packageName=bindPackagesUpdated=");
+                        LogUtil.i("packageName=bindPackagesUpdated,4");
                     }
                 }
             });
@@ -2155,7 +2122,7 @@ public class LauncherModel extends BroadcastReceiver {
                 return null;
             }
         } catch (NameNotFoundException e) {
-            Log.d(TAG, "getPackInfo failed for package " + componentName.getPackageName());
+            LogUtil.d("getPackInfo failed for package " + componentName.getPackageName());
         }
 
         // TODO: See if the PackageManager knows about this case.  If it doesn't
@@ -2312,7 +2279,7 @@ public class LauncherModel extends BroadcastReceiver {
         @SuppressWarnings("all") // suppress dead code warning
         final boolean debug = false;
         if (debug) {
-            Log.d(TAG, "getIconFromCursor app="
+            LogUtil.d("getIconFromCursor app="
                     + c.getString(c.getColumnIndexOrThrow(LauncherSettings.Favorites.TITLE)));
         }
         byte[] data = c.getBlob(iconIndex);
@@ -2395,7 +2362,7 @@ public class LauncherModel extends BroadcastReceiver {
 
         if (intent == null) {
             // If the intent is null, we can't construct a valid ShortcutInfo, so we return null
-            Log.e(TAG, "Can't construct ShorcutInfo with null intent");
+            LogUtil.e("Can't construct ShorcutInfo with null intent");
             return null;
         }
 
@@ -2418,7 +2385,7 @@ public class LauncherModel extends BroadcastReceiver {
                     icon = Utilities.createIconBitmap(
                             mIconCache.getFullResIcon(resources, id), context, "");
                 } catch (Exception e) {
-                    Log.w(TAG, "Could not load shortcut icon: " + extra);
+                    LogUtil.w("Could not load shortcut icon: " + extra);
                 }
             }
         }
@@ -2476,7 +2443,7 @@ public class LauncherModel extends BroadcastReceiver {
             needSave = true;
         }
         if (needSave) {
-            Log.d(TAG, "going to save icon bitmap for info=" + info);
+            LogUtil.d("going to save icon bitmap for info=" + info);
             // This is slower than is ideal, but this only happens once
             // or when the app is updated with a new icon.
             updateItemInDatabase(context, info);
@@ -2502,7 +2469,9 @@ public class LauncherModel extends BroadcastReceiver {
         final Collator collator = Collator.getInstance();
         return new Comparator<ApplicationInfo>() {
             public final int compare(ApplicationInfo a, ApplicationInfo b) {
-                int result = collator.compare(a.title.toString(), b.title.toString());
+                String titleA = a.title != null ? a.title.toString() : "";
+                String titleB = b.title != null ? b.title.toString() : "";
+                int result = collator.compare(titleA, titleB);
                 if (result == 0) {
                     result = a.componentName.compareTo(b.componentName);
                 }
@@ -2517,7 +2486,12 @@ public class LauncherModel extends BroadcastReceiver {
             public final int compare(ApplicationInfo a, ApplicationInfo b) {
                 int result = Integer.compare(a.getLevel(), b.getLevel());
                 if (result == 0) {
-                    result = collator.compare(a.title.toString(), b.title.toString());
+                    String titleA = a.title != null ? a.title.toString() : "";
+                    String titleB = b.title != null ? b.title.toString() : "";
+                    result = collator.compare(titleA, titleB);
+                    if (result == 0) {
+                        result = a.componentName.compareTo(b.componentName);
+                    }
                 }
                 return result;
             }
@@ -2624,10 +2598,8 @@ public class LauncherModel extends BroadcastReceiver {
         }
     }
 
-    ;
-
     public void dumpState() {
-        Log.d(TAG, "mCallbacks=" + mCallbacks);
+        LogUtil.d("mCallbacks=" + mCallbacks);
         ApplicationInfo.dumpApplicationInfoList(TAG, "mAllAppsList.data", mBgAllAppsList.data);
         ApplicationInfo.dumpApplicationInfoList(TAG, "mAllAppsList.added", mBgAllAppsList.added);
         ApplicationInfo.dumpApplicationInfoList(TAG, "mAllAppsList.removed", mBgAllAppsList.removed);
@@ -2635,7 +2607,33 @@ public class LauncherModel extends BroadcastReceiver {
         if (mLoaderTask != null) {
             mLoaderTask.dumpState();
         } else {
-            Log.d(TAG, "mLoaderTask=null");
+            LogUtil.d("mLoaderTask=null");
         }
     }
+    /**
+     * 预热图标缓存：在 sWorker 线程上预先解码所有图标到 IconCache
+     * 与 LoaderTask 在同一线程顺序执行，避免锁竞争
+     */
+    public void prewarmIconCache() {
+        sWorker.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (mAllAppsLoaded) return;
+                    Intent preIntent = new Intent(Intent.ACTION_MAIN, null);
+                    preIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    List<ResolveInfo> apps = mApp.getPackageManager()
+                            .queryIntentActivities(preIntent, 0);
+                    if (apps != null) {
+                        for (ResolveInfo ri : apps) {
+                            new ApplicationInfo(mApp.getPackageManager(), ri, mIconCache, null);
+                        }
+                    }
+                } catch (Exception e) {
+                    LogUtil.e("prewarmIconCache failed: " + e.getMessage());
+                }
+            }
+        });
+    }
+
 }

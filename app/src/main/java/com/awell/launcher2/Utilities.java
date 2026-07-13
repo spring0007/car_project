@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
@@ -32,6 +33,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PaintDrawable;
@@ -63,6 +65,8 @@ public final class Utilities {
 
     private static int sThemeMode = 1;
     private static boolean sIconSizeSame = false;
+    private static int sCropIconWidthSize = 0;         // 剪切图标宽度尺寸,方形宽度/圆形图标直径（px），0表示不启用
+    private static int sCropIconHeightSize = 0;       // 剪切图标高度尺寸,方形高度（px），0表示不启用
 
 //    private static int[] sfOtherBG = {
 //            R.drawable.sf_other_app1
@@ -111,11 +115,26 @@ public final class Utilities {
     }
 
     public static void setPluginThemeMode(int themeMode, boolean iconSizeSame) {
-            sThemeMode = themeMode;
-            sIconSizeSame = iconSizeSame;
-        LogUtil.d("setPluginThemeMode, themeMode=" + themeMode + ", iconSizeSame=" + iconSizeSame);
+        setPluginThemeMode(themeMode, iconSizeSame, 0,0);
+
+    }
+    public static void setPluginThemeMode(int themeMode, boolean iconSizeSame,  int cropIconWidthSize) {
+        setPluginThemeMode(themeMode, iconSizeSame, cropIconWidthSize,0);
+    }
+    public static void setPluginThemeMode(int themeMode, boolean iconSizeSame,  int cropIconWidthSize ,int cropIconHeightSize) {
+        sThemeMode = themeMode;
+        sIconSizeSame = iconSizeSame;
+        sCropIconWidthSize = cropIconWidthSize;
+        sCropIconHeightSize = cropIconHeightSize;
+        //LogUtil.d("setPluginThemeMode, sThemeMode=" + themeMode + ", sIconSizeSame=" + iconSizeSame + "," +
+        //        " sCropIconWidthSize=" + cropIconWidthSize + ", sCropIconHeightSize=" + cropIconHeightSize );
     }
 
+    /**
+     * 获取插件包默认背景资源 ID
+     * @param themeMode
+     * @return
+     */
     private static int getIconResource(int themeMode) {
         switch (themeMode) {
             case 0:
@@ -140,6 +159,70 @@ public final class Utilities {
                 return R.drawable.sf_other_bg_app3;
         }
     }
+    /**
+     * 先将应用图标裁剪为圆形，再缩放到 pluginIconSize，居中绘制
+     */
+    private static void drawCircularIcon( Canvas canvas, Drawable icon, int left,int top, int width, int height) {
+        // 1. 获取图标固有尺寸，确保所有 Drawable 类型统一处理
+        int intrinsicW = icon.getIntrinsicWidth();
+        int intrinsicH = icon.getIntrinsicHeight();
+        if (intrinsicW <= 0 || intrinsicH <= 0) {
+            LogUtil.e("drawCircularIcon, icon.getIntrinsicWidth() <= 0 || icon.getIntrinsicHeight() <= 0");
+            return;
+        }
+
+
+        // 2. 按固有尺寸绘制到临时 Bitmap（不拉伸、不失真）
+        Bitmap src = Bitmap.createBitmap(intrinsicW, intrinsicH, Bitmap.Config.ARGB_8888);
+        Canvas tc = new Canvas(src);
+        icon.setBounds(0, 0, intrinsicW, intrinsicH);
+        icon.draw(tc);
+
+        // 3. 确定圆形目标直径
+        /*final int targetSize = sCropIconWidthSize > 0
+                ? sCropIconWidthSize
+                : Math.min(width, height);*/
+        final int targetSize = Math.min(sCropIconWidthSize > 0 ? sCropIconWidthSize : Math.min(width, height), width);
+
+
+        // 4. 等比缩放，使短边 = targetSize
+        int srcW = src.getWidth();
+        int srcH = src.getHeight();
+        float scale = targetSize*1.0f / Math.min(srcW, srcH);
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.postScale(scale, scale);
+        Bitmap scaledFull = Bitmap.createBitmap(src, 0, 0, srcW, srcH, scaleMatrix, true);
+        //LogUtil.i("drawCircularIcon, srcW=" + srcW + ", srcH=" + srcH + ", scale=" + scale +",scaledFull( width"+scaledFull.getWidth() + ", height="+scaledFull.getHeight());
+        src.recycle();
+
+        // 5. 从缩放结果中取中心正方形区域
+        int scaledW = scaledFull.getWidth();
+        int scaledH = scaledFull.getHeight();
+        int offsetX = (scaledW - targetSize) / 2;
+        int offsetY = (scaledH - targetSize) / 2;
+
+        // 6. 在 targetSize×targetSize 上裁圆
+        Bitmap circleResult = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888);
+        Canvas cc = new Canvas(circleResult);
+        Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+        BitmapShader shader = new BitmapShader(scaledFull, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        Matrix shaderMatrix = new Matrix();
+        shaderMatrix.preTranslate(-offsetX, -offsetY);
+        shader.setLocalMatrix(shaderMatrix);
+        p.setShader(shader);
+        float r = targetSize / 2f;
+        cc.drawCircle(r, r, r, p);
+        scaledFull.recycle();
+        // 7. 居中绘制到主画布
+
+        canvas.drawBitmap(circleResult,
+                    left + (width - targetSize) / 2f,
+                    top + (height - targetSize) / 2f, null);
+
+       circleResult.recycle();
+    }
+
+
 
     /**
      * Returns a bitmap suitable for the all apps view.
@@ -164,9 +247,12 @@ public final class Utilities {
                 }
             }
 
-
-            int width = sIconWidth / 3;
+            /*int width = sIconWidth / 3;
             int height = sIconHeight / 3;
+            if(sCropIconWidthSize>0){
+                width = sCropIconWidthSize;
+                height = sCropIconHeightSize>0?sCropIconHeightSize:sCropIconWidthSize;
+            }
 
             if (icon instanceof PaintDrawable) {
                 PaintDrawable painter = (PaintDrawable) icon;
@@ -179,67 +265,49 @@ public final class Utilities {
                 if (bitmap.getDensity() == Bitmap.DENSITY_NONE) {
                     bitmapDrawable.setTargetDensity(context.getResources().getDisplayMetrics());
                 }
-            }
-           /* int sourceWidth = icon.getIntrinsicWidth();
-            int sourceHeight = icon.getIntrinsicHeight();*/
-           /* if (sourceWidth > 0 && sourceHeight > 0) {
-                // There are intrinsic sizes.
-                if (width < sourceWidth || height < sourceHeight) {
-                    // It's too big, scale it down.
-                    final float ratio = (float) sourceWidth / sourceHeight;
-                    if (sourceWidth > sourceHeight) {
-                        height = (int) (width / ratio);
-                    } else if (sourceHeight > sourceWidth) {
-                        width = (int) (height * ratio);
-                    }
-                } else if (sourceWidth < width && sourceHeight < height) {
-                    // Don't scale up the icon
-                    width = sourceWidth;
-                    height = sourceHeight;
-                }
             }*/
 
             // no intrinsic size --> use default size
             int textureWidth = sIconTextureWidth;
             int textureHeight = sIconTextureHeight;
-            //LogUtil.i("sIconSizeSame=" + sIconSizeSame);
+            int left  = 0;
+            int top = 0;
+            int width = 0;
+            int height = 0;
             if (!sIconSizeSame) {
-                width = sIconTextureWidth / 3 * 2;
-                height = sIconTextureHeight / 3 * 2;
+                if(sCropIconWidthSize>0){
+                    width = sCropIconWidthSize;
+                    height = sCropIconHeightSize>0? sCropIconHeightSize:sCropIconWidthSize;
+                }else {
+                    width = sIconTextureWidth / 3 * 2;
+                    height = sIconTextureHeight / 3 * 2;
+                }
+                left = (textureWidth - width) / 2;
+                top = (textureHeight - height) / 2;
             }else{
-                width = sIconWidth;
-                height = sIconHeight;
+                if(sCropIconWidthSize>0){
+                    width = sCropIconWidthSize;
+                    height = sCropIconHeightSize>0? sCropIconHeightSize:sCropIconWidthSize;
+                }else {
+                    width = sIconWidth;
+                    height = sIconHeight;
+                }
             }
-
             final Bitmap bitmap = Bitmap.createBitmap(textureWidth, textureHeight,
                     Bitmap.Config.ARGB_8888);
             final Canvas canvas = sCanvas;
             canvas.setBitmap(bitmap);
-            int left = 0;
-            int top = 0;
-            if (!sIconSizeSame) {//不同图标大小,居中绘制
-                left = (textureWidth - width) / 2;
-                top = (textureHeight - height) / 2;
-            }
-//            final int left = (textureWidth - width) / 2;
-//            final int top = (textureHeight - height) / 2;
 
-            @SuppressWarnings("all") // suppress dead code warning
-            final boolean debug = false;
-            if (debug) {
-                // draw a big box for the icon for debugging
-                canvas.drawColor(sColors[sColorIndex]);
-                if (++sColorIndex >= sColors.length) sColorIndex = 0;
-                Paint debugPaint = new Paint();
-                debugPaint.setColor(0xffcccc00);
-                canvas.drawRect(left, top, left + width, top + height, debugPaint);
+            if (sCropIconWidthSize > 0) {
+
+                int effectiveCropSize = Math.min(sCropIconWidthSize, Math.min(sIconTextureWidth, sIconTextureHeight));
+                drawCircularIcon(canvas, icon , left, top, effectiveCropSize , effectiveCropSize);
             }
 
             //增加图标背景图片 OWL - 仅在需要时加载当前主题的图片
-            if (!sIconSizeSame) { //不同图标大小,绘制背景,
+            if (!sIconSizeSame ) { //不同图标大小,绘制背景,
 
                 int iconResId = getIconResource(sThemeMode);
-                //LogUtil.i("iconResId=" + iconResId  + " sThemeMode=" + sThemeMode+ " ,packageName=" + packageName);
                 if (iconResId != 0) {
                     Bitmap backBitmap=null;
                     
@@ -255,7 +323,7 @@ public final class Utilities {
                         // 普通模式：使用主应用的 Resources 加载
                         backBitmap = BitmapFactory.decodeResource(context.getResources(), iconResId);
                     }
-                    
+
                     if (backBitmap != null) {
                         int backWidth = backBitmap.getWidth();
                         int backHeight = backBitmap.getHeight();
@@ -275,10 +343,15 @@ public final class Utilities {
                 }
             }
 
-            sOldBounds.set(icon.getBounds());
-            icon.setBounds(left, top, left + width, top + height);
-            icon.draw(canvas);
-            icon.setBounds(sOldBounds);
+            if (sCropIconWidthSize > 0) {
+
+            } else {
+                sOldBounds.set(icon.getBounds());
+                icon.setBounds(left, top, left + width, top + height);
+                icon.draw(canvas);
+                icon.setBounds(sOldBounds);
+            }
+
             canvas.setBitmap(null);
 
             return bitmap;
