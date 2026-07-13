@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI1</string>
+    
+    
+
+    <string name="click_play_music">Oynamak İçin Tıklayın</string>
+    <string name="music_artist">Sanatçı</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">KONUM</string>
+    <string name="radio_save">Arama</string>
+    <string name="icon_add_name">Ek Kat</string>
+    <string name="unknow_song_name">Bilinmeyen şarkı adı</string>
+    <string name="unknow_song_artist">Bilinmeyen sanatçı</string>
+
+    
+</resources>

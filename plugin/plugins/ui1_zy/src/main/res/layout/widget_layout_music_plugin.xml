@@ -1,0 +1,205 @@
+<com.example.plugin1.MusicWidgetPlugin xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/music_widget_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <FrameLayout
+        android:layout_width="480dp"
+        android:layout_height="242dp"
+        android:layout_centerInParent="true">
+
+        <RelativeLayout
+            android:id="@+id/music_widget_rl"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/music_widget_artists_image_view"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/music_ablum_bg" />
+
+            <ImageView
+                android:id="@+id/icon_music_img"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignLeft="@+id/music_widget_artists_image_view"
+                android:layout_alignTop="@+id/music_widget_artists_image_view"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/icon_music_img"
+                android:visibility="visible" />
+
+            <com.awell.ctrlview.CircleImageView
+                android:id="@+id/music_artists_image_view"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ablum_default_bg" />
+
+            <ImageView
+                android:id="@+id/music_artists_image_view_bar"
+                android:layout_width="50dp"
+                android:layout_height="160dp"
+                android:layout_alignTop="@+id/music_artists_image_view"
+                android:layout_alignRight="@+id/music_artists_image_view"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="0dp"
+                android:src="@drawable/music_bar_img"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_name_layout_music"
+            android:layout_width="268dp"
+            android:layout_height="168dp"
+            android:background="@drawable/music_info_bg"
+            android:orientation="vertical">
+            <!--歌曲名-->
+            <!--<TextView
+                android:id="@+id/music_widget_music_name"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:ellipsize="marquee"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/harmonyos_sans_sc_bold"
+                android:gravity="start|center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:focusable="true"
+                android:maxLines="1"
+                android:text="@string/click_play_music"
+                android:textColor="@android:color/black"
+                android:textSize="26sp" />-->
+            <com.awell.launcher2.EarqueeTextView
+                android:id="@+id/music_widget_music_name"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:fontFamily="@font/harmonyos_sans_sc_bold"
+                android:gravity="start|center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:text="@string/click_play_music"
+                android:textColor="@android:color/black"
+                android:textSize="26sp" />
+            <!-- 歌手名 -->
+            <TextView
+                android:id="@+id/music_artist"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="none"
+                android:fontFamily="@font/harmonyos_sans_sc_light"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:text="@string/music_artist"
+                android:textColor="@android:color/black"
+                android:textIsSelectable="false"
+                android:textSize="23sp"
+                android:visibility="visible" />
+            <!-- 进度条  style="@style/volume_SeekBar"  -->
+            <RelativeLayout
+                android:id="@+id/ll_time_layout_music"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+                <!-- 当前时间 -->
+                <TextView
+                    android:id="@+id/music_widget_cur_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/music_widget_seekbars"
+                    android:layout_alignLeft="@+id/music_widget_seekbars"
+                    android:layout_marginLeft="15dp"
+                    android:text="00:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+                <!-- 总时间 -->
+                <TextView
+                    android:id="@+id/music_widget_total_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_below="@+id/music_widget_seekbars"
+                    android:layout_alignRight="@+id/music_widget_seekbars"
+                    android:layout_marginRight="15dp"
+                    android:text="00:00"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp" />
+                <!-- 进度条    style="@style/volume_SeekBar"  -->
+                <SeekBar
+                    android:id="@+id/music_widget_seekbars"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="20dp"
+                    android:thumb="@null"
+                    android:visibility="visible" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!-- 音乐控制 -->
+        <LinearLayout
+            android:id="@+id/ll_control_layout_music"
+            android:layout_width="350dp"
+            android:layout_height="80dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/music_control_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.8" />
+
+
+            <ImageView
+                android:id="@+id/music_widget_pre"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
+                android:src="@drawable/sf_music_pre" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/music_widget_play"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
+                android:src="@drawable/sf_music_bofang" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/music_widget_next"
+                android:layout_width="@dimen/music_widget_iv_size"
+                android:layout_height="@dimen/music_widget_iv_size"
+                android:src="@drawable/sf_music_next" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="0.8" />
+        </LinearLayout>
+    </FrameLayout>
+</com.example.plugin1.MusicWidgetPlugin>

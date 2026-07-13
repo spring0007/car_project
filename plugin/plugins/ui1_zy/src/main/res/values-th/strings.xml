@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ตัวเรียกใช้งาน UI1</string>
+    
+    
+
+    <string name="click_play_music">คลิกเพื่อเล่น</string>
+    <string name="music_artist">ศิลปิน</string>
+
+    <string name="radio_dx">ดีเอ็กซ์</string>
+    <string name="radio_loc">ที่ตั้ง</string>
+    <string name="radio_save">ค้นหา</string>
+    <string name="icon_add_name">เพิ่มไปยัง</string>
+    <string name="unknow_song_name">ไม่ทราบชื่อเพลง</string>
+    <string name="unknow_song_artist">ศิลปินที่ไม่รู้จัก</string>
+
+    
+</resources>

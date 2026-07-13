@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="car_width">658dp</dimen>
+    <dimen name="car_height">298dp</dimen>
+    <dimen name="bottom_icon_width">70dp</dimen>
+    <dimen name="car_speed_hor_ratio">0.32</dimen>
+    <dimen name="guideline_bottom_bias">0.89</dimen>
+    <dimen name="hohset_iv_size">70dp</dimen>
+</resources>

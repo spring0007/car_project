@@ -51,7 +51,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff,false,false,IconManager.INSTANCE.getPACKAGE_ICON_MAP_SQUARE(),"yks_other_app","com.launcher.yks_ui01");
+        int iconCircleSize = (int) getResources().getDimension(R.dimen.app_icon_circle_size);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff,false,false,
+                IconManager.INSTANCE.getPACKAGE_ICON_MAP_SQUARE(),"yks_other_app",
+                "com.launcher.yks_ui01" ,iconCircleSize);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
                 .setAutoWidthGap(true)
                 .setAutoHeightGap(true)
