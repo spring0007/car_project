@@ -96,13 +96,13 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         setBtstatus();
         initReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4,false);
-        AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder()
+                .setThemeMode(4)
+                .setRefresh(false)
                 .setAutoWidthGap(true)
                 .setColumnCount(5)
                 .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
-                .build();
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
+                .build());
 
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }

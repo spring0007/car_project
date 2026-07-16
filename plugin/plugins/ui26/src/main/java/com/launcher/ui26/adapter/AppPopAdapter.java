@@ -1,6 +1,8 @@
 package com.launcher.ui26.adapter;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
-import com.awell.launcher.library.R;
+import com.launcher.ui26.IconManager;
+import com.launcher.ui26.R;
 
 import java.util.List;
 
@@ -38,19 +42,35 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item2, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_pop_app_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AppInfo appInfo = contentList.get(position);
-        holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+        Integer iconResId = IconManager.getPackageIconDarkMap().get(appInfo.package_name);
+        Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
+        if (icon_bg != null) {
+            holder.iv_app_icon.setImageDrawable(icon_bg);
+        } else {
+
+            try {
+                PackageManager pm = mContext.getPackageManager();
+                Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                holder.iv_app_icon.setImageDrawable(icon);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+
+                //holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+            }
+
+
+        }
         holder.tv_app_name.setText(appInfo.getLabel());
 
-        String pckName = appInfo.getPackage_name();
+        //String pckName = appInfo.getPackage_name();
 
          /*int r = new Random().nextInt(4);
         holder.iv_app_icon_bg.setImageResource(Utils.iconBg[r]);

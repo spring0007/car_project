@@ -123,17 +123,17 @@ class UIActivity : Activity(), View.OnClickListener {
         initFreeformControl()
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
-        val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
-        val config = AppsCustomizeConfig.Builder()
-            .setIconSize(icSize)
+
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder()
+            .setIconSize(resources.getDimensionPixelSize(R.dimen.app_icon_size))
             .setFontColor(Color.WHITE)
             .setFontSizeSp(resources.getDimensionPixelSize(R.dimen.font_size_sp)) // 20
-            .build()
-
-
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false , IconManager.getPackageIconMap(), "apple_other_app3_square", "com.launcher.ui22")
-        AppsCustomizeControl.applyAppsCustomizeConfig(config)
-
+            .setThemeMode(0xff)
+            .setRefresh(false)
+            .setIconMap(IconManager.getPackageIconMap())
+            .setPluginPackageName("com.launcher.ui22")
+            .setPluginOtherBgName("apple_other_app3_square")
+            .build());
     }
 
     private val handlerFreeform = Handler(Looper.getMainLooper())

@@ -32,16 +32,19 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.widget.ImageView
 import android.widget.PopupWindow
 import androidx.annotation.RequiresPermission
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.awell.addapp.AddSelectAppCallback
 import com.awell.addapp.AppInfo
-import com.awell.addapp.MyDbHelper
+import com.awell.addapp.AppListStorage
 import com.awell.addapp.ShowPopupI
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -49,9 +52,9 @@ import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
-import com.launcher.ui17.databinding.UiActivityBinding
 import com.launcher.ui17.adapter.AppInofAdapter
 import com.launcher.ui17.adapter.AppPopAdapter
+import com.launcher.ui17.databinding.UiActivityBinding
 import com.launcher.ui17.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.launcher.ui17.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.launcher.ui17.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
@@ -99,8 +102,6 @@ class UIActivity : Activity(), View.OnClickListener {
     private lateinit var showAppInfoList: ArrayList<AppInfo>
     lateinit var popupWindow: PopupWindow
     private lateinit var placehodlerInfo: AppInfo
-    private lateinit var myDbHelper: MyDbHelper
-    private lateinit var sqLiteDatabase: SQLiteDatabase
 
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
@@ -128,7 +129,7 @@ class UIActivity : Activity(), View.OnClickListener {
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
         // 设置主题模式，并同步到 IconManager
-        AppsCustomizeControl.setPluginThemeMode(1)
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder().setThemeMode(1).build())
 
     }
 
@@ -267,7 +268,125 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun initAddAppView() {
+        showAppInfoList = ArrayList<AppInfo>()
+        allAppInfoList = ArrayList<AppInfo>()
+
+        placehodlerInfo = createMismatchPlaceholder();
+        // 获取已保存需要显示的app包名，如果没有，则显示默认
+        //myDbHelper = MyDbHelper(this, "show_app", null, 1)
+        //sqLiteDatabase = myDbHelper.writableDatabase
+
+        appInfoAdapter =
+            AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
+
+
+        // 设置item垂直居中
+        mViewBinding.rvApps.layoutManager = GridLayoutManager(this, 2,RecyclerView.VERTICAL,false)
+        mViewBinding.rvApps.adapter = appInfoAdapter
+
+        Thread {
+            showHostApp()
+        }.start()
+
+    }
+
+    private fun showHostApp() {
+        // 刷新应用列表
+        refreshAppListAsync()
+
+        runOnUiThread {
+            appInfoAdapter.setContentList(showAppInfoList)
+            appInfoAdapter.notifyDataSetChanged()
+        }
+    }
+
+    val addSelectAppCallback: AddSelectAppCallback = object : AddSelectAppCallback {
+        @SuppressLint("NotifyDataSetChanged")
+        override fun addAppInfo(appInfo: AppInfo) {
+            for (pack in showAppInfoList)
+                if (pack.package_name.equals(appInfo.package_name)) {
+                    popupWindow.dismiss()
+                    showPopupI.hidePopup()
+                    return
+                }
+            showAppInfoList.remove(placehodlerInfo)
+
+            showAppInfoList.add(appInfo)
+            showAppInfoList.add(placehodlerInfo)
+            appInfoAdapter.setContentList(showAppInfoList)
+            AppListStorage.addItem(this@UIActivity, appInfo.package_name)
+
+            showPopupI.hidePopup()
+        }
+
+        override fun removeAppInfo(packageName: String?) {
+            AppListStorage.removeItem(this@UIActivity, packageName);
+            for (pack in showAppInfoList)
+                if (pack.package_name.equals(packageName)) {
+                    showAppInfoList.remove(pack)
+                    break
+                }
+
+            appInfoAdapter.setContentList(showAppInfoList)
+        }
+
+    }
+
     var lastSpeed: Float = 0F
+
+    private val showPopupI: ShowPopupI = object : ShowPopupI {
+        override fun showPopup() {
+            showPopupAllApp()
+           // backgroundAlpha(0.1f)
+        }
+
+        override fun hidePopup() {
+            popupWindow.dismiss()
+        }
+    }
+
+    private fun showPopupAllApp() {
+        val view: View = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null)
+        
+        // 计算屏幕尺寸的 80% 和 60%
+        //val displayMetrics = resources.displayMetrics
+       // val popupWidth = (displayMetrics.widthPixels * 0.8).toInt()
+        //val popupHeight = (displayMetrics.heightPixels * 0.8).toInt()
+        
+        popupWindow = PopupWindow(
+            view,
+            WindowManager.LayoutParams.MATCH_PARENT  ,
+           WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+
+        popupWindow.isOutsideTouchable = true
+        popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
+        view.setOnClickListener { popupWindow.dismiss() }
+
+        allAppInfoList = getAllAppInfo(this, false)
+
+        val rvPop = view.findViewById<RecyclerView>(R.id.rv_pop_allapp)
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.orientation = RecyclerView.HORIZONTAL
+        
+        // 添加垂直方向间隔（50dp）- 只在行与行之间有间隔
+        val verticalSpacing = (20 * resources.displayMetrics.density).toInt()
+        rvPop.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = verticalSpacing
+                outRect.bottom = verticalSpacing
+            }
+        })
+        
+        val appInfoAdapter = AppPopAdapter(this, allAppInfoList, addSelectAppCallback)
+        rvPop.layoutManager = gridLayoutManager
+        rvPop.adapter = appInfoAdapter
+
+        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0,0)
+    }
 
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -392,7 +511,6 @@ class UIActivity : Activity(), View.OnClickListener {
                     if (zlinkStatus == null) {
                         return
                     }
-                    LogUtil.i("onReceive: mediaControl.getCurrentPkgName()=>${mediaControl.getCurrentPkgName()}")
                     if (mediaControl.getCurrentPkgName()?.equals("com.zjinnova.zlink") == true) {
                         if ("REFRESH_JEPG" == zlinkStatus) {
                             updateCarplayImageAlbum()
@@ -792,6 +910,60 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
+    private fun getAllAppInfo(context: Context, isFilterSystem: Boolean): ArrayList<AppInfo> {
+        val appBeanList: ArrayList<AppInfo> = ArrayList()
+
+        val intent = Intent(Intent.ACTION_MAIN, null).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+        }
+
+        val packageManager = context.packageManager
+        val resolveInfos = packageManager.queryIntentActivities(intent, 0)
+        // 获取所有输入法包名
+        val imePackages = mutableSetOf<String>()
+        val imeIntent = Intent("android.view.InputMethod")
+        val imeServices = packageManager.queryIntentServices(imeIntent, 0)
+        imeServices.forEach { imePackages.add(it.serviceInfo.packageName) }
+
+        // 获取所有launcher包名（CATEGORY_HOME）
+        val launcherPackages = mutableSetOf<String>()
+        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        val homeActivities = packageManager.queryIntentActivities(homeIntent, 0)
+        homeActivities.forEach { launcherPackages.add(it.activityInfo.packageName) }
+
+        val noNeedToShow = Utils.notDisplayedPackageName
+
+        val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
+            try {
+                packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
+            } catch (e: PackageManager.NameNotFoundException) {
+                null
+            }
+        }.distinctBy { it.packageName }
+            .filter { pkgInfo ->
+            val pkg = pkgInfo.packageName
+            !imePackages.contains(pkg) && !launcherPackages.contains(pkg) && !noNeedToShow.contains(pkg)
+        }
+
+        //LogUtil.w("appList size: ${appList.size}")
+
+        for (p in appList) {
+            //val packageName = p.applicationInfo.packageName
+            //val flags = p.applicationInfo.flags
+            //LogUtil.i("packageName=${p.applicationInfo.packageName}")
+            val bean = AppInfo()
+            //bean.setIcon(IconManager.getAppIcon(context, packageName))
+            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
+            bean.setPackage_name( p.applicationInfo.packageName)
+            bean.setFlags(p.applicationInfo.flags)
+            appBeanList.add(bean)
+
+        }
+
+        LogUtil.w("appBeanList size: ${appBeanList.size}")
+        return appBeanList
+    }
+
 
     /**
      * 重写只为长按弹出壁纸选择
@@ -918,243 +1090,8 @@ class UIActivity : Activity(), View.OnClickListener {
 
 //============================start===============================================
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun initAddAppView() {
-        showAppInfoList = ArrayList<AppInfo>()
-        allAppInfoList = ArrayList<AppInfo>()
-
-        placehodlerInfo = createMismatchPlaceholder();
-        // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = MyDbHelper(this, "show_app", null, 1)
-        sqLiteDatabase = myDbHelper.writableDatabase
-
-        appInfoAdapter =
-            AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback)
-
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.orientation = RecyclerView.VERTICAL
-
-        mViewBinding.rvApps.setLayoutManager(gridLayoutManager)
-        mViewBinding.rvApps.setAdapter(appInfoAdapter)
-
-        Thread {
-            showHostApp()
-        }.start()
-
-    }
-
-    private fun showHostApp() {
-        // 刷新应用列表
-        refreshAppList()
-
-        runOnUiThread {
-            appInfoAdapter.setContentList(showAppInfoList)
-            appInfoAdapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun refreshAppList() {
-        // 获取所有已安装应用
-        allAppInfoList = getAllAppInfo(this, false)
-        // 清空当前显示列表
-        showAppInfoList = ArrayList()
-
-        // 从数据库加载保存的应用
-        val storageAppList = loadAppListFromDatabase()
-
-        // 添加保存的应用到显示列表
-        for (packageName in storageAppList) {
-            val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
-            if (app != null) {
-                showAppInfoList.add(app)
-            }
-        }
-
-        // 如果没有保存的应用，加载默认应用
-        if (showAppInfoList.isEmpty()) {
-            loadDefaultApps()
-        }
-
-        // 保存应用到数据库
-        saveAppListToDatabase()
-
-        // 添加占位符
-        addAppPlaceholder()
-    }
-
-    private fun loadAppListFromDatabase(): List<String> {
-        val storageAppList = ArrayList<String>()
-        val cursor = myDbHelper.writableDatabase.query("showapp", null, null, null, null, null, null)
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range")
-                val packageName = cursor.getString(cursor.getColumnIndex("packagename"))
-                storageAppList.add(packageName)
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", arrayOf(packageName))
-            }
-            cursor.close()
-        }
-        return storageAppList
-    }
-
-    private fun loadDefaultApps() {
-        for (packName in Utils.getDefaultShowApp(this)) {
-            val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
-            if (appInfo != null) {
-                showAppInfoList.add(appInfo)
-            }
-        }
-    }
-
-    private fun saveAppListToDatabase() {
-        for (storagePac in showAppInfoList) {
-            if (storagePac != null) {
-                val contentValues = ContentValues().apply {
-                    put("packagename", storagePac.package_name)
-                }
-                sqLiteDatabase.insert("showapp", null, contentValues)
-            }
-        }
-    }
-
-    private fun addAppPlaceholder() {
-// 使用统一的占位符更新方法
-        updateAppPlaceholder(false)
-    }
-
-
-    val addSelectAppCallback: AddSelectAppCallback = object : AddSelectAppCallback {
-        @SuppressLint("NotifyDataSetChanged")
-        override fun addAppInfo(appInfo: AppInfo) {
-            for (pack in showAppInfoList)
-                if (pack.package_name.equals(appInfo.package_name)) {
-                    popupWindow.dismiss()
-                    showPopupI.hidePopup()
-                    return
-                }
-            showAppInfoList.remove(placehodlerInfo)
-
-            showAppInfoList.add(appInfo)
-            showAppInfoList.add(placehodlerInfo)
-            appInfoAdapter.setContentList(showAppInfoList)
-            appInfoAdapter.notifyDataSetChanged()
-            thread {
-                val contentValues = ContentValues().apply {
-                    put("packagename", appInfo.package_name)
-                }
-                sqLiteDatabase.insert("showapp", null, contentValues)
-            }
-
-
-            showPopupI.hidePopup()
-        }
-
-        override fun removeAppInfo(packageName: String?) {
-            sqLiteDatabase.delete("showapp", "packagename=?", arrayOf(packageName))
-            for (pack in showAppInfoList)
-                if (pack.package_name.equals(packageName)) {
-                    showAppInfoList.remove(pack)
-                    break
-                }
-
-            appInfoAdapter.setContentList(showAppInfoList)
-        }
-
-    }
-
-    private val showPopupI: ShowPopupI = object : ShowPopupI {
-        override fun showPopup() {
-            showPopupAllApp()
-            backgroundAlpha(0.2f)
-        }
-
-        override fun hidePopup() {
-            popupWindow.dismiss()
-        }
-    }
-
-    private fun showPopupAllApp() {
-        val view: View = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null)
-        popupWindow = PopupWindow(
-            view,
-            RecyclerView.LayoutParams.WRAP_CONTENT,
-            RecyclerView.LayoutParams.WRAP_CONTENT
-        )
-
-        popupWindow.isOutsideTouchable = true
-        popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
-
-        allAppInfoList = getAllAppInfo(this, false)
-
-        val rvPop = view.findViewById<RecyclerView>(R.id.rv_pop_allapp)
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.orientation = RecyclerView.HORIZONTAL
-        val appInfoAdapter = AppPopAdapter(this, allAppInfoList, addSelectAppCallback)
-        rvPop.layoutManager = gridLayoutManager
-        rvPop.adapter = appInfoAdapter
-
-        popupWindow.setOnDismissListener {
-            backgroundAlpha(1.0f)
-        }
-
-        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 10)
-    }
-
-    private fun backgroundAlpha(alpha: Float) {
-        val lp = window.attributes
-        lp.alpha = alpha //0.0-1.0
-        window.attributes = lp
-    }
-
-    private fun getAllAppInfo(context: Context, isFilterSystem: Boolean): ArrayList<AppInfo> {
-        val appBeanList: ArrayList<AppInfo> = ArrayList()
-
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-
-        val packageManager = context.packageManager
-        val resolveInfos = packageManager.queryIntentActivities(intent, 0)
-
-        val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
-            try {
-                packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
-            } catch (e: PackageManager.NameNotFoundException) {
-                null
-            }
-        }.distinctBy { it.packageName }
-
-
-        for (p in appList) {
-            val bean = AppInfo()
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager))
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
-            val pack = p.applicationInfo.packageName
-            bean.setPackage_name(pack)
-            val flags = p.applicationInfo.flags
-            bean.setFlags(flags)
-            if ((flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                && Utils.needToShowPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
-            } else if ((flags and ApplicationInfo.FLAG_SYSTEM) == 0
-                && !Utils.filterAppPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
-            } else if ((flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                && Utils.otherNeedToShowPackageName.contains(pack)
-            ) {
-                appBeanList.add(bean)
-            }
-
-        }
-
-        return appBeanList
-    }
-
     private fun updateAppListAfterUninstall(packageName: String) {
-// Remove from showAppInfoList
+        // Remove from showAppInfoList
         val iterator: MutableIterator<AppInfo?> = showAppInfoList.iterator()
         while (iterator.hasNext()) {
             val appInfo = iterator.next()
@@ -1164,10 +1101,10 @@ class UIActivity : Activity(), View.OnClickListener {
             }
         }
 
-// Remove from database
-        sqLiteDatabase.delete("showapp", "packagename=?", arrayOf<String?>(packageName))
+        // Remove from database
+        AppListStorage.removeItem(this, packageName);
 
-// Refresh the adapter
+        // Refresh the adapter
         runOnUiThread(object : Runnable {
             override fun run() {
                 if (appInfoAdapter != null) {
@@ -1177,113 +1114,85 @@ class UIActivity : Activity(), View.OnClickListener {
         })
     }
 
+    private fun refreshAppListAsync() {
+        // 1. 后台：获取所有已安装应用
+        val freshAllList: ArrayList<AppInfo> = getAllAppInfo(this, false)
+        allAppInfoList = freshAllList
 
+        // 2. 后台：从 SP 加载保存的应用
+        val storageAppList = AppListStorage.load(this)
+
+        // 3. 后台：构建新的显示列表
+        val newShowList: MutableList<AppInfo> = ArrayList<AppInfo>()
+        for (packageName in storageAppList) {
+            val app = Utils.getAppInfoFromPackage(packageName, freshAllList)
+            if (app != null) {
+                newShowList.add(app)
+            }
+        }
+        if (newShowList.isEmpty()) {
+            // 后台：加载默认应用
+            loadDefaultAppsInto(newShowList, freshAllList)
+        }
+        // 4. 后台：保存到 SP
+        saveAppListToPref(newShowList)
+        // 5. 后台：添加占位符
+        addAppPlaceholderTo(newShowList)
+
+        // 6. 统一替换 showAppInfoList
+        showAppInfoList = newShowList as ArrayList<AppInfo>
+    }
+    private fun loadDefaultAppsInto(target: MutableList<AppInfo>, allApps: MutableList<AppInfo>) {
+        //val defaultApps = arrayOf<String>("com.google.android.apps.maps", "com.awell.eqselect", "com.awell.bluetooth", "com.awell.localmusic")
+        for (packName  in Utils.getDefaultShowApp(this)) {
+            val appInfo = Utils.getAppInfoFromPackage(packName, allApps)
+            if (appInfo != null) target.add(appInfo)
+        }
+    }
+
+    private fun saveAppListToPref(list: MutableList<AppInfo>) {
+        val packageNames: MutableList<String> = ArrayList<String>()
+        for (app in list) {
+            if (app != null) packageNames.add(app.package_name)
+        }
+        AppListStorage.save(this, packageNames)
+    }
+
+    private fun addAppPlaceholderTo(list: MutableList<AppInfo>) {
+        list.add(placehodlerInfo)
+    }
     private fun verifyInstalledApps() {
         if (showAppInfoList == null || showAppInfoList.isEmpty()) return
 
-
         // 刷新应用列表
-        refreshAppList()
-
-        // 检查应用数量是否匹配
-        checkAppCountMatch()
-
-        // 刷新适配器
         if (appInfoAdapter != null) {
             appInfoAdapter.setContentList(showAppInfoList)
         }
-    }
 
-    private fun checkAppCountMatch() {
-        // 获取系统中实际应用列表
-        val actualAppList: ArrayList<AppInfo> = getAllAppInfo(this, false)
-        // 获取系统中实际应用数量
-        val actualAppCount = actualAppList.size
-        // 获取当前应用列表中的应用数量
-        val currentAppCount = if (allAppInfoList != null) allAppInfoList.size else 0
+        // 检查应用数量是否匹配
+        //checkAppCountMatch()
 
 
-        // 检查数量是否匹配
-        val countMatches = actualAppCount == currentAppCount
-        // 检查包名是否匹配
-        val packageNamesMatch = countMatches && comparePackageNames(
-            actualAppList as java.util.ArrayList<AppInfo?>?,
-            allAppInfoList as MutableList<AppInfo?>?
-        )
+        // 检查应用数量是否匹配
+        //checkAppCountMatch();
 
-
-        // 检查是否完全匹配
-        if (!countMatches || !packageNamesMatch) {
-            // 数量或包名不匹配，显示不匹配占位符
-            updateAppPlaceholder(true)
-        } else {
-            // 数量和包名都匹配，显示正常占位符
-            updateAppPlaceholder(false)
-        }
-    }
-
-    private fun comparePackageNames(
-        actualAppList: java.util.ArrayList<AppInfo?>?,
-        currentAppList: MutableList<AppInfo?>?
-    ): Boolean {
-        if (actualAppList == null || currentAppList == null) {
-            return false
-        }
-
-
-        // 创建包名集合进行比较
-        val actualPackages: MutableSet<String?> = HashSet<String?>()
-        for (appInfo in actualAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                actualPackages.add(appInfo.package_name)
-            }
-        }
-
-        val currentPackages: MutableSet<String?> = HashSet<String?>()
-        for (appInfo in currentAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                currentPackages.add(appInfo.package_name)
-            }
-        }
-
-
-// 检查两个集合是否相等
-        return actualPackages == currentPackages
-    }
-
-    private fun updateAppPlaceholder(isMismatch: Boolean) {
-// 移除所有占位符
-        removeAllPlaceholders()
-
-
-// 添加相应的占位符
-        if (isMismatch) {
-// 添加不匹配占位符
-            val mismatchPlaceholder = createMismatchPlaceholder()
-            showAppInfoList.add(mismatchPlaceholder)
-        } else {
-// 添加正常占位符
-            showAppInfoList.add(placehodlerInfo)
-        }
-    }
-
-    private fun removeAllPlaceholders() {
-        for (i in showAppInfoList.indices.reversed()) {
-            val appInfo: AppInfo? = showAppInfoList.get(i)
-            if (appInfo != null) {
-                // 移除正常占位符
-                if (appInfo.getLabel() != null && appInfo.getLabel() == getString(R.string.add_app)) {
-                    showAppInfoList.removeAt(i)
-                } else if ("placeholder_mismatch" == appInfo.package_name) {
-                    showAppInfoList.removeAt(i)
+        // 刷新适配器
+        Thread(java.lang.Runnable {
+            // 后台加载所有已安装应用并更新 showAppInfoList
+            refreshAppListAsync()
+            runOnUiThread(java.lang.Runnable {
+                if (appInfoAdapter != null) {
+                    appInfoAdapter.setContentList(showAppInfoList)
                 }
-            }
-        }
+                com.awell.utils.LogUtil.i("end ,verifyInstalledApps")
+            })
+        }).start()
     }
+
 
     private fun createMismatchPlaceholder(): AppInfo {
         val mismatchPlaceholder = AppInfo()
-        mismatchPlaceholder.setIcon(getDrawable(R.drawable.sf_app_add_icon))
+        //mismatchPlaceholder.setIcon(resources.getDrawable(R.drawable.sf_app_add_icon))
         mismatchPlaceholder.setLabel(getString(R.string.add_app))
         mismatchPlaceholder.package_name = "placeholder_mismatch"
         return mismatchPlaceholder

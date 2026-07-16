@@ -25,5 +25,13 @@
     <dimen name="rv_margin_end">20dp</dimen>
     <dimen name="freeform_full_width">90dp</dimen>
     <dimen name="freeform_full_height">95dp</dimen>
+    <dimen name="ll_height">480dp</dimen>
+    <dimen name="ll_width">640dp</dimen>
+    <dimen name="app_icon_width">64dp</dimen>
+    <dimen name="app_icon_height">128dp</dimen>
+    <dimen name="app_icon_margin" >12dp</dimen>
+    <dimen name="app_icon_tv_width">72dp</dimen>
+    <dimen name="app_icon_tv_margin">8dp</dimen>
+    <dimen name="app_icon_tv_size">16sp</dimen>
 
 </resources>

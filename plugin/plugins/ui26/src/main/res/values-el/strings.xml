@@ -1,0 +1,13 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="music">Μουσική</string>
+    <string name="add_app">Προσθέτει</string>
+
+    
+
+</resources>

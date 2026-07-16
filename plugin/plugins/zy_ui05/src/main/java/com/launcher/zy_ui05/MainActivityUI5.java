@@ -74,13 +74,14 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         clickApp();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(6,false);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+                .setThemeMode(6)
+                .setRefresh(false)
                 .setAutoWidthGap(true)
                 .setColumnCount(5)
                 .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
                 .build();
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(appsCustomizeConfig);
 
     }
 

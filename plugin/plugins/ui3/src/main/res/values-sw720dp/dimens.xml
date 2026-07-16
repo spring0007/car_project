@@ -11,7 +11,7 @@
     <dimen name="bottom_frame_height">174dp</dimen>
 
     <dimen name="time_start_radio">0.95</dimen>
-    <dimen name="hotset_allapp_size">48dp</dimen>
+    <dimen name="hotset_allapp_size">88dp</dimen>
     <dimen name="time_font_size1">80sp</dimen>
     <dimen name="date_font_size1">30sp</dimen>
     <dimen name="music_name_text_size">24sp</dimen>
@@ -19,4 +19,12 @@
     <dimen name="radio_iv_width">244dp</dimen>
     <dimen name="radio_iv_height">69dp</dimen>
     <dimen name="iv_radio_size">50dp</dimen>
+    <dimen name="ll_height">600dp</dimen>
+    <dimen name="ll_width">800dp</dimen>
+    <dimen name="app_icon_width">90dp</dimen>
+    <dimen name="app_icon_height">160dp</dimen>
+    <dimen name="app_icon_margin">20dp</dimen>
+    <dimen name="app_icon_tv_width">90dp</dimen>
+    <dimen name="app_icon_tv_margin">10dp</dimen>
+    <dimen name="app_icon_tv_size">20sp</dimen>
 </resources>

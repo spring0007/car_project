@@ -134,6 +134,7 @@ import com.awell.addapp.AppInofAdapter;
 import com.awell.addapp.AppPopAdapter;
 import com.awell.addapp.MyDbHelper;
 import com.awell.addapp.ShowPopupI;
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.control.MediaViewModel;
@@ -538,7 +539,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         updateSpeedUnitText();
         Log.i(TAG, "onCreate end ...");
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(1);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(1).build());
 
         Intent serviceIntent = new Intent(this, MediaNotificationListener.class);
         startForegroundService(serviceIntent);

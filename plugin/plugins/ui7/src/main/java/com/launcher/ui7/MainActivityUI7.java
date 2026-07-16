@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher2.IconCache;
 import com.launcher.ui7.databinding.ActivityMainUi7Binding;
@@ -48,7 +49,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         binding.timeLayout.dateLayout.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(2).build());
 
     }
 

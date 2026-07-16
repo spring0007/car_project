@@ -57,26 +57,23 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         binding.ivBluetoothPhone.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
       //  AppsCustomizeControl.INSTANCE.setAppIconSize((int) getResources().getDimension(R.dimen.app_icon_size));
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(5, false);
-        AppsCustomizeConfig config = getAppsCustomizeConfig();
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(config);
-
-        musicWidget = findViewById(R.id.music_widget_layout);
-        setMusicWidget(musicWidget);
-    }
-    private AppsCustomizeConfig getAppsCustomizeConfig() {
         int iconSize = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_size);
         int iconPadding = (int) getResources().getDimensionPixelSize(R.dimen.app_icon_padding);
         int cellHeight = (int) getResources().getDimensionPixelSize(R.dimen.cell_height);
-        return new AppsCustomizeConfig.Builder()
-                .setCustomStyle(true)
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder()
+                .setThemeMode(5)
+                .setRefresh(false)
+                //.setCustomStyle(true)
                 .setIconSize(iconSize)
                 .setIconTextPadding(iconPadding)
                 .setCellHeightDp(cellHeight)
                 .setColumnCount(5)
                 .setTextLine(1)
                 .setAutoWidthGap(true)
-                .build();
+                .build());
+
+        musicWidget = findViewById(R.id.music_widget_layout);
+        setMusicWidget(musicWidget);
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {

@@ -61,7 +61,11 @@ import android.content.Context
  */
 data class AppsCustomizeConfig(
     // ========== 样式配置 ==========
-    //val customStyle: Boolean= false, // 自定义样式，true 表示自定义样式,每行的图标数量固定 ;false 表示默认样式 ,每行的图标数量默认为7个,根据不同的分辨率自动适配图标数量
+    val themeMode: Int = 1,  //主题模式 1=默认
+    val refresh: Boolean = true, // 是否立即刷新应用图标属性
+    val iconSizeSame: Boolean = false, //是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
+
+
     // ========== 图标配置 ==========
     val iconSize: Int = -1,               // 图标大小（像素），-1 表示默认
     val iconTextPadding: Int = 0,       // 图标文本内边距（像素）
@@ -82,13 +86,24 @@ data class AppsCustomizeConfig(
     // ========== Cell 配置 ==========
     val cellWidthDp: Int = -1,            // Cell 宽度（dp），-1 表示默认
     val cellHeightDp: Int = -1,           // Cell 高度（dp），-1 表示默认
+    val iconCropWidth: Int = 0, // 图标剪裁宽度
+    val iconCropHeight: Int = 0, // 图标剪裁高度
 
     // ========== 间距配置 ==========
     val autoWidthGap: Boolean = false,    // 水平间距是否自动调整，false 表示不修改
     val autoHeightGap: Boolean = false,   // 垂直间距是否自动调整，false 表示不修改
+    val iconGapX: Int = 0, // 图标水平间距（像素）
+    val iconGapY: Int = 0, // 图标垂直间距（像素）
+
 
     // ========== 主题配置 ==========
+    var iconMap: Map<String, String>? = null, //图标映射表
+    val pluginPackageName: String? = null, //Plugin 包名
+    val pluginOtherBgName: String? = null, // 默认插件背景图片名称
     val backgroundTheme: Int = -1,         // 页面背景主题，-1 表示不修改
+
+    //============ 翻页器 ================
+    val indicatorPanel: Int = 0, //翻页指示器样式
 
 
 ) {
@@ -104,11 +119,48 @@ data class AppsCustomizeConfig(
      * ```
      */
     class Builder {
+
         /**
-         * 自定义样式
-         * true=固定图标数量; false=自动适配
+         *  主题模式 1=默认
          */
-        //private var customStyle: Boolean = false
+        private var themeMode: Int = 1
+
+        /**
+         *  是否立即刷新应用图标属性
+         */
+        private var refresh: Boolean = true
+
+        /**
+         *  是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
+         */
+        private var iconSizeSame: Boolean = false
+
+        /**
+         *  图标映射表
+         */
+        private var iconMap: Map<String, String>? = null
+        /**
+         * 默认插件背景图片名称
+         */
+        private var pluginOtherBgName: String? = null
+        /**
+         * Plugin 包名
+         */
+        private var pluginPackageName: String? = null
+        /**
+         * 图标剪裁宽度 ,一般只设置iconCropWidth ，代表圆形
+         */
+        private var iconCropWidth: Int = 0
+        /**
+         * 图标剪裁高度 ,一般只设置iconCropHeight ，代表方形
+         */
+        private var iconCropHeight: Int = 0
+
+        /**
+         *  翻页指示器样式
+         */
+        private var indicatorPanel: Int = 0
+
         
         /**
          * 图标大小（像素）
@@ -198,14 +250,34 @@ data class AppsCustomizeConfig(
          * false 表示不修改
          */
         private var autoHeightGap: Boolean = false
-        
+
+        /**
+         * 图标水平间距（像素）
+         * 0 表示不修改
+         */
+        private var iconGapX: Int = 0
+        /**
+         * 图标垂直间距（像素）
+         * 0 表示不修改
+         */
+        private var iconGapY: Int = 0
+
         /**
          * 页面背景主题
          * -1 表示不修改
          */
         private var backgroundTheme: Int = -1
 
-        //fun setCustomStyle(value: Boolean) = apply { this.customStyle = value }
+        fun setIconSizeSame(value: Boolean) = apply { this.iconSizeSame = value }
+        fun setThemeMode(value: Int) = apply { this.themeMode = value }
+        fun setRefresh(value: Boolean) = apply { this.refresh = value }
+        fun setIconMap(value: Map<String, String>?) = apply { this.iconMap = value }
+        fun setPluginOtherBgName(value: String?) = apply { this.pluginOtherBgName = value }
+        fun setPluginPackageName(value: String?) = apply { this.pluginPackageName = value }
+        fun setIconCropWidth(value: Int) = apply { this.iconCropWidth = value }
+        fun setIconCropHeight(value: Int) = apply { this.iconCropHeight = value }
+        fun setIndicatorPanel(value: Int) = apply { this.indicatorPanel = value }
+
         fun setIconSize(value: Int) = apply { this.iconSize = value }
         fun setIconTextPadding(value: Int) = apply { this.iconTextPadding = value }
         fun setIconOffsetX(value: Int) = apply { this.iconOffsetX = value }
@@ -220,11 +292,16 @@ data class AppsCustomizeConfig(
         fun setCellWidthDp(value: Int) = apply { this.cellWidthDp = value }
         fun setCellHeightDp(value: Int) = apply { this.cellHeightDp = value }
         fun setAutoWidthGap(value: Boolean) = apply { this.autoWidthGap = value }
+        fun setIconGapX(value: Int) = apply { this.iconGapX = value }
+        fun setIconGapY(value: Int) = apply { this.iconGapY = value }
         fun setAutoHeightGap(value: Boolean) = apply { this.autoHeightGap = value }
         fun setBackgroundTheme(value: Int) = apply { this.backgroundTheme = value }
 
         fun build(): AppsCustomizeConfig = AppsCustomizeConfig(
-            //customStyle,
+
+            themeMode,
+            refresh,
+            iconSizeSame,
             iconSize,
             iconTextPadding,
             iconOffsetX,
@@ -238,11 +315,53 @@ data class AppsCustomizeConfig(
             textLine,
             cellWidthDp,
             cellHeightDp,
+            iconCropWidth,
+            iconCropHeight,
             autoWidthGap,
             autoHeightGap,
-            backgroundTheme
+            iconGapX = 0,
+            iconGapY = 0,
+            iconMap,
+            pluginPackageName,
+            pluginOtherBgName,
+            backgroundTheme,
+            indicatorPanel,
+
         )
     }
+
+    override fun toString(): String {
+        val props = mutableListOf<String>()
+        if (themeMode != 1) props.add("themeMode=$themeMode")
+        if (!refresh) props.add("refresh=$refresh")
+        if (iconSizeSame) props.add("iconSizeSame=$iconSizeSame")
+        if (iconSize != -1) props.add("iconSize=$iconSize")
+        if (iconTextPadding != 0) props.add("iconTextPadding=$iconTextPadding")
+        if (iconOffsetX != 0) props.add("iconOffsetX=$iconOffsetX")
+        if (iconOffsetY != 0) props.add("iconOffsetY=$iconOffsetY")
+        if (textOrientation != -1) props.add("textOrientation=$textOrientation")
+        if (textGravity != -1) props.add("textGravity=$textGravity")
+        if (columnCount != -1) props.add("columnCount=$columnCount")
+        if (rowCount != -1) props.add("rowCount=$rowCount")
+        if (fontSizeSp != -1) props.add("fontSizeSp=$fontSizeSp")
+        if (fontColor != -1) props.add("fontColor=$fontColor")
+        if (textLine != -1) props.add("textLine=$textLine")
+        if (cellWidthDp != -1) props.add("cellWidthDp=$cellWidthDp")
+        if (cellHeightDp != -1) props.add("cellHeightDp=$cellHeightDp")
+        if (iconCropWidth != 0) props.add("iconCropWidth=$iconCropWidth")
+        if (iconCropHeight != 0) props.add("iconCropHeight=$iconCropHeight")
+        if (autoWidthGap) props.add("autoWidthGap=$autoWidthGap")
+        if (autoHeightGap) props.add("autoHeightGap=$autoHeightGap")
+        if (iconGapX != 0) props.add("iconGapX=$iconGapX")
+        if (iconGapY != 0) props.add("iconGapY=$iconGapY")
+        if (iconMap != null) props.add("iconMap=$iconMap")
+        if (pluginPackageName != null) props.add("pluginPackageName=$pluginPackageName")
+        if (pluginOtherBgName != null) props.add("pluginOtherBgName=$pluginOtherBgName")
+        if (backgroundTheme != -1) props.add("backgroundTheme=$backgroundTheme")
+        if (indicatorPanel != 0) props.add("indicatorPanel=$indicatorPanel")
+        return "AppsCustomizeConfig(${props.joinToString(", ")})"
+    }
+
 
     companion object {
         /**

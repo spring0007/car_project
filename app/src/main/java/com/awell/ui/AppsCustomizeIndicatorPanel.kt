@@ -44,14 +44,18 @@ class AppsCustomizeIndicatorPanel(context: Context) : View(context) {
     fun setIndicatorStyle( style : Int){
         when (style) {
             1 -> {
-                val bmp = resources.getDrawable(R.drawable.mui101_ic_pageindicator_default) as BitmapDrawable
+                val bmp = resources.getDrawable(R.drawable. mui101_ic_pageindicator_current) as BitmapDrawable
                 mBmpBackground = bmp.bitmap
-                val bmpDraw = resources.getDrawable(R.drawable.mui101_ic_pageindicator_current) as BitmapDrawable
+                val bmpDraw = resources.getDrawable(R.drawable.mui101_ic_pageindicator_default) as BitmapDrawable
                 mBmpSelect = bmpDraw.bitmap
             }
-            /*2 -> {
-                val bmp = resources.getDrawable(R.drawable.dot_nor2) as BitmapDrawable
-            }*/
+//            2 -> { //逸卡思 --长条
+//                val bmp = resources.getDrawable(R.drawable.yks_dot_sel) as BitmapDrawable
+//                mBmpBackground = bmp.bitmap
+//                val bmpDraw = resources.getDrawable(R.drawable.yks_dot_nor) as BitmapDrawable
+//                mBmpSelect = bmpDraw.bitmap
+//
+//            }
             else -> {
                 val bmp = resources.getDrawable(R.drawable.dot_nor3) as BitmapDrawable
                 mBmpBackground = bmp.bitmap

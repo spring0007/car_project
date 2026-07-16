@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -72,7 +73,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setActivity(this);
         SharedPreferences sharedPreferences = getSharedPreferences("styleMode", MODE_PRIVATE);
         int styleMode = sharedPreferences.getInt("styleMode", 1);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(styleMode);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(styleMode).build());
 
     }
 
@@ -291,7 +292,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
                 styleMode++;
             }
             sharedPreferences.edit().putInt("styleMode", styleMode).apply();
-            AppsCustomizeControl.INSTANCE.setPluginThemeMode(styleMode,true);
+            AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(styleMode).build());
             Toast.makeText(this, "应用图标已切换成功", Toast.LENGTH_SHORT).show();
         }else if (v.getId() == R.id.iv_radio_icon) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");

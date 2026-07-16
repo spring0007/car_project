@@ -28,8 +28,8 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresPermission
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
-import com.awell.control.AppsCustomizeControl.setPluginThemeMode
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
 import com.awell.launcher2.IconCache
@@ -110,7 +110,7 @@ class UI2Activity : Activity() {
         initBroadcastReceiver()
 
         AppsCustomizeControl.setActivity(this)
-        setPluginThemeMode(1)
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder().setThemeMode(1).build())
 
     }
 

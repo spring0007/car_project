@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -59,7 +60,7 @@ public class MainActivityUI12 extends Activity implements View.OnClickListener {
         setBtstatus();
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(2);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(2).build());
 
     }
 

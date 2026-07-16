@@ -25,6 +25,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -72,7 +73,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(0).build());
     }
 
     private void initReceiver() {

@@ -148,11 +148,13 @@ class UIActivity : Activity(), View.OnClickListener {
             .setCellWidthDp(cellWidth) //358
             .setCellHeightDp(cellHeight)
             .setBackgroundTheme(1)
+            .setThemeMode(0xff)
+            .setRefresh(false)
+            .setIconSizeSame(true)
+            .setIconMap(IconManager.PACKAGE_ICON_MAP)
+            .setPluginPackageName("com.launcher.zy_ui03")
             .build()
-
-                
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,true ,IconManager.PACKAGE_ICON_MAP, null, "com.launcher.zy_ui03")
-        AppsCustomizeControl.applyAppsCustomizeConfig(config)
+        AppsCustomizeControl.setPluginThemeMode(config)
         // 初始化 IconManager，预加载资源
         IconManager.initialize(this)
 
@@ -234,56 +236,6 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-//        private fun refreshAppList() {
-//        LogUtil.i("start ,refreshAppList");
-//        // 获取所有已安装应用
-//        allAppInfoList = getAllAppInfo(this, false);
-//        // 清空当前显示列表
-//        showAppInfoList = ArrayList<AppInfo>()
-//
-//        // 从 SharedPreferences 加载保存的应用 — 替代 loadAppListFromDatabase()
-//        val storageAppList = AppListStorage.load(this);
-//        // 添加保存的应用到显示列表
-//        for ( packageName in storageAppList) {
-//            val app = Utils.getAppInfoFromPackage(packageName, allAppInfoList)
-//            if (app != null) {
-//                showAppInfoList.add(app);
-//            }
-//        }
-//        // 如果没有保存的应用，加载默认应用
-//        if (showAppInfoList.isEmpty()) {
-//            loadDefaultApps();
-//        }
-//        // 保存应用到 SharedPreferences — 替代 saveAppListToDatabase()
-//        saveAppListToPref()
-//        addAppPlaceholder()
-//        LogUtil.i("end ,refreshAppList")
-//    }
-
-//    // 新增：写入 SP
-//    private fun saveAppListToPref() {
-//        val packageNames = ArrayList<String>()
-//        for ( app in showAppInfoList) {
-//            if (app != null) {
-//                packageNames.add(app.package_name);
-//            }
-//        }
-//        AppListStorage.save(this, packageNames);
-//    }
-//
-//    private fun loadDefaultApps() {
-//        for (packName in Utils.getDefaultShowApp(this)) {
-//            val appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList)
-//            if (appInfo != null) {
-//                showAppInfoList.add(appInfo)
-//            }
-//        }
-//    }
-
-//    private fun addAppPlaceholder() {
-//        // 使用统一的占位符更新方法
-//        updateAppPlaceholder(false)
-//    }
 
     val addSelectAppCallback: AddSelectAppCallback = object : AddSelectAppCallback {
         @SuppressLint("NotifyDataSetChanged")
@@ -322,7 +274,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private val showPopupI: ShowPopupI = object : ShowPopupI {
         override fun showPopup() {
             showPopupAllApp()
-            backgroundAlpha(0.1f)
+           // backgroundAlpha(0.1f)
         }
 
         override fun hidePopup() {
@@ -334,18 +286,20 @@ class UIActivity : Activity(), View.OnClickListener {
         val view: View = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null)
         
         // 计算屏幕尺寸的 80% 和 60%
-        val displayMetrics = resources.displayMetrics
-        val popupWidth = (displayMetrics.widthPixels * 0.8).toInt()
+        //val displayMetrics = resources.displayMetrics
+       // val popupWidth = (displayMetrics.widthPixels * 0.8).toInt()
         //val popupHeight = (displayMetrics.heightPixels * 0.8).toInt()
         
         popupWindow = PopupWindow(
             view,
-            popupWidth  ,
-           /* popupHeight */ WindowManager.LayoutParams.WRAP_CONTENT
+            WindowManager.LayoutParams.MATCH_PARENT  ,
+           WindowManager.LayoutParams.MATCH_PARENT,
+            true
         )
 
         popupWindow.isOutsideTouchable = true
         popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
+        view.setOnClickListener { popupWindow.dismiss() }
 
         allAppInfoList = getAllAppInfo(this, false)
 
@@ -354,7 +308,7 @@ class UIActivity : Activity(), View.OnClickListener {
         gridLayoutManager.orientation = RecyclerView.HORIZONTAL
         
         // 添加垂直方向间隔（50dp）- 只在行与行之间有间隔
-        val verticalSpacing = (50 * resources.displayMetrics.density).toInt()
+        val verticalSpacing = (20 * resources.displayMetrics.density).toInt()
         rvPop.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = verticalSpacing
@@ -366,17 +320,7 @@ class UIActivity : Activity(), View.OnClickListener {
         rvPop.layoutManager = gridLayoutManager
         rvPop.adapter = appInfoAdapter
 
-        popupWindow.setOnDismissListener {
-            backgroundAlpha(1.0f)
-        }
-
-        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 10)
-    }
-
-    private fun backgroundAlpha(alpha: Float) {
-        val lp = window.attributes
-        lp.alpha = alpha //0.0-1.0
-        window.attributes = lp
+        popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0,0)
     }
 
 
@@ -1115,91 +1059,6 @@ class UIActivity : Activity(), View.OnClickListener {
         }).start()
     }
 
-//    private fun checkAppCountMatch() {
-//        // 获取系统中实际应用列表
-//        val actualAppList: ArrayList<AppInfo> = getAllAppInfo(this, false)
-//        // 获取系统中实际应用数量
-//        val actualAppCount = actualAppList.size
-//        // 获取当前应用列表中的应用数量
-//        val currentAppCount = if (allAppInfoList != null) allAppInfoList.size else 0
-//
-//
-//        // 检查数量是否匹配
-//        val countMatches = actualAppCount == currentAppCount
-//        // 检查包名是否匹配
-//        val packageNamesMatch = countMatches && comparePackageNames(actualAppList as java.util.ArrayList<AppInfo?>?,
-//            allAppInfoList as MutableList<AppInfo?>?
-//        )
-//
-//
-//        // 检查是否完全匹配
-//        if (!countMatches || !packageNamesMatch) {
-//            // 数量或包名不匹配，显示不匹配占位符
-//            updateAppPlaceholder(true)
-//        } else {
-//            // 数量和包名都匹配，显示正常占位符
-//            updateAppPlaceholder(false)
-//        }
-//    }
-
-//    private fun comparePackageNames(
-//        actualAppList: java.util.ArrayList<AppInfo?>?,
-//        currentAppList: MutableList<AppInfo?>?
-//    ): Boolean {
-//        if (actualAppList == null || currentAppList == null) {
-//            return false
-//        }
-//
-//
-//        // 创建包名集合进行比较
-//        val actualPackages: MutableSet<String?> = HashSet<String?>()
-//        for (appInfo in actualAppList) {
-//            if (appInfo != null && appInfo.package_name != null) {
-//                actualPackages.add(appInfo.package_name)
-//            }
-//        }
-//
-//        val currentPackages: MutableSet<String?> = HashSet<String?>()
-//        for (appInfo in currentAppList) {
-//            if (appInfo != null && appInfo.package_name != null) {
-//                currentPackages.add(appInfo.package_name)
-//            }
-//        }
-//
-//
-//        // 检查两个集合是否相等
-//        return actualPackages == currentPackages
-//    }
-//
-//    private fun updateAppPlaceholder(isMismatch: Boolean) {
-//        // 移除所有占位符
-//        removeAllPlaceholders()
-//
-//
-//        // 添加相应的占位符
-//        if (isMismatch) {
-//            // 添加不匹配占位符
-//            val mismatchPlaceholder = createMismatchPlaceholder()
-//            showAppInfoList.add(mismatchPlaceholder)
-//        } else {
-//            // 添加正常占位符
-//            showAppInfoList.add(placehodlerInfo)
-//        }
-//    }
-
-//    private fun removeAllPlaceholders() {
-//        for (i in showAppInfoList.indices.reversed()) {
-//            val appInfo: AppInfo? = showAppInfoList.get(i)
-//            if (appInfo != null) {
-//                // 移除正常占位符
-//                if (appInfo.getLabel() != null && appInfo.getLabel() == getString(R.string.add_app)) {
-//                    showAppInfoList.removeAt(i)
-//                } else if ("placeholder_mismatch" == appInfo.package_name) {
-//                    showAppInfoList.removeAt(i)
-//                }
-//            }
-//        }
-//    }
 
     /**
      * 创建占位符应用信息（用于“添加应用”按钮）

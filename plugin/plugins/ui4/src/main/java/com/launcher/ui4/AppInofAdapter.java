@@ -13,12 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
-import com.awell.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,22 +61,18 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         if ("placeholder_mismatch".equals(appInfo.package_name)){
             holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
         }else {
-            Integer icon_bg =ImageManager.mHomePackName.getOrDefault(appInfo.package_name ,0);
-            if (icon_bg != null &&icon_bg != 0) {
-                holder.iv_app_icon.setImageResource(icon_bg);
+            Integer iconResId = ImageManager.mHomePackName.get(appInfo.package_name);
+            Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
+            if (icon_bg != null) {
+                holder.iv_app_icon.setImageDrawable(icon_bg);
             } else {
 
                 try {
-                    // 获取 PackageManager 实例
                     PackageManager pm = mContext.getPackageManager();
-                    // 直接通过包名获取图标 Drawable 对象
                     Drawable icon = pm.getApplicationIcon(appInfo.package_name);
-                    // 将图标设置到 ImageView 中
                     holder.iv_app_icon.setImageDrawable(icon);
                 } catch (PackageManager.NameNotFoundException e) {
-                    // 如果包名不存在，会抛出此异常
                     e.printStackTrace();
-                    // 可以在这里设置一个默认图标
                     holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
                 }
             }

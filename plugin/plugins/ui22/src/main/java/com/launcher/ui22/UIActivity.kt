@@ -125,14 +125,17 @@ class UIActivity : Activity(), View.OnClickListener {
 
         val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
         val config = AppsCustomizeConfig.Builder()
+            .setThemeMode(0xff)
+            .setRefresh(false)
+            .setIconMap(IconManager.getPackageIconMap())
+            .setPluginOtherBgName("apple_other_app3_square")
+            .setPluginPackageName("com.launcher.ui22")
             .setIconSize(icSize)
             .setFontColor(Color.BLACK)
             .setFontSizeSp(resources.getDimensionPixelSize(R.dimen.font_size_sp)) // 20
             .build()
 
-
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false , IconManager.getPackageIconMap(), "apple_other_app3_square", "com.launcher.ui22")
-        AppsCustomizeControl.applyAppsCustomizeConfig(config)
+        AppsCustomizeControl.setPluginThemeMode(config)
 
     }
 

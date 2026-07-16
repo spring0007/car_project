@@ -28,6 +28,14 @@
     <dimen name="app_icon_text_padding">24dp</dimen>
     <dimen name="recycle_app_item_width">96dp</dimen>
     <dimen name="recycle_app_item_margin">11dp</dimen>
+    <dimen name="ll_height">480dp</dimen>
+    <dimen name="ll_width">640dp</dimen>
+    <dimen name="app_icon_width">72dp</dimen>
+    <dimen name="app_icon_height">128dp</dimen>
+    <dimen name="app_icon_margin">16dp</dimen>
+    <dimen name="app_icon_tv_width">72dp</dimen>
+    <dimen name="app_icon_tv_margin">8dp</dimen>
+    <dimen name="app_icon_tv_size">16sp</dimen>
 
 
 </resources>

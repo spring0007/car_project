@@ -81,6 +81,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         int cellWidth = getResources().getDimensionPixelSize(R.dimen.cell_width);
 
         AppsCustomizeConfig config = new AppsCustomizeConfig.Builder()
+                .setThemeMode(0xff)
+                .setRefresh(false)
+                .setIconMap(IconManager.INSTANCE.getPackageIconMap())
+                .setPluginPackageName("com.launcher.zy_ui04")
                 .setColumnCount(5)
                 .setRowCount(2)
                 .setFontSizeSp(fontSize)
@@ -90,8 +94,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 //.setCellHeightDp(iconHeight)
                 .setIconSize(iconSize).build();
 
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff, false, false, IconManager.INSTANCE.getPackageIconMap(),  null, "com.launcher.zy_ui04");
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(config);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(config);
 
     }
 

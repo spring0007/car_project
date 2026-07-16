@@ -351,6 +351,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         this.mAppsCustomizeConfig = null;
         mAppIconSize =  getResources().getDimensionPixelSize(R.dimen.app_icon_size);
         mPageBackgroundResId = 0;
+        if(pageIndication != null)
+            pageIndication.setIndicatorStyle(0);
         
         // 重置 mWidgetSpacingLayout 到默认值，防止之前 plugin 的设置影响当前 plugin
         if (mWidgetSpacingLayout != null) {
@@ -407,6 +409,11 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         }
         if(configObj.getIconSize()<=0)
             mAppIconSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+
+        if(pageIndication != null)
+            pageIndication.setIndicatorStyle(Math.max(configObj.getIndicatorPanel(), 0));
+
+
         mAppsCustomizeConfig = configObj;
         if(configObj.getBackgroundTheme() <=0){
             mPageBackgroundResId = 0;

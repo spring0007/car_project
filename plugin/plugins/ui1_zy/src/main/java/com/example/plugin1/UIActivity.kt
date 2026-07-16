@@ -29,6 +29,7 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.annotation.RequiresPermission
 import androidx.core.graphics.toColorInt
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.ctrlview.MusicWidget
@@ -110,7 +111,9 @@ class UIActivity : Activity(), View.OnClickListener {
 
         initBroadcastReceiver()
         AppsCustomizeControl.setActivity(this)
-        AppsCustomizeControl.setPluginThemeMode(1)
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig(
+            themeMode = 1
+        ))
 
 
     }

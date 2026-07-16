@@ -51,11 +51,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        int iconCircleSize = (int) getResources().getDimension(R.dimen.app_icon_circle_size);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff,false,false,
-                IconManager.INSTANCE.getPACKAGE_ICON_MAP_SQUARE(),"yks_other_app",
-                "com.launcher.yks_ui01" ,iconCircleSize);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+                .setThemeMode(0xff)
+                .setRefresh(false)
+                .setIconMap(IconManager.INSTANCE.getPACKAGE_ICON_MAP_SQUARE())
+                .setPluginOtherBgName("yks_other_app")
+                .setPluginPackageName("com.launcher.yks_ui01")
+                .setIconCropWidth((int) getResources().getDimension(R.dimen.app_icon_circle_size))
                 .setAutoWidthGap(true)
                 .setAutoHeightGap(true)
                 .setColumnCount(4)
@@ -65,8 +67,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setFontSizeSp((int) getResources().getDimension(R.dimen.font_size))
                 .setCellWidthDp((int) getResources().getDimension(R.dimen.cell_width))
                 .setCellHeightDp((int) getResources().getDimension(R.dimen.cell_height))
+                //.setIndicatorPanel(2)
                 .build();
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(appsCustomizeConfig);
     }
 
     private void initReceiver() {

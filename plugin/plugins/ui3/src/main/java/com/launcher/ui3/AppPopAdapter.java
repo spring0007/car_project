@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
@@ -47,12 +48,10 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AppInfo appInfo = contentList.get(position);
-
-
-        Integer icon_bg =ImageManager.mHomePackName.getOrDefault(appInfo.package_name ,0);
-        //LogUtil.i("packgae="+appInfo.package_name+ ",icon_bg = " + icon_bg);
-        if (icon_bg != null &&icon_bg != 0) {
-            holder.iv_app_icon.setImageResource(icon_bg);
+        Integer iconResId = ImageManager.mHomePackName.get(appInfo.package_name);
+        Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
+        if (icon_bg != null) {
+            holder.iv_app_icon.setImageDrawable(icon_bg);
         } else {
 
             try {

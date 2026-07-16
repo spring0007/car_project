@@ -1,0 +1,13 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+    <string name="music">राग</string>
+    <string name="add_app">जोड़ता है</string>
+
+    
+
+</resources>

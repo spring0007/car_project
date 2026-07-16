@@ -5,7 +5,10 @@ import static com.awell.utils.Utils.startWallpaper;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
@@ -27,6 +30,7 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
+import com.awell.utils.CommonData;
 import com.launcher.zy_ui07.ClickUtils;
 import com.launcher.zy_ui07.databinding.ActivityMainBinding;
 import com.launcher.zy_ui07.databinding.MusicWidgetBinding;
@@ -60,6 +64,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
         setContentView(binding.getRoot());
 
         initLongTouch();
+        initReceiver();
         clickApp();
 
         int fontSize = getResources().getDimensionPixelSize(R.dimen.font_size);
@@ -81,10 +86,13 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
                 .setCellWidthDp(cellWidth)
                 //.setCellWidthDp(iconWidth)
                 .setCellHeightDp(cellHeight)
+                .setThemeMode(0xff)
+                .setRefresh(false)
+                .setIconMap(IconManager.getPackageIconMap())
+                .setPluginPackageName("com.launcher.zy_ui07")
+                .setPluginOtherBgName("zy07_other_app")
                 .setIconSize(iconSize).build();
-
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff, false, false, IconManager.getPackageIconMap(),  "zy07_other_app", "com.launcher.zy_ui07");
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(config);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(config);
     }
 
     @Override
@@ -114,12 +122,102 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
         try {
             mediaControl.unBindDataService(this);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initReceiver() {
+        IntentFilter filter = new IntentFilter();
+
+        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
+        filter.addAction(CommonData.ACTION_ACC_ON);
+        filter.addAction(CommonData.ACTION_ACC_OFF);
+        filter.addAction("com.zjinnova.zlink");
+        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
+        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
+        filter.addAction("top_session_package_change");
+        registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
+//        updateTime();
+    }
+
+    private BroadcastReceiver mainReceiver = new BroadcastReceiver() {
+        String SYSTEM_REASON = "reason";
+        String SYSTEM_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            LogUtil.i( "mainReceiver:" + action);
+            switch (action) {
+                case CommonData.BROADCAST_LAMP_SWITCH:
+//                    if (intent.getIntExtra("lamplet_state", 0) == 1)
+//                        ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.open);
+//                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
+                    break;
+                case CommonData.ACTION_ACC_ON:
+//                    if (ivLampSwitchBg != null)
+//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    break;
+                case CommonData.ACTION_ACC_OFF:
+                    //accRecor = true;
+                    break;
+                case CommonData.BROADCAST_MEDIA_EXIT:
+                    String packge = intent.getStringExtra("package");
+                    if (packge != null && (packge.equals("cn.kuwo.kwmusiccar") || packge.equals("exitAll"))) {
+
+                    }
+                    break;
+                case "com.zjinnova.zlink":
+                    String zlinStatus = intent.getStringExtra("status");
+                    String phoneMode = intent.getStringExtra("phoneMode");
+                    LogUtil.d( "zlinStatus:" + zlinStatus);
+                    if (zlinStatus == null) {
+                        return;
+                    }
+                    //musicWidget.getCarPlayData(zlinStatus, phoneMode);
+                    break;
+                case "android.launcher.show.allApp":
+                    AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    break;
+                case "top_session_package_change":
+                    String sessionTopPkg = intent.getStringExtra("top_package");
+                    handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
+                    LogUtil.d( "88888-top_session_package_change:" + sessionTopPkg);
+                    break;
+
+            }
+
+        }
+    };
+
+    public void handleMediaPlaybackResult(String value1, String value2, int value3, int value4) {
+        String oldPlayingPackage = mediaControl.getCurrentPkgName();
+        boolean isStartCommand = "start".equals(value2);
+        boolean isStopCommand = "stop".equals(value2);
+        boolean isValidPackage = !TextUtils.isEmpty(value1);
+        LogUtil.i("handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
+        LogUtil.i("handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
+
+
+        // 处理停止播放的情况
+        //if (isValidPackage && isStopCommand) {
+        //    mMediaListener.setCurrentPlayingPackage(null);
+        //    return;
+        //}
+
+        // 处理开始播放的情况
+        if (isValidPackage && isStartCommand) {
+            // 当前没有播放或切换到新包时，更新并启动回调
+            if (oldPlayingPackage != null && !oldPlayingPackage.equals(value1)) {
+            }
+            //Log.i(TAG, "0000----Switched to new package: " + value1);
         }
     }
 
@@ -261,11 +359,13 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
             }else if ((pkg.contains("com.awell.bluetooth") || pkg.contains("/system/bin/gocsdk") && mediaType == AudioManager.STREAM_MUSIC)) {
-                LogUtil.d("updateViewMusicPlay ,pkg=" + pkg + " command=" + command + " mediaType=" + mediaType + " currentMedia=" + currentMedia+" bundle="+bundle.toString());
+                //LogUtil.d("updateViewMusicPlay222 ,pkg=" + pkg + " command=" + command + " mediaType=" + mediaType + " currentMedia=" + currentMedia+" bundle="+bundle.toString());
                 if ("start".equals(command)){
                     binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
+                    binding.btMusicState.setTag(R.drawable.sf_music_zanting_n);
                 }else{
                     binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
+                    binding.btMusicState.setTag(R.drawable.sf_music_bofang_n);
                 }
             }
                // musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
@@ -277,11 +377,12 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             if (type == MusicWidget.MUSIC) {
                 musicWidget.setCurMusicState(status, type);
             }else if(type == MusicWidget.BT){
-                LogUtil.d("updateViewPlayStatus ,status"  + status + " type=" + type +",bundle = "+ bundle.toString());
                 if (status) {
                     binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
+                    binding.btMusicState.setTag(R.drawable.sf_music_zanting_n);
                 } else {
                     binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
+                    binding.btMusicState.setTag(R.drawable.sf_music_bofang_n);
                 }
             }
 
@@ -289,7 +390,6 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
-            LogUtil.d("updateViewMusicPlayImage ,bundle=" + bundle.toString());
            /* runOnUiThread(() -> {
                 String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
                 Uri uri = null;
@@ -317,6 +417,12 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             }else{
                 musicWidget.setMusicNameTextView(songName, type);
                 musicWidget.setArtistNameTextView(singerName, type);
+                if(type == MusicWidget.BT) {
+                    if (binding.btMusicState.getTag() != null && !binding.btMusicState.getTag().equals(R.drawable.sf_music_zanting_n)) {
+                        binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
+                        binding.btMusicState.setTag(R.drawable.sf_music_zanting_n);
+                    }
+                }
             }
         }
 

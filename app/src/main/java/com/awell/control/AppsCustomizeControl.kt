@@ -47,7 +47,7 @@ object AppsCustomizeControl {
     private lateinit var mAppContext: Context
     private lateinit var mModel: LauncherModel
     private lateinit var mIconCache: IconCache
-    private var mAppsCustomizeConfig: AppsCustomizeConfig? = null
+    //private var mAppsCustomizeConfig: AppsCustomizeConfig? = null
 
 
     var mAllIsShowing = false
@@ -65,138 +65,36 @@ object AppsCustomizeControl {
 
     }
 
-    /**
-     * 设置 Plugin 主题模式
-     * @param themeMode 主题模式值
-     * @param refresh 默认立即刷新应用图标属性
-     */
-    fun setPluginThemeMode(themeMode: Int) {
-        setPluginThemeMode(themeMode, true)
-    }
 
-    /**
-     * 设置 Plugin 主题模式
-     * @param themeMode 主题模式值
-     * @param refresh 是否立即刷新应用图标属性
-     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
-     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
-     */
-    fun setPluginThemeMode(themeMode: Int,refresh: Boolean = true ) {
-        setPluginThemeMode(themeMode, refresh , iconSizeSame = false)
-    }
-
-    /***
-     * 设置 Plugin 主题模式
-     * @param themeMode 主题模式值
-     * @param refresh 是否立即刷新应用图标属性
-     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
-     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
-     */
-    fun setPluginThemeMode(themeMode: Int ,refresh: Boolean = true ,iconSizeSame: Boolean = false) {
-
-        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,null, null, "")
-    }
-
-
-    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
-                             defaultPluginBgName: String? = null, pluginPackageName: String){
-        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,0,0)
-    }
-
-    fun setPluginThemeMode(themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false, iconMap: Map<String, String>?,
-                           defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int ){
-        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,iconCropWidth,0)
-    }
-
-    fun setPluginThemeMode(themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false, iconMap: Map<String, String>?,
-                           defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int , indicatorPanel: Int ){
-        setPluginThemeMode(themeMode ,refresh,iconSizeSame ,iconMap, defaultPluginBgName, pluginPackageName,iconCropWidth,0,0)
-    }
-
-    /**
-     * 设置 Plugin 主题模式
-     * @param themeMode 主题模式值
-     * @param refresh 是否立即刷新应用图标属性
-     * @param iconSizeSame 是否保持图标大小不变（默认 false），true 表示plugin 图标大小与普通图标一致，
-     * false 否则根据主题模式使用Plugin 图标，默认使用普通图标+背景图片
-     * @param iconMap 图标映射表
-     * @param defaultPluginBgName 默认 Plugin 背景替换图片名称
-     * @param pluginPackageName Plugin 包名
-     * @param pluginBgSize 背景替换图片大小
-     *  @param indicatorPanel 翻页指示器样式
-     */
-    fun setPluginThemeMode( themeMode: Int, refresh: Boolean = true, iconSizeSame: Boolean = false,iconMap: Map<String, String>?,
-         defaultPluginBgName: String? = null, pluginPackageName: String, iconCropWidth:Int, iconCropHeight:Int,indicatorPanel: Int  ) {
+    fun setPluginThemeMode(config: AppsCustomizeConfig) {
 
         //PluginIconManager.reset()
         // 设置 Plugin 配置
-        PluginIconManager.setPluginConfig(iconMap,pluginPackageName,defaultPluginBgName )
+        PluginIconManager.setPluginConfig(config.iconMap,config.pluginPackageName,config.pluginOtherBgName )
+        mIconCache.setPluginThemeMode(config.themeMode ,config.iconSizeSame, config.iconCropWidth ,config.iconCropHeight )
 
-        mIconCache.setPluginThemeMode(themeMode ,iconSizeSame, iconCropWidth ,iconCropHeight )
-        //Utilities.setPluginThemeMode(themeMode, iconSizeSame, mAppContext)
-       // if( mAppsCustomizeContent?.pageIndication != null)
-       //     mAppsCustomizeContent?.pageIndication?.setIndicatorStyle(indicatorPanel)
 
 
         // 立即执行重置（旧 Plugin 只会调用这个方法，不会再调用 applyAppsCustomizeConfig）
-        if (refresh) {
+        if (config.refresh) {
             resetAppIconAttributes()
         }
+        // 直接传递给 AppsCustomizePagedView 进行数据处理
+        mAppsCustomizeContent?.processAppsCustomizeConfig(config)
 
-        LogUtil.d("setPluginThemeMode: themeMode=$themeMode, refresh=$refresh, attributes reset immediately")
+        LogUtil.d("setPluginThemeMode: config=${config.toString()}, attributes reset immediately")
     }
+
 
     //还原app icon属性
     private fun resetAppIconAttributes() {
         // 使用批量重置方法，只刷新一次布局
-        if(mAppsCustomizeConfig == null)
-            return
-        mAppsCustomizeConfig = null;
+       // if(mAppsCustomizeConfig == null)
+       //     return
+       // mAppsCustomizeConfig = null;
 
         mAppsCustomizeContent?.resetAllAppAttributes() ?: false
     }
-
-    /**
-     * 应用配置到 AppsCustomizePagedView
-     * 此方法只负责数据传输，具体的数据处理由 AppsCustomizePagedView 完成
-     * @param config 配置对象，只设置需要修改的子配置
-     */
-    fun applyAppsCustomizeConfig(config: AppsCustomizeConfig) {
-        mAppsCustomizeConfig = config
-        // 直接传递给 AppsCustomizePagedView 进行数据处理
-        mAppsCustomizeContent?.processAppsCustomizeConfig(config)
-        
-        LogUtil.d("applyAppsCustomizeConfig: config transferred successfully")
-    }
-
-    fun applyDefaultAppsCustomizeConfig() {
-        mAppsCustomizeConfig = AppsCustomizeConfig.createDefault()
-        // 直接传递给 AppsCustomizePagedView 进行数据处理
-        mAppsCustomizeContent?.processAppsCustomizeConfig(mAppsCustomizeConfig)
-
-        LogUtil.d("applyAppsCustomizeConfig: config transferred successfully")
-    }
-
-
-    /**
-     * 设置 Plugin 的图标映射表到主应用
-     * @param iconMap Plugin 提供的图标映射表（包名 -> 资源名称）
-     * @param defaultPluginBgName 默认背景资源名称
-     * @param pluginPackageName Plugin 包名（可选，如果不传则使用之前的设置）
-     */
-    fun setPluginIconMap(iconMap: Map<String, String>, defaultPluginBgName: String? = null, pluginPackageName: String) {
-        try {
-            //如果启用了 Plugin 图标映射表，则主题模式设置为默认值 (1)，不与其他主题冲突
-            setPluginThemeMode(0xff ,false,false ,iconMap, defaultPluginBgName, pluginPackageName)  // 使用plugin图标,并不刷新属性
-            
-           // LogUtil.i( "setPluginIconMap: 成功设置 Plugin 图标映射表")
-           // LogUtil.i( "  - Plugin 包名: ${PluginIconManager.getPluginPackageName()} " + "  - 默认背景: $defaultPluginBgName " + "  - 图标数量: ${iconMap.size}")
-        } catch (e: Exception) {
-            LogUtil.e( "setPluginIconMap: 设置图标映射表失败", e)
-            setPluginThemeMode(1) // 使用普通图标
-        }
-    }
-
 
     fun setActivity(context: Context?) {
         mAppsCustomizeContent?.setActivity(context)

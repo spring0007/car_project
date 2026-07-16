@@ -30,6 +30,7 @@ import android.widget.ImageView
 import androidx.annotation.RequiresPermission
 import com.awell.addapp.AppInfo
 import com.awell.addapp.MyDbHelper
+import com.awell.control.AppsCustomizeConfig
 import com.awell.control.AppsCustomizeControl
 import com.awell.control.AwellMediaControl
 import com.awell.launcher2.IconCache
@@ -103,7 +104,7 @@ class UIActivity : Activity(), View.OnClickListener {
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
 
         // 设置主题模式，并同步到 IconManager
-        AppsCustomizeControl.setPluginThemeMode(1)
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder().setThemeMode(1).build())
 
     }
 

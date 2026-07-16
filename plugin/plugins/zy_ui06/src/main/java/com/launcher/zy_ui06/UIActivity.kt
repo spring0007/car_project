@@ -126,6 +126,11 @@ class UIActivity : Activity(), View.OnClickListener {
         val cellWidth = resources.getDimensionPixelSize(R.dimen.cell_width_dp)
         //val icSize = resources.getDimensionPixelSize(R.dimen.app_icon_size)
         customizeConfig = AppsCustomizeConfig.Builder()
+            .setThemeMode(0xff)
+            .setRefresh(false)
+            .setIconMap(getAppTheme(themeId))
+            .setPluginPackageName("com.launcher.zy_ui06")
+            .setIndicatorPanel(1)
             .setIconSize(resources.getDimensionPixelSize(R.dimen.app_icon_size))
             .setIconTextPadding(resources.getDimensionPixelSize(R.dimen.app_icon_text_padding))
             .setColumnCount(5)
@@ -139,8 +144,7 @@ class UIActivity : Activity(), View.OnClickListener {
             .build()
 
                 
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
-        AppsCustomizeControl.applyAppsCustomizeConfig(customizeConfig)
+        AppsCustomizeControl.setPluginThemeMode(customizeConfig)
         // 初始化 IconManager，预加载资源
         IconManager.initialize(this)
 
@@ -1120,8 +1124,10 @@ class UIActivity : Activity(), View.OnClickListener {
         //刷新快捷方式图标
         IconManager.currentThemeMode = themeId
         setShortCutDrawable()
-        AppsCustomizeControl.setPluginThemeMode(0xff ,false,false ,getAppTheme(themeId), null, "com.launcher.zy_ui06")
-        AppsCustomizeControl.applyAppsCustomizeConfig(customizeConfig)
+        if (customizeConfig!= null)
+            customizeConfig.iconMap = getAppTheme(themeId)
+        AppsCustomizeControl.setPluginThemeMode(customizeConfig)
+
 
     }
 

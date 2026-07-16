@@ -116,6 +116,10 @@ public final class IconManager {
         return PACKAGE_ICON_MAP;
     }
 
+    public static Map<String, Integer> getPackageIconDarkMap() {
+        return PACKAGE_ICON_MAP_DARK;
+    }
+
     // 静态内部类持有单例
     private static final class Holder {
         private static final IconManager INSTANCE = new IconManager();

@@ -1,0 +1,13 @@
+<resources>
+    <!-- app 名称 -->
+    
+    
+
+    <string name="click_play_music">Haz clic para reproducir</string>
+    <string name="music_artist">Artista</string>
+    <string name="music">Música</string>
+    <string name="add_app">Añade</string>
+
+    
+
+</resources>

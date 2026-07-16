@@ -4,6 +4,8 @@ import static com.launcher.yfd_ui2.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PAC
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,8 +60,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -67,7 +68,18 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
 
         AppInfo appInfo = contentList.get(position);
         if (appInfo == null) return;
-        holder.iv_app_icon.setImageDrawable(appInfo.getIcon());
+        if ("placeholder_mismatch".equals(appInfo.package_name)){
+            holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
+        }else {
+                try {
+                    PackageManager pm = mContext.getPackageManager();
+                    Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                    holder.iv_app_icon.setImageDrawable(icon);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                }
+            }
         holder.tv_app_name.setText(appInfo.getLabel());
         holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
 

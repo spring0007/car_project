@@ -13,12 +13,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
-import com.awell.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +61,10 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         if ("placeholder_mismatch".equals(appInfo.package_name)){
             holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
         }else {
-            Integer icon_bg =ImageManager.mHomePackName.getOrDefault(appInfo.package_name ,0);
-            if (icon_bg != null &&icon_bg != 0) {
-                holder.iv_app_icon.setImageResource(icon_bg);
+            Integer iconResId = ImageManager.mHomePackName.get(appInfo.package_name);
+            Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
+            if (icon_bg != null) {
+                holder.iv_app_icon.setImageDrawable(icon_bg);
             } else {
 
                 try {

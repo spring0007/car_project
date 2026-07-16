@@ -20,6 +20,7 @@ import android.view.WindowManager;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
@@ -55,7 +56,7 @@ public class MainActivityUI9 extends Activity implements View.OnClickListener {
 
         binding.timeBgIv.setOnClickListener(this);
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode( new AppsCustomizeConfig.Builder().setThemeMode(0).build());
     }
 
     public void setMusicWidget(MusicWidget musicWidget) {

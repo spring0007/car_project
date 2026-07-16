@@ -77,8 +77,9 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
         mediaControl.setUpdateMusicView(mediaImpl);
         initReceiver();
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(4,false);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
+                .setThemeMode(4)
+                .setRefresh(false)
                 .setAutoWidthGap(true)
                 .setColumnCount(5)
 				.setTextLine(1)
@@ -86,7 +87,7 @@ public class MainActivityUI1 extends Activity implements View.OnClickListener {
 				.setCellHeightDp((int) getResources().getDimensionPixelSize(R.dimen.cell_height))
                 .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
                 .build();
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(appsCustomizeConfig);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(appsCustomizeConfig);
 
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
     }

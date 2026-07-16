@@ -12,5 +12,13 @@
     <dimen name="iv_app_icon_bg_height">102dp</dimen>
     <dimen name="recycle_app_icon_width">82dp</dimen>
     <dimen name="recycle_app_icon_height">86dp</dimen>
+    <dimen name="ll_height">600dp</dimen>
+    <dimen name="ll_width">800dp</dimen>
+    <dimen name="app_icon_width">90dp</dimen>
+    <dimen name="app_icon_height">160dp</dimen>
+    <dimen name="app_icon_margin">20dp</dimen>
+    <dimen name="app_icon_tv_width">90dp</dimen>
+    <dimen name="app_icon_tv_margin">10dp</dimen>
+    <dimen name="app_icon_tv_size">20sp</dimen>
 
 </resources>

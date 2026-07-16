@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,8 +14,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -53,7 +52,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
-import com.awell.addapp.MyDbHelper;
+import com.awell.addapp.AppListStorage;
+
 import com.awell.addapp.ShowPopupI;
 import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
@@ -136,6 +136,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeConfig config = new AppsCustomizeConfig.Builder()
+                .setThemeMode(0xff)
+                .setIconMap(IconManager.getPackageIconMap())
+                .setPluginPackageName("com.launcher.ui26")
+                .setRefresh(false)
+                .setIconSizeSame(true)
                 .setColumnCount(5)
                 //.setRowCount(2)
                 //.setFontSizeSp(fontSize)
@@ -147,9 +152,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 //.setCellWidthDp(iconWidth)
                 .setCellHeightDp(cellHeight)
                 .setIconSize(iconSize).build();
-
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(0xff, false, true, IconManager.getPackageIconMap(),  null, "com.launcher.ui26");
-        AppsCustomizeControl.INSTANCE.applyAppsCustomizeConfig(config);
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(config);
     }
 	
 	    private void initLocationListener() {
@@ -407,12 +410,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         LogUtil.setLogSwitch();
         verifyInstalledApps();
     }
-    private LinearLayoutManager linearLayoutManager;
     private AppInofAdapter appInfoAdapter;
     private List<AppInfo> allAppInfoList, showAppInfoList;
     private AppInfo placehodlerInfo;
-    private MyDbHelper myDbHelper;
-    private SQLiteDatabase sqLiteDatabase;
+    //private MyDbHelper myDbHelper;
+    //private SQLiteDatabase sqLiteDatabase;
 
     private void initAddAppView() {
 
@@ -422,12 +424,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         placehodlerInfo = createMismatchPlaceholder();
 
         // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = new MyDbHelper(this, "show_app", null, 1);
-        sqLiteDatabase = myDbHelper.getWritableDatabase();
+        //myDbHelper = new MyDbHelper(this, "show_app", null, 1);
+        //sqLiteDatabase = myDbHelper.getWritableDatabase();
 
 //        findViewById(R.id.rl_content_view).setOnClickListener(v -> hidePopup());
         appInfoAdapter = new AppInofAdapter(this, showAppInfoList, showPopupI, addSelectAppCallback);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         binding.rv.setLayoutManager(linearLayoutManager);
         binding.rv.setAdapter(appInfoAdapter);
 
@@ -442,90 +444,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void getShowHotApp() {
         // 刷新应用列表
-        refreshAppList();
-        
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+        refreshAppListAsync();
+
+        runOnUiThread(() -> {
                 appInfoAdapter.setContentList(showAppInfoList);
-                appInfoAdapter.notifyDataSetChanged();
-            }
+                //appInfoAdapter.notifyDataSetChanged();
         });
-    }
-
-    private void refreshAppList() {
-        // 获取所有已安装应用
-        allAppInfoList = getAllAppInfo(this, false);
-        // 清空当前显示列表
-        showAppInfoList = new ArrayList<>();
-        
-        // 从数据库加载保存的应用
-        List<String> storageAppList = loadAppListFromDatabase();
-        
-        // 添加保存的应用到显示列表
-        for (String packageName : storageAppList) {
-            AppInfo app = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
-            if (app != null) {
-                showAppInfoList.add(app);
-            }
-        }
-        
-        // 如果没有保存的应用，加载默认应用
-        if (showAppInfoList.isEmpty()) {
-            loadDefaultApps();
-        }
-        
-        // 保存应用到数据库
-        saveAppListToDatabase();
-        
-        // 添加占位符
-        addAppPlaceholder();
-    }
-
-    private List<String> loadAppListFromDatabase() {
-        List<String> storageAppList = new ArrayList<>();
-        Cursor cursor = myDbHelper.getWritableDatabase().query("showapp", null, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
-                storageAppList.add(packageName);
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-            }
-            cursor.close();
-        }
-        return storageAppList;
-    }
-
-    private void loadDefaultApps() {
-        for (String packName : Utils.getDefaultShowApp(this)) {
-            AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-            if (appInfo != null) {
-                showAppInfoList.add(appInfo);
-            }
-        }
-    }
-
-    private void saveAppListToDatabase() {
-        for (AppInfo storagePac : showAppInfoList) {
-            if (storagePac != null) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("packagename", storagePac.package_name);
-                sqLiteDatabase.insert("showapp", null, contentValues);
-            }
-        }
-    }
-
-    private void addAppPlaceholder() {
-        // 使用统一的占位符更新方法
-        updateAppPlaceholder(false);
     }
 
     private ShowPopupI showPopupI = new ShowPopupI() {
         @Override
         public void showPopup() {
             showPopupAllapp();
-            backgroundAlpha(0.2f);
+            //backgroundAlpha(0.2f);
         }
 
         @Override
@@ -549,20 +480,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
             showAppInfoList.add(appInfo);
             showAppInfoList.add(placehodlerInfo);
             appInfoAdapter.setContentList(showAppInfoList);
-            appInfoAdapter.notifyDataSetChanged();
+            //appInfoAdapter.notifyDataSetChanged();
 
-            new Thread(() -> {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("packagename", appInfo.package_name);
-                sqLiteDatabase.insert("showapp", null, contentValues);
-            }).start();
+            // 替代 sqLiteDatabase.insert() — 无需新线程，SP.apply() 本身就是异步
+            AppListStorage.addItem(MainActivity.this, appInfo.package_name);
 
             showPopupI.hidePopup();
         }
 
         @Override
         public void removeAppInfo(String packageName) {
-            sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
+            // 替代 sqLiteDatabase.delete()
+            AppListStorage.removeItem(MainActivity.this, packageName);
+
             for (AppInfo pcka : showAppInfoList)
                 if (pcka.package_name.equals(packageName)) {
                     showAppInfoList.remove(pcka);
@@ -575,7 +505,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
 
-    PopupWindow popupWindow;
+    private PopupWindow popupWindow;
 
     /**
      * popupwindow列表显示所有已安装应用
@@ -583,7 +513,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void showPopupAllapp() {
 
         View view = LayoutInflater.from(this).inflate(R.layout.layout_allapp, null);
-        popupWindow = new PopupWindow(view, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+        popupWindow = new PopupWindow(view, RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT , true);
 
         popupWindow.setOutsideTouchable(true);
         //popupWindow.setFocusable(true);
@@ -591,16 +521,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
         allAppInfoList = getAllAppInfo(this, false);
 
         RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
-        gridLayoutManager.setSpanCount(2);
-        gridLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         AppPopAdapter appInofAdapter = new AppPopAdapter(this, allAppInfoList, addSelectAppCallback);
-        rvPop.setLayoutManager(gridLayoutManager);
+        int verticalSpacing = (int) (20 * getResources().getDisplayMetrics().density);
+        rvPop.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                outRect.top = verticalSpacing;
+                outRect.bottom = verticalSpacing;
+            }
+        });
+        rvPop.setLayoutManager(new GridLayoutManager(this, 2,RecyclerView.HORIZONTAL,false));
         rvPop.setAdapter(appInofAdapter);
 
-        popupWindow.setOnDismissListener(() -> {
-            backgroundAlpha(1.0f);
-        });
+
+
+        view.setOnClickListener(v -> popupWindow.dismiss());
 
         popupWindow.showAtLocation(contentView, Gravity.CENTER, 0, 10);
 
@@ -647,7 +582,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         for (PackageInfo p : appList) {
             bean = new AppInfo();
-            bean.setIcon(p.applicationInfo.loadIcon(packageManager));
+           // bean.setIcon(p.applicationInfo.loadIcon(packageManager));
             bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
             String packName = p.applicationInfo.packageName;
             bean.setPackage_name(packName);
@@ -662,13 +597,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
-        for (AppInfo a : appBeanList) {
-            String str = a.getPackage_name();
-            Integer iconRes = Utils.mHomePackName.get(str); // 假设值是资源ID（int）
-            if (iconRes != null) {
-                a.setIcon(getResources().getDrawable(iconRes));
-            }
-        }
         return appBeanList;
     }
 
@@ -1012,9 +940,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
-        // Remove from database
-        sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-
+        // 从 SharedPreferences 中移除
+        AppListStorage.removeItem(this, packageName);
         // Refresh the adapter
         runOnUiThread(new Runnable() {
             @Override
@@ -1026,103 +953,82 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
     }
 
+    private void refreshAppListAsync() {
+        // 1. 后台：获取所有已安装应用
+        ArrayList<AppInfo> freshAllList = getAllAppInfo(this, false);
+        allAppInfoList = freshAllList;
 
+        // 2. 后台：从 SP 加载保存的应用
+        List<String> storageAppList = AppListStorage.load(this);
+
+        // 3. 后台：构建新的显示列表
+        List<AppInfo> newShowList = new ArrayList<>();
+        for (String packageName : storageAppList) {
+            AppInfo app = Utils.getAppInfoFromPackage(packageName, freshAllList);
+            if (app != null) {
+                newShowList.add(app);
+            }
+        }
+        if (newShowList.isEmpty()) {
+            // 后台：加载默认应用
+            loadDefaultAppsInto(newShowList, freshAllList);
+        }
+        // 4. 后台：保存到 SP
+        saveAppListToPref(newShowList);
+        // 5. 后台：添加占位符
+        addAppPlaceholderTo(newShowList);
+
+        // 6. 统一替换 showAppInfoList
+        showAppInfoList = newShowList;
+    }
+    private void loadDefaultAppsInto(List<AppInfo> target, List<AppInfo> allApps) {
+        //String[] defaultApps = {"com.awell.navigation", "com.awell.bluetooth", "com.awell.carsetting"};
+        for (String packName : Utils.getDefaultShowApp(this)) {
+            AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allApps);
+            if (appInfo != null) target.add(appInfo);
+        }
+    }
+
+    private void saveAppListToPref(List<AppInfo> list) {
+        List<String> packageNames = new ArrayList<>();
+        for (AppInfo app : list) {
+            if (app != null) packageNames.add(app.package_name);
+        }
+        AppListStorage.save(this, packageNames);
+    }
+
+    private void addAppPlaceholderTo(List<AppInfo> list) {
+        list.add(placehodlerInfo);
+    }
     private void verifyInstalledApps() {
         if (showAppInfoList == null || showAppInfoList.isEmpty()) return;
         
         // 刷新应用列表
-        refreshAppList();
-        
-        // 检查应用数量是否匹配
-        checkAppCountMatch();
-        
-        // 刷新适配器
         if (appInfoAdapter != null) {
             appInfoAdapter.setContentList(showAppInfoList);
         }
-    }
-
-    private void checkAppCountMatch() {
-        // 获取系统中实际应用列表
-        ArrayList<AppInfo> actualAppList = getAllAppInfo(this, false);
-        // 获取系统中实际应用数量
-        int actualAppCount = actualAppList.size();
-        // 获取当前应用列表中的应用数量
-        int currentAppCount = allAppInfoList != null ? allAppInfoList.size() : 0;
         
-        // 检查数量是否匹配
-        boolean countMatches = actualAppCount == currentAppCount;
-        // 检查包名是否匹配
-        boolean packageNamesMatch = countMatches && comparePackageNames(actualAppList, allAppInfoList);
+        // 检查应用数量是否匹配
+        //checkAppCountMatch();
         
-        // 检查是否完全匹配
-        if (!countMatches || !packageNamesMatch) {
-            // 数量或包名不匹配，显示不匹配占位符
-            updateAppPlaceholder(true);
-        } else {
-            // 数量和包名都匹配，显示正常占位符
-            updateAppPlaceholder(false);
-        }
-    }
-
-    private boolean comparePackageNames(ArrayList<AppInfo> actualAppList, List<AppInfo> currentAppList) {
-        if (actualAppList == null || currentAppList == null) {
-            return false;
-        }
-        
-        // 创建包名集合进行比较
-        java.util.Set<String> actualPackages = new java.util.HashSet<>();
-        for (AppInfo appInfo : actualAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                actualPackages.add(appInfo.package_name);
-            }
-        }
-        
-        java.util.Set<String> currentPackages = new java.util.HashSet<>();
-        for (AppInfo appInfo : currentAppList) {
-            if (appInfo != null && appInfo.package_name != null) {
-                currentPackages.add(appInfo.package_name);
-            }
-        }
-        
-        // 检查两个集合是否相等
-        return actualPackages.equals(currentPackages);
-    }
-
-    private void updateAppPlaceholder(boolean isMismatch) {
-        // 移除所有占位符
-        removeAllPlaceholders();
-        
-        // 添加相应的占位符
-        if (isMismatch) {
-            // 添加不匹配占位符
-            AppInfo mismatchPlaceholder = createMismatchPlaceholder();
-            showAppInfoList.add(mismatchPlaceholder);
-        } else {
-            // 添加正常占位符
-            showAppInfoList.add(placehodlerInfo);
-        }
-    }
-
-    private void removeAllPlaceholders() {
-        for (int i = showAppInfoList.size() - 1; i >= 0; i--) {
-            AppInfo appInfo = showAppInfoList.get(i);
-            if (appInfo != null) {
-                // 移除正常占位符
-                if (appInfo.getLabel() != null && appInfo.getLabel().equals(getString(R.string.add_app))) {
-                    showAppInfoList.remove(i);
+        // 刷新适配器
+        new Thread(() -> {
+            // 后台加载所有已安装应用并更新 showAppInfoList
+            refreshAppListAsync();
+            runOnUiThread(() -> {
+                if (appInfoAdapter != null) {
+                    appInfoAdapter.setContentList(showAppInfoList);
                 }
-                // 移除不匹配占位符
-                else if ("placeholder_mismatch".equals(appInfo.package_name)) {
-                    showAppInfoList.remove(i);
-                }
-            }
-        }
+                LogUtil.i("end ,verifyInstalledApps");
+            });
+        }).start();
     }
 
+
+    @SuppressLint("UseCompatLoadingForDrawables")
     private AppInfo createMismatchPlaceholder() {
         AppInfo mismatchPlaceholder = new AppInfo();
-        mismatchPlaceholder.setIcon(getDrawable(R.drawable.collect_add));
+       // mismatchPlaceholder.setIcon(getDrawable(R.drawable.collect_add));
         mismatchPlaceholder.setLabel(getString(R.string.add_app));
         mismatchPlaceholder.package_name = "placeholder_mismatch";
         return mismatchPlaceholder;
