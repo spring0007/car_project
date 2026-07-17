@@ -68,17 +68,12 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
             } else {
 
                 try {
-                    // 获取 PackageManager 实例
                     PackageManager pm = mContext.getPackageManager();
-                    // 直接通过包名获取图标 Drawable 对象
                     Drawable icon = pm.getApplicationIcon(appInfo.package_name);
-                    // 将图标设置到 ImageView 中
                     holder.iv_app_icon.setImageDrawable(icon);
                 } catch (PackageManager.NameNotFoundException e) {
-                    // 如果包名不存在，会抛出此异常
                     e.printStackTrace();
-                    // 可以在这里设置一个默认图标
-                    holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                   // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
                 }
             }
         }

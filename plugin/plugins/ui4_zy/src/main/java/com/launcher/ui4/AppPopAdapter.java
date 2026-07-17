@@ -60,7 +60,7 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
                 holder.iv_app_icon.setImageDrawable(icon);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-                holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+              //  holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
             }
 
 

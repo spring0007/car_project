@@ -11,11 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.launcher.ui17.R;
+import com.launcher.ui17.utils.ImageManager;
 
 import java.util.List;
 
@@ -48,27 +50,21 @@ public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AppInfo appInfo = contentList.get(position);
-        try {
-            PackageManager pm = mContext.getPackageManager();
-            Drawable icon = pm.getApplicationIcon(appInfo.package_name);
-            holder.iv_app_icon.setImageDrawable(icon);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            holder.iv_app_icon.setImageResource(R.drawable.sf_video);
+        Integer iconResId = ImageManager.mHomePackName.get(appInfo.package_name);
+        Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
+        if (icon_bg != null) {
+            holder.iv_app_icon.setImageDrawable(icon_bg);
+        } else {
+            try {
+                PackageManager pm = mContext.getPackageManager();
+                Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                holder.iv_app_icon.setImageDrawable(icon);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+            }
         }
         holder.tv_app_name.setText(appInfo.getLabel());
-
-        //String pckName = appInfo.getPackage_name();
-
-         /*int r = new Random().nextInt(4);
-        holder.iv_app_icon_bg.setImageResource(Utils.iconBg[r]);
-        Log.e("kkkkkkkk"," r = " + r);*/
-
-     /*   holder.ll_item.setOnLongClickListener(view -> {
-            contentList.remove(position);
-            notifyDataSetChanged();
-            return true;
-        });*/
 
         holder.ll_item.setOnClickListener(vie -> {
             /*Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);

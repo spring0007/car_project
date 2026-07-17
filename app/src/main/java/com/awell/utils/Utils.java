@@ -182,7 +182,7 @@ public class Utils {
     public static List<String>  notDisplayedPackageName = Arrays.asList(
             /*"com.google.android.googlequicksearchbox",*/"com.google.android.apps.googleassistant",
             "com.android.gallery3d","com.google.android.healthconnect.controller",
-            "com.android.traceur","com.awell.platformservice"
+            "com.android.traceur","com.awell.platformservice","com.debug.loggerui"
     );
 
     /**

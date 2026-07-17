@@ -248,40 +248,66 @@ public class MainActivityUI3 extends Activity implements View.OnClickListener {
     /**
      * 获取手机已安装应用列表
      *
-     * @param ctx
+     * @param context
      * @param isFilterSystem 是否过滤系统应用
      * @return
      */
-    private ArrayList<AppInfo> getAllAppInfo(Context ctx, boolean isFilterSystem) {
-
+    public ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
         ArrayList<AppInfo> appBeanList = new ArrayList<>();
-        AppInfo bean = null;
-        PackageManager packageManager = ctx.getPackageManager();
 
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
-        List<PackageInfo> appList = getAppList(packageManager, resolveInfos);
 
-        for (PackageInfo p : appList) {
-            bean = new AppInfo();
-           // bean.setIcon(p.applicationInfo.loadIcon(packageManager));
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
-            String packName = p.applicationInfo.packageName;
-            bean.setPackage_name(packName);
-            int flags = p.applicationInfo.flags;
-            bean.setFlags(flags);
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(packName)) {
-                appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(packName)) {
-                appBeanList.add(bean);
-            } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.otherNeedToShowPackageName.contains(packName)) {
-                appBeanList.add(bean);
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+
+        // 获取所有输入法包名
+        Set<String> imePackages = new HashSet<>();
+        Intent imeIntent = new Intent("android.view.InputMethod");
+        List<ResolveInfo> imeServices = packageManager.queryIntentServices(imeIntent, 0);
+        for (ResolveInfo ri : imeServices) {
+            imePackages.add(ri.serviceInfo.packageName);
+        }
+
+        // 获取所有launcher包名（CATEGORY_HOME）
+        Set<String> launcherPackages = new HashSet<>();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
+        List<ResolveInfo> homeActivities = packageManager.queryIntentActivities(homeIntent, 0);
+        for (ResolveInfo ri : homeActivities) {
+            launcherPackages.add(ri.activityInfo.packageName);
+        }
+
+        List<String> noNeedToShow = Utils.notDisplayedPackageName;
+
+        // 首先从resolveInfos提取包名并获取PackageInfo，然后去重，再过滤
+        List<PackageInfo> appList = new ArrayList<>();
+        Set<String> processedPackages = new HashSet<>();
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String pkgName = resolveInfo.activityInfo.packageName;
+            if (processedPackages.contains(pkgName)) continue;
+            processedPackages.add(pkgName);
+            try {
+                PackageInfo pkgInfo = packageManager.getPackageInfo(pkgName, 0);
+                // 过滤条件
+                if (!imePackages.contains(pkgName) && !launcherPackages.contains(pkgName) && !noNeedToShow.contains(pkgName)) {
+                    appList.add(pkgInfo);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                // ignore
             }
         }
 
+        // 也可以像Kotlin那样先收集再过滤，但这里直接过滤。
+        for (PackageInfo p : appList) {
+            AppInfo bean = new AppInfo();
+            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
+            bean.setPackage_name(p.applicationInfo.packageName);
+            bean.setFlags(p.applicationInfo.flags);
+            appBeanList.add(bean);
+        }
 
-
+        LogUtil.w("appBeanList size: " + appBeanList.size());
         return appBeanList;
     }
 

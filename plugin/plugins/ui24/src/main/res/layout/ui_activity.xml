@@ -86,7 +86,7 @@
         android:id="@+id/rv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="@+id/home_bottom_"
         app:layout_constraintEnd_toEndOf="@+id/home_bottom_"
         app:layout_constraintStart_toStartOf="@+id/home_bottom_"

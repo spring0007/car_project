@@ -131,7 +131,7 @@ class UIActivity : Activity(), View.OnClickListener {
             .setThemeMode(0xff)
             .setRefresh(false)
             .setIconMap(IconManager.getPackageIconMap())
-            .setPluginPackageName("com.launcher.ui22")
+            .setPluginPackageName("com.launcher.ui23")
             .setPluginOtherBgName("apple_other_app3_square")
             .build());
     }

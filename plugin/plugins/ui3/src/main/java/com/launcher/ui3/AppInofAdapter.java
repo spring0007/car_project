@@ -73,7 +73,7 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
                     holder.iv_app_icon.setImageDrawable(icon);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
-                    holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                   // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
                 }
             }
         }

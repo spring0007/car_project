@@ -136,20 +136,13 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         setContentView(mViewBinding.root)
 
         initView()
-
         initMediaMusic()
-
         updateSpeedUnitText()
-
         initTouchAndSpeedListener()
-
         initBroadcastReceiver()
-
-        AppsCustomizeControl.setActivity(this)
-
         initFreeformControl()
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
-
+        AppsCustomizeControl.setActivity(this)
         AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder().setThemeMode(100).build())
 
     }
