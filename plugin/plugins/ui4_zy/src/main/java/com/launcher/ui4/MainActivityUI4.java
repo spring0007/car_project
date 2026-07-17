@@ -527,7 +527,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
      * @param isFilterSystem 是否过滤系统应用
      * @return
      */
-    public ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
+    private ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
         ArrayList<AppInfo> appBeanList = new ArrayList<>();
 
         Intent intent = new Intent(Intent.ACTION_MAIN, null);

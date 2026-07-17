@@ -565,11 +565,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /**
      * 获取手机已安装应用列表
      *
-     * @param ctx
+     * @param boolean
      * @param isFilterSystem 是否过滤系统应用
      * @return
      */
-    public ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
+    private ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
         ArrayList<AppInfo> appBeanList = new ArrayList<>();
 
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
