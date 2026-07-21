@@ -46,7 +46,7 @@ public class ApplicationInfo extends ItemInfo {
     /**
      * The time at which the app was first installed.
      */
-    long firstInstallTime;
+    //long firstInstallTime;
 
     ComponentName componentName;
 
@@ -71,19 +71,19 @@ public class ApplicationInfo extends ItemInfo {
         this.setActivity(componentName,
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
 
-        try {
-            int appFlags = pm.getApplicationInfo(packageName, 0).flags;
-            if ((appFlags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0) {
-                flags |= DOWNLOADED_FLAG;
 
-                if ((appFlags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                    flags |= UPDATED_SYSTEM_APP_FLAG;
-                }
+        int appFlags = info.activityInfo.applicationInfo.flags;
+        if ((appFlags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0) {
+            flags |= DOWNLOADED_FLAG;
+            if ((appFlags & android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+                flags |= UPDATED_SYSTEM_APP_FLAG;
             }
+        }
+        /*try {
             firstInstallTime = pm.getPackageInfo(packageName, 0).firstInstallTime;
         } catch (NameNotFoundException e) {
             Log.d(TAG, "PackageManager.getApplicationInfo failed for " + packageName);
-        }
+        }*/
 
         iconCache.getTitleAndIcon(this, info, labelCache);
     }
@@ -94,7 +94,7 @@ public class ApplicationInfo extends ItemInfo {
         title = info.title.toString();
         intent = new Intent(info.intent);
         flags = info.flags;
-        firstInstallTime = info.firstInstallTime;
+        //firstInstallTime = info.firstInstallTime;
     }
 
     /**
@@ -130,8 +130,8 @@ public class ApplicationInfo extends ItemInfo {
         Log.d(tag, label + " size=" + list.size());
         for (ApplicationInfo info : list) {
             Log.d(tag, "   title=\"" + info.title + "\" iconBitmap="
-                    + info.iconBitmap + " firstInstallTime="
-                    + info.firstInstallTime);
+                    + info.iconBitmap /*+ " firstInstallTime="
+                    + info.firstInstallTime*/);
         }
     }
 

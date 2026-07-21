@@ -42,8 +42,12 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher.library.R;
@@ -173,6 +177,9 @@ public class IconCache {
             , "com.ms.ms2160"
             , "com.awell.weather"
     };
+    public static final Set<String> HOME_PACKAGE_SET =
+            Collections.unmodifiableSet(new HashSet<>(Arrays.asList(mHomePackageName_lehang)));
+
 
     public final int mHomePackageIcon_116_lehang_2[] = {
             R.drawable.sf_video
@@ -576,34 +583,67 @@ public class IconCache {
     }
 
     /**
+     * 轻量版 cacheLocked：仅缓存标题，不创建默认图标 Bitmap。
+     * 用于【已确定有自定义图标资源】的应用，避免浪费一次完整的图标创建。
+     */
+    private CacheEntry cacheLockedTitleOnly(ComponentName componentName, ResolveInfo info,
+                                            HashMap<Object, CharSequence> labelCache) {
+        CacheEntry entry = mCache.get(componentName);
+        if (entry == null) {
+            entry = new CacheEntry();
+            mCache.put(componentName, entry);
+
+            // 只获取 title，跳过 icon 创建
+            ComponentName key = LauncherModel.getComponentNameFromResolveInfo(info);
+            if (labelCache != null && labelCache.containsKey(key)) {
+                entry.title = labelCache.get(key).toString();
+            } else {
+                entry.title = info.loadLabel(mPackageManager).toString();
+                if (labelCache != null) {
+                    labelCache.put(key, entry.title);
+                }
+            }
+            if (entry.title == null) {
+                entry.title = info.activityInfo.name;
+            }
+            //故意不设置 entry.icon，后续由 getTitleAndIcon 用自定义图标设置
+        }
+        return entry;
+    }
+
+
+    /**
      * Fill in "application" with the icon and label for "info."
      */
     public void getTitleAndIcon(ApplicationInfo application, ResolveInfo info,
                                 HashMap<Object, CharSequence> labelCache) {
-        //LogUtil.d( "getTitleAndIcon");
         synchronized (mCache) {
-            CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
             String packageName = info.activityInfo.applicationInfo.packageName;
             String className = info.activityInfo.name;
-            application.title = entry.title;
+
+            // 先检查是否有自定义图标
             Integer iconResId = getIconResource(packageName, className);
             if (iconResId != null && iconResId != 0) {
+                // 【路径 A】有自定义图标 → 轻量缓存获取标题，直接创建自定义图标（只创建一次）
+                CacheEntry entry = cacheLockedTitleOnly(application.componentName, info, labelCache);
+                application.title = entry.title;
 
-                // 判断是否为 Plugin 资源（themeMode=0xff）
                 if (mThemeMode == 0xff) {
-                    // Plugin 模式：使用插件的 Resources 加载
-                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(PluginIconManager.getPluginPackageName());
+                    Context pluginContext = com.qihoo360.replugin.RePlugin.fetchContext(
+                            PluginIconManager.getPluginPackageName());
                     bmp = (pluginContext != null)
                             ? getFullResIcon(pluginContext.getResources(), iconResId)
                             : getFullResDefaultActivityIcon();
                 } else {
-                    // 普通模式：使用主应用的 Resources 加载
                     bmp = getFullResIcon(mContext.getResources(), iconResId);
                 }
-                
                 application.iconBitmap = Utilities.createIconBitmap(bmp, mContext, packageName);
-                entry.icon = application.iconBitmap;
-            }else  {
+                entry.icon = application.iconBitmap;  // ← 只创建一次 Bitmap
+
+            } else {
+                // 【路径 B】无自定义图标 → 走原逻辑，使用系统图标
+                CacheEntry entry = cacheLocked(application.componentName, info, labelCache);
+                application.title = entry.title;
                 application.iconBitmap = entry.icon;
             }
         }

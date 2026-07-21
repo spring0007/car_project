@@ -343,57 +343,99 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
 
 
     /**
+     * 在 showApps 前调用：强制清除旧页面内容并立即重建所有页面
+     * 解决旧页面内容在 50ms 延迟窗口期间闪现的问题
+     */
+    public void forceRefreshBeforeShow() {
+        if (mPendingInvalidatePageDataRunnable != null) {
+            removeCallbacks(mPendingInvalidatePageDataRunnable);
+            mPendingInvalidatePageDataRunnable = null;
+            mPendingInvalidatePageData = false;
+        }
+
+        if (!isDataReady() || mAppsCustomizeConfig == null) {
+            removeAllViews();
+            return;
+        }
+
+        // 2. 重建所有页面布局和图标
+        cancelAllTasks();
+        syncPages();
+        for (int i = 0; i < mNumAppsPages; i++) {
+            syncAppsPageItems(i, true);
+        }
+
+        // 3. 跳转到目标页面（无动画）
+        // invalidatePageData 内部会触发 snapToPage 还原页面位置
+        invalidatePageData(0, false);
+
+        // 4. 指示器与当前页面同步
+        if (getPageIndication() != null) {
+            getPageIndication().setMTotalPages(mNumAppsPages);
+            getPageIndication().setMCurrentPage(0);
+            getPageIndication().invalidate();
+        }
+
+        LogUtil.d("forceRefreshBeforeShow: all " + mNumAppsPages
+                + " pages rebuilt, restored to page  0");
+    }
+
+
+    /**
+     * 阶段一：只重置内部属性，不触发布局刷新
+     * 专为 processAppsCustomizeConfig 内部调用设计
+     */
+    private void resetAttributesOnly() {
+        LogUtil.d("resetAttributesOnly: resetting internal attributes...");
+        this.mAppsCustomizeConfig = null;
+        mAppIconSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+        mPageBackgroundResId = 0;
+        if (pageIndication != null)
+            pageIndication.setIndicatorStyle(0);
+
+        if (mWidgetSpacingLayout != null) {
+            mWidgetSpacingLayout.resetToDefaultCellDimensions();
+        }
+
+        mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
+        mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
+
+        // 清除旧 plugin 的过时图标位图
+        for (ApplicationInfo app : mApps) {
+            app.iconBitmap = null;
+        }
+    }
+
+    /**
+     * 阶段二：统一的布局刷新（提取重复的高度修正逻辑）
+     */
+    private void refreshLayoutIfReady() {
+        if (!isDataReady()) return;
+
+        int availableWidth = getMeasuredWidth();
+        int availableHeight = getMeasuredHeight();
+
+        ViewParent parent = getParent();
+        if (parent instanceof View) {
+            View parentView = (View) parent;
+            int parentHeight = parentView.getMeasuredHeight();
+            if (parentHeight > 0 && availableHeight < parentHeight) {
+                availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
+            }
+        }
+
+        onDataReady(availableWidth, availableHeight);
+        LogUtil.d("refreshLayoutIfReady: layout refreshed, width=" + availableWidth + ", height=" + availableHeight);
+    }
+
+    /**
      * 批量重置所有图标属性（只在最后刷新一次布局）
      * @return 是否重置成功
      */
     public void resetAllAppAttributes() {
-        LogUtil.d("resetAllAppAttributes: resetting all app attributes...");
-        this.mAppsCustomizeConfig = null;
-        mAppIconSize =  getResources().getDimensionPixelSize(R.dimen.app_icon_size);
-        mPageBackgroundResId = 0;
-        if(pageIndication != null)
-            pageIndication.setIndicatorStyle(0);
-        
-        // 重置 mWidgetSpacingLayout 到默认值，防止之前 plugin 的设置影响当前 plugin
-        if (mWidgetSpacingLayout != null) {
-            mWidgetSpacingLayout.resetToDefaultCellDimensions();
-            LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
-        }
-        
-        // 重置页面间距为从 XML 读取的原始默认值
-        // 不同屏幕尺寸有不同的默认值（如 sw600dp-land-mdpi 是 45dp）
-        mCustomPageLayoutWidthGap = mPageLayoutWidthGap ;
-        mCustomPageLayoutHeightGap = mPageLayoutHeightGap ;
-        LogUtil.d("resetAllAppAttributes: reset gaps to original defaults - width=" + mCustomPageLayoutWidthGap
-                + ", height=" + mCustomPageLayoutHeightGap +",isDataReady="+isDataReady());
-
-        //清除旧 plugin 的过时图标位图,避免 onDataReady() → invalidatePageData()
-        for (ApplicationInfo app : mApps) {
-            app.iconBitmap = null;
-        }
-        // 统一刷新布局（只调用一次）
-        if (isDataReady()) {
-            // 关键修复：使用父容器的可用高度，而不是当前已缩小的测量值
-            // 避免 wrap_content 导致的恶性循环：570dp -> 441px -> 更小 -> ...
-            int availableWidth = getMeasuredWidth();
-            int availableHeight = getMeasuredHeight();
-            
-            // 如果当前高度异常小（可能是上次切换导致的），使用父容器高度
-            ViewParent parent = getParent();
-            if (parent instanceof View) {
-                View parentView = (View) parent;
-                int parentHeight = parentView.getMeasuredHeight();
-                // 如果父容器高度合理且当前高度明显偏小，使用父容器高度
-                if (parentHeight > 0 && availableHeight < parentHeight) {
-                    availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
-                    LogUtil.d("resetAllAppAttributes: using parent height instead of current - parent=" + parentHeight
-                            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
-                }
-            }
-            
-            onDataReady(availableWidth, availableHeight);
-            LogUtil.d("resetAllAppAttributes: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
-        }
+        LogUtil.d("resetAllAppAttributes: called...");
+        resetAttributesOnly();
+        refreshLayoutIfReady();
     }
 
     /**
@@ -402,48 +444,51 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
      * @param configObj 配置对象（Kotlin data class）
      */
     public void processAppsCustomizeConfig(AppsCustomizeConfig configObj) {
-        if (configObj == null) {
+        if (configObj == null ) {
             LogUtil.w("processAppsCustomizeConfig: config is null, resetting to default");
             resetAllAppAttributes();
             return;
         }
-        if(configObj.getIconSize()<=0)
+        // 统一管理：refresh 决定是否先重置
+        long startTime = System.currentTimeMillis();
+
+        if (configObj.getRefresh()) {
+            resetAttributesOnly();  // 只重置属性，不触发 onDataReady
+        }
+
+        // 应用新配置
+        if (configObj.getIconSize() <= 0) {
             mAppIconSize = getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+        } else {
+            mAppIconSize = configObj.getIconSize();
+        }
 
-        if(pageIndication != null)
+        if (pageIndication != null) {
             pageIndication.setIndicatorStyle(Math.max(configObj.getIndicatorPanel(), 0));
-
+        }
 
         mAppsCustomizeConfig = configObj;
-        if(configObj.getBackgroundTheme() <=0){
-            mPageBackgroundResId = 0;
-        }else{
-            mPageBackgroundResId =R.drawable.rect_svg;
-        }
-        if (mWidgetSpacingLayout != null) {
+
+        mPageBackgroundResId = getThemeBackgroundResId(configObj.getBackgroundTheme());
+
+        // 【优化】仅在未重置时调用 resetToDefaultCellDimensions
+        // 如果已通过 resetAttributesOnly 重置过，mWidgetSpacingLayout 已在其中重置
+        if (!configObj.getRefresh() && mWidgetSpacingLayout != null) {
             mWidgetSpacingLayout.resetToDefaultCellDimensions();
-            LogUtil.d("resetAllAppAttributes: mWidgetSpacingLayout reset to default dimensions");
         }
-        if (isDataReady()) {
-            // 关键修复：使用父容器的可用高度，避免累积缩小
-            int availableWidth = getMeasuredWidth();
-            int availableHeight = getMeasuredHeight();
-            
-            ViewParent parent = getParent();
-            if (parent instanceof View) {
-                View parentView = (View) parent;
-                int parentHeight = parentView.getMeasuredHeight();
-                if (parentHeight > 0 && availableHeight < parentHeight ) {
-                    availableHeight = parentHeight - getPaddingTop() - getPaddingBottom();
-                    LogUtil.d("processAppsCustomizeConfig: using parent height - parent=" + parentHeight
-                            + ", current=" + getMeasuredHeight() + ", adjusted=" + availableHeight);
-                }
-            }
-            
-            onDataReady(availableWidth, availableHeight);
-            LogUtil.d("processAppsCustomizeConfig: layout refreshed once, width=" + availableWidth + ", height=" + availableHeight);
+
+        // 统一触发一次布局刷新
+        refreshLayoutIfReady();
+
+        LogUtil.d("processAppsCustomizeConfig: completed in " + (System.currentTimeMillis() - startTime) + "ms");
+
+    }
+
+    private int getThemeBackgroundResId(int themeId) {
+        if (themeId == 1) {
+            return R.drawable.rect_svg; //zy_ui3
         }
-        LogUtil.d("processAppsCustomizeConfig: processing configuration...");
+        return 0;
     }
 
     public void setActivity(Context context) {
@@ -635,7 +680,6 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         }
        // LogUtil.d("onDataReady: using DEFAULT layout, columnCount=" + maxCellCountX + ", rowCount=" + maxCellCountY);
 
-
         // Temp hack for now: only use the max cell count Y for widget layout
         int maxWidgetCellCountY = maxCellCountY;
 
@@ -643,9 +687,7 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             maxWidgetCellCountY = Math.min(maxWidgetCellCountY, mMaxAppCellCountY);
         }
         LogUtil.d("onDataReady: using DEFAULT layout, maxCellCountY=" + maxCellCountY + ", mMaxAppCellCountY=" + mMaxAppCellCountY);*/
-        // Now that the data is ready, we can calculate the content width, the
-        // number of cells to
-        // use for each page
+
         // 处理页面间距：如果配置对象存在但未设置，则使用从 XML 读取的原始默认值
         if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoWidthGap()) {
             mCustomPageLayoutWidthGap = -1;

@@ -73,27 +73,10 @@ object AppsCustomizeControl {
         PluginIconManager.setPluginConfig(config.iconMap,config.pluginPackageName,config.pluginOtherBgName )
         mIconCache.setPluginThemeMode(config.themeMode ,config.iconSizeSame, config.iconCropWidth ,config.iconCropHeight )
 
-
-
-        // 立即执行重置（旧 Plugin 只会调用这个方法，不会再调用 applyAppsCustomizeConfig）
-        if (config.refresh) {
-            resetAppIconAttributes()
-        }
         // 直接传递给 AppsCustomizePagedView 进行数据处理
         mAppsCustomizeContent?.processAppsCustomizeConfig(config)
 
         LogUtil.d("setPluginThemeMode: config=${config.toString()}, attributes reset immediately")
-    }
-
-
-    //还原app icon属性
-    private fun resetAppIconAttributes() {
-        // 使用批量重置方法，只刷新一次布局
-       // if(mAppsCustomizeConfig == null)
-       //     return
-       // mAppsCustomizeConfig = null;
-
-        mAppsCustomizeContent?.resetAllAppAttributes() ?: false
     }
 
     fun setActivity(context: Context?) {
@@ -139,6 +122,7 @@ object AppsCustomizeControl {
         hideAllContentViews(viewGroup)
 
         removeFromParent()
+        mAppsCustomizeContent?.forceRefreshBeforeShow()
 
         viewGroup.addView(
             mAppsCustomizeTabHost,

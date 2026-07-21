@@ -69,9 +69,9 @@ class AllAppsList {
      * If the app is already in the list, doesn't add it.
      */
     public void add(ApplicationInfo info) {
-        if (findActivity(data, info.componentName)) {
-            return;
-        }
+        //if (findActivity(data, info.componentName)) {
+        //    return;
+        //}
         data.add(info);
         added.add(info);
     }

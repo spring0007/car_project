@@ -37,7 +37,6 @@ import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.awell.impl.ModelImpl;
-import com.awell.launcher.library.BuildConfig;
 import com.awell.launcher.library.R;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.utils.LogUtil;
@@ -336,9 +335,7 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         public boolean onPluginNotExistsForActivity(Context context, String plugin, Intent intent, int process) {
             // FIXME 当插件"没有安装"时触发此逻辑，可打开您的"下载对话框"并开始下载。
             // FIXME 其中"intent"需传递到"对话框"内，这样可在下载完成后，打开这个插件的Activity
-            if (BuildConfig.DEBUG) {
-                LogUtil.d("onPluginNotExistsForActivity: Start download... p=" + plugin + "; i=" + intent);
-            }
+            LogUtil.d("onPluginNotExistsForActivity: Start download... p=" + plugin + "; i=" + intent);
             return super.onPluginNotExistsForActivity(context, plugin, intent, process);
         }
     }
@@ -355,9 +352,7 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         public void onInstallPluginFailed(String path, InstallResult code) {
             // FIXME 当插件安装失败时触发此逻辑。您可以在此处做“打点统计”，也可以针对安装失败情况做“特殊处理”
             // 大部分可以通过RePlugin.install的返回值来判断是否成功
-            if (BuildConfig.DEBUG) {
-                LogUtil.d("onInstallPluginFailed: Failed! path=" + path + "; r=" + code);
-            }
+            LogUtil.d("onInstallPluginFailed: Failed! path=" + path + "; r=" + code);
             super.onInstallPluginFailed(path, code);
         }
 

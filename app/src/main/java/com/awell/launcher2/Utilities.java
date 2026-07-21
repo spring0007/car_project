@@ -236,15 +236,8 @@ public final class Utilities {
                 initStatics(context);
             }
 
-            for (int i = 0; i < IconCache.mHomePackageName_lehang.length; i++) {
-                synchronized (packageName) {
-                    if (packageName.equals(IconCache.mHomePackageName_lehang[i])) {
-                        //BitmapDrawable bd = (BitmapDrawable) icon;
-                        //FLAG = false;
-//    						return bd.getBitmap();
-                        return drawableToBitmap(icon, sIconTextureWidth, sIconTextureHeight);
-                    }
-                }
+            if (IconCache.HOME_PACKAGE_SET.contains(packageName)) {
+                return drawableToBitmap(icon, sIconTextureWidth, sIconTextureHeight);
             }
 
             /*int width = sIconWidth / 3;

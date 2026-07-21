@@ -1879,7 +1879,7 @@ public class LauncherModel extends BroadcastReceiver {
         }
 
         private void loadAllAppsByBatch() {
-            final long t =SystemClock.uptimeMillis();
+            final long t = SystemClock.uptimeMillis();
 
             final Callbacks oldCallbacks = mCallbacks.get();
             if (oldCallbacks == null) {
@@ -1929,30 +1929,24 @@ public class LauncherModel extends BroadcastReceiver {
                         + " icons processed in "
                         + (SystemClock.uptimeMillis() - t2) + "ms");
 
-            final boolean first = true;
             final Callbacks callbacks = tryGetCallbacks(oldCallbacks);
             final ArrayList<ApplicationInfo> added = mBgAllAppsList.added;
-            mBgAllAppsList.added = new ArrayList<ApplicationInfo>();
+            mBgAllAppsList.added = new ArrayList<>();
 
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    final long t1 = SystemClock.uptimeMillis();
-                    if (callbacks != null) {
-                        callbacks.bindAllApplications(added);
-                        LogUtil.d("bound " + added.size() + " apps in "
-                                    + (SystemClock.uptimeMillis() - t1) + "ms");
-                    } else {
-                        LogUtil.i("not binding apps: no Launcher activity");
-                    }
+            mHandler.post(() -> {
+                final long t1 = SystemClock.uptimeMillis();
+                if (callbacks != null) {
+                    callbacks.bindAllApplications(added);
+                    LogUtil.d("bound " + added.size() + " apps in "
+                            + (SystemClock.uptimeMillis() - t1) + "ms");
+                } else {
+                    LogUtil.i("not binding apps: no Launcher activity");
                 }
             });
 
             LogUtil.d("cached all " + N + " apps in "
                         + (SystemClock.uptimeMillis() - t) + "ms");
         }
-
-
 
         public void dumpState() {
             synchronized (sBgLock) {
@@ -2498,7 +2492,7 @@ public class LauncherModel extends BroadcastReceiver {
         };
     }
 
-    public static final Comparator<ApplicationInfo> APP_INSTALL_TIME_COMPARATOR
+   /* public static final Comparator<ApplicationInfo> APP_INSTALL_TIME_COMPARATOR
             = new Comparator<ApplicationInfo>() {
         public final int compare(ApplicationInfo a, ApplicationInfo b) {
             if (a.firstInstallTime < b.firstInstallTime) return 1;
@@ -2514,7 +2508,7 @@ public class LauncherModel extends BroadcastReceiver {
                 return collator.compare(a.label.toString(), b.label.toString());
             }
         };
-    }
+    }*/
 
     static ComponentName getComponentNameFromResolveInfo(ResolveInfo info) {
         if (info.activityInfo != null) {
