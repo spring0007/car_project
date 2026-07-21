@@ -358,6 +358,12 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
             if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
+                if ("start".equals(command)) {
+                    if (binding.btMusicState.getTag() != null && !binding.btMusicState.getTag().equals(R.drawable.sf_music_zanting_n)) {
+                        binding.btMusicState.setImageResource(R.drawable.sf_music_bofang_n);
+                        binding.btMusicState.setTag(R.drawable.sf_music_bofang_n);
+                    }
+                }
             }else if ((pkg.contains("com.awell.bluetooth") || pkg.contains("/system/bin/gocsdk") && mediaType == AudioManager.STREAM_MUSIC)) {
                 //LogUtil.d("updateViewMusicPlay222 ,pkg=" + pkg + " command=" + command + " mediaType=" + mediaType + " currentMedia=" + currentMedia+" bundle="+bundle.toString());
                 if ("start".equals(command)){
@@ -373,7 +379,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-
+            //LogUtil.i("updateViewPlayStatus: bundle=>" + bundle.toString() +" ,status = " +status + ", type=>" + type);
             if (type == MusicWidget.MUSIC) {
                 musicWidget.setCurMusicState(status, type);
             }else if(type == MusicWidget.BT){
@@ -407,6 +413,11 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
+           // LogUtil.i("updateViewPlayInfo: bundle=" + bundle.toString() + " type=" + type + " songName=" + songName + " singerName=" + singerName + " album=" + album);
+            if(TextUtils.isEmpty(songName) || TextUtils.isEmpty(singerName) || TextUtils.isEmpty(album)){
+                return;
+            }
+
             if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
                     && "NO_MUSIC_LIST".equals(album)) {
@@ -417,7 +428,7 @@ public class MainActivityUI7 extends Activity implements View.OnClickListener {
             }else{
                 musicWidget.setMusicNameTextView(songName, type);
                 musicWidget.setArtistNameTextView(singerName, type);
-                if(type == MusicWidget.BT) {
+                if(type == MusicWidget.BT && mediaControl.sendStrToHost(AwellTool.BT.GET_STATE).equals("true")) {
                     if (binding.btMusicState.getTag() != null && !binding.btMusicState.getTag().equals(R.drawable.sf_music_zanting_n)) {
                         binding.btMusicState.setImageResource(R.drawable.sf_music_zanting_n);
                         binding.btMusicState.setTag(R.drawable.sf_music_zanting_n);

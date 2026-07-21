@@ -202,10 +202,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }else if (v.getId() == binding.ivMonitoring.getId()) {
            // startActivity("com.awell.battery", "com.awell.battery.MainActivity");
         }else if (v.getId() == binding.ivOffScreen.getId()) {
+            sendKeyBroadcast(POWER, LONG_PRESS);
 
         }else if (v.getId() == binding.ivVoice.getId()){
 
         }
+    }
+    private static final int LONG_PRESS = 0x03;
+    private static final int POWER = 0x01;
+//    private static final String ACTION_TOUCH_KEY = "com.awellauto.key";
+//    private static final String KEYCODE = "keycode";
+//    private static final String STATUS = "status";
+    private void sendKeyBroadcast(int keycode, int status) {
+        Intent intent = new Intent("com.awellauto.key");
+        intent.putExtra("keycode", keycode);
+        intent.putExtra("status", status);
+        sendBroadcast(intent);
     }
 
     /**

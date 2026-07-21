@@ -35,6 +35,7 @@ import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -932,6 +933,8 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
                 if (isboot) Settings.System.putString(getContentResolver(), "boot_apk2", packName)
             }
             startActivity(intent)
+        }else{
+            Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,7 +1,7 @@
 <resources>
 
 
-    <string name="app_name">LauncherUI2</string>
+    
 
     <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
     <!--system/priv-app/ 目录值和apk名的值-->
@@ -18,6 +18,7 @@
     <string name="bluetooth">BT</string>
     <string name="music">Musik</string>
     <string name="navi">Schiffe</string>
+    <string name="activity_not_found">Die App ist nicht installiert</string>
 
 
     
