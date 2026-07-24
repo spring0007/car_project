@@ -23,7 +23,7 @@ import android.graphics.Rect;
 
 import com.awell.addapp.AppInfo;
 import com.launcher.yfd_ui01.R;
-import com.launcher.yfd_ui01.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

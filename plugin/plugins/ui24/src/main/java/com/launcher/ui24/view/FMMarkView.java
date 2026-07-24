@@ -15,7 +15,7 @@ import android.widget.Scroller;
 import androidx.annotation.ColorRes;
 import androidx.annotation.Nullable;
 
-import com.launcher.ui24.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 import java.text.DecimalFormat;
 

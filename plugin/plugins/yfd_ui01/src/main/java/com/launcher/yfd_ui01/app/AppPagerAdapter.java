@@ -16,7 +16,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 
 import com.awell.addapp.AppInfo;
-import com.launcher.yfd_ui01.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

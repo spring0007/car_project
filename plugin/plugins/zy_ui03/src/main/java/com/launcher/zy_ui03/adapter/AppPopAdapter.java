@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.launcher.zy_ui03.R;
+import com.awell.library.util.LogUtil;
 import com.launcher.zy_ui03.utils.IconManager;
 
 import java.util.List;

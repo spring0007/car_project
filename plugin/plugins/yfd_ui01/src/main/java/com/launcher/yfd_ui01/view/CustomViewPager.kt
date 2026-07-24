@@ -9,7 +9,7 @@ import android.view.ViewConfiguration
 import android.widget.OverScroller
 import androidx.core.view.isEmpty
 import androidx.viewpager.widget.ViewPager
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 
 
 /**

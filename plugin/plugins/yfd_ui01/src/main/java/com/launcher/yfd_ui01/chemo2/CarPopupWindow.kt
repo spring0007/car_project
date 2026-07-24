@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.pop.AppPopupWindow.OnPopupUpdateListener
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

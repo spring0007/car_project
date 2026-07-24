@@ -2,16 +2,6 @@
 
 
 buildscript {
-    loadVersions:
-    {// 读取versions.properties到ext中，供项目中直接用变量引用版本号
-        def versions_properties_path = 'buildScripts/gradle/versions.properties'
-        def versions = new Properties()
-        versions.load(file(versions_properties_path).newReader())
-        versions.forEach { key, stringValue ->
-            def value = stringValue?.isInteger() ? stringValue as Integer : stringValue
-            ext.set(key, value)
-        }
-    }
     ext.SAMPLE_HOST_APP_APPLICATION_ID = 'com.awell.launcher'
 
     repositories {
@@ -113,6 +103,19 @@ task assembleAllRelease {
     // 依赖关系在 whenTaskAdded 中动态添加
 }
 
+
+// 所有插件模块共享的 Glide annotationProcessor 配置
+// 排除不含 Glide 注解的模块（AwellLibrary、launcher host 等）
+subprojects { subproject ->
+    if (subproject.name in ['AwellLibrary', 'launcher', 'app']) return
+    plugins.whenPluginAdded { plugin ->
+        if (plugin.class.name == 'com.android.build.gradle.LibraryPlugin' ||
+            plugin.class.name == 'com.android.build.gradle.AppPlugin' ||
+            plugin.class.name == 'com.android.build.gradle.api.AndroidBasePlugin') {
+            subproject.dependencies.add('annotationProcessor', 'com.github.bumptech.glide:compiler:4.16.0')
+        }
+    }
+}
 
 afterEvaluate {
     assembleAllRelease.dependsOn(releaseTasks)

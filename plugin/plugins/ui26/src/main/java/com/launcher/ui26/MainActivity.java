@@ -60,6 +60,8 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
+import com.awell.library.util.ClickUtils;
+import com.awell.library.util.LogUtil;
 import com.awell.utils.CommonData;
 import com.awell.utils.Utils;
 import com.launcher.ui26.adapter.AppInofAdapter;
@@ -299,11 +301,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
         filter.addAction(CommonData.ACTION_ACC_ON);
         filter.addAction(CommonData.ACTION_ACC_OFF);
-        filter.addAction("com.zjinnova.zlink");
-        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.ACTION_ZLINK);
+        filter.addAction(CommonData.ACTION_SHOW_ALL_APP);
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
-        filter.addAction("top_session_package_change");
+        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE);
+        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE);
 		filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addDataScheme("package");
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
@@ -337,7 +339,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                     }
                     break;
-                case "com.zjinnova.zlink":
+                case CommonData.ACTION_ZLINK:
                     String zlinStatus = intent.getStringExtra("status");
                     String phoneMode = intent.getStringExtra("phoneMode");
                     LogUtil.d( "zlinStatus:" + zlinStatus);
@@ -346,15 +348,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }
                     musicWidget.getCarPlayData(zlinStatus, phoneMode);
                     break;
-                case "android.launcher.show.allApp":
+                case CommonData.ACTION_SHOW_ALL_APP:
                     LogUtil.d( "mainReceiver:" + intent.getAction());
                     AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
                     break;
-                case "CANBUS_CHANGE_SPEED_Unit":
+                case CommonData.ACTION_SPEED_UNIT_CHANGE:
                     updateSpeedUnitText();
                     break;
-                case "top_session_package_change":
-                    String sessionTopPkg = intent.getStringExtra("top_package");
+                case CommonData.ACTION_TOP_SESSION_CHANGE:
+                    String sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE);
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
                     LogUtil.d( "88888-top_session_package_change:" + sessionTopPkg);
                     break;
@@ -565,7 +567,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     /**
      * 获取手机已安装应用列表
      *
-     * @param boolean
      * @param isFilterSystem 是否过滤系统应用
      * @return
      */

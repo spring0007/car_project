@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui9.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/video_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -39,7 +39,7 @@
         app:layout_constraintStart_toEndOf="@+id/video_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui9.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/folder_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -64,7 +64,7 @@
         app:layout_constraintStart_toEndOf="@+id/folder_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui9.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/setting_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -88,7 +88,7 @@
         app:layout_constraintStart_toEndOf="@+id/setting_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui9.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/all_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"

@@ -3,7 +3,7 @@ package com.launcher.yfd_ui01.utils
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.launcher.yfd_ui01.R;
-import com.launcher.yfd_ui01.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 public class AppItemView extends RelativeLayout implements View.OnTouchListener {
     private static final String TAG = "AppItemView";

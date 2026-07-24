@@ -1,7 +1,7 @@
 package com.launcher.ui25.adapter;
 
 
-import static com.launcher.ui25.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME;
+import static com.awell.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
 import com.launcher.ui25.R;
-import com.launcher.ui25.utils.SystemUIClient;
+import com.awell.library.util.SystemUIClient;
 
 import java.util.ArrayList;
 import java.util.List;

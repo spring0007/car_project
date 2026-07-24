@@ -87,6 +87,6 @@ dependencies {
 
     implementation project(path: ':app')
 
-    compileOnly project(path: ':AwellLibrary')
+    implementation project(path: ':AwellLibrary')
 
 }

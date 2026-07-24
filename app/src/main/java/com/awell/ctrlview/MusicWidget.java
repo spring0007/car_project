@@ -41,6 +41,7 @@ import com.awell.launcher2.IconCache;
 import com.awell.launcher2.Launcher;
 import com.awell.library.AwellLibrary;
 import com.awell.library.AwellTool;
+import com.awell.utils.CommonData;
 import com.awell.utils.SocketThread;
 
 import java.io.FileDescriptor;
@@ -697,7 +698,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     private void keyDealToZlink(int keycode) {
         Intent intent = new Intent();
-        intent.setAction("com.zjinnova.zlink");
+        intent.setAction(CommonData.ACTION_ZLINK);
         intent.setPackage("com.zjinnova.zlink");
 
         intent.putExtra("command", "REQ_SPEC_FUNC_CMD");

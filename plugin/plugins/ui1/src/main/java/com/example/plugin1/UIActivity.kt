@@ -125,11 +125,11 @@ class UIActivity : Activity(), View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH)
         filter.addAction(CommonData.ACTION_ACC_ON)
         filter.addAction(CommonData.ACTION_ACC_OFF)
-        filter.addAction("com.zjinnova.zlink")
-        filter.addAction("android.launcher.show.allApp")
+        filter.addAction(CommonData.ACTION_ZLINK)
+        filter.addAction(CommonData.ACTION_SHOW_ALL_APP)
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit")
-        filter.addAction("top_session_package_change")
+        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE)
+        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, RECEIVER_EXPORTED)
@@ -494,7 +494,7 @@ class UIActivity : Activity(), View.OnClickListener {
                     }
                 }
 
-                "com.zjinnova.zlink" -> {
+                CommonData.ACTION_ZLINK -> {
                     val zlinkStatus = intent.getStringExtra("status")
                     val phoneMode = intent.getStringExtra("phoneMode")
                     Log.d(TAG, "zlinkStatus:$zlinkStatus")
@@ -504,19 +504,19 @@ class UIActivity : Activity(), View.OnClickListener {
                     llMusic.getCarPlayData(zlinkStatus, phoneMode)
                 }
 
-                "android.launcher.show.allApp" -> {
+                CommonData.ACTION_SHOW_ALL_APP -> {
                     //showAllApps(true)
                     //setSettingOrAndroidPage(true)
                     //mModel.startLoader(true, -1)
                     AppsCustomizeControl.showApps(thisActivity.findViewById<ViewGroup>(android.R.id.content))
                 }
 
-                "CANBUS_CHANGE_SPEED_Unit" -> {
+                CommonData.ACTION_SPEED_UNIT_CHANGE -> {
                     updateSpeedUnitText()
                 }
 
-                "top_session_package_change" -> {
-                    val sessionTopPkg = intent.getStringExtra("top_package")
+                CommonData.ACTION_TOP_SESSION_CHANGE -> {
+                    val sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE)
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
             }

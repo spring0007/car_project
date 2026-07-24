@@ -30,7 +30,7 @@ import com.launcher.yfd_ui01.R
 import com.launcher.yfd_ui01.app.AppPagerAdapter
 import com.launcher.yfd_ui01.app.IconManager
 import com.launcher.yfd_ui01.manager.FragmentAnimation
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 import com.launcher.yfd_ui01.view.CustomViewPager
 import com.launcher.yfd_ui01.view.OnVerticalSwipeListener
 import kotlinx.coroutines.Dispatchers

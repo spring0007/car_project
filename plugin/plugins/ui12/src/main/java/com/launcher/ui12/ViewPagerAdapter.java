@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import com.awell.library.util.PageData;
+
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder> {
 
     private List<PageData> pageDataList;

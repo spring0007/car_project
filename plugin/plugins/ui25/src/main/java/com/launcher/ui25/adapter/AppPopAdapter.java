@@ -18,6 +18,7 @@ import com.awell.addapp.AppInfo;
 import com.launcher.ui25.R;
 import com.launcher.ui25.utils.IconManager;
 
+import com.awell.library.util.LogUtil;
 import java.util.List;
 
 public class AppPopAdapter extends RecyclerView.Adapter<AppPopAdapter.ViewHolder> {

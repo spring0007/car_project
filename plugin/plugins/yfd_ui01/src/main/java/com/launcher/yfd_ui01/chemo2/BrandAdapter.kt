@@ -13,7 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.launcher.yfd_ui01.R
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 
 class BrandAdapter (
     private val groupedBrands: List<Pair<Char, List<CarBrand>>>,

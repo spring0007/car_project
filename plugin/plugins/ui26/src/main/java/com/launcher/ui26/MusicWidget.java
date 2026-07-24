@@ -33,6 +33,7 @@ import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.EarqueeTextView;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
+import com.awell.library.util.LogUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;

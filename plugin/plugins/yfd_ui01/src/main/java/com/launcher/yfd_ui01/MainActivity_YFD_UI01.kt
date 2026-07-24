@@ -14,7 +14,7 @@ import com.launcher.yfd_ui01.fragment.MainFragment
 import com.launcher.yfd_ui01.fragment.MenuFragment
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.manager.FragmentStackManager
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 import kotlin.math.abs
 
 class MainActivity_YFD_UI01 :  FragmentActivity() {

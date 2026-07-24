@@ -1,4 +1,5 @@
 [versions]
+javassist = "3.28.0-GA"
 kotlinxCoroutinesAndroid = "1.7.3"
 appcompat = "1.6.1"
 constraintlayout = "2.1.0"
@@ -13,6 +14,7 @@ localbroadcastmanager = "1.0.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
+slf4jApi = "1.7.5"
 viewpager2 = "1.0.0"
 gson = "2.10.1"
 androidsvg = "1.4"
@@ -20,6 +22,7 @@ cardview = "1.0.0"
 
 
 [libraries]
+javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 localbroadcastmanager = { module = "androidx.localbroadcastmanager:localbroadcastmanager", version.ref = "localbroadcastmanager" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -35,6 +38,7 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
 viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 androidsvg = { group = "com.caverock", name = "androidsvg-aar", version.ref = "androidsvg" }

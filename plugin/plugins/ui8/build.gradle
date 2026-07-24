@@ -78,7 +78,6 @@ dependencies {
         compileOnly project(path: ':AwellLibrary')
 
         //编译期 不会打包
-        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
         compileOnly(libs.okhttp3.integration) {
             exclude group: 'androidx.core', module: 'core'
@@ -107,7 +106,6 @@ dependencies {
         //system has
         compileOnly project(path: ':AwellLibrary')
 
-        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
         //app module has
         compileOnly(libs.okhttp3.integration) {

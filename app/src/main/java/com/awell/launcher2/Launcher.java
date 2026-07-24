@@ -112,7 +112,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,8 +124,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
@@ -143,9 +140,6 @@ import com.awell.control.PlayTime;
 import com.awell.control.RadioInfo;
 import com.awell.ctrlview.FrequencyTextView;
 import com.awell.ctrlview.MusicWidget;
-import com.awell.ctrlview.MyPageTransformer2;
-import com.awell.ctrlview.MyQAnalogClock;
-import com.awell.ctrlview.NewCalendar;
 import com.awell.ctrlview.VisualizerView;
 import com.awell.launcher.library.R;
 import com.awell.launcher2.DropTarget.DragObject;
@@ -1456,26 +1450,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
 
     private void findView() {
-        /*viewPager = findViewById(R.id.viewpager);
-        dots = new ImageView[dotsId.length];
-        for (int i = 0; i < dotsId.length; i++) {
-            dots[i] = findViewById(dotsId[i]);
-        }
-        viewpagerLayout1 = getLayoutInflater().inflate(R.layout.homepage_1, null);
-        viewpagerLayout2 = getLayoutInflater().inflate(R.layout.homepage_2, null);
-        viewpagerLayout3 = getLayoutInflater().inflate(R.layout.homepage_3, null);*/
-
         llMusic = findViewById(R.id.music_widget_layout);
         musicName = llMusic.findViewById(R.id.music_widget_music_name);
-        /*
-        date_bg_rl_h = viewpagerLayout2.findViewById(R.id.date_bg_rl_h);
-        date_bg_rl_m = viewpagerLayout2.findViewById(R.id.date_bg_rl_m);
-        date_bg_tc_h = viewpagerLayout2.findViewById(R.id.date_bg_tc_h);
-        date_bg_tc_m = viewpagerLayout2.findViewById(R.id.date_bg_tc_m);
-        date_bg_tc_mm = viewpagerLayout2.findViewById(R.id.date_bg_tc_mm);
-        date_bg_tv_h = viewpagerLayout2.findViewById(R.id.date_bg_tv_h);
-        date_bg_tv_m = viewpagerLayout2.findViewById(R.id.date_bg_tv_m);*/
-
         radio_rl = findViewById(R.id.radio_rl);
         //radio_rl.setOnClickListener(this);
         radio_iv = findViewById(R.id.radio_iv);
@@ -1496,29 +1472,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         iv_radio_setSearch.setOnClickListener(this);
         tvRadioDxLoc = findViewById(R.id.iv_radio_setYC);
         tvRadioDxLoc.setOnClickListener(this);
-/*
-        time_widget_change = findViewById(R.id.time_widget_change);
-        time_widget_change.setOnLongClickListener(this);
-        time_ll_one = findViewById(R.id.time_ll_one);
-        myQAnalogClock = findViewById(R.id.time_biao);
-
-        biaopan_one_iv = findViewById(R.id.biaopan_one_iv);
-        myQAnalogClock1 = findViewById(R.id.time_biao1);
-        page2_date_m = findViewById(R.id.page2_date_m);
-        page2_date_d = findViewById(R.id.page2_date_d);
-
-        small_calendar_layout = findViewById(R.id.small_calendar_layout);
-        small_calendar_month = findViewById(R.id.small_calendar_month);
-        small_calendar_day = findViewById(R.id.small_calendar_day);
-        small_calendar_year = findViewById(R.id.small_calendar_year);
-
-        contentView = findViewById(android.R.id.content);
-        calendar  = findViewById(R.id.calendarView);
-        time_ll = new LinearLayout[time_ll_id.length];
-        for (int i = 0; i < time_ll_id.length; i++) {
-            time_ll[i] = findViewById(time_ll_id[i]);
-        }
-*/
         rv_layout = findViewById(R.id.rv_layout);
         contentView = findViewById(android.R.id.content);
         rvshowAllApp = findViewById(R.id.rv_showapp);
@@ -1532,7 +1485,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         hotset_moshi = findViewById(R.id.hotset_moshi);
         hotset_moshi.setOnClickListener(this);
 
-        //findViewById(R.id.rl_car).setOnClickListener(this);
         ivAnimTwo = findViewById(R.id.iv_anim_speed_road);
         ivLampSwitchBg = findViewById(R.id.iv_main_xiaodeng);
         //ivLampSwitchBg.setOnClickListener(this);
@@ -1544,70 +1496,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     }
 
     private WallpaperManager wallpaperManager;
-    private ViewPager viewPager;
-    private List<View> viewsList;
-    private View viewpagerLayout1, viewpagerLayout2, viewpagerLayout3;
-    private int[] dotsId = {R.id.dot_1, R.id.dot_2, R.id.dot_3};
-    private ImageView[] dots;
-    private PagerAdapter pagerAdapter;
     private final int INITVIEW = 111;
 
-    private void initViewPager() {
-        viewsList = new ArrayList<>();
-        viewsList.add(viewpagerLayout1);
-        viewsList.add(viewpagerLayout3);
-        viewsList.add(viewpagerLayout2);
-
-        pagerAdapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return viewsList.size();
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-
-            @NonNull
-            @Override
-            public Object instantiateItem(@NonNull ViewGroup container, int position) {
-                container.addView(viewsList.get(position));
-                return viewsList.get(position);
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                container.removeView(viewsList.get(position));
-            }
-        };
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.i(TAG, "position = " + position);
-                for (int i = 0; i < dots.length; i++) {
-                    dots[i].setBackgroundResource(position == i ? R.drawable.sel_o : R.drawable.nor_t);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-        viewPager.setPageTransformer(true, new MyPageTransformer2());
-//        viewPager.setCurrentItem(0);
-    }
-
     private MusicWidget llMusic;
-    private RelativeLayout date_bg_rl_h, date_bg_rl_m;
-    private TextClock date_bg_tc_h, date_bg_tc_m, date_bg_tc_mm;
-    private TextView date_bg_tv_h, date_bg_tv_m;
-    //private TextView musicName;
     private EarqueeTextView musicName;
     //huangxw add
     private MediaViewModel mediaViewModel;
@@ -1656,56 +1547,8 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     }
 
-    private MyQAnalogClock myQAnalogClock, myQAnalogClock1;
-    private int[] time_ll_id = new int[]{R.id.time_ll_one, R.id.time_ll_two, R.id.time_ll_three, R.id.time_ll_four};
-    private LinearLayout[] time_ll;
-
     private int[] time_img_id = new int[]{R.id.time_w_one_img, R.id.time_w_two_img, R.id.time_w_three_img, R.id.time_w_four_img};
-    private ImageView[] time_img;
-    private View contentView, layoutView3;
-    private NewCalendar calendar;
-    private RelativeLayout time_widget_change;
-    private LinearLayout time_ll_one, small_calendar_layout;
-    private ImageView biaopan_one_iv;
-    private TextClock page2_date_m, page2_date_d, small_calendar_month, small_calendar_day, small_calendar_year;
-
-    private void initClock() {
-        layoutView3 = LayoutInflater.from(this).inflate(R.layout.layout_pop_time_widget, null);
-        time_img = new ImageView[time_img_id.length];
-        for (int i = 0; i < time_img_id.length; i++) {
-            time_img[i] = layoutView3.findViewById(time_img_id[i]);
-            time_img[i].setOnClickListener(this);
-        }
-
-        int timeIndex = mSharedPrefs.getInt("time_widget_index", 0);
-        Log.d(TAG, "time_widget_index:" + timeIndex);
-        setTimeWidgetVisible(timeIndex);
-
-        placehodlerInfo = new AppInfo();
-    }
-
-    private void setTimeWidgetVisible(int timeIndex) {
-        for (int i = 0; i < time_ll_id.length; i++) {
-            if (timeIndex == i) {
-                time_ll[i].setVisibility(View.VISIBLE);
-            } else {
-                time_ll[i].setVisibility(View.GONE);
-            }
-        }
-    }
-
-    private PopupWindow popupWindow3;
-
-    private void showPopupTimeWidget() {
-        View view = layoutView3;
-        popupWindow3 = new PopupWindow(view, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-        popupWindow3.setOutsideTouchable(true);
-        //popupWindow3.setFocusable(true);
-        popupWindow3.setOnDismissListener(() -> {
-            backgroundAlpha(1.0f);
-        });
-        popupWindow3.showAtLocation(contentView, Gravity.CENTER, 0, 10);
-    }
+    private View contentView;
 
     private void backgroundAlpha(float alpha) {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
@@ -1713,74 +1556,14 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         getWindow().setAttributes(lp);
     }
 
-    private void setTimeWidgetIndex(int index) {
-        if (popupWindow3 != null) {
-            popupWindow3.dismiss();
-        }
-        SharedPreferences.Editor editor = mSharedPrefs.edit();
-        editor.putInt("time_widget_index", index);
-        editor.commit();
-    }
-
     private LinearLayout rv_layout;
     private RecyclerView rvshowAllApp;
     private LinearLayoutManager linearLayoutManager;
     private AppInofAdapter appInofAdapter;
     private List<AppInfo> allAppInfoList, showAppInfoLis;
-    private final int INITADDAPPVIEW = 101;
     private AppInfo placehodlerInfo;
     private MyDbHelper myDbHelper;
     private SQLiteDatabase sqLiteDatabase;
-
-    private void initAddAppView() {
-        placehodlerInfo.setLabel(getString(R.string.icon_add_name));
-        allAppInfoList = getAllAppInfo(Launcher.this, false);
-        showAppInfoLis = new ArrayList<>();
-        // 获取已保存需要显示的app包名，如果没有，则显示默认
-        myDbHelper = new MyDbHelper(this, "show_app", null, 1);
-        sqLiteDatabase = myDbHelper.getWritableDatabase();
-        List<String> stroageAppList = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.query("showapp", null, null, null, null, null, null);
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String packageName = cursor.getString(cursor.getColumnIndex("packagename"));
-                stroageAppList.add(packageName);
-                // 删除记录
-                sqLiteDatabase.delete("showapp", "packagename=?", new String[]{packageName});
-            }
-            for (String packageName : stroageAppList) {
-                AppInfo appInfo1 = Utils.getAppInfoFromPackage(packageName, allAppInfoList);
-                if (appInfo1 != null) {
-                    showAppInfoLis.add(appInfo1);
-                }
-            }
-            cursor.close();
-        }
-        Log.i(TAG, "show_app cursor");
-        // 如果数据库中没有数据，加载默认数据
-        if (showAppInfoLis.size() == 0) {
-            for (String packName : Utils.getDefaultShowApp(this)) {
-                AppInfo appInfo = Utils.getAppInfoFromPackage(packName, allAppInfoList);
-                if (appInfo != null) {
-                    showAppInfoLis.add(Utils.getAppInfoFromPackage(packName, allAppInfoList));
-                }
-            }
-        }
-        // 添加到数据库
-        for (AppInfo storagePac : showAppInfoLis) {
-            if (storagePac != null) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("packagename", storagePac.package_name);
-                sqLiteDatabase.insert("showapp", null, contentValues);
-            }
-        }
-
-        showAppInfoLis.add(placehodlerInfo);
-        appInofAdapter = new AppInofAdapter(this, showAppInfoLis, showPopupI, addSelectAppCallback);
-        rvshowAllApp.setAdapter(appInofAdapter);
-        linearLayoutManager = new GridLayoutManager(this, 3);
-        rvshowAllApp.setLayoutManager(linearLayoutManager);
-    }
 
     private ShowPopupI showPopupI = new ShowPopupI() {
         @Override
@@ -1910,7 +1693,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
     private ImageView ivAnimTwo, ivLampSwitchBg, hotset_moshi;
     private TextView tvGPSSpeed, tvGPSSpeedUnit;
-    private final int ADDCARANIM = 120;
     private boolean accRecor;
 
     private void initCarView() {
@@ -1920,26 +1702,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         if (Settings.System.getInt(getContentResolver(), "Headlamp", 0) == 1)
             ivLampSwitchBg.setImageResource(R.drawable.open);
         else ivLampSwitchBg.setImageResource(R.drawable.off);
-
-        //handler.removeMessages(ADDCARANIM);
-        //handler.sendEmptyMessageDelayed(ADDCARANIM, 2000);
-    }
-
-    private AnimationDrawable animationDrawableTwo;
-
-    private void addCarAnim() {
-        ivAnimTwo.setBackgroundResource(R.drawable.sf_speed_line_two);
-        animationDrawableTwo = (AnimationDrawable) ivAnimTwo.getBackground();
-//        animationDrawableTwo.start();
-        byte[] unit = new byte[1];
-        CommonData.readDataToMeta(unit, 0x84);
-        int unitData = unit[0];
-        Log.e(TAG, "unit Data = " + unitData);
-        if (unitData == 0) {
-            tvGPSSpeedUnit.setText("KM/h");
-        } else if (unitData == 1) {
-            tvGPSSpeedUnit.setText("mph");
-        }
     }
 
     @SuppressLint("HandlerLeak")
@@ -1971,22 +1733,12 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                                 tvGPSSpeed.setText(speed_mile + "");
                                 tvGPSSpeedUnit.setText("mph");
                             }
-                            if (animationDrawableTwo != null) {
-                                if (speed_km > 0 || speed_mile > 0) {
-                                    animationDrawableTwo.start();
-                                } else {
-                                    animationDrawableTwo.stop();
-                                }
-                            }
                         }
                         mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
                         mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
                         break;
                     case MSG_CLEAR_SPEED:
                         tvGPSSpeed.setText("" + 0);
-                        if (animationDrawableTwo != null) {
-                            animationDrawableTwo.stop();
-                        }
                         break;
                 }
             }
@@ -2034,27 +1786,14 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     }
 
     int[] hotset_moshiID = {R.drawable.hotset_moshi, R.drawable.hotset_moshi1};
- //   int[] sf_widget_musicID = {R.drawable.sf_widget_music_bg, R.drawable.sf_widget_music_bg_n};
     int[] date_bgID = {R.drawable.date_bg, R.drawable.date_bg_n};
     int[] radio_bar_icon_bgID = {R.drawable.radio_bar_icon_bg, R.drawable.radio_bar_icon_bg_n};
     int[] sf_radio_preID = {R.drawable.sf_radio_pre, R.drawable.sf_radio_pre_n};
     int[] sf_radio_nextID = {R.drawable.sf_radio_next, R.drawable.sf_radio_next_n};
-//    int[] date_bg_tvID = {Color.parseColor("#D5D7DD"), Color.parseColor("#141414")};
     int[] textColorId = {Color.parseColor("#99ffffff"), Color.parseColor("#99ffffff")};
-//    int[] textColorId1 = {Color.WHITE, Color.BLACK};
-//    int[] sf_time_bg_mainID = {R.drawable.sf_time_bg_main, R.drawable.sf_time_bg_main_n};
-//    int[] biaopanID = {R.drawable.biaopan, R.drawable.biaopan_n};
-//    //    int[] biaopan_oneID = {R.drawable.biaopan_one, R.drawable.biaopan_one_n};
-//    int[] small_calendar_layoutID = {R.drawable.four_rili_bg, R.drawable.four_rili_bg_n};
-//    int[][] time_imgID = {{R.drawable.time_w_one, R.drawable.time_w_one_night}, {R.drawable.time_w_two, R.drawable.time_w_two_night}, {R.drawable.time_w_three, R.drawable.time_w_three_night}, {R.drawable.time_w_four, R.drawable.time_w_four_night}};
-//    int[] sf_app_bg_mainID = {R.drawable.sf_app_bg_main, R.drawable.sf_app_bg_main_n};
-//    int[] sf_add2_dID = {R.drawable.sf_add2_d, R.drawable.sf_add2_n};
 
     private void dayNightImages(int dayNight) {
         hotset_moshi.setImageResource(hotset_moshiID[dayNight]);
-        //viewpagerLayout1.setBackgroundResource(sf_widget_musicID[dayNight]);
-        //viewpagerLayout2.setBackgroundResource(sf_widget_musicID[dayNight]);
-        //viewpagerLayout3.setBackgroundResource(sf_widget_musicID[dayNight]);
         llMusic.setDayNight(dayNight);
 
         radio_iv.setBackgroundResource(radio_bar_icon_bgID[dayNight]);
@@ -2067,42 +1806,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         tvRadioButAFM.setTextColor(textColorId[dayNight]);
         iv_radio_setSearch.setTextColor(textColorId[dayNight]);
         tvRadioDxLoc.setTextColor(textColorId[dayNight]);
-/*
-        date_bg_rl_h.setBackgroundResource(date_bgID[dayNight]);
-        date_bg_rl_m.setBackgroundResource(date_bgID[dayNight]);
-        date_bg_tc_h.setTextColor(textColorId[dayNight]);
-        date_bg_tc_m.setTextColor(textColorId[dayNight]);
-        date_bg_tc_mm.setTextColor(textColorId[dayNight]);
-        date_bg_tv_h.setBackgroundColor(date_bg_tvID[dayNight]);
-        date_bg_tv_m.setBackgroundColor(date_bg_tvID[dayNight]);
-
-        time_widget_change.setBackgroundResource(sf_time_bg_mainID[dayNight]);
-        time_ll_one.setBackgroundResource(biaopanID[dayNight]);
-        myQAnalogClock.setValue(dayNight);
-
-        biaopan_one_iv.setBackgroundResource(biaopan_oneID[dayNight]);
-        myQAnalogClock1.setValue(dayNight);
-        page2_date_m.setTextColor(textColorId[dayNight]);
-        page2_date_d.setTextColor(textColorId[dayNight]);
-
-        calendar.renderCalendar(dayNight);
-
-        small_calendar_layout.setBackgroundResource(small_calendar_layoutID[dayNight]);
-        small_calendar_month.setTextColor(textColorId1[dayNight]);
-        small_calendar_day.setTextColor(textColorId1[dayNight]);
-        small_calendar_year.setTextColor(textColorId[dayNight]);
-
-        for (int i = 0; i < time_img.length; i++) {
-            time_img[i].setBackgroundResource(time_imgID[i][dayNight]);
-        }
-
-        rv_layout.setBackgroundResource(sf_app_bg_mainID[dayNight]);
-        placehodlerInfo.setIcon(getDrawable(sf_add2_dID[dayNight]));
-        if (appInofAdapter != null)
-            appInofAdapter.notifyDataSetChanged();
-*/
-        //tvGPSSpeed.setTextColor(textColorId[dayNight]);
-        //tvGPSSpeedUnit.setTextColor(textColorId[dayNight]);
         tvGPSSpeed.setTextColor(Color.parseColor("#ccffffff"));
         tvGPSSpeedUnit.setTextColor(Color.parseColor("#ccffffff"));
     }
@@ -2126,25 +1829,12 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             super.handleMessage(msg);
             Log.i(TAG, "handlerNew msg.what = " + msg.what);
             switch (msg.what) {
-                case 100:
-                    break;
                 case INITVIEW:
-                    //initViewPager();
                     initMusicWidget();
                     initRadioWidget();
-                    //initClock();
                     initCarView();
                     int value = Settings.System.getInt(getContentResolver(), "launcherTypeDN", 0);
                     dayNightImages(value == 1 ? 1 : 0);
-
-                    //handler.removeMessages(INITADDAPPVIEW);
-                    //handler.sendEmptyMessageDelayed(INITADDAPPVIEW, 1000);
-                    break;
-                case INITADDAPPVIEW:
-                    //initAddAppView();
-                    break;
-                case ADDCARANIM:
-                    //addCarAnim();
                     break;
                 case SPEEDHOME:
                     speedhome();
@@ -3210,13 +2900,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_LocDX);
         }
 
-        for (int i = 0; i < time_img_id.length; i++) {
-            if (v.getId() == time_img_id[i]) {
-                setTimeWidgetVisible(i);
-                setTimeWidgetIndex(i);
-                break;
-            }
-        }
         // Make sure that rogue clicks don't get through while allapps is
         // launching, or after the
         // view has detached (it's possible for this to happen if the view is
@@ -3584,9 +3267,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
     }
 
     public boolean onLongClick(View v) {
-        if (v.getId() == R.id.time_widget_change) {
-            //showPopupTimeWidget();
-        } else if (v.getId() == R.id.all_apps_cling) {
+        if (v.getId() == R.id.all_apps_cling) {
 
         } else {
 
@@ -5185,11 +4866,11 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
         filter.addAction(CommonData.ACTION_ACC_ON);
         filter.addAction(CommonData.ACTION_ACC_OFF);
-        filter.addAction("com.zjinnova.zlink");
-        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.ACTION_ZLINK);
+        filter.addAction(CommonData.ACTION_SHOW_ALL_APP);
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
-        filter.addAction("top_session_package_change");
+        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE);
+        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE);
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
 //        updateTime();
     }
@@ -5222,7 +4903,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
 
                     }
                     break;
-                case "com.zjinnova.zlink":
+                case CommonData.ACTION_ZLINK:
                     String zlinStatus = intent.getStringExtra("status");
                     String phoneMode = intent.getStringExtra("phoneMode");
                     LogUtil.d("zlinStatus:" + zlinStatus);
@@ -5231,7 +4912,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                     }
                     llMusic.getCarPlayData(zlinStatus, phoneMode);
                     break;
-                case "android.launcher.show.allApp":
+                case CommonData.ACTION_SHOW_ALL_APP:
                     LogUtil.d( "mainReceiver:" + intent.getAction());
                     canbus_set_dis = getCanBusState();
                     //仅在数据未加载且无LoaderTask运行时启动新加载
@@ -5243,11 +4924,11 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                     }
                     showAllApps(true);
                     break;
-                case "CANBUS_CHANGE_SPEED_Unit":
+                case CommonData.ACTION_SPEED_UNIT_CHANGE:
                     updateSpeedUnitText();
                     break;
-                case "top_session_package_change":
-                    String sessionTopPkg = intent.getStringExtra("top_package");
+                case CommonData.ACTION_TOP_SESSION_CHANGE:
+                    String sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE);
                     handleMediaPlaybackResult(sessionTopPkg, "start", 3, 4);
                     LogUtil.d("88888-top_session_package_change:" + sessionTopPkg);
                     break;

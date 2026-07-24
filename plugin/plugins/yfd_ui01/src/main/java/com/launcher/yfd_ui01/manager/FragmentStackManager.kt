@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.launcher.yfd_ui01.R
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 
 class FragmentStackManager(
     private val fragmentManager: FragmentManager,

@@ -48,10 +48,10 @@ import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
-import com.launcher.yfd_ui01.utils.FreeformUtils.startFreeformApp
-import com.launcher.yfd_ui01.utils.LogUtil
-import com.launcher.yfd_ui01.utils.SystemUIClient
-import com.launcher.yfd_ui01.utils.SystemUIClient.OPEN_APP_TO_FREEFORM
+import com.awell.utils.FreeformUtils.startFreeformApp
+import com.awell.library.util.LogUtil
+import com.awell.library.util.SystemUIClient
+import com.awell.utils.FreeformUtils.OPEN_APP_TO_FREEFORM
 import com.launcher.yfd_ui01.view.AppItemView
 import com.launcher.yfd_ui01.view.DashboardView
 import com.launcher.yfd_ui01.view.DialWidget
@@ -224,11 +224,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH)
         filter.addAction(CommonData.ACTION_ACC_ON)
         filter.addAction(CommonData.ACTION_ACC_OFF)
-        filter.addAction("com.zjinnova.zlink")
-        filter.addAction("android.launcher.show.allApp")
+        filter.addAction(CommonData.ACTION_ZLINK)
+        filter.addAction(CommonData.ACTION_SHOW_ALL_APP)
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit")
-        filter.addAction("top_session_package_change")
+        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE)
+        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE)
         filter.addAction(Intent.ACTION_TIME_CHANGED)
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         //filter.addAction(Intent.ACTION_TIME_TICK)
@@ -287,7 +287,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     }
                 }
 
-                "com.zjinnova.zlink" -> {
+                CommonData.ACTION_ZLINK -> {
                     val zlinkStatus = intent.getStringExtra("status")
                     val phoneMode = intent.getStringExtra("phoneMode")
                     LogUtil.d( "zlinkStatus:$zlinkStatus")
@@ -297,15 +297,15 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     musicWidget.getCarPlayData(zlinkStatus, phoneMode)
                 }
 
-                "android.launcher.show.allApp" -> {
+                CommonData.ACTION_SHOW_ALL_APP -> {
                     imageUpdateJob?.cancel()
                     systemUIClient?.hideFreeform()
                     LogUtil.i( "onClick: huang freeform to hide222==>")
                 }
 
-                "CANBUS_CHANGE_SPEED_Unit" -> {}
-                "top_session_package_change" -> {
-                    val sessionTopPkg = intent.getStringExtra("top_package")
+                CommonData.ACTION_SPEED_UNIT_CHANGE -> {}
+                CommonData.ACTION_TOP_SESSION_CHANGE -> {
+                    val sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE)
                     handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
                 }
 
@@ -920,11 +920,11 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private fun startActivityByPkgClazz(packName: String, className: String?) {
         LogUtil.i("startActivityByPkgClazz,packName=$packName")
         val intent = swipeActivity.packageManager.getLaunchIntentForPackage(packName)
-        var isboot = true
+        var isboot = false
         if (intent != null) {
             for (index in IconCache.WorkSpacePackageName.indices) {
-                if (packName != IconCache.WorkSpacePackageName[index]) {
-                    isboot = false
+                if (packName == IconCache.WorkSpacePackageName[index]) {
+                    isboot = true
                     break
                 }
             }
@@ -940,10 +940,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private fun startActivityIntent(intent: Intent) {
         LogUtil.i("startActivityIntent")
         val packName = intent.`package`
-        var isboot = true
+        var isboot = false
         for (index in IconCache.WorkSpacePackageName.indices) {
-            if (packName != IconCache.WorkSpacePackageName[index]) {
-                isboot = false
+            if (packName == IconCache.WorkSpacePackageName[index]) {
+                isboot = true
                 break
             }
         }

@@ -38,7 +38,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.launcher.zy_ui06.R;
-import com.launcher.zy_ui06.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 
 public class MusicWidget extends ConstraintLayout implements OnClickListener {

@@ -80,7 +80,6 @@ dependencies {
         compileOnly project(path: ':AwellLibrary')
 
         //编译期 不会打包
-        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
         compileOnly libs.recyclerview
 
@@ -111,7 +110,6 @@ dependencies {
         //system has
         compileOnly project(path: ':AwellLibrary')
 
-        annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
 
         compileOnly libs.recyclerview
 

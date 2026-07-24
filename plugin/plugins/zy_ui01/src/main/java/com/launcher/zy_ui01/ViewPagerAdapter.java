@@ -12,11 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.launcher.zy_ui01.utils.WeatherHelper;
+import com.awell.library.util.WeatherHelper;
 import com.launcher.zy_ui01.utils.WeatherIconLoader;
 import com.launcher.zy_ui01.utils.WeatherTextMapper;
 
 import java.util.List;
+
+import com.awell.library.util.PageData;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder> {
     private List<PageData> pageDataList;

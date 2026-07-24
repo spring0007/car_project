@@ -13,7 +13,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.launcher.yfd_ui01.R;
-import com.launcher.yfd_ui01.utils.LogUtil;
+import com.awell.library.util.LogUtil;
 
 /**
  * Date :2021/12/24

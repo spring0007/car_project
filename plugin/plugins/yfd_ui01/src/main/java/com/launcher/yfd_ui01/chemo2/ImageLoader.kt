@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.launcher.yfd_ui01.R
-import com.launcher.yfd_ui01.utils.LogUtil
+import com.awell.library.util.LogUtil
 import java.io.File
 
 object ImageLoader {

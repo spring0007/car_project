@@ -37,6 +37,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.awell.library.util.LogUtil;
 import com.bumptech.glide.request.target.Target;
 
 

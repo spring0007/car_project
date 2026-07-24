@@ -40,6 +40,8 @@ import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
+import com.awell.library.util.ClickUtils;
+import com.awell.library.util.LogUtil;
 import com.awell.utils.Utils;
 import com.launcher.ui3.databinding.ActivityMainUi3Binding;
 import com.launcher.ui3.databinding.MusicWidgetBinding;

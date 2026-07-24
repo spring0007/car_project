@@ -47,6 +47,34 @@ public class CommonData {
     public static final String KEY_KM_SPEED = "speed_km";
     public static final String KEY_MILE_SPEED = "speed_mile";
 
+    /**
+     * ZLink (CarPlay/Android Auto) 连接状态广播
+     */
+    public static final String ACTION_ZLINK = "com.zjinnova.zlink";
+
+    /**
+     * 显示所有应用广播
+     */
+    public static final String ACTION_SHOW_ALL_APP = "android.launcher.show.allApp";
+
+    /**
+     * 车速单位变更广播
+     */
+    public static final String ACTION_SPEED_UNIT_CHANGE = "CANBUS_CHANGE_SPEED_Unit";
+
+    /**
+     * 顶部 Activity 变更广播
+     */
+    public static final String ACTION_TOP_SESSION_CHANGE = "top_session_package_change";
+    public static final String EXTRA_TOP_PACKAGE = "top_package";
+
+    /**
+     * 按键广播
+     */
+    public static final String ACTION_TOUCH_KEY = "com.awellauto.key";
+    public static final String EXTRA_KEYCODE = "keycode";
+    public static final String EXTRA_KEY_STATUS = "status";
+
 
     /**
      * 获取当前车速单位

@@ -80,7 +80,7 @@
         app:layout_constraintStart_toEndOf="@+id/guideline_left"
         app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
 
-    <com.launcher.ui19.MarqueeTextView
+    <com.awell.launcher2.EarqueeTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/navigation"
@@ -102,7 +102,7 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_btphone_bg"
         tools:ignore="MissingConstraints" />
 
-    <com.launcher.ui19.MarqueeTextView
+    <com.awell.launcher2.EarqueeTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/radio"
@@ -124,7 +124,7 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_btmusic_bg"
         tools:ignore="MissingConstraints" />
 
-    <com.launcher.ui19.MarqueeTextView
+    <com.awell.launcher2.EarqueeTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/phone"
@@ -147,7 +147,7 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_setting_bg"
         tools:ignore="MissingConstraints" />
 
-    <com.launcher.ui19.MarqueeTextView
+    <com.awell.launcher2.EarqueeTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/bt_music"
@@ -169,7 +169,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <com.launcher.ui19.MarqueeTextView
+    <com.awell.launcher2.EarqueeTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/setting"

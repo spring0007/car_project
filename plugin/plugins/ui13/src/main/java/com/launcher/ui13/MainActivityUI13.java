@@ -81,11 +81,11 @@ public class MainActivityUI13 extends Activity implements View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_LAMP_SWITCH);
         filter.addAction(CommonData.ACTION_ACC_ON);
         filter.addAction(CommonData.ACTION_ACC_OFF);
-        filter.addAction("com.zjinnova.zlink");
-        filter.addAction("android.launcher.show.allApp");
+        filter.addAction(CommonData.ACTION_ZLINK);
+        filter.addAction(CommonData.ACTION_SHOW_ALL_APP);
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
-        filter.addAction("CANBUS_CHANGE_SPEED_Unit");
-        filter.addAction("top_session_package_change");
+        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE);
+        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE);
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
     }
 

@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui7.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/navi_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -40,7 +40,7 @@
         app:layout_constraintStart_toEndOf="@+id/navi_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui7.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/music_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -64,7 +64,7 @@
         app:layout_constraintStart_toEndOf="@+id/music_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui7.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/all_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -88,7 +88,7 @@
         app:layout_constraintStart_toEndOf="@+id/all_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui7.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/phone_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
@@ -112,7 +112,7 @@
         app:layout_constraintStart_toEndOf="@+id/phone_iv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.launcher.ui7.MarqueeTextView
+        <com.awell.launcher2.EarqueeTextView
             android:id="@+id/radio_tv"
             style="@style/marquee_text"
             android:layout_width="0dp"
