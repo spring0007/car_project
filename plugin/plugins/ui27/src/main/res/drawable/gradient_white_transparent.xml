@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- 固定尺寸（单位 px，与需求一致） -->
+    <size
+        android:width="213px"
+        android:height="4px" />
+
+    <!-- 线性渐变：从左到右（angle="0"），起始白色，结束透明白色 -->
+    <gradient
+        android:startColor="#00FFFFFF"
+        android:centerColor="#FFFFFFFF"
+        android:endColor="#00FFFFFF"
+        android:angle="0" />
+
+</shape>

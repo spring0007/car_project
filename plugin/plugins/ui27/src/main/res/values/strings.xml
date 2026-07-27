@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">LauncherUI5</string><!-- app 名称 -->
+
+    <string name="ui_key" translatable="false">LauncherUI27</string>
+    <string name="ui_clazz" translatable="false">com.launcher.ui27.MainActivityUI27</string>
+
+
+    <string name="click_play_music">Song Title</string>
+    <string name="music_artist">Artist</string>
+    <string name="unknown">unknown</string>
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+        <item>wallpaper_01</item>
+        <item>wallpaper_02</item>
+        <item>wallpaper_03</item>
+    </string-array>
+
+</resources>

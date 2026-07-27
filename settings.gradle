@@ -51,6 +51,7 @@ include ':plugin:plugins:ui23'  //freeform
 include ':plugin:plugins:ui24'  //freeform
 include ':plugin:plugins:ui25'  //freeform
 include ':plugin:plugins:ui26'
+include ':plugin:plugins:ui27'
 include ':plugin:plugins:yfd_ui01'
 include ':plugin:plugins:yfd_ui2'
 include ':plugin:plugins:yfd_ui03'

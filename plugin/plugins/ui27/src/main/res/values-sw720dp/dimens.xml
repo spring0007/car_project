@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="music_widget_iv_size">50dp</dimen>
+    <dimen name="hotset_iv_size">60dp</dimen>
+    <dimen name="tv_radio_amfm_size">23sp</dimen>
+    <dimen name="tv_radio_freq_size">75sp</dimen>
+    <dimen name="tv_radio_freq_unit_size">30sp</dimen>
+    <dimen name="img_song_art_bg_size">275dp</dimen>
+    <dimen name="music_name_tv_size">24sp</dimen>
+    <dimen name="music_artist_tv_size">18sp</dimen>
+    <dimen name="iv_radio_width">387dp</dimen>
+    <dimen name="tc_date_size">38sp</dimen>
+    <dimen name="tc_time_size">90sp</dimen>
+    <dimen name="space_width">203dp</dimen>
+    <dimen name="space_height">4dp</dimen>
+    <dimen name="margin_bottom">50dp</dimen>
+
+</resources>
