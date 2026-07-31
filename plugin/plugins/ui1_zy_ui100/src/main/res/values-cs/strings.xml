@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI1</string>
+    
+    
+
+    <string name="click_play_music">Klikněte pro přehrávání</string>
+    <string name="music_artist">Umělec</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">POLOHA</string>
+    <string name="radio_save">Vyhledávání</string>
+    <string name="icon_add_name">Přidat k</string>
+    <string name="unknow_song_name">Neznámý název písně</string>
+    <string name="unknow_song_artist">Neznámý umělec</string>
+
+    
+</resources>

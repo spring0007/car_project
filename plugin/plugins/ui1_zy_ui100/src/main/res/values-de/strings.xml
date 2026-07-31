@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI1</string>
+    
+    
+
+    <string name="click_play_music">Zum Spielen klicken</string>
+    <string name="music_artist">Künstler</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">LAGE</string>
+    <string name="radio_save">Suche</string>
+    <string name="icon_add_name">Hinzufügen zu</string>
+    <string name="unknow_song_name">Unbekannter Songname</string>
+    <string name="unknow_song_artist">Unbekannter Künstler</string>
+
+    
+</resources>

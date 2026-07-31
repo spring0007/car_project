@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="car_width">708dp</dimen>
+    <dimen name="car_height">348dp</dimen>
+    <dimen name="bottom_icon_width">56dp</dimen>
+    <dimen name="car_speed_hor_ratio">0.68</dimen>
+    <dimen name="guideline_bottom_bias">0.89</dimen>
+    <dimen name="music_widget_iv_size">60dp</dimen>
+    <dimen name="iv_radio_iv_size">48dp</dimen>
+    <dimen name="hohset_iv_size">70dp</dimen>
+</resources>

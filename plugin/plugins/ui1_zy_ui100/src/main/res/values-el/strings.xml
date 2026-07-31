@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ΕκτοξευτήςUI1</string>
+    
+    
+
+    <string name="click_play_music">Κάντε κλικ για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+
+    <string name="radio_dx">ΔΧ</string>
+    <string name="radio_loc">ΤΟΠΟΘΕΣΙΑ</string>
+    <string name="radio_save">Αναζήτηση</string>
+    <string name="icon_add_name">Προσθήκη σε</string>
+    <string name="unknow_song_name">Άγνωστο όνομα τραγουδιού</string>
+    <string name="unknow_song_artist">Άγνωστος καλλιτέχνης</string>
+
+    
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Trình khởi chạyUI1</string>
+    
+    
+
+    <string name="click_play_music">Bấm để chơi</string>
+    <string name="music_artist">Nghệ sĩ</string>
+
+    <string name="radio_dx">Chuyển đổi</string>
+    <string name="radio_loc">ĐỊA ĐIỂM</string>
+    <string name="radio_save">Tìm kiếm</string>
+    <string name="icon_add_name">Thêm vào</string>
+    <string name="unknow_song_name">Tên bài hát không rõ</string>
+    <string name="unknow_song_artist">Nghệ sĩ vô danh</string>
+
+    
+</resources>

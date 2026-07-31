@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">启动器UI1</string>
+    
+    
+
+    <string name="click_play_music">请选择歌曲</string>
+    <string name="music_artist">歌手</string>
+
+    <string name="radio_dx">远程</string>
+    <string name="radio_loc">近程</string>
+    <string name="radio_save">搜台</string>
+    <string name="icon_add_name">添加</string>
+    <string name="unknow_song_name">未知歌曲</string>
+    <string name="unknow_song_artist">未知艺术家</string>
+
+    
+</resources>

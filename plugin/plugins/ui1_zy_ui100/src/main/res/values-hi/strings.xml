@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">लॉन्चरUI1</string>
+    
+    
+
+    <string name="click_play_music">खेलने के लिए क्लिक करें</string>
+    <string name="music_artist">कलाकृति-निर्माता</string>
+
+    <string name="radio_dx">डीएक्स</string>
+    <string name="radio_loc">स्थान</string>
+    <string name="radio_save">खोज</string>
+    <string name="icon_add_name">इसमें जोड़ें</string>
+    <string name="unknow_song_name">अज्ञात गीत का नाम</string>
+    <string name="unknow_song_artist">अज्ञात कलाकार</string>
+
+    
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">LauncherUI1</string>
+    
+    
+
+    <string name="click_play_music">انقر لتشغيل</string>
+    <string name="music_artist">فنان</string>
+
+    <string name="radio_dx">DX</string>
+    <string name="radio_loc">الموقع</string>
+    <string name="radio_save">البحث</string>
+    <string name="icon_add_name">أضف إلى</string>
+    <string name="unknow_song_name">اسم الأغنية غير معروف</string>
+    <string name="unknow_song_artist">فنان مجهول</string>
+
+    
+</resources>
