@@ -101,7 +101,7 @@
     <application
         android:name="com.awell.launcher2.LauncherApplication"
         android:hardwareAccelerated="true"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.NoTitleBar">
 
