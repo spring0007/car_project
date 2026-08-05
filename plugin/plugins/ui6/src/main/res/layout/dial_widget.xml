@@ -5,8 +5,7 @@
     android:id="@+id/dial_widget_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
     <TextClock
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +13,7 @@
         android:text="11:25"
         android:format12Hour="hh:mm"
         android:format24Hour="HH:mm"
-        android:textSize="32sp"
+        android:textSize="@dimen/dial_time_tc_size"
         android:textColor="@color/white"
         android:layout_gravity="center"
         />
@@ -40,9 +39,13 @@
             android:format24Hour="MM-dd"
             android:text="5月18日"
             android:textColor="@android:color/white"
-            android:textSize="30sp"
-            android:layout_marginEnd="70dp"
+            android:textSize="@dimen/tc_time_size"
             android:layout_gravity="center_vertical|left"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            />
 
         <TextClock
             android:layout_width="wrap_content"
@@ -51,7 +54,7 @@
             android:format24Hour="EEEE"
             android:text="星期五"
             android:textColor="@android:color/white"
-            android:textSize="28sp"
+            android:textSize="@dimen/tc_week_size"
             android:layout_gravity="center_vertical|left"/>
 
     </LinearLayout>

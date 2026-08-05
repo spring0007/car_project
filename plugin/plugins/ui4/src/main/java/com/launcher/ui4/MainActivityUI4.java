@@ -6,7 +6,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -53,7 +52,6 @@ import com.awell.utils.CommonData;
 import com.awell.utils.LogUtil;
 import com.awell.utils.Utils;
 import com.launcher.ui4.databinding.ActivityMainUi4NewBinding;
-import com.launcher.ui4.databinding.MusicWidgetBinding;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -235,11 +233,11 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 //                            }
                         }
                         mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
+                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         break;
                     case MSG_CLEAR_SPEED:
                         binding.carSpeedTv.setText("" + 0);
-//                        if (animationDrawableTwo != null) {
+//                       if (animationDrawableTwo != null) {
 //                            animationDrawableTwo.stop();
 //                        }
                         break;
@@ -252,7 +250,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             return;
         }
         if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+            mLocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandlerSpeed.getLooper());
         } else {
             Log.e(TAG, "LocationManager is null, cannot request location updates");
         }

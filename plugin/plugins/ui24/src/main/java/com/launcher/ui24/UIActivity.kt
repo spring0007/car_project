@@ -5,14 +5,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.BroadcastReceiver
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Rect
 import android.location.Location
 import android.location.LocationListener
@@ -66,7 +63,6 @@ import com.awell.library.util.SystemUIClient
 import com.launcher.ui24.view.MusicWidget
 import kotlinx.coroutines.Runnable
 import java.io.File
-import kotlin.concurrent.thread
 import kotlin.math.abs
 
 class UIActivity : Activity(), View.OnClickListener {
@@ -265,7 +261,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if(locationManager!= null)
-            locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+            locationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -769,8 +765,10 @@ class UIActivity : Activity(), View.OnClickListener {
                             }
 
                         }
-                        mHandle.removeMessages(MSG_UPDATE_SPEED)
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
+                        mHandle.removeMessages(MSG_CLEAR_SPEED)
+                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                     }
 
                     MSG_CLEAR_SPEED -> {

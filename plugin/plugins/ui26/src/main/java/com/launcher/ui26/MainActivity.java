@@ -15,7 +15,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -257,7 +256,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                            }
                         }
                         mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
+                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         break;
                     case MSG_CLEAR_SPEED:
                         binding.carSpeedTv.setText("" + 0);
@@ -275,7 +276,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
 
         if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+            mLocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandlerSpeed.getLooper());
         } else {
             LogUtil.e( "LocationManager is null, cannot request location updates");
         }

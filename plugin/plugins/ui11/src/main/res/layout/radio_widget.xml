@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:textSize="33sp"
         android:textColor="@color/white"
-        android:text="108.6"
+        android:text="87.5"
         app:layout_constraintStart_toEndOf="@+id/iv_radio_pre"
         app:layout_constraintEnd_toStartOf="@+id/iv_radio_next"
         app:layout_constraintTop_toBottomOf="@+id/radio_progress_iv"/>

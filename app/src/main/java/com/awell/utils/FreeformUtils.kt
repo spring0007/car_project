@@ -60,7 +60,8 @@ object FreeformUtils {
         }
 
         val isRun = isAppRunning(context, pkg)
-        if (isRun && top_Activity != null && (!clazz.equals(top_Activity)))
+        // clazz 可能为 null(例如仅配置了包名未配置类名),直接 equals 会 NPE,使用空安全的 != 比较
+        if (isRun && top_Activity != null && clazz != top_Activity)
             clazz = top_Activity
 
         if (isAppInstalled(context, pkg) && isGaoDeMap(pkg)) {

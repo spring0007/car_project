@@ -123,7 +123,7 @@ class UI2Activity : Activity() {
 
         mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+            mLocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES,mLocationListener, mHandle.looper)
         } else {
             Log.e(TAG, "LocationManager is null, cannot request location updates");
         }
@@ -516,8 +516,10 @@ class UI2Activity : Activity() {
                                 stopAnimation()
                             }
                         }
-                        mHandle.removeMessages(MSG_UPDATE_SPEED)
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
+                        mHandle.removeMessages(MSG_CLEAR_SPEED)
+                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                     }
 
                     MSG_CLEAR_SPEED -> {

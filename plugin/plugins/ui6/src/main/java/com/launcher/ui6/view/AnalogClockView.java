@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -97,34 +96,7 @@ public class AnalogClockView extends View {
         secondRotation = (seconds * 6) + (mill_seconds * 0.006f);
     }
 
-    // 添加分辨率适配方法
-    private float getOptimalScaleFactor() {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        int screenWidth = metrics.widthPixels;
-        int screenHeight = metrics.heightPixels;
-        
-        float scaleFactor;
-        
-        if (screenWidth <= 1024 && screenHeight <= 600) {
-            scaleFactor = 0.75f;
-            Log.d("AnalogClockView", "1024x600分辨率，使用缩放因子: " + scaleFactor);
-        } else if (screenWidth <= 1280 && screenHeight <= 720) {
-            scaleFactor = 1.0f;
-            Log.d("AnalogClockView", "1280x720分辨率，使用缩放因子: " + scaleFactor);
-        }  else if (screenWidth <= 2400 && screenHeight <= 896) {
-            scaleFactor = 1.5f;
-            Log.d("AnalogClockView", "2400x896分辨率，使用缩放因子: " + scaleFactor);
-        }else if (screenWidth <= 2000 && screenHeight <= 1200) {
-                scaleFactor = 1.5f;
-                Log.d("AnalogClockView", "2000x1200分辨率，使用缩放因子: " + scaleFactor);
-
-        } else {
-            scaleFactor = 1.0f;
-            Log.d("AnalogClockView", "其他分辨率(" + screenWidth + "x" + screenHeight + ")，使用缩放因子: " + scaleFactor);
-        }
-        
-        return scaleFactor;
-    }
+    // 分辨率适配逻辑已移除：缩放因子统一在 onSizeChanged 按实际 View 尺寸计算
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -133,8 +105,12 @@ public class AnalogClockView extends View {
         centerX = w / 2;
         centerY = h / 2;
 
-        // 根据分辨率计算缩放因子
-        scaleFactor = getOptimalScaleFactor();
+        // 根据实际 View 尺寸计算缩放因子，让表盘始终刚好填满 View
+        if (clockBackground != null && clockBackground.getWidth() > 0 && clockBackground.getHeight() > 0) {
+            scaleFactor = Math.min((float) w / clockBackground.getWidth(),
+                    (float) h / clockBackground.getHeight());
+        }
+        Log.d("AnalogClockView", "实际尺寸 " + w + "x" + h + ", 缩放因子: " + scaleFactor);
         
         // 如果没有运行动画，则开始动画
         if (!isRunning) {
@@ -145,18 +121,12 @@ public class AnalogClockView extends View {
     // 添加 onMeasure 方法确保正确测量
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // 获取基础尺寸（基于原始图片大小）
-        int baseSize = Math.max(clockBackground.getWidth(), clockBackground.getHeight());
-        
-        // 根据缩放因子计算最终尺寸
-        float scale = getOptimalScaleFactor();
-        int desiredSize = (int) (baseSize * scale);
-        
-        // 考虑 padding
-        desiredSize += getPaddingLeft() + getPaddingRight();
-        
-        // 设置测量尺寸
-        setMeasuredDimension(desiredSize, desiredSize);
+        int base = Math.max(clockBackground.getWidth(), clockBackground.getHeight());
+        int w = base + getPaddingLeft() + getPaddingRight();
+        int h = base + getPaddingTop() + getPaddingBottom();
+        // 尊重布局设置的尺寸（EXACT），wrap_content 时以 base 为上限
+        setMeasuredDimension(resolveSize(w, widthMeasureSpec), resolveSize(h, heightMeasureSpec));
+
     }
 
     @Override

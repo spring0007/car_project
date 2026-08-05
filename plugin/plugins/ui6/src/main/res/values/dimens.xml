@@ -9,4 +9,9 @@
     <dimen name="dial_date_top">55dp</dimen>
     <dimen name="car_speed_unit_top">0dp</dimen>
     <dimen name="analog_clock_view_size">230dp</dimen>
+    <dimen name="car_speed_tv_size">75sp</dimen>
+    <dimen name="car_speed_unit_tv_size">30sp</dimen>
+    <dimen name="dial_time_tc_size">32sp</dimen>
+    <dimen name="tc_time_size">30sp</dimen>
+    <dimen name="tc_week_size">28sp</dimen>
 </resources>

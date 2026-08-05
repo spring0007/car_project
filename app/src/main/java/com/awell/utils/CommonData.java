@@ -74,6 +74,8 @@ public class CommonData {
     public static final String ACTION_TOUCH_KEY = "com.awellauto.key";
     public static final String EXTRA_KEYCODE = "keycode";
     public static final String EXTRA_KEY_STATUS = "status";
+    public static final long MEMENTINE = 1000;
+    public static final float MAXINSTANCES = 0.1f;
 
 
     /**

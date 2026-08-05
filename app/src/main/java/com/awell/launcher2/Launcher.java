@@ -1735,7 +1735,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                             }
                         }
                         mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000);
+                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         break;
                     case MSG_CLEAR_SPEED:
                         tvGPSSpeed.setText("" + 0);
@@ -1753,7 +1755,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mlocationManager.requestLocationUpdates("gps", 1000, 10, new LocationListener() {
+        mlocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, new LocationListener() {
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
             }

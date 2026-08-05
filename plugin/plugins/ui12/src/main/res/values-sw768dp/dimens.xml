@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="app_icon_bg_size">80dp</dimen>
+    <dimen name="recycle_app_icon_size">100dp</dimen>
+    <dimen name="recycle_app_width">160dp</dimen>
+    <dimen name="tv_margin_top">0.05</dimen>
+    <dimen name="text_size">22sp</dimen>
+    <dimen name="viewpager_item_width">225dp</dimen>
+    <dimen name="viewpager_item_height">305dp</dimen>
+    <dimen name="music_name_tv_size">22sp</dimen>
+    <dimen name="music_widget_iv_size">48dp</dimen>
+    <dimen name="time_tv_size">64sp</dimen>
+    <dimen name="am_tc_size">24sp</dimen>
+    <dimen name="date_tc_size">36sp</dimen>
+    <dimen name="iv_bt_con_width">122dp</dimen>
+    <dimen name="iv_bt_con_height">38dp</dimen>
+    <dimen name="iv_bt_no_con_size">16dp</dimen>
+
+</resources>

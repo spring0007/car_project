@@ -197,7 +197,7 @@ public class MainActivityUI27 extends Activity implements View.OnClickListener {
 //        }
 //
 //        if (mLocationManager != null) {
-//            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+//            mLocationManager.requestLocationUpdates("gps", CommonData.MINTIMEMS, CommonData.MINDISTANCEM, mLocationListener, mHandlerSpeed.getLooper());
 //        } else {
 //            Log.e(TAG, "LocationManager is null, cannot request location updates");
 //        }
