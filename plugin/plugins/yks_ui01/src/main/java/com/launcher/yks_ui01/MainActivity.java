@@ -31,6 +31,8 @@ import com.awell.utils.CommonData;
 import com.launcher.yks_ui01.R;
 import com.launcher.yks_ui01.databinding.ActivityMainBinding;
 
+import java.util.Calendar;
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
     private final String TAG = MainActivity.class.getSimpleName();
@@ -82,6 +84,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT);
         filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE);
         filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE);
+        filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+
         registerReceiver(mainReceiver, filter, RECEIVER_EXPORTED);
     }
 
@@ -107,6 +113,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 case CommonData.ACTION_ACC_OFF:
                     accRecor = true;
                     break;
+                case CommonData.ACTION_SHOW_ALL_APP:
+                    AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    break;
+                case Intent.ACTION_TIME_TICK:
+                case Intent.ACTION_TIME_CHANGED:
+                case Intent.ACTION_TIMEZONE_CHANGED:
+                    updateTime();
+                        break;
             }
         }
     };
@@ -136,6 +150,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
         //if (Settings.System.getInt(getContentResolver(), "Headlamp", 0) == 1)
         //    binding.carIv.setImageResource(R.drawable.sf_car_on);
         //else binding.carIv.setImageResource(R.drawable.sf_car_off);
+
+    }
+
+    public void updateTime() {
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+
+        if (hour >= 12)
+            binding.tvTime.setText(R.string.good_afternoon);
+        else binding.tvTime.setText(R.string.good_morning);
 
     }
 

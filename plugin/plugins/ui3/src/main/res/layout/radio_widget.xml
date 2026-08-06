@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:textSize="40sp"
             android:textColor="@color/white"
-            android:text="107.50"
+            android:text="87.5"
             android:gravity="center"/>
         <TextView
             android:id="@+id/tv_radio_am_fm"

@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -74,7 +73,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
     private val BIN_DATA_SPEED_UNIT = 0x84
-    private var accRecor: Boolean? = null
+    private var accRecor: Boolean = false
 
     val PERMISSION_REQUEST_CODE: Int = 100
 
@@ -191,7 +190,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         if(locationManager!= null)
-            locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+            locationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -417,7 +416,8 @@ class UIActivity : Activity(), View.OnClickListener {
                 }
 
                 CommonData.ACTION_ACC_ON -> {
-                  //  mViewBinding.ivLampSwitchBg.postDelayed({ accRecor = false }, 8 * 1000)
+                    if( mViewBinding.tvGpsSpeed!=null)
+                     mViewBinding.tvGpsSpeed.postDelayed({ accRecor = false }, 8 * 1000)
 
                 }
 
@@ -669,8 +669,7 @@ class UIActivity : Activity(), View.OnClickListener {
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
-                        mViewBinding.tvGpsSpeed.text = speedKm
-                        if (accRecor == false) {
+                        if (!accRecor) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()
@@ -681,10 +680,11 @@ class UIActivity : Activity(), View.OnClickListener {
                                 mViewBinding.tvGpsSpeed.text = speedMile
                                 mViewBinding.tvGpsSpeedUnit.text = "mph"
                             }
-
+                            mHandle.removeMessages(MSG_CLEAR_SPEED)
+                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                            mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                         }
-                        mHandle.removeMessages(MSG_UPDATE_SPEED)
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
                     }
 
                     MSG_CLEAR_SPEED -> {

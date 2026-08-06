@@ -72,7 +72,7 @@ class UIActivity : Activity(), View.OnClickListener {
     private var isEventConsumedByChild = false
     private var isLongPressPossible = false
 
-    private var accRecor: Boolean? = null
+    private var accRecor: Boolean = false
     var thisActivity = this
 
 
@@ -98,7 +98,7 @@ class UIActivity : Activity(), View.OnClickListener {
         mLocationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         if (mLocationManager != null) {
-            mLocationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+            mLocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandle.looper)
         } else {
             Log.e(TAG, "LocationManager is null, cannot request location updates");
         }
@@ -285,8 +285,7 @@ class UIActivity : Activity(), View.OnClickListener {
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
-                        mCarSpeedLayout.tvGpsSpeed.text = speedKm
-                        if (accRecor == false) {
+                        if (!accRecor) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()
@@ -298,9 +297,12 @@ class UIActivity : Activity(), View.OnClickListener {
                                 mCarSpeedLayout.tvGpsSpeed.text = speedMile
                                 mCarSpeedLayout.tvGpsSpeedUnit.text = "mph"
                             }
+
+                            mHandle.removeMessages(MSG_CLEAR_SPEED)
+                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                            mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                         }
-                        mHandle.removeMessages(MSG_UPDATE_SPEED)
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
                     }
 
                     MSG_CLEAR_SPEED -> {

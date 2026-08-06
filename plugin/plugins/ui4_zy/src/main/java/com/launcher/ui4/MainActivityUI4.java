@@ -253,7 +253,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 //            return;
 //        }
 //        if (mLocationManager != null) {
-//            mLocationManager.requestLocationUpdates("gps", 1000, 10, mLocationListener, mHandlerSpeed.getLooper());
+//            mLocationManager.requestLocationUpdates("gps", CommonData.MINTIMEMS, CommonData.MINDISTANCEM, mLocationListener, mHandlerSpeed.getLooper());
 //        } else {
 //            Log.e(TAG, "LocationManager is null, cannot request location updates");
 //        }
@@ -305,11 +305,11 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 //                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
                     break;
                 case CommonData.ACTION_ACC_ON:
-//                    if (ivLampSwitchBg != null)
-//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    //if (binding.carSpeedTv != null)
+                    //    binding.carSpeedTv.postDelayed(() -> accRecor = false, 8 * 1000);
                     break;
                 case CommonData.ACTION_ACC_OFF:
-                    accRecor = true;
+                    //accRecor = true;
                     break;
                 case CommonData.BROADCAST_MEDIA_EXIT:
                     String packge = intent.getStringExtra("package");

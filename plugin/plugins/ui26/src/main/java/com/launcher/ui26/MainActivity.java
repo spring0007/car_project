@@ -85,7 +85,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final int MSG_UPDATE_SPEED = 1;
     private final int MSG_CLEAR_SPEED = 2;
     private Handler mHandlerSpeed = null;
-    private boolean accRecor;
+    private boolean accRecor=false;
     private final int SPEEDHOME = 20;
 	private LocationManager mLocationManager;
     private LocationListener mLocationListener;
@@ -227,11 +227,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MSG_UPDATE_SPEED:
-                        int speed = msg.arg1;
-                        binding.carSpeedTv.setText("" + speed);
-                        /**
-                         * gps车速
-                         */
                         int speed_km = msg.arg1;
                         int speed_mile = msg.arg2;
                         LogUtil.i( "accRecor = " + accRecor);
@@ -239,7 +234,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                             byte[] unit = new byte[1];
                             CommonData.readDataToMeta(unit, 0x84);
                             int unitData = unit[0];
-                            LogUtil.e( "unit Data = " + unitData);
+                            LogUtil.e("unit Data = " + unitData);
                             if (unitData == 0) {
                                 binding.carSpeedTv.setText(speed_km + "");
                                 binding.carSpeedUnitTv.setText("KM/h");
@@ -254,11 +249,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                                    animationDrawableTwo.stop();
 //                                }
 //                            }
+
+                            mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
+                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                            mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         }
-                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
-                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         break;
                     case MSG_CLEAR_SPEED:
                         binding.carSpeedTv.setText("" + 0);
@@ -328,8 +324,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                    // else binding.carIv.setImageResource(R.drawable.sf_car_off);
                     break;
                 case CommonData.ACTION_ACC_ON:
-                   // if (binding.carIv != null)
-                   //     binding.carIv.postDelayed(() -> accRecor = false, 8 * 1000);
+                    if (binding.carSpeedTv != null)
+                        binding.carSpeedTv.postDelayed(() -> accRecor = false, 8 * 1000);
                     break;
                 case CommonData.ACTION_ACC_OFF:
                     accRecor = true;
