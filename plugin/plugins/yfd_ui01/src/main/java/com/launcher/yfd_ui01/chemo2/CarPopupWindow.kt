@@ -608,7 +608,8 @@ class CarPopupWindow(
 
     // 更新图片列表
     private fun updateImageList(images: List<CarModelVersion>) {
-        val currentView = viewStack.peek()
+        // 弹窗可能已 dismiss(视图栈被清空),用 lastOrNull 避免 EmptyStackException
+        val currentView = viewStack.lastOrNull()
         val rvImages = currentView?.findViewById<RecyclerView>(R.id.rv_images)
         val emptyView = currentView?.findViewById<View>(R.id.empty_view)
         val adapter = rvImages?.adapter as? ImagePickerAdapter
@@ -631,7 +632,8 @@ class CarPopupWindow(
      * @param message 可选的提示消息
      */
     private fun showEmptyView(message: String? = null) {
-        val currentView = viewStack.peek()
+        // 弹窗可能已 dismiss(视图栈被清空),用 lastOrNull 避免 EmptyStackException
+        val currentView = viewStack.lastOrNull()
         val rvImages = currentView?.findViewById<RecyclerView>(R.id.rv_images)
         val emptyView = currentView?.findViewById<View>(R.id.empty_view)
         

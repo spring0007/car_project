@@ -1713,11 +1713,6 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MSG_UPDATE_SPEED:
-                        int speed = msg.arg1;
-                        tvGPSSpeed.setText("" + speed);
-                        /**
-                         * gps车速
-                         */
                         int speed_km = msg.arg1;
                         int speed_mile = msg.arg2;
                         Log.i(TAG, "accRecor = " + accRecor);
@@ -1733,11 +1728,11 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
                                 tvGPSSpeed.setText(speed_mile + "");
                                 tvGPSSpeedUnit.setText("mph");
                             }
+                            mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
+                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                            mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         }
-                        mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
-                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
-                        mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         break;
                     case MSG_CLEAR_SPEED:
                         tvGPSSpeed.setText("" + 0);

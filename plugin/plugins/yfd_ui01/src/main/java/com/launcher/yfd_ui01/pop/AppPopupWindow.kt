@@ -238,16 +238,6 @@ class AppPopupWindow(
     }
 
     /**
-     * 显示PopupWindow（在锚点View下方）
-     * @param anchorView 锚点View
-     */
-    fun show(anchorView: View) {
-        if (!isShowing) {
-            showAsDropDown(anchorView)
-        }
-    }
-
-    /**
      * 显示PopupWindow（在指定位置）
      * @param parentView 父View
      * @param gravity 位置
@@ -257,44 +247,6 @@ class AppPopupWindow(
     fun show(parentView: View, x: Int, y: Int) {
         if (!isShowing) {
             showAtLocation(parentView, Gravity.CENTER, x, y)
-        }
-    }
-
-    /**
-     * 显示PopupWindow（在锚点View下方，带偏移和对齐方式）
-     * @param anchorView 锚点View
-     * @param xoff x轴偏移
-     * @param yoff y轴偏移
-     * @param gravity 对齐方式
-     */
-//    fun show(anchorView: View, xoff: Int, yoff: Int, gravity: Int) {
-//        if (!isShowing) {
-//            showAsDropDown(anchorView, xoff, yoff, gravity)
-//        }
-//    }
-
-    /**
-     * 显示在锚点View正下方（居中）
-     * @param anchorView 锚点View
-     */
-    fun showBelowCenter(anchorView: View) {
-        if (!isShowing) {
-            // 测量PopupWindow的宽度
-            mContentView.measure(
-                View.MeasureSpec.UNSPECIFIED,
-                View.MeasureSpec.UNSPECIFIED
-            )
-            val popupWidth = mContentView.measuredWidth
-            
-            // 获取锚点View的位置
-            val location = IntArray(2)
-            anchorView.getLocationOnScreen(location)
-            val anchorWidth = anchorView.width
-            
-            // 计算x偏移使PopupWindow居中
-            val xoff = (anchorWidth - popupWidth) / 2
-            
-            showAsDropDown(anchorView, xoff, 0)
         }
     }
 
@@ -319,19 +271,6 @@ class AppPopupWindow(
         hideBackground()
     }
 
-    /**
-     * 更新自定义数字参数
-     * @param customNumber 新的数字
-     */
-    fun updateCustomNumber(customNumber: Int) {
-        this.customNumber = customNumber
-
-    }
-
-    /**
-     * 获取自定义数字参数
-     */
-    fun getCustomNumber(): Int = customNumber
     override fun onPopupDismissed() {
         dismissSafely()
         allAppInfoList = null

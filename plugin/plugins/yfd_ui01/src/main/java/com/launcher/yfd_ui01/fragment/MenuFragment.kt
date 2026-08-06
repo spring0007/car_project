@@ -11,8 +11,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemProperties
 import android.view.LayoutInflater
 import android.view.View
@@ -66,9 +64,6 @@ class MenuFragment : Fragment() {
     private var currentNavbarPosition = -1 // -1表示未初始化
     private val NAVBAR_POSITION_PROPERTY = "persist.sys.awell.navbar.position"
 
-    // 新增：用于等待视图布局完成的Handler
-    private val handler = Handler(Looper.getMainLooper())
-    private var layoutCheckRunnable: Runnable? = null
     private var layoutObserver: ViewTreeObserver.OnGlobalLayoutListener? = null
 
     companion object {
@@ -126,12 +121,14 @@ class MenuFragment : Fragment() {
                 // 尺寸变化后重新设置适配器（优化版本，不强制重置到第一页）
                 if (newWidth > 0 && newHeight > 0 && currentAdapter != null) {
                     viewPager.postDelayed(Runnable {
+                        // 延时执行期间 currentAdapter 可能已被清理,空安全返回
+                        val adapter = currentAdapter ?: return@Runnable
                         // 保存当前页面索引
                         val currentItem = viewPager.currentItem
                         LogUtil.i("ViewPager 尺寸变化，当前页面：$currentItem")
-                            
+
                         // 更新所有页面布局
-                        currentAdapter!!.updateAllPageLayouts(newWidth, newHeight)
+                        adapter.updateAllPageLayouts(newWidth, newHeight)
                             
                         // 延迟恢复页面状态
                         viewPager.postDelayed({
@@ -171,18 +168,6 @@ class MenuFragment : Fragment() {
         }
 
         view?.viewTreeObserver?.addOnGlobalLayoutListener(layoutObserver)
-
-        // 方法2：同时使用Handler延迟检查作为备份
-        /*layoutCheckRunnable = Runnable {
-            if (isViewReady()) {
-                safeInitData()
-            } else {
-                // 如果还没准备好，再次延迟检查
-                handler.postDelayed(layoutCheckRunnable!!, 100) // 约1帧的时间
-            }
-        }
-
-        handler.post(layoutCheckRunnable!!)*/
     }
 
     /**
@@ -467,18 +452,6 @@ class MenuFragment : Fragment() {
         return appList
     }
 
-    /**
-     * 判断是否应该包含该应用
-     */
-    private fun shouldIncludeApp(
-        packageName: String,
-        hasFilterApps: Boolean,
-        hasNeedToShowApps: Boolean
-    ): Boolean {
-        // 过滤掉指定包名的应用
-        return hasFilterApps && IconManager.NEED_TO_BLOCKED_PACKAGE_NAMES.contains(packageName)
-    }
-
     private fun createAppInfo(
         icon: Drawable?,
         label: String,
@@ -495,24 +468,6 @@ class MenuFragment : Fragment() {
         } catch (e: Exception) {
             LogUtil.e("Error creating app info for: $packageName", e)
             null
-        }
-    }
-
-    /**
-     * 批量更新应用图标
-     */
-    private fun updateAppIcons(appList: List<AppInfo>) {
-        if (iconManager == null) return
-
-        // 预加载图标管理器缓存
-        iconManager?.preloadCommonIcons()
-
-        for (app in appList) {
-            val packageName = app.package_name ?: continue
-            val customIcon = iconManager?.getIcon(packageName)
-            if (customIcon != null) {
-                app.icon = customIcon
-            }
         }
     }
 
@@ -643,8 +598,8 @@ class MenuFragment : Fragment() {
             override fun onReceive(context: Context, intent: Intent) {
                 //if(!isResumed)return
                 LogUtil.i("pkg,action="+intent.action)
-                //val packageName = intent.data?.schemeSpecificPart ?: return
-                val packageName = intent.data!!.schemeSpecificPart
+                // 显式广播可能不带 data,避免 NPE
+                val packageName = intent.data?.schemeSpecificPart
                 val replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)
 
                 var op = 0
@@ -749,10 +704,10 @@ class MenuFragment : Fragment() {
     }
 
     private fun closeReceiver(){
-        // 取消广播注册
+        // 取消广播注册(注册时用的是 applicationContext,反注册需用同一上下文,否则 receiver 泄漏)
         packageReceiver?.let {
             try {
-                requireContext().unregisterReceiver(it)
+                swipeActivity.applicationContext.unregisterReceiver(it)
             } catch (e: IllegalArgumentException) {
                 // 忽略已经反注册的情况
             }
@@ -761,7 +716,7 @@ class MenuFragment : Fragment() {
 
         homeReceiver?.let {
             try {
-                requireContext().unregisterReceiver(it)
+                swipeActivity.applicationContext.unregisterReceiver(it)
             } catch (e: IllegalArgumentException) {
                 // 忽略已经反注册的情况
             }
@@ -777,15 +732,10 @@ class MenuFragment : Fragment() {
         viewPager.adapter = null
         currentAdapter = null
 
-        // 移除布局监听器和Runnable
+        // 移除布局监听器
         layoutObserver?.let {
             view?.viewTreeObserver?.removeOnGlobalLayoutListener(it)
             layoutObserver = null
-        }
-
-        layoutCheckRunnable?.let {
-            handler.removeCallbacks(it)
-            layoutCheckRunnable = null
         }
     }
 
@@ -809,19 +759,6 @@ class MenuFragment : Fragment() {
         } else if (isViewCreated && !isDataInitialized) {
             // 视图已创建但数据未初始化，重新初始化
             checkViewLayoutAndInitData()
-        }
-    }
-
-    /**
-     * 检查导航栏位置是否变化（已优化，直接在 onResume 中处理）
-     */
-    private fun checkNavbarPositionChange() {
-        val newPosition = getNavbarPosition()
-        if (newPosition != currentNavbarPosition) {
-            LogUtil.i("导航栏位置变化：$currentNavbarPosition -> $newPosition")
-            currentNavbarPosition = newPosition
-            // 导航栏位置变化，更新布局
-            updateLayoutForNavbarPosition()
         }
     }
 
@@ -908,11 +845,6 @@ class MenuFragment : Fragment() {
         loadJob?.cancel()
         loadJob = null
         iconManager = null
-        // 确保清理Handler相关资源
-        layoutCheckRunnable?.let {
-            handler.removeCallbacks(it)
-            layoutCheckRunnable = null
-        }
     }
 
 }

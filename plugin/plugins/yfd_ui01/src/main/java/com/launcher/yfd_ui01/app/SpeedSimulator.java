@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class SpeedSimulator {
     private static final int MIN_SPEED = 0;      // 最小速度 0 km/h
     private static final int MAX_SPEED = 240;    // 最大速度 200 km/h
-    private static final int SPEED_CHANGE_INTERVAL = 500; // 速度变化间隔 1秒
+    private static final int SPEED_CHANGE_INTERVAL = 1000; // 速度变化间隔 1秒
 
     private int currentSpeed = 0;
     private boolean isAccelerating = true;

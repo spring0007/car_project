@@ -1,21 +1,15 @@
 package com.launcher.yfd_ui01
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemProperties
 import android.provider.Settings
 import android.util.Log
-import android.view.MotionEvent
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import com.launcher.yfd_ui01.databinding.FragmentMainBinding
 import com.launcher.yfd_ui01.fragment.MainFragment
 import com.launcher.yfd_ui01.fragment.MenuFragment
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.manager.FragmentStackManager
 import com.awell.library.util.LogUtil
-import kotlin.math.abs
 
 class MainActivity_YFD_UI01 :  FragmentActivity() {
     private val TAG = "MainFragmentActivity"
@@ -23,8 +17,7 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
     private val fragmentStackManager: FragmentStackManager by lazy {
         FragmentStackManager(supportFragmentManager, R.id.fragment_container)
     }
-    private lateinit var mViewBinding: FragmentMainBinding
-    
+
     // 标记是否正在重建
     //private var isRecreating = false
     // 标记是否从MenuFragment失去焦点
@@ -36,8 +29,6 @@ class MainActivity_YFD_UI01 :  FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fragment)
 
-        // 初始化ViewBinding
-        mViewBinding = FragmentMainBinding.inflate(layoutInflater)
         Settings.System.putString(contentResolver,"ui_has_freeform", "true" )
 
         if (savedInstanceState != null) {

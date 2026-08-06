@@ -56,7 +56,6 @@ import com.launcher.yfd_ui01.view.AppItemView
 import com.launcher.yfd_ui01.view.DashboardView
 import com.launcher.yfd_ui01.view.DialWidget
 import com.launcher.yfd_ui01.view.MusicWidget
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -65,7 +64,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.math.abs
-import androidx.core.net.toUri
 
 class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUpdateListener {
 
@@ -88,7 +86,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
     private val BIN_DATA_SPEED_UNIT = 0x84
-    private var accRecor: Boolean? = null
+    private var accRecor: Boolean = false
     lateinit var systemUIClient: SystemUIClient
  //   private lateinit var imagePreferences: ImagePreferences
 //    private lateinit var appScope: AppCoroutineScope
@@ -147,23 +145,26 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         //chemo reset data
         restoreCarModel()
         initBroadcastReceiver()
-        // 创建速度模拟器
-//        speedSimulator = SpeedSimulator(object : SpeedSimulator.SpeedChangeListener {
-//            override fun onSpeedChanged(speed: Int) {
-//                // 在主线程中更新UI
-//                runOnUiThread {
-//                    // 您可以在这里处理其他与速度相关的逻辑
-//                    LogUtil.i( "speed = $speed")
-//                    dashboardView.udDataSpeed(speed)
-//                   // mViewBinding.carSpeedTv.text = "$speed"
-//                }
-//            }
-//        })
-//
-//        // 开始模拟
-//        speedSimulator.startSimulation()
 
     }
+
+   /* private val updateRunnable = object : Runnable {
+        override fun run() {
+            // 生成 0～100 的随机整数
+            val randomNumber = (0..50).random()
+
+            // 延迟1秒再次执行
+            val speedKm = randomNumber * 3.6
+            val speedMild = speedKm / 1.6093
+            val msg = mHandle.obtainMessage().apply {
+                what = MSG_UPDATE_SPEED
+                arg1 = speedKm.toInt()
+                arg2 = speedMild.toInt()
+            }
+            mHandle.sendMessage(msg)
+            mHandle.postDelayed(this, 1000L)
+        }
+    }*/
 
     private fun getAppInfoByPkg(view: AppItemView,appNumber:Int,defaultPackage:String)
     {
@@ -182,8 +183,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         systemUIClient.bindToSystemUIService(swipeActivity)
 
     }
-    private fun updateImagePosition(imageView: ImageView, reason:String) {
-        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "1")
+    private fun updateImagePosition(imageView: ImageView, reason: String) {
+        Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "1")
         LogUtil.i("freeform_launcher_idle,1")
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
@@ -192,10 +193,54 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val width = imageView.width
         val height = imageView.height
         LogUtil.i("reason=$reason,screenx=$screenX,screeny=$screenY")
-        startFreeformApp(swipeActivity ,  Rect(screenX, screenY, screenX + width, screenY + height))
+        // 先标记为自由窗口模式,再启动小窗(与其它插件顺序一致,避免启动失败后模式停留在旧值)
         systemUIClient.setmFreeformMode(OPEN_APP_TO_FREEFORM)
-        //systemUIClient.startOrSetFreeformType( swipeActivity)
+        startFreeformApp(swipeActivity, Rect(screenX, screenY, screenX + width, screenY + height))
+    }
 
+    /**
+     * 显示自由窗口:仅当 freeformBg 可见时重新定位;否则进入重试机制
+     */
+    private fun showFreeformWindowIfVisible(reason: String) {
+        if (freeformBg.isVisibleOnScreen()) {
+            updateImagePosition(freeformBg, reason)
+        } else {
+            LogUtil.w("$reason: freeformBg 不可见,启动重试机制")
+            retryCheckVisibility(3)
+        }
+    }
+
+    /**
+     * 隐藏自由窗口(仅隐藏,不改变应用运行状态)
+     */
+    private fun hideFreeformWindow() {
+        cancelPendingFreeformTasks()
+        systemUIClient.hideFreeform()
+        Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "0")
+        LogUtil.i("freeform_launcher_idle,0")
+    }
+
+    /**
+     * 隐藏自由窗口并全屏化(仅在自由窗口模式时执行)
+     */
+    private fun fullscreenFreeformWindow() {
+        if (systemUIClient.getmFreeformMode() != OPEN_APP_TO_FREEFORM) return
+        systemUIClient.hideFreeform()
+        Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "0")
+        systemUIClient.fullScreenFreeform()
+        LogUtil.i("freeform_launcher_idle,0")
+    }
+
+    /**
+     * 取消所有待执行的自由窗口任务(延时展示/可见性重试/延时隐藏)
+     */
+    private fun cancelPendingFreeformTasks() {
+        imageUpdateJob?.cancel()
+        pendingShowRunnable?.let { freeformBg.removeCallbacks(it) }
+        pendingShowRunnable = null
+        retryVisibilityRunnable?.let { freeformBg.removeCallbacks(it) }
+        retryVisibilityRunnable = null
+        handlerFreeform.removeCallbacks(hideFreeformRunnable)
     }
 
     /**
@@ -219,41 +264,39 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private fun initBroadcastReceiver() {
-        val filter = IntentFilter()
-
-        filter.addAction(CommonData.BROADCAST_LAMP_SWITCH)
-        filter.addAction(CommonData.ACTION_ACC_ON)
-        filter.addAction(CommonData.ACTION_ACC_OFF)
-        filter.addAction(CommonData.ACTION_ZLINK)
-        filter.addAction(CommonData.ACTION_SHOW_ALL_APP)
-        filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
-        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE)
-        filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE)
-        filter.addAction(Intent.ACTION_TIME_CHANGED)
-        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
-        //filter.addAction(Intent.ACTION_TIME_TICK)
-        //filter.addAction(Intent.ACTION_DATE_CHANGED)
-        filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
-        filter.addAction("awellauto.backcar.on")
-
-        filter.addAction("com.awell.360floatview.fullscreen")
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
-        } else {
-            requireContext().registerReceiver(receiver, filter)
+        // 基础广播过滤器(普通 action,无 data scheme)
+        val filter = IntentFilter().apply {
+            addAction(CommonData.BROADCAST_LAMP_SWITCH)
+            addAction(CommonData.ACTION_ACC_ON)
+            addAction(CommonData.ACTION_ACC_OFF)
+            addAction(CommonData.ACTION_ZLINK)
+            addAction(CommonData.ACTION_SHOW_ALL_APP)
+            addAction(CommonData.BROADCAST_MEDIA_EXIT)
+            addAction(CommonData.ACTION_SPEED_UNIT_CHANGE)
+            addAction(CommonData.ACTION_TOP_SESSION_CHANGE)
+            addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+            //filter.addAction(Intent.ACTION_TIME_TICK)
+            //filter.addAction(Intent.ACTION_DATE_CHANGED)
+            addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+            addAction("awellauto.backcar.on")
+            addAction("com.awell.360floatview.fullscreen")
         }
 
-        // 添加 U 盘插拔监听
-        filter.addAction(Intent.ACTION_MEDIA_MOUNTED)
-        filter.addAction(Intent.ACTION_MEDIA_EJECT)
-        filter.addAction(Intent.ACTION_MEDIA_REMOVED)
-        filter.addDataScheme("file")
+        // U 盘插拔监听需要独立的 file data scheme 过滤器
+        val mediaFilter = IntentFilter().apply {
+            addAction(Intent.ACTION_MEDIA_MOUNTED)
+            addAction(Intent.ACTION_MEDIA_EJECT)
+            addAction(Intent.ACTION_MEDIA_REMOVED)
+            addDataScheme("file")
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireContext().registerReceiver(receiver, filter, RECEIVER_EXPORTED)
+            requireContext().registerReceiver(receiver, mediaFilter, RECEIVER_EXPORTED)
         } else {
             requireContext().registerReceiver(receiver, filter)
+            requireContext().registerReceiver(receiver, mediaFilter)
         }
     }
 
@@ -269,15 +312,13 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             when (action) {
                 CommonData.BROADCAST_LAMP_SWITCH -> {}
                 CommonData.ACTION_ACC_ON -> {
-                    if (freeformBg?.isVisibleOnScreen() == true)
-                        updateImagePosition(freeformBg ,"acc_on")
+                    showFreeformWindowIfVisible("acc_on")
 
                     dashboardView?.postDelayed({ accRecor = false}, 8 * 1000)
                 }
                 CommonData.ACTION_ACC_OFF -> {
                     accRecor = true
-                    imageUpdateJob?.cancel()
-                    systemUIClient?.hideFreeform()
+                    hideFreeformWindow()
                 }
 
                 CommonData.BROADCAST_MEDIA_EXIT -> {
@@ -298,15 +339,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                 }
 
                 CommonData.ACTION_SHOW_ALL_APP -> {
-                    imageUpdateJob?.cancel()
-                    systemUIClient?.hideFreeform()
+                    hideFreeformWindow()
                     LogUtil.i( "onClick: huang freeform to hide222==>")
                 }
 
                 CommonData.ACTION_SPEED_UNIT_CHANGE -> {}
                 CommonData.ACTION_TOP_SESSION_CHANGE -> {
                     val sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE)
-                    handleMediaPlaybackResult(sessionTopPkg!!, "start", 3, 4)
+                    LogUtil.i("ACTION_TOP_SESSION_CHANGE: sessionTopPkg=$sessionTopPkg")
                 }
 
                 Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED /*,Intent.ACTION_DATE_CHANGED, Intent.ACTION_TIME_TICK*/ -> {
@@ -317,8 +357,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     var reason = intent.getStringExtra("reason")
                     if (reason == "recentapps") {
                         canclePopupWindow()
-                        imageUpdateJob?.cancel()
-                        handlerFreeform.removeCallbacks(hideFreeformRunnable)
+                        cancelPendingFreeformTasks()
                         handlerFreeform.postDelayed(hideFreeformRunnable,100)
 
                     }else if (reason == "homekey") {//多任务；recent：最近 ,home键
@@ -359,48 +398,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     private val handlerFreeform = Handler(Looper.getMainLooper())
     private val hideFreeformRunnable = Runnable {
-        if (systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM ) {
-            systemUIClient.hideFreeform()
-            /*Settings.System.putString( swipeActivity.contentResolver,"freeform_launcher_idle",
-                "0"
-            );*/
-             systemUIClient.fullScreenFreeform()
-            LogUtil.i("freeform_launcher_idle,0")
-        }
-    }
-
-    fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
-
-        val oldPlayingPackage = mediaControl.getCurrentPkgName()
-        val isStartCommand = "start" == value2
-        val isStopCommand = "stop" == value2
-        val isValidPackage = !TextUtils.isEmpty(value1)
-        // 处理本地音乐的特殊情况
-        if (isValidPackage && (value1.contains("localmusic") || value1.contains("com.awell.bluetooth") || value1.contains(
-                "/system/bin/gocsdk"
-            )) && isStartCommand
-        ) {
-//            mMediaListener.removeCallbacks()
-            return
-        }
-
-        // 处理停止播放的情况
-        //if (isValidPackage && isStopCommand) {
-        //    mMediaListener.setCurrentPlayingPackage(null);
-        //    return;
-        //}
-
-        // 处理开始播放的情况
-        if (isValidPackage && isStartCommand) {
-            // 当前没有播放或切换到新包时，更新并启动回调
-            if (oldPlayingPackage != null && oldPlayingPackage != value1) {
-//                mMediaListener.togglePause() //有些播放器未暂停，手动暂停
-//                mMediaListener.removeCallbacks()
-            }
-
-//            mMediaListener.setPlayingPackage(value1)
-//            mMediaListener.startCallbacks()
-        }
+        fullscreenFreeformWindow()
     }
 
     val mHandle: Handler by lazy {
@@ -411,9 +409,8 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
-                        LogUtil.i("speedKm:$speedKm,speedMile:$speedMile")
-//                        mViewBinding.tvGpsSpeed.text = speedKm
-                        if (accRecor == false) {
+                        LogUtil.i("speedKm:$speedKm,speedMile:$speedMile ,accRecor:$accRecor,")
+                        if (!accRecor) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()
@@ -426,11 +423,17 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
                                 //mViewBinding.tvGpsSpeed.text = speedMile
                                 //mViewBinding.tvGpsSpeedUnit.text = "mph"
                             }
+                            // 归零机制:不能在 GPS 更新后 1 秒就清 0。
+                            // GPS 的 minTime=1000ms 只是下限,低速行驶时受距离阈值影响,
+                            // 实际上报间隔可达 2~5 秒,1 秒超时会在正常行驶时把指针清成 0(每 2 秒跳 0)。
+                            // 改为 3 秒安全网定时器:正常行驶时每秒上报会不断刷新它,不会触发;
+                            // 仅当 GPS 连续 3 秒无上报(停车/信号丢失)时才归零。
+                            mHandle.removeMessages(MSG_CLEAR_SPEED)
+                            mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                         }
-                        mHandle.removeMessages(MSG_UPDATE_SPEED)
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 2000)
                     }
                     MSG_CLEAR_SPEED -> {
+                        LogUtil.i("MSG_CLEAR_SPEED: 3 秒无GPS上报,归零")
                         //mViewBinding.tvGpsSpeed.text = 0.toString()
                         //stopAnimation()
                         dashboardView.udDataSpeed(0)
@@ -693,40 +696,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
     }
 
-    /**
-     * 从 U 盘的文件 URI 复制图片到私有目录
-     */
-    private fun copyImageFromFileUri(fileUri: String, imageName: String): String? {
-        return try {
-            val uri = fileUri.toUri()
-            val sourceFile = File(uri.path ?: return null)
-
-            if (!sourceFile.exists()) {
-                LogUtil.e("源文件不存在：$fileUri")
-                return null
-            }
-
-            // 创建目标目录
-            val destDir = File(requireContext().filesDir, "saved_cars")
-            if (!destDir.exists()) {
-                destDir.mkdirs()
-            }
-
-            // 生成目标文件名
-            val fileName = "usb_${imageName}"
-            val destFile = File(destDir, fileName)
-
-            // 复制文件
-            sourceFile.copyTo(destFile, overwrite = true)
-
-            LogUtil.i("从 U 盘复制图片到私有目录：$fileName")
-            destFile.absolutePath
-        } catch (e: Exception) {
-            LogUtil.e("从 U 盘复制图片失败：$fileUri", e)
-            null
-        }
-    }
-
     private fun setCarImageToImageView(version: CarModelVersion) {
         // 优先使用保存的路径
         val sharedPrefs =  requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
@@ -760,7 +729,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             CarModelSource.CUSTOM
         }
         
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val bitmap = when (source) {
                 CarModelSource.USB,
                 CarModelSource.SDCARD -> {
@@ -834,38 +803,6 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         }
     }
     
-    /**
-     * 从 U 盘加载图片
-     */
-    private fun loadBitmapFromUsb(imagePath: String): Bitmap? {
-        return try {
-            // 检查私有目录中是否有保存的 U 盘图片
-            val savedCarsDir = File(requireContext().filesDir, "saved_cars")
-            if (!savedCarsDir.exists()) {
-                return null
-            }
-                
-            // 查找以 "usb_" 开头的图片文件
-            val usbFiles = savedCarsDir.listFiles { file ->
-                file.isFile && file.name.startsWith("usb_")
-            }?.sortedByDescending { it.lastModified() }
-                
-            if (!usbFiles.isNullOrEmpty()) {
-                val targetFile = usbFiles.first()
-                val bitmap = BitmapFactory.decodeFile(targetFile.absolutePath)
-                if (bitmap != null) {
-                    LogUtil.i("从 U 盘保存图片加载成功：${targetFile.name}")
-                    return bitmap
-                }
-            }
-            null
-        } catch (e: Exception) {
-            LogUtil.e("从 U 盘加载图片失败", e)
-            null
-        }
-    }
-
-
     private fun restoreCarModel() {
         val sharedPrefs = requireContext().getSharedPreferences("car_model_prefs", Context.MODE_PRIVATE)
         val savedPath = sharedPrefs.getString("saved_image_path", null)
@@ -892,8 +829,15 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         val assetPath = sharedPrefs.getString("car_asset_path", null)
         val carSource = sharedPrefs.getString("car_source", "CUSTOM")
         if (assetPath != null) {
+            // 旧版本可能保存了非法的枚举名,解析失败时回退到内置车模
+            val source = try {
+                CarModelSource.valueOf(carSource ?: "CUSTOM")
+            } catch (e: IllegalArgumentException) {
+                LogUtil.w("无法识别的 car_source=$carSource,回退 CUSTOM")
+                CarModelSource.CUSTOM
+            }
             loadImageFromAllSources(CarModelVersion(imagePath = assetPath, name = "car_model_name",
-                displayName = "car_model_display_name", brandFolder = null, carSource = CarModelSource.valueOf(carSource!!)))
+                displayName = "car_model_display_name", brandFolder = null, carSource = source))
         }
     }
 
@@ -981,7 +925,10 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun initTouchAndSpeedListener() {
         locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
-        locationManager.requestLocationUpdates("gps", 1000, 10f, mLocationListener, mHandle.looper)
+        // minDistance 改为 0:原来 10m 阈值会让低速行驶/静止时 GPS 不上报,
+        // 指针只能靠超时清 0,导致每 1~2 秒跳 0。0 米后按 minTime 每秒稳定上报,
+        // 静止时也能每秒上报 0 速,指针平滑归零。
+        locationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandle.looper)
     }
 
     override fun onStart() {
@@ -989,13 +936,14 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         LogUtil.i("lqq,onStart")
     }
     private var imageUpdateJob: Job? = null
+    private var pendingShowRunnable: Runnable? = null
+    private var retryVisibilityRunnable: Runnable? = null
 
     override fun onResume() {
         super.onResume()
-        //LogUtil.i("lqq,onResume ,isVisible=$isVisible,isAdded=$isAdded, isMenuVisible= $isMenuVisible")
         LogUtil.i("lqq,onResume ")
         dialWidget?.startAnimation()
-        imageUpdateJob?.cancel()
+        cancelPendingFreeformTasks()
 
 
         if (checkTopAppLollipop(swipeActivity)) {
@@ -1004,13 +952,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
             imageUpdateJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main.immediate) {
                 delay(150)
                 LogUtil.i("lqq,onResume ,isVisibleOnScreen="+freeformBg.isVisibleOnScreen())
-                if (freeformBg.isVisibleOnScreen()) {
-                    updateImagePosition(freeformBg, "onResume")
-                } else {
-                    // 如果第一次检查失败，使用重试机制
-                    LogUtil.w("onResume: freeformBg 不可见，启动重试机制")
-                    retryCheckVisibility(3)
-                }
+                showFreeformWindowIfVisible("onResume")
             }
         }
     }
@@ -1041,27 +983,23 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         LogUtil.i( "onHiddenChanged: hidden=$hidden")
-    
+
         if (hidden) {
-            // Fragment 被隐藏，隐藏自由窗口
-            imageUpdateJob?.cancel()
-            systemUIClient.hideFreeform()
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
-            systemUIClient.fullScreenFreeform()
-            LogUtil.i("freeform_launcher_idle,0")
-    
+            // Fragment 被隐藏，取消待执行任务并隐藏自由窗口
+            cancelPendingFreeformTasks()
+            fullscreenFreeformWindow()
+
         } else {
             // Fragment 被显示，显示自由窗口
-            // 使用 postDelayed 确保视图已经完成布局和测量
-            freeformBg.postDelayed({
+            // 使用可取消的延时任务,确保视图完成布局和测量后再显示
+            pendingShowRunnable?.let { freeformBg.removeCallbacks(it) }
+            val runnable = Runnable {
+                pendingShowRunnable = null
                 LogUtil.i("freeformBg.isVisibleOnScreen()="+freeformBg.isVisibleOnScreen())
-                if (freeformBg.isVisibleOnScreen()) {
-                    updateImagePosition(freeformBg ,"hidden")
-                } else {
-                    // 如果第一次检查失败，再次延迟重试（最多重试 3 次）
-                    retryCheckVisibility(3)
-                }
-            }, 150)
+                showFreeformWindowIfVisible("hidden")
+            }
+            pendingShowRunnable = runnable
+            freeformBg.postDelayed(runnable, 150)
         }
     }
     
@@ -1071,27 +1009,30 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
      */
     private fun retryCheckVisibility(maxRetries: Int) {
         var retryCount = 0
-            
+
         val checkRunnable = object : Runnable {
             override fun run() {
                 if (retryCount >= maxRetries) {
                     LogUtil.w("达到最大重试次数，放弃检查")
+                    retryVisibilityRunnable = null
                     return
                 }
-                    
+
                 retryCount++
                 LogUtil.i("第${retryCount}次重试检查 freeformBg 可见性")
-                    
+
                 if (freeformBg.isVisibleOnScreen()) {
                     LogUtil.i("重试成功，freeformBg 已可见")
-                    updateImagePosition(freeformBg ,"retry_$retryCount")
+                    retryVisibilityRunnable = null
+                    updateImagePosition(freeformBg, "retry_$retryCount")
                 } else {
                     // 继续重试
                     freeformBg.postDelayed(this, 100)
                 }
             }
         }
-            
+
+        retryVisibilityRunnable = checkRunnable
         freeformBg.postDelayed(checkRunnable, 100)
     }
 
@@ -1099,13 +1040,9 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
     override fun onStop() {
         super.onStop()
         LogUtil.i("freeform_launcher_idle,0")
-        imageUpdateJob?.cancel()
-        if(systemUIClient.getmFreeformMode() == OPEN_APP_TO_FREEFORM) {
-            systemUIClient.hideFreeform()
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
-            systemUIClient.fullScreenFreeform()
-        }else
-            Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
+        cancelPendingFreeformTasks()
+        fullscreenFreeformWindow()
+        Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
 
         LogUtil.i("lqq,onStop")
     }
@@ -1118,9 +1055,15 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
         LogUtil.i("lqq,onPause")
     }
+    override fun onDestroyView() {
+        mHandle.removeCallbacksAndMessages(null)
+        dashboardView?.releaseResources()
+        super.onDestroyView()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
+        cancelPendingFreeformTasks()
         receiver?.let {
             try {
                 requireContext().unregisterReceiver(it)

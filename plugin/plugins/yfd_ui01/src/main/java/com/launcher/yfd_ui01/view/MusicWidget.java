@@ -321,12 +321,13 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
 
     private void startActivity(String pkg, String className) {
         Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(pkg);
-        boolean isboot = true;
+        boolean isboot = false;
         if (intent != null) {
             for (int index = 0; index < IconCache.WorkSpacePackageName.length; index++) {
                 LogUtil.d( "packagename11 = " + pkg);
-                if (!pkg.equals(IconCache.WorkSpacePackageName[index])) {
-                    isboot = false;
+                // 只要匹配到工作区任一包名即为 boot 应用(与 MainFragment.startActivityByPkgClazz 一致)
+                if (pkg.equals(IconCache.WorkSpacePackageName[index])) {
+                    isboot = true;
                     break;
                 }
             }

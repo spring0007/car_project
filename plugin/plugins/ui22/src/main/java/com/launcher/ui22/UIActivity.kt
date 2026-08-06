@@ -67,16 +67,8 @@ class UIActivity : Activity(), View.OnClickListener {
 
     lateinit var mediaControl: AwellMediaControl
     private lateinit var musicWidget: MusicWidget
-    private lateinit var locationManager: LocationManager
-
-    private val MSG_UPDATE_SPEED = 1
-    private val MSG_CLEAR_SPEED = 2
-    private val BIN_DATA_SPEED_UNIT = 0x84
-    private var accRecor: Boolean? = null
-
+    private var accRecor: Boolean = false
     val PERMISSION_REQUEST_CODE: Int = 100
-
-
     private var handler: Handler? = null
     private var startX = 0f
     private var startY = 0f
@@ -111,8 +103,6 @@ class UIActivity : Activity(), View.OnClickListener {
         initView()
 
         initMediaMusic()
-
-        updateSpeedUnitText()
 
         initTouchAndSpeedListener()
 
@@ -263,10 +253,6 @@ class UIActivity : Activity(), View.OnClickListener {
     private fun initTouchAndSpeedListener() {
         handler = Handler(Looper.getMainLooper())
         viewConfiguration = ViewConfiguration.get(this)
-
-        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        if (locationManager != null)
-            locationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandle.looper)
     }
 
     private fun initView() {
@@ -289,7 +275,6 @@ class UIActivity : Activity(), View.OnClickListener {
         filter.addAction(CommonData.ACTION_ZLINK)
         filter.addAction(CommonData.ACTION_SHOW_ALL_APP)
         filter.addAction(CommonData.BROADCAST_MEDIA_EXIT)
-        filter.addAction(CommonData.ACTION_SPEED_UNIT_CHANGE)
         filter.addAction(CommonData.ACTION_TOP_SESSION_CHANGE)
         filter.addAction("awellauto.backcar.on")
 
@@ -320,19 +305,10 @@ class UIActivity : Activity(), View.OnClickListener {
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
         AppsCustomizeControl.hideApps()
-        unregisterCustomerListener()
         try {
             mediaControl.unBindDataService(this)
         } catch (e: Exception) {
             LogUtil.e("onDestroy: unBindDataService error=>${e.message}")
-        }
-    }
-
-    private fun unregisterCustomerListener() {
-        try {
-            locationManager.removeUpdates(mLocationListener)
-        } catch (e: Exception) {
-            LogUtil.e("unregisterCustomerListener: removeGpsStatusListener error=>${e.message}")
         }
     }
 
@@ -383,7 +359,7 @@ class UIActivity : Activity(), View.OnClickListener {
                 }
 
                 CommonData.ACTION_ACC_OFF -> {
-                    accRecor = true
+                    //accRecor = true
                     systemUIClient?.hideFreeform()
                 }
 
@@ -416,9 +392,6 @@ class UIActivity : Activity(), View.OnClickListener {
                     AppsCustomizeControl.showApps(findViewById<ViewGroup>(android.R.id.content))
                 }
 
-                CommonData.ACTION_SPEED_UNIT_CHANGE -> {
-                    updateSpeedUnitText()
-                }
 
                 CommonData.ACTION_TOP_SESSION_CHANGE -> {
                     val sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE)
@@ -459,17 +432,6 @@ class UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun updateSpeedUnitText() {
-        val unit = ByteArray(1)
-        CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
-        val unitData = unit[0].toInt()
-        if (unitData == 0) {
-            // mViewBinding.tvGpsSpeedUnit.text = "KM/h"
-        } else if (unitData == 1) {
-            //mViewBinding.tvGpsSpeedUnit.text = "mph"
-        }
-    }
 
     fun handleMediaPlaybackResult(value1: String, value2: String, value3: Int, value4: Int) {
 
@@ -610,61 +572,8 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
 
-    val mHandle: Handler by lazy {
-        object : Handler(Looper.getMainLooper()) {
-            @SuppressLint("SetTextI18n")
-            override fun handleMessage(msg: Message) {
-                when (msg.what) {
-                    MSG_UPDATE_SPEED -> {
-                        val speedKm = msg.arg1.toString()
-                        val speedMile = msg.arg2.toString()
-                        //mViewBinding.tvGpsSpeed.text = speedKm
-                        if (accRecor == false) {
-                            val unit = ByteArray(1)
-                            CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
-                            val unitData = unit[0].toInt()
-                            if (unitData == 0) {
-                                //mViewBinding.tvGpsSpeed.text = speedKm
-                                //mViewBinding.tvGpsSpeedUnit.text = "KM/h"
-                            } else if (unitData == 1) {
-                                //mViewBinding.tvGpsSpeed.text = speedMile
-                                //mViewBinding.tvGpsSpeedUnit.text = "mph"
-                            }
 
-                        }
-                        mHandle.removeMessages(MSG_CLEAR_SPEED)
-                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
-                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
-                    }
 
-                    MSG_CLEAR_SPEED -> {
-                        //mViewBinding.tvGpsSpeed.text = 0.toString()
-                    }
-
-                }
-            }
-        }
-    }
-
-    val mLocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            if (location.hasSpeed()) {
-                val speedKm = location.speed * 3.6
-                val speedMild = speedKm / 1.6093
-                val msg = mHandle.obtainMessage().apply {
-                    what = MSG_UPDATE_SPEED
-                    arg1 = speedKm.toInt()
-                    arg2 = speedMild.toInt()
-                }
-                mHandle.sendMessage(msg)
-            }
-        }
-
-        override fun onProviderDisabled(provider: String) {}
-        override fun onProviderEnabled(provider: String) {}
-        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-    }
 
     private fun clickStartApp() {
 
@@ -1004,20 +913,7 @@ class UIActivity : Activity(), View.OnClickListener {
             }).start()
         }
 
-        private fun checkAndRequestPermission() {
-            if (ContextCompat.checkSelfPermission(this, "com.awell.weather.permission.READ_WEATHER")
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf<String>("com.awell.weather.permission.READ_WEATHER"),
-                    PERMISSION_REQUEST_CODE
-                )
-            } else {
-                // 权限已授予，开始查询
-                loadWeatherData()
-            }
-        }
+
 
         override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)

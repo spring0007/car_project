@@ -57,7 +57,7 @@ class UI2Activity : Activity() {
     private val MSG_UPDATE_SPEED = 1
     private val MSG_CLEAR_SPEED = 2
     private val BIN_DATA_SPEED_UNIT = 0x84
-    private var accRecor: Boolean? = null
+    private var accRecor: Boolean = false
 
     private var handler: Handler? = null
     private var startX = 0f
@@ -491,8 +491,8 @@ class UI2Activity : Activity() {
                     MSG_UPDATE_SPEED -> {
                         val speedKm = msg.arg1.toString()
                         val speedMile = msg.arg2.toString()
-                        mCarSpeedLayout.tvGpsSpeed.text = speedKm
-                        if (accRecor == false) {
+                        Log.i(TAG, "handleMessage: speedKm=>${speedKm}, speedMile=>${speedMile},accRecor =${accRecor}" )
+                        if (!accRecor) {
                             val unit = ByteArray(1)
                             CommonData.readDataToMeta(unit, BIN_DATA_SPEED_UNIT)
                             val unitData = unit[0].toInt()
@@ -515,14 +515,16 @@ class UI2Activity : Activity() {
                             } else {
                                 stopAnimation()
                             }
+
+                            mHandle.removeMessages(MSG_CLEAR_SPEED)
+                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
+                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
+                            mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                         }
-                        mHandle.removeMessages(MSG_CLEAR_SPEED)
-                        // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
-                        // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
-                        mHandle.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000)
                     }
 
                     MSG_CLEAR_SPEED -> {
+                        Log.i(TAG, "MSG_CLEAR_SPEED: ")
                         mCarSpeedLayout.tvGpsSpeed.text = 0.toString()
                         stopAnimation()
                     }
