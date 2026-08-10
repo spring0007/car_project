@@ -7,4 +7,5 @@
     <dimen name="tc_time_size">108sp</dimen>
     <dimen name="iv_week_size">33sp</dimen>
     <dimen name="iv_date_size">27sp</dimen>
+    <item name="guide_line4" type="dimen" format="float">0.75</item>
 </resources>

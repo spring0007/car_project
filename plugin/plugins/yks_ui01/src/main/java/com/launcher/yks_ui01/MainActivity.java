@@ -224,7 +224,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }else if (v.getId() == binding.ivAdas.getId()) {
            // startActivity("com.awell.battery", "com.awell.battery.MainActivity");
         }else if (v.getId() == binding.ivMonitoring.getId()) {
-           // startActivity("com.awell.battery", "com.awell.battery.MainActivity");
+            startActivity("com.awell.lz360","com.awell.lz360.Lz360Activity");
         }else if (v.getId() == binding.ivOffScreen.getId()) {
             sendKeyBroadcast(POWER, LONG_PRESS);
 

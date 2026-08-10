@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.72"/>
+        app:layout_constraintGuide_percent="@dimen/guide_line4"/>
 
     <ImageView
         android:layout_width="0dp"
@@ -96,6 +96,7 @@
         android:layout_height="0dp"
         android:id="@+id/iv_radio_bg"
         android:src="@drawable/sf_radio_bg"
+        android:adjustViewBounds="true"
         app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_nav_bg"
@@ -118,6 +119,7 @@
         android:layout_height="0dp"
         android:id="@+id/iv_btphone_bg"
         android:src="@drawable/sf_btphone_bg"
+        android:adjustViewBounds="true"
         app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_radio_bg"
@@ -141,6 +143,7 @@
         android:layout_height="0dp"
         android:id="@+id/iv_btmusic_bg"
         android:src="@drawable/sf_btmusic_bg"
+        android:adjustViewBounds="true"
         app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
         app:layout_constraintStart_toEndOf="@+id/iv_btphone_bg"
@@ -161,6 +164,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:id="@+id/iv_setting_bg"
+        android:adjustViewBounds="true"
         android:src="@drawable/sf_settings_bg"
         app:layout_constraintWidth_percent="0.186"
         app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
