@@ -6,13 +6,17 @@
         <!-- 可选：全屏显示 -->
         <!--<item name="android:windowFullscreen">true</item>-->
         <!-- 可选：透明状态栏（API 19+） -->
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <!-- 可选：透明导航栏（API 19+） -->
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <!-- 防止内容区域有默认背景 -->
         <item name="android:windowBackground">@android:color/transparent</item>
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+
     </style>
 </resources>

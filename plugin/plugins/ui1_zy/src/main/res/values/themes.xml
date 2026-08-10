@@ -1,17 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- 使用Theme.AppCompat.Light.NoActionBar作为基础，并设置为透明背景 -->
-    <style name="Theme.Transparent" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <!-- 如果希望状态栏透明，可以添加以下属性（需要API 21以上） -->
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-    </style>
+    <!-- Base application theme. -->
 
     <style name="PluginTheme" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 关键属性：显示壁纸 -->
         <item name="android:windowShowWallpaper">true</item>
+        <!-- 可选：全屏显示 -->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!-- 可选：透明状态栏（API 19+） -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- 可选：透明导航栏（API 19+） -->
+        <item name="android:windowTranslucentNavigation">false</item>
+        <!-- 防止内容区域有默认背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+
     </style>
 </resources>

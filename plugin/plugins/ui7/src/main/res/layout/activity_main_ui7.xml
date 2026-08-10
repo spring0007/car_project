@@ -17,6 +17,20 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.17"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.325"/>
+
      <include
          android:id="@+id/time_layout"
          android:layout_width="wrap_content"
@@ -24,19 +38,17 @@
          layout="@layout/time_widget"
          app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintVertical_bias="0.12"/>
+         app:layout_constraintTop_toBottomOf="@+id/guide_top"
+         />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        app:layout_constraintTop_toBottomOf="@+id/guide_top1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_layout"
-        app:layout_constraintBottom_toTopOf="@+id/linear_indicator"/>
+        />
 
     <LinearLayout
         android:id="@+id/linear_indicator"
@@ -44,6 +56,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

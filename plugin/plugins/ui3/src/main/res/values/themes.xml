@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
 
     <style name="Plugin3_Theme" parent="@android:style/Theme.Translucent.NoTitleBar">
         <!-- 关键属性：显示壁纸 -->
@@ -15,5 +14,11 @@
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <!-- 设置状态栏颜色为透明（API 21+） -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
     </style>
 </resources>

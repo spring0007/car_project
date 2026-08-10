@@ -200,5 +200,5 @@
     <dimen name="recycle_app_width">120dp</dimen>
     <dimen name="recycle_app_icon_size">100dp</dimen>
     <dimen name="app_icon_padding">10dp</dimen>
-    <dimen name="status_bar_height">48dp</dimen>
+    <dimen name="status_bar_height">64dp</dimen>
 </resources>

@@ -8,11 +8,17 @@
         <!-- 可选：透明状态栏（API 19+） -->
         <item name="android:windowTranslucentStatus">true</item>
         <!-- 可选：透明导航栏（API 19+） -->
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
         <!-- 防止内容区域有默认背景 -->
         <item name="android:windowBackground">@android:color/transparent</item>
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+
+        <!-- 关键属性：不让导航栏覆盖内容 -->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <!-- 设置状态栏颜色为透明（API 21+） -->
+        <item name="android:statusBarColor">@android:color/black</item>
+
     </style>
 </resources>

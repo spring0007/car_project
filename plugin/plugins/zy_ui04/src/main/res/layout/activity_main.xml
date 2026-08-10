@@ -25,12 +25,11 @@
         android:layout_height="0dp"
         android:background="@drawable/viewpager_middle_bg"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/indicator_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="@dimen/viewpager_height_parent"
+        app:layout_constraintHeight_percent="0.592"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.10"
+        app:layout_constraintVertical_bias="0.30"
         app:layout_constraintWidth_percent="0.78" />
 
     <ImageView

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="text_size">27sp</dimen>
-    <dimen name="time_tc_size">28sp</dimen>
+    <dimen name="text_size">24sp</dimen>
+    <dimen name="time_tc_size">24sp</dimen>
     <dimen name="viewpager_item_width">176dp</dimen>
     <dimen name="viewpager_item_height">288dp</dimen>
     <item name="tv_ver_bias" type="dimen" format="float">0.7</item>

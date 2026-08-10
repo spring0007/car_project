@@ -111,9 +111,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         initBroadcastReceiver()
         AppsCustomizeControl.setActivity(this)
-        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig(
-            themeMode = 1,
-        ))
+        AppsCustomizeControl.setPluginThemeMode(AppsCustomizeConfig.Builder().setThemeMode(1).build())
 
 
     }

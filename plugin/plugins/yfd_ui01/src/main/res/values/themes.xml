@@ -32,6 +32,7 @@
 
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
+	<item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
 </resources>
