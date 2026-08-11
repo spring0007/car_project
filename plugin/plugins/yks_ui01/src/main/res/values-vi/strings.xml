@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_morning_desc">Chào buổi sáng</string>
     <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="good_afternoon_desc">Chào buổi chiều</string>
+    <string name="good_night">Buổi tối vui vẻ</string>
+    <string name="good_midnight">chúc nửa đêm tốt lành</string>
+    <string name="good_morning_desc2">Chào buổi sáng</string>
+
     <string name="voice">Giọng nói</string>
     <string name="settings">Thành lập</string>
     <string name="navigation">Điều hướng</string>

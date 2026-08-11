@@ -1,8 +1,17 @@
 <resources>
     <string name="app_name">启动器UI1</string><!-- app 名称 -->
 
+    
+    
+
     <string name="good_morning">早上好</string>
+    <string name="good_morning_desc">上午好</string>
     <string name="good_afternoon">下午好</string>
+    <string name="good_afternoon_desc">下午好</string>
+    <string name="good_night">晚上好</string>
+    <string name="good_midnight">午夜好</string>
+    <string name="good_morning_desc2">凌晨好</string>
+
     <string name="voice">语音</string>
     <string name="settings">设置</string>
     <string name="navigation">导航</string>

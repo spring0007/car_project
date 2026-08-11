@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">صباح الخير</string>
+    <string name="good_morning_desc">صباح الخير</string>
     <string name="good_afternoon">مساء الخير</string>
+    <string name="good_afternoon_desc">مساء الخير</string>
+    <string name="good_night">مساء الخير</string>
+    <string name="good_midnight">منتصف الليل جيد</string>
+    <string name="good_morning_desc2">صباح الخير</string>
+
     <string name="voice">الصوت</string>
     <string name="settings">الإعداد</string>
     <string name="navigation">الملاحة</string>

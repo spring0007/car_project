@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">おはようございます</string>
+    <string name="good_morning_desc">おはよう</string>
     <string name="good_afternoon">こんにちは</string>
+    <string name="good_afternoon_desc">こんにちは</string>
+    <string name="good_night">こんばんは</string>
+    <string name="good_midnight">良い真夜中</string>
+    <string name="good_morning_desc2">おはよう</string>
+
     <string name="voice">声</string>
     <string name="settings">セットアップ</string>
     <string name="navigation">ナビゲーション</string>

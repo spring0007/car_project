@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">Καλημέρα</string>
+    <string name="good_morning_desc">Καλημέρα</string>
     <string name="good_afternoon">Καλό απόγευμα</string>
+    <string name="good_afternoon_desc">Καλημέρα</string>
+    <string name="good_night">Καλησπέρα</string>
+    <string name="good_midnight">καλά μεσάνυχτα</string>
+    <string name="good_morning_desc2">Καλημέρα</string>
+
     <string name="voice">Φωνή</string>
     <string name="settings">Ρύθμιση</string>
     <string name="navigation">Πλοήγηση</string>

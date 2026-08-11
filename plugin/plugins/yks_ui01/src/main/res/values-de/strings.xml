@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">Guten Morgen</string>
+    <string name="good_morning_desc">Guten Morgen</string>
     <string name="good_afternoon">Guten Tag</string>
+    <string name="good_afternoon_desc">Guten Tag</string>
+    <string name="good_night">Guten Abend</string>
+    <string name="good_midnight">gute Mitternacht</string>
+    <string name="good_morning_desc2">Guten Morgen</string>
+
     <string name="voice">Stimme</string>
     <string name="settings">Aufbau</string>
     <string name="navigation">Navigation</string>

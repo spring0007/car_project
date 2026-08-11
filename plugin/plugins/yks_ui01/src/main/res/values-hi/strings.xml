@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">सुप्रभात</string>
+    <string name="good_morning_desc">शुभ प्रभात</string>
     <string name="good_afternoon">नमस्कार</string>
+    <string name="good_afternoon_desc">शुभ दोपहर</string>
+    <string name="good_night">शुभ संध्या</string>
+    <string name="good_midnight">शुभ मध्यरात्रि</string>
+    <string name="good_morning_desc2">शुभ प्रभात</string>
+
     <string name="voice">आवाज</string>
     <string name="settings">सेट अप</string>
     <string name="navigation">नेविगेशन</string>

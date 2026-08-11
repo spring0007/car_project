@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">صبح بخیر</string>
+    <string name="good_morning_desc">صبح بخیر</string>
     <string name="good_afternoon">عصر بخیر</string>
+    <string name="good_afternoon_desc">بعد از ظهر بخیر</string>
+    <string name="good_night">عصر بخیر</string>
+    <string name="good_midnight">نیمه شب بخیر</string>
+    <string name="good_morning_desc2">صبح بخیر</string>
+
     <string name="voice">صدا</string>
     <string name="settings">راه اندازی</string>
     <string name="navigation">ناوبری</string>

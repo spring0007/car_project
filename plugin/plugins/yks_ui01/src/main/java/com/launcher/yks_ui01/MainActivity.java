@@ -52,6 +52,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         handler.removeMessages(INITVIEW);
         handler.sendEmptyMessageDelayed(INITVIEW, 0);
+        updateTime();
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeConfig appsCustomizeConfig = new AppsCustomizeConfig.Builder()
                 .setThemeMode(0xff)
@@ -156,10 +157,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void updateTime() {
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
-
-        if (hour >= 12)
+        if( hour < 5)
+            binding.tvTime.setText(R.string.good_morning_desc2);
+        if (hour >= 5 && hour < 8)
+            binding.tvTime.setText(R.string.good_morning);
+        else if (hour >= 8 && hour < 11)
+            binding.tvTime.setText(R.string.good_morning_desc);
+        else if (hour >= 11 && hour < 14)
             binding.tvTime.setText(R.string.good_afternoon);
-        else binding.tvTime.setText(R.string.good_morning);
+        else if (hour >= 14 && hour < 19)
+            binding.tvTime.setText(R.string.good_afternoon_desc);
+        else if (hour >= 19 && hour < 22)
+            binding.tvTime.setText(R.string.good_night);
+        else if (hour >= 22 )
+            binding.tvTime.setText(R.string.good_midnight);
 
     }
 
@@ -229,11 +240,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
             sendKeyBroadcast(POWER, LONG_PRESS);
 
         }else if (v.getId() == binding.ivVoice.getId()){
+            sendTxzSystemStatus("0");
 
         }
     }
-    private static final int LONG_PRESS = 0x03;
-    private static final int POWER = 0x01;
+
+    private void sendTxzSystemStatus(String status) {
+        //Log.i(TAG, "sendTxzSystemStatus status=" + status);
+        Intent intent = new Intent("com.txznet.adapter.recv");
+        intent.putExtra("key_type", 2400);
+        intent.putExtra("action", "txz.window.open");
+        //intent.putExtra("status", status);
+        intent.addFlags(0x01000000);
+        sendBroadcast(intent);
+    }
+    private static final int LONG_PRESS = 0x05;
+    private static final int POWER = 0x49;
 //    private static final String ACTION_TOUCH_KEY = "com.awellauto.key";
 //    private static final String KEYCODE = "keycode";
 //    private static final String STATUS = "status";

@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">Доброе утро</string>
+    <string name="good_morning_desc">доброе утро</string>
     <string name="good_afternoon">Добрый день</string>
+    <string name="good_afternoon_desc">добрый день</string>
+    <string name="good_night">Добрый вечер</string>
+    <string name="good_midnight">доброй полночи</string>
+    <string name="good_morning_desc2">доброе утро</string>
+
     <string name="voice">Голос</string>
     <string name="settings">Настройка</string>
     <string name="navigation">Навигация</string>

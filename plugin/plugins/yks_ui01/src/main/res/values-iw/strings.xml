@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">בוקר טוב</string>
+    <string name="good_morning_desc">בוקר טוב</string>
     <string name="good_afternoon">צהריים טובים</string>
+    <string name="good_afternoon_desc">צהריים טובים</string>
+    <string name="good_night">ערב טוב</string>
+    <string name="good_midnight">חצות טובות</string>
+    <string name="good_morning_desc2">בוקר טוב</string>
+
     <string name="voice">קול</string>
     <string name="settings">הכנה</string>
     <string name="navigation">ניווט</string>

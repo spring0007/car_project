@@ -5,7 +5,13 @@
     
 
     <string name="good_morning">Dobré ráno</string>
+    <string name="good_morning_desc">Dobré ráno</string>
     <string name="good_afternoon">Dobrý den</string>
+    <string name="good_afternoon_desc">Dobré odpoledne</string>
+    <string name="good_night">Dobrý večer</string>
+    <string name="good_midnight">dobrou půlnoc</string>
+    <string name="good_morning_desc2">Dobré ráno</string>
+
     <string name="voice">Hlas</string>
     <string name="settings">Nastavení</string>
     <string name="navigation">Navigace</string>
