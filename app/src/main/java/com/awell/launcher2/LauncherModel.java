@@ -58,6 +58,7 @@ import java.lang.ref.WeakReference;
 import java.net.URISyntaxException;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -2475,13 +2476,15 @@ public class LauncherModel extends BroadcastReceiver {
     }
 
     public static Comparator<ApplicationInfo> getAppLevelComparator() {
-        final Collator collator = Collator.getInstance();
+        // 跟随设备当前语言排序:中文按拼音、英文按字母、阿拉伯/希伯来按各自字母序
+        final Collator collator = Collator.getInstance(Locale.getDefault());
         return new Comparator<ApplicationInfo>() {
             public final int compare(ApplicationInfo a, ApplicationInfo b) {
                 int result = Integer.compare(a.getLevel(), b.getLevel());
                 if (result == 0) {
                     String titleA = a.title != null ? a.title.toString() : "";
                     String titleB = b.title != null ? b.title.toString() : "";
+                    // 所有等级统一用 Collator,按设备语言的规则排序各语言应用名
                     result = collator.compare(titleA, titleB);
                     if (result == 0) {
                         result = a.componentName.compareTo(b.componentName);

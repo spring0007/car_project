@@ -2478,11 +2478,14 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void addAppsWithoutInvalidate(ArrayList<ApplicationInfo> list) {
-        // We add it in place, in alphabetical order
+        // We add it in place, according to the level-then-name order used by setApps()
+        Comparator<ApplicationInfo> levelComparator = LauncherModel.getAppLevelComparator();
         int count = list.size();
         for (int i = 0; i < count; ++i) {
             ApplicationInfo info = list.get(i);
-            int index = Collections.binarySearch(mApps, info, LauncherModel.getAppNameComparator());
+            // 动态新增/更新的应用先补上等级,保证能按等级比较器找到正确的插入位置
+            setAppShowLevel(info);
+            int index = Collections.binarySearch(mApps, info, levelComparator);
             if (index < 0) {
                 //Log.i(TAG, "addAppsWithoutInvalidate: huang add info =>" + info);
                 mApps.add(-(index + 1), info);

@@ -2,7 +2,6 @@ package com.launcher.yks_ui01;
 
 import static com.awell.utils.Utils.startWallpaper;
 
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,6 +26,8 @@ import androidx.annotation.NonNull;
 import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.launcher2.IconCache;
+import com.awell.library.AwellLibrary;
+import com.awell.library.AwellTool;
 import com.awell.utils.CommonData;
 import com.launcher.yks_ui01.R;
 import com.launcher.yks_ui01.databinding.ActivityMainBinding;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private View contentView;
     private final int INITVIEW = 111;
     private boolean accRecor;
+    private AwellLibrary mediaLibrary;
 
 
     @Override
@@ -73,6 +75,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 //.setIndicatorPanel(2)
                 .build();
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(appsCustomizeConfig);
+        mediaLibrary = new AwellLibrary(AwellTool.OPEN);
+        mediaLibrary.init(this);
     }
 
     private void initReceiver() {
@@ -233,7 +237,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }else if(v.getId() == binding.ivSetting.getId()){
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
         }else if (v.getId() == binding.ivAdas.getId()) {
-           // startActivity("com.awell.battery", "com.awell.battery.MainActivity");
+            if(mediaLibrary!=null)
+                mediaLibrary.setDataEvent(AwellTool.MONITOTING.FRONT, 1);
+             //startActivity("com.awell.frontvideo", "com.awell.frontvideo.MainActivity");
         }else if (v.getId() == binding.ivMonitoring.getId()) {
             startActivity("com.awell.lz360","com.awell.lz360.Lz360Activity");
         }else if (v.getId() == binding.ivOffScreen.getId()) {

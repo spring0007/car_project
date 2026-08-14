@@ -102,6 +102,12 @@ public class AwellTool {
      */
     public static final String RIGHT_VIDEO = "rightVideo";
 
+    /**
+     * CPU温度 带一个参数（STATUS_SEND）
+     * VALUE_M1(float)
+     */
+    public static final String CPU_TMEP = "cpu_temperature";
+
     public class RADIO{
 
         /**
@@ -181,6 +187,7 @@ public class AwellTool {
 
         /**
          * 指定频率 87.5 or 531（STATUS_SEND）
+         * VALUE_M1(String) "87.5"  "87.6"  "531" 等等
          */
         public static final String TUNE_STATION = PACKAGE_NAME_RADIO + "_tuneStation";
 
@@ -189,6 +196,44 @@ public class AwellTool {
          */
         public static final String EXIT = PACKAGE_NAME_RADIO + "_exit";
 
+        /**
+         * 收音机列表上一页（STATUS_SEND）
+         */
+        public static final String LIST_PRE_PAGE = PACKAGE_NAME_RADIO + "_listPrePage";
+
+        /**
+         * 收音机列表下一页（STATUS_SEND）
+         */
+        public static final String LIST_NEXT_PAGE = PACKAGE_NAME_RADIO + "_listNextPage";
+
+        /**
+         * 收音机列表序号1（STATUS_SEND）
+         */
+        public static final String LIST_NUM1 = PACKAGE_NAME_RADIO + "_listNum1";
+
+        /**
+         * 收音机列表序号2（STATUS_SEND）
+         */
+        public static final String LIST_NUM2 = PACKAGE_NAME_RADIO + "_listNum2";
+
+        /**
+         * 收音机列表序号3（STATUS_SEND）
+         */
+        public static final String LIST_NUM3 = PACKAGE_NAME_RADIO + "_listNum3";
+
+        /**
+         * 收音机列表序号4（STATUS_SEND）
+         */
+        public static final String LIST_NUM4 = PACKAGE_NAME_RADIO + "_listNum4";
+
+        /**
+         * 收音机列表序号5（STATUS_SEND）
+         */
+        public static final String LIST_NUM5 = PACKAGE_NAME_RADIO + "_listNum5";
+        /**
+         * 收音机列表序号6（STATUS_SEND）
+         */
+        public static final String LIST_NUM6 = PACKAGE_NAME_RADIO + "_listNum6";
     }
 
     public class MUSIC{
@@ -344,11 +389,12 @@ public class AwellTool {
          * VALUE_M3(String)  专辑
          */
         public static final String PLAY_NAME = PACKAGE_NAME_BT + "_playName";
+
         /**
-        * 音乐播放进度 返回两个参数（STATUS_ACCEPT）\r
-        * VALUE_M1(int)  当期时间 单位秒\r
-        * VALUE_M2(int)  总时间 单位秒\r
-        */
+         * 音乐播放进度 返回两个参数（STATUS_ACCEPT）
+         * VALUE_M1(int)  当期时间 单位秒
+         * VALUE_M2(int)  总时间 单位秒
+         */
         public static final String PLAY_TIME = PACKAGE_NAME_BT + "_playTime";
 
         /**
@@ -649,6 +695,84 @@ public class AwellTool {
          */
         public static final String AIR_CONTROL = PACKAGE_NAME_CANBUS + "_airData";
 
+
+    }
+
+    public class PURIFIER{
+
+        /**
+         * 净化器
+         */
+        public static final String PACKAGE_NAME_PURIFIER = "com.awell.cleanup";
+
+        /**
+         * 打开负离子/打开净化器（STATUS_SEND）
+         */
+        public static final String OPEN = PACKAGE_NAME_PURIFIER + "_open";
+
+        /**
+         * 关闭负离子/关闭净化器（STATUS_SEND）
+         */
+        public static final String CLOSE = PACKAGE_NAME_PURIFIER + "_close";
+
+        /**
+         * 打开空气净化/帮我空气净化（STATUS_SEND）
+         */
+        public static final String OPEN_AIR_PURIFY = PACKAGE_NAME_PURIFIER + "_open_air_purify";
+
+        /**
+         * 关闭空气净化（STATUS_SEND）
+         */
+        public static final String CLOSE_AIR_PURIFY = PACKAGE_NAME_PURIFIER + "_close_air_purify";
+
+        /**
+         * 打开去异味/帮我去异味（STATUS_SEND）
+         */
+        public static final String OPEN_deodorize = PACKAGE_NAME_PURIFIER + "_open_deodorize";
+
+        /**
+         * 关闭去异味（STATUS_SEND）
+         */
+        public static final String CLOSE_deodorize = PACKAGE_NAME_PURIFIER + "_close_deodorize";
+
+    }
+
+    public class MONITOTING {
+
+        /**
+         * 全景、监控
+         */
+        public static final String PACKAGE_NAME_MONITOTING = "com.awell.lz360";
+
+        /**
+         * 监控/全景 带一个参数（STATUS_SEND）
+         * VALUE_M1(int)  0 关闭全景  1 打开全景  2 打开/关闭全景
+         */
+        public static final String PANORAMA = PACKAGE_NAME_MONITOTING + "_panorama";
+
+        /**
+         * 前视 带一个参数（STATUS_SEND）
+         * VALUE_M1(int)  0 关闭前视  1 打开前视  2 打开/关闭前视
+         */
+        public static final String FRONT = PACKAGE_NAME_MONITOTING + "_front";
+
+        /**
+         * 后视 带一个参数（STATUS_SEND）
+         * VALUE_M1(int)  0 关闭后视  1 打开后视  2 打开/关闭后视
+         */
+        public static final String REAR = PACKAGE_NAME_MONITOTING + "_rear";
+
+        /**
+         * 左视 带一个参数（STATUS_SEND）
+         * VALUE_M1(int)  0 关闭左视  1 打开左视  2 打开/关闭左视
+         */
+        public static final String LEFT = PACKAGE_NAME_MONITOTING + "_left";
+
+        /**
+         * 右视 带一个参数（STATUS_SEND）
+         * VALUE_M1(int)  0 关闭右视  1 打开右视  2 打开/关闭右视
+         */
+        public static final String RIGHT = PACKAGE_NAME_MONITOTING + "_right";
 
     }
 
