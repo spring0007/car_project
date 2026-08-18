@@ -487,7 +487,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     private int getThemeBackgroundResId(int themeId) {
         if (themeId == 1) {
             return R.drawable.rect_svg; //zy_ui3
-        }
+        }else if (themeId == 2)
+            return R.drawable.rect_svg2;//yfd_ui6
         return 0;
     }
 

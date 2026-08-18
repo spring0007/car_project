@@ -420,6 +420,7 @@ public class Utils {
     );
 
     public static final Set<String> mAppLevel_5 = Set.of(
+            "com.awell.smttest",
             "com.awell.soundeffect",
             "com.awell.eqselect",
             "com.google.android.apps.maps",

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.launcher.ui22.UIActivity"
+    tools:context="com.launcher.ui23.UIActivity"
     tools:ignore="MissingDefaultResource">
 
 
