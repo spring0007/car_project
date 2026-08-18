@@ -1,0 +1,77 @@
+<resources>
+    
+
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Неизвестная песня</string>
+    <string name="music_artist">Художник</string>
+
+    <string name="weather_desc_100">Солнечные дни</string>
+    <string name="weather_desc_101">Облачно</string>
+    <string name="weather_desc_102">Шаоюнь</string>
+    <string name="weather_desc_103">Частично солнечно</string>
+    <string name="weather_desc_104">Облачно</string>
+    <string name="weather_desc_300">Душевые</string>
+    <string name="weather_desc_301">Сильные ливни</string>
+    <string name="weather_desc_302">Грозы</string>
+    <string name="weather_desc_303">Сильные грозы</string>
+    <string name="weather_desc_304">Грозы с градом</string>
+    <string name="weather_desc_305">Лёгкий дождь</string>
+    <string name="weather_desc_306">Умеренные осадки</string>
+    <string name="weather_desc_307">Сильный дождь</string>
+    <string name="weather_desc_308">Экстремальные осадки</string>
+    <string name="weather_desc_309">Морось.</string>
+    <string name="weather_desc_310">Шторм</string>
+    <string name="weather_desc_311">Шторм</string>
+    <string name="weather_desc_312">Сильные штормы</string>
+    <string name="weather_desc_313">Ледяной дождь</string>
+    <string name="weather_desc_400">Лёгкий снег</string>
+    <string name="weather_desc_401">Умеренный снегопад</string>
+    <string name="weather_desc_402">Сильный снегопад</string>
+    <string name="weather_desc_403">Метель</string>
+    <string name="weather_desc_404">Слава</string>
+    <string name="weather_desc_405">Дождь и снег</string>
+    <string name="weather_desc_406">Ливни и снежные ливни</string>
+    <string name="weather_desc_407">Сяосюэ</string>
+    <string name="weather_desc_500">Туман</string>
+    <string name="weather_desc_501">Туман</string>
+    <string name="weather_desc_502">Туман</string>
+    <string name="weather_desc_503">Густой туман</string>
+    <string name="weather_desc_504">Лёгкий туман</string>
+    <string name="weather_desc_507">Песчаная буря</string>
+    <string name="weather_desc_508">Интенсивные песчаные бури</string>
+    <string name="weather_desc_unknown">Неизвестно</string>
+    <string name="no_weather_information_available_at_the_moment">В настоящее время нет информации о погоде</string>
+    <string name="navigation">Навигация</string>
+    <string name="radio">Радио</string>
+    <string name="phone">Bluetooth-телефон</string>
+    <string name="brower">Браузер</string>
+    <string name="setting">Места действия</string>
+    <string name="music">Музыка</string>
+    <string name="apps">Применение</string>
+    <string name="no_install_app">Не удалось запустить приложение</string>
+    <string name="apps_no_install">Приложение не установлено</string>
+    <string name="no_image_available">Нет доступного изображения</string>
+    <string name="custom_carmodel">Пользовательская модель автомобиля</string>
+    <string name="select_car_model">Выберите модель автомобиля</string>
+    <string name="sd_">SD-карта</string>
+    <string name="usb_">U-диск</string>
+    <string name="custom_">Пользовательский</string>
+    <string name="choose_brand">Выберите бренд</string>
+    <string name="choose_model">Выберите модель автомобиля</string>
+    <string name="route">плавание</string>
+    <string name="continue_your_journey">продолжайте свой путь</string>
+    <string name="weather">погода</string>
+    <string name="immersive_audio">иммерсивный звук</string>
+    <string name="now_playing">Сейчас играет</string>
+    <string name="pause_play">Пауза воспроизведения</string>
+    <string name="bt">Bluetooth</string>
+    <string name="video">Видео</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="gallery">Галерея</string>
+
+
+    
+</resources>

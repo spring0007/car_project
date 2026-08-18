@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="font_size_sp">20sp</dimen>
+    <dimen name="app_icon_size">74dp</dimen>
+    <dimen name="music_artist_text_size">15sp</dimen>
+    <dimen name="music_name_text_size">19sp</dimen>
+    <dimen name="music_context_size">16sp</dimen>
+    <dimen name="music_image_size">60dp</dimen>
+    <dimen name="weather_city_text_size">24sp</dimen>
+    <dimen name="weather_desc_text_size">24sp</dimen>
+    <dimen name="weather_temp_text_size">45sp</dimen>
+    <dimen name="weather_date_text_size">32sp</dimen>
+    <dimen name="weather_temp_icon_size">100dp</dimen>
+    <item name="host_tv_width_percent" type="dimen" format="float">0.11</item>
+    <dimen name="iv_music_play_size">60dp</dimen>
+    <dimen name="car_icon_width">354dp</dimen>
+    <dimen name="car_icon_height">150dp</dimen>
+    <dimen name="host_icon_text_size">16sp</dimen>
+    <dimen name="host_icon_size_width">46dp</dimen>
+    <dimen name="host_icon_size_height">46dp</dimen>
+    <dimen name="icon_offset_y">20dp</dimen>
+    <dimen name="text_padding">20dp</dimen>
+    <dimen name="cell_width">230dp</dimen>
+    <dimen name="cell_height">155dp</dimen>
+    <dimen name="arrow_width">15dp</dimen>
+    <dimen name="arrow_height">18dp</dimen>
+    <dimen name="route_tv_size">19sp</dimen>
+    <dimen name="continue_your_journey_tv_size">16sp</dimen>
+    <dimen name="iv_song_art_bg_size">58dp</dimen>
+    <dimen name="seekbar_width">335dp</dimen>
+    <dimen name="app_gird_icon_width">36dp</dimen>
+    <dimen name="app_grid_pad">10dp</dimen>
+    <dimen name="app_item_tv_size">13sp</dimen>
+    <dimen name="app_item_tv_margin">10dp</dimen>
+
+
+</resources>

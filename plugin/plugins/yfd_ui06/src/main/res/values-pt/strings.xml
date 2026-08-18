@@ -1,0 +1,77 @@
+<resources>
+    
+
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Canção Desconhecida</string>
+    <string name="music_artist">Artista</string>
+
+    <string name="weather_desc_100">Dias ensolarados</string>
+    <string name="weather_desc_101">Nublado</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Parcialmente ensolarado</string>
+    <string name="weather_desc_104">Nublado</string>
+    <string name="weather_desc_300">Chuvas</string>
+    <string name="weather_desc_301">Chuvas fortes</string>
+    <string name="weather_desc_302">Tempestades</string>
+    <string name="weather_desc_303">Tempestades fortes</string>
+    <string name="weather_desc_304">Tempestades com granizo</string>
+    <string name="weather_desc_305">Chuva leve</string>
+    <string name="weather_desc_306">Precipitação moderada</string>
+    <string name="weather_desc_307">Chuva forte</string>
+    <string name="weather_desc_308">Precipitação extrema</string>
+    <string name="weather_desc_309">Garoa</string>
+    <string name="weather_desc_310">tempestade</string>
+    <string name="weather_desc_311">Tempestade</string>
+    <string name="weather_desc_312">Tempestades severas</string>
+    <string name="weather_desc_313">Chuva congelante</string>
+    <string name="weather_desc_400">Neve leve</string>
+    <string name="weather_desc_401">Neve moderada</string>
+    <string name="weather_desc_402">Forte nevasca</string>
+    <string name="weather_desc_403">Nevasca</string>
+    <string name="weather_desc_404">Granizo</string>
+    <string name="weather_desc_405">Chuva e neve</string>
+    <string name="weather_desc_406">Chuvas e neve</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">Névoa</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Neblina densa</string>
+    <string name="weather_desc_504">Leve neblina</string>
+    <string name="weather_desc_507">Tempestade de areia</string>
+    <string name="weather_desc_508">Tempestades de areia intensas</string>
+    <string name="weather_desc_unknown">Desconhecido</string>
+    <string name="no_weather_information_available_at_the_moment">Atualmente, não há informações meteorológicas</string>
+    <string name="navigation">Navegação</string>
+    <string name="radio">Rádio</string>
+    <string name="phone">Telefone Bluetooth</string>
+    <string name="brower">Navegador</string>
+    <string name="setting">Configurações</string>
+    <string name="music">Música</string>
+    <string name="apps">Aplicação</string>
+    <string name="no_install_app">Não é possível abrir o app</string>
+    <string name="apps_no_install">O aplicativo não está instalado</string>
+    <string name="no_image_available">Nenhuma imagem disponível</string>
+    <string name="custom_carmodel">Modelo de carro personalizado</string>
+    <string name="select_car_model">Escolha um modelo de carro</string>
+    <string name="sd_">cartão SD</string>
+    <string name="usb_">disco U</string>
+    <string name="custom_">Personalizado</string>
+    <string name="choose_brand">Escolha uma marca</string>
+    <string name="choose_model">Escolha o modelo do carro</string>
+    <string name="route">navegação</string>
+    <string name="continue_your_journey">continue a sua jornada</string>
+    <string name="weather">tempo</string>
+    <string name="immersive_audio">áudio imersivo</string>
+    <string name="now_playing">Reproduzindo agora</string>
+    <string name="pause_play">Pausar reprodução</string>
+    <string name="bt">Bluetooth</string>
+    <string name="video">Vídeo</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="gallery">Galeria</string>
+
+
+    
+</resources>

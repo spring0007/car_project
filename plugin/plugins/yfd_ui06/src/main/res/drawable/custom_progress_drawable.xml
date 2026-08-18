@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 背景轨道 -->
+    <item android:id="@android:id/background" android:drawable="@drawable/music_progress_bg"/>
+    <!-- 主进度 -->
+    <item android:id="@android:id/progress" android:drawable="@drawable/music_progress_pro"/>
+
+</layer-list>

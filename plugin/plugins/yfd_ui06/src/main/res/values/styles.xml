@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="host_text_style">
+
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/host_icon_text_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:onClick">onClick</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:gravity">center_horizontal</item>
+
+
+    </style>
+    
+    <style name="PopupAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
+</resources>

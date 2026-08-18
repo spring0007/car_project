@@ -1,0 +1,77 @@
+<resources>
+    
+
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Bilinmeyen Şarkı</string>
+    <string name="music_artist">Sanatçı</string>
+
+    <string name="weather_desc_100">Güneşli günler</string>
+    <string name="weather_desc_101">Bulutlu</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Kısmen güneşli</string>
+    <string name="weather_desc_104">Bulutlu</string>
+    <string name="weather_desc_300">Duşlar</string>
+    <string name="weather_desc_301">Şiddetli sağanak</string>
+    <string name="weather_desc_302">Gök gürültülü fırtınalar</string>
+    <string name="weather_desc_303">Şiddetli gök gürültülü fırtınalar</string>
+    <string name="weather_desc_304">Gök gürültülü fırtınalar ve dolu</string>
+    <string name="weather_desc_305">Hafif yağmur</string>
+    <string name="weather_desc_306">Orta derecede yağış</string>
+    <string name="weather_desc_307">Şiddetli yağmur</string>
+    <string name="weather_desc_308">Aşırı yağışlar</string>
+    <string name="weather_desc_309">Çiseleme</string>
+    <string name="weather_desc_310">Fırtına</string>
+    <string name="weather_desc_311">Fırtına</string>
+    <string name="weather_desc_312">Şiddetli fırtınalar</string>
+    <string name="weather_desc_313">Dondurucu yağmur</string>
+    <string name="weather_desc_400">Hafif kar</string>
+    <string name="weather_desc_401">Orta Kar Yağışı</string>
+    <string name="weather_desc_402">Yoğun kar yağışı</string>
+    <string name="weather_desc_403">Kar Fırtınası</string>
+    <string name="weather_desc_404">Yaşa</string>
+    <string name="weather_desc_405">Yağmur ve kar</string>
+    <string name="weather_desc_406">Duşular ve kar yağmurları</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Sis</string>
+    <string name="weather_desc_501">Sis</string>
+    <string name="weather_desc_502">Sis</string>
+    <string name="weather_desc_503">Yoğun sis</string>
+    <string name="weather_desc_504">Hafif bir sis</string>
+    <string name="weather_desc_507">Kum Fırtınası</string>
+    <string name="weather_desc_508">Yoğun kum fırtınaları</string>
+    <string name="weather_desc_unknown">Bilinmiyor</string>
+    <string name="no_weather_information_available_at_the_moment">Şu anda hava durumu bilgisi yoktur</string>
+    <string name="navigation">Navigasyon</string>
+    <string name="radio">Radyo</string>
+    <string name="phone">Bluetooth telefon</string>
+    <string name="brower">Tarayıcı</string>
+    <string name="setting">Ortamlar</string>
+    <string name="music">Müzik</string>
+    <string name="apps">Uygulama</string>
+    <string name="no_install_app">Uygulamayı başlatamadım</string>
+    <string name="apps_no_install">Uygulama yüklenmemiştir</string>
+    <string name="no_image_available">Kullanılabilir görsel yok</string>
+    <string name="custom_carmodel">Özel Araba Modeli</string>
+    <string name="select_car_model">Bir araba modeli seçin</string>
+    <string name="sd_">SD kart</string>
+    <string name="usb_">U disk</string>
+    <string name="custom_">Özel</string>
+    <string name="choose_brand">Bir marka seçin</string>
+    <string name="choose_model">Araba modeli seçin</string>
+    <string name="route">yelken</string>
+    <string name="continue_your_journey">yolculuğuna devam et</string>
+    <string name="weather">hava durumu</string>
+    <string name="immersive_audio">sarmal ses</string>
+    <string name="now_playing">Şu anda çalınıyor</string>
+    <string name="pause_play">Oynatmayı duraklat</string>
+    <string name="bt">Bluetooth</string>
+    <string name="video">Video</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="gallery">Gralery</string>
+
+
+    
+</resources>

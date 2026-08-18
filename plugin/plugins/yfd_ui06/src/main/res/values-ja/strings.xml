@@ -1,0 +1,77 @@
+<resources>
+    
+
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">未知の歌</string>
+    <string name="music_artist">アーティスト</string>
+
+    <string name="weather_desc_100">晴れた日々</string>
+    <string name="weather_desc_101">曇り</string>
+    <string name="weather_desc_102">少雲</string>
+    <string name="weather_desc_103">部分的に晴れています</string>
+    <string name="weather_desc_104">曇り</string>
+    <string name="weather_desc_300">シャワー</string>
+    <string name="weather_desc_301">激しい雨</string>
+    <string name="weather_desc_302">雷雨</string>
+    <string name="weather_desc_303">強い雷雨</string>
+    <string name="weather_desc_304">雹を伴う雷雨</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中程度の降雨</string>
+    <string name="weather_desc_307">激しい雨</string>
+    <string name="weather_desc_308">極端な降雨</string>
+    <string name="weather_desc_309">霧雨</string>
+    <string name="weather_desc_310">嵐</string>
+    <string name="weather_desc_311">嵐</string>
+    <string name="weather_desc_312">激しい嵐</string>
+    <string name="weather_desc_313">凍雨</string>
+    <string name="weather_desc_400">軽い雪</string>
+    <string name="weather_desc_401">中程度の降雪量</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">ブリザード</string>
+    <string name="weather_desc_404">雹</string>
+    <string name="weather_desc_405">雨と雪</string>
+    <string name="weather_desc_406">にわか雨と雪にわか雨</string>
+    <string name="weather_desc_407">小雪</string>
+    <string name="weather_desc_500">ミスト</string>
+    <string name="weather_desc_501">霧</string>
+    <string name="weather_desc_502">ヘイズ</string>
+    <string name="weather_desc_503">濃い霧</string>
+    <string name="weather_desc_504">わずかな霞</string>
+    <string name="weather_desc_507">砂嵐</string>
+    <string name="weather_desc_508">激しい砂嵐</string>
+    <string name="weather_desc_unknown">不明</string>
+    <string name="no_weather_information_available_at_the_moment">現在、天気情報はありません</string>
+    <string name="navigation">ナビゲーション</string>
+    <string name="radio">ラジオ</string>
+    <string name="phone">Bluetooth電話</string>
+    <string name="brower">ブラウザ</string>
+    <string name="setting">舞台設定</string>
+    <string name="music">音楽</string>
+    <string name="apps">応用</string>
+    <string name="no_install_app">アプリを起動できません</string>
+    <string name="apps_no_install">アプリはインストールされていません</string>
+    <string name="no_image_available">利用可能な画像がありません</string>
+    <string name="custom_carmodel">カスタムカーモデル</string>
+    <string name="select_car_model">車のモデルを選択してください</string>
+    <string name="sd_">SDカード</string>
+    <string name="usb_">Uディスク</string>
+    <string name="custom_">カスタム</string>
+    <string name="choose_brand">ブランドを選択</string>
+    <string name="choose_model">車のモデルを選択</string>
+    <string name="route">航海</string>
+    <string name="continue_your_journey">旅を続けてください</string>
+    <string name="weather">天気</string>
+    <string name="immersive_audio">イマーシブオーディオ</string>
+    <string name="now_playing">再生中</string>
+    <string name="pause_play">再生を一時停止</string>
+    <string name="bt">Bluetooth</string>
+    <string name="video">ビデオ</string>
+    <string name="bluetooth">ブルートゥース</string>
+    <string name="gallery">ギャラリー</string>
+
+
+    
+</resources>

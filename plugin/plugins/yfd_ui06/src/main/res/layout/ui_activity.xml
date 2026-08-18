@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UIActivity">
+
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_gps_speed"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:fontFamily="@font/harmonyos_sans_sc_regular"-->
+    <!--        android:gravity="center_horizontal"-->
+    <!--        android:text="0"-->
+    <!--        android:textColor="@android:color/white"-->
+    <!--        android:textSize="@dimen/gpsSpeed_size"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintVertical_bias="0.1" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_gps_speed_unit"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:gravity="center"-->
+    <!--        android:text="KM/h"-->
+    <!--        android:textColor="@android:color/white"-->
+    <!--        android:textSize="@dimen/gpsSpeedUnit_size"-->
+    <!--        android:visibility="gone" />-->
+
+    <!--左上 天气-->
+    <ImageView
+        android:id="@+id/weather_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/weather_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+
+        <ImageView
+            android:id="@+id/weather_iv_info"
+            android:layout_width="@dimen/weather_temp_icon_size"
+            android:layout_height="@dimen/weather_temp_icon_size"
+            android:src="@drawable/weather_qing"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.89"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/weather_"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:text="@string/weather"
+            android:textColor="@color/route_color"
+            android:textSize="@dimen/weather_date_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.15"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.238"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintWidth_percent="0.5" />
+
+
+        <TextView
+            android:id="@+id/weater_tv_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:text="23℃"
+            android:textColor="@color/white"
+            android:textSize="@dimen/weather_temp_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/tv_weather_desc"
+            app:layout_constraintStart_toStartOf="@+id/weather_"
+            app:layout_constraintTop_toBottomOf="@+id/weather_" />
+
+        <TextView
+            android:id="@+id/tv_weather_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:text="@string/weather_desc_100"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/weather_desc_text_size"
+            app:layout_constraintBottom_toTopOf="@+id/tv_weather_city"
+            app:layout_constraintEnd_toEndOf="@+id/weather_"
+            app:layout_constraintStart_toStartOf="@+id/weather_"
+            app:layout_constraintTop_toBottomOf="@+id/weater_tv_temp" />
+
+
+        <TextView
+            android:id="@+id/tv_weather_city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_regular"
+            android:text="北京"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/weather_city_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/weather_"
+            app:layout_constraintStart_toStartOf="@+id/weather_"
+            app:layout_constraintTop_toBottomOf="@+id/tv_weather_desc"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--右下 app item-->
+    <ImageView
+        android:id="@+id/apps_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/app_item_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top4" />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="1"
+        app:appIcon="@drawable/host_navigation_small"
+        app:appName="@string/navigation"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/app_item_5"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_2"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top4"
+        app:layout_constraintVertical_chainStyle="spread" />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="2"
+        app:appIcon="@drawable/host_radio_small"
+        app:appName="@string/radio"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_3"
+        app:layout_constraintStart_toEndOf="@+id/app_item_1"
+        app:layout_constraintTop_toTopOf="@+id/app_item_1"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_1"
+        />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="3"
+        app:appIcon="@drawable/host_video_small"
+        app:appName="@string/video"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_4"
+        app:layout_constraintStart_toEndOf="@+id/app_item_2"
+        app:layout_constraintTop_toTopOf="@+id/app_item_1"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_1"
+        />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="4"
+        app:appIcon="@drawable/host_phone_small"
+        app:appName="@string/bluetooth"
+        android:onClick="onClick"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/app_item_3"
+        app:layout_constraintTop_toTopOf="@+id/app_item_1"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_1"
+        />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="5"
+        app:appIcon="@drawable/host_music_small"
+        app:appName="@string/music"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_6"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toBottomOf="@+id/app_item_1" />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="6"
+        app:appIcon="@drawable/host_gallery_small"
+        app:appName="@string/gallery"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_5"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_7"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/app_item_5"
+        app:layout_constraintTop_toTopOf="@+id/app_item_5" />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_7"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:appFlag="7"
+        app:appIcon="@drawable/host_brower_small"
+        app:appName="@string/setting"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_5"
+        app:layout_constraintEnd_toStartOf="@+id/app_item_8"
+        app:layout_constraintStart_toEndOf="@+id/app_item_6"
+        app:layout_constraintTop_toTopOf="@+id/app_item_5" />
+
+    <com.launcher.yfd_ui6.view.AppItemView
+        android:id="@+id/app_item_8"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"
+        app:appFlag="8"
+        app:appIcon="@drawable/host_carinfo_small"
+        app:appName="@string/setting"
+        app:layout_constraintBottom_toBottomOf="@+id/app_item_5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/app_item_7"
+        app:layout_constraintTop_toTopOf="@+id/app_item_5" />
+
+
+    <!--右上 car item-->
+    <ImageView
+        android:id="@+id/car_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/car_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+
+    <!--car icon -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/car_icon_linear"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center|bottom"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_top3"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_4"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top">
+
+        <TextView
+            android:id="@+id/tv_route"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="@string/route"
+            android:textColor="@color/route_color"
+            android:textSize="@dimen/route_tv_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.263"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintWidth_percent="0.8" />
+
+
+        <TextView
+            android:id="@+id/continue_your_journey"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text="@string/continue_your_journey"
+            android:textColor="@color/white"
+            android:textSize="@dimen/continue_your_journey_tv_size"
+            app:layout_constraintBottom_toTopOf="@+id/car_line"
+            app:layout_constraintEnd_toEndOf="@+id/tv_route"
+            app:layout_constraintStart_toStartOf="@+id/tv_route"
+            app:layout_constraintTop_toBottomOf="@+id/tv_route"
+            app:layout_constraintWidth_percent="0.8" />
+
+        <ImageView
+            android:id="@+id/car_line"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:src="@drawable/car_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.22" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="@dimen/arrow_width"
+            android:layout_height="@dimen/arrow_height"
+            android:src="@drawable/ic_arrow"
+            app:layout_constraintBottom_toTopOf="@+id/car_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/continue_your_journey"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/car_icon"
+            android:layout_width="@dimen/car_icon_width"
+            android:layout_height="@dimen/car_icon_height"
+            android:layout_marginBottom="17dp"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/a3_2008_2012"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--中间-->
+
+    <ImageView
+        android:id="@+id/freeform_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/freeform_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_3"
+        app:layout_constraintStart_toEndOf="@+id/vertical_guideline_2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top" />
+
+    <!--左下 music-->
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_bottom1"
+        app:layout_constraintEnd_toStartOf="@+id/vertical_guideline_1"
+        app:layout_constraintStart_toEndOf="@+id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_top2" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.094" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5166" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5222" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5791" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5805" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.866" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.87" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9882" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.005" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2851" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2898" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7039" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/vertical_guideline_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7054" />
+
+    <!--bottom-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bottom_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_bottom">
+
+        <ImageView
+            android:id="@+id/host_nav_iv"
+            android:layout_width="@dimen/host_icon_size_width"
+            android:layout_height="@dimen/host_icon_size_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:onClick="onClick"
+            android:src="@drawable/host_navigation"
+            app:layout_constraintBottom_toTopOf="@+id/host_nav_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_nav_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_nav_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/host_nav_tv"
+            style="@style/host_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/navigation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_phone_tv"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/host_nav_iv"
+            app:layout_constraintWidth_percent="@dimen/host_tv_width_percent" />
+
+
+        <ImageView
+            android:id="@+id/host_phone_iv"
+            android:layout_width="@dimen/host_icon_size_width"
+            android:layout_height="@dimen/host_icon_size_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:onClick="onClick"
+            android:src="@drawable/host_phone"
+            app:layout_constraintBottom_toTopOf="@+id/host_phone_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_phone_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_phone_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/host_phone_tv"
+            style="@style/host_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/phone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_app_tv"
+            app:layout_constraintStart_toEndOf="@+id/host_nav_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_phone_iv"
+            app:layout_constraintWidth_percent="@dimen/host_tv_width_percent" />
+
+        <ImageView
+            android:id="@+id/host_app_iv"
+            android:layout_width="@dimen/host_icon_size_width"
+            android:layout_height="@dimen/host_icon_size_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:onClick="onClick"
+            android:src="@drawable/host_app"
+            app:layout_constraintBottom_toTopOf="@+id/host_app_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_app_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_app_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/host_app_tv"
+            style="@style/host_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/apps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_music_tv"
+            app:layout_constraintStart_toEndOf="@+id/host_phone_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_app_iv"
+            app:layout_constraintWidth_percent="@dimen/host_tv_width_percent" />
+
+        <ImageView
+            android:id="@+id/host_music_iv"
+            android:layout_width="@dimen/host_icon_size_width"
+            android:layout_height="@dimen/host_icon_size_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:onClick="onClick"
+            android:src="@drawable/host_music"
+            app:layout_constraintBottom_toTopOf="@+id/host_music_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_music_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_music_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/host_music_tv"
+            style="@style/host_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/music"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/host_setting_tv"
+            app:layout_constraintStart_toEndOf="@+id/host_app_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_music_iv"
+            app:layout_constraintWidth_percent="@dimen/host_tv_width_percent" />
+
+        <ImageView
+            android:id="@+id/host_setting_iv"
+            android:layout_width="@dimen/host_icon_size_width"
+            android:layout_height="@dimen/host_icon_size_height"
+            android:clickable="false"
+            android:focusable="false"
+            android:onClick="onClick"
+            android:src="@drawable/host_carinfo"
+            app:layout_constraintBottom_toTopOf="@+id/host_setting_tv"
+            app:layout_constraintEnd_toEndOf="@+id/host_setting_tv"
+            app:layout_constraintStart_toStartOf="@+id/host_setting_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/host_setting_tv"
+            style="@style/host_text_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/setting"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/host_music_tv"
+            app:layout_constraintTop_toBottomOf="@+id/host_setting_iv"
+            app:layout_constraintWidth_percent="@dimen/host_tv_width_percent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

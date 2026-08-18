@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name" translatable="false">LauncherUI1</string>
+
+    <string name="ui_key" translatable="false">LauncherUI1</string>
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    <string name="ui_clazz" translatable="false">com.launcher.yfd_ui6.UIActivity</string>
+
+    <string name="click_play_music">Unknown Song</string>
+    <string name="music_artist">Artist</string>
+
+    <string name="weather_desc_100">Sunny</string>
+    <string name="weather_desc_101">Cloudy</string>
+    <string name="weather_desc_102">Few clouds</string>
+    <string name="weather_desc_103">Partly sunny</string>
+    <string name="weather_desc_104">Overcast</string>
+    <string name="weather_desc_300">Shower rain</string>
+    <string name="weather_desc_301">Heavy shower rain</string>
+    <string name="weather_desc_302">Thundershower</string>
+    <string name="weather_desc_303">Severe thundershower</string>
+    <string name="weather_desc_304">Thundershower with hail</string>
+    <string name="weather_desc_305">Light rain</string>
+    <string name="weather_desc_306">Moderate rain</string>
+    <string name="weather_desc_307">Heavy rain</string>
+    <string name="weather_desc_308">Extreme rain</string>
+    <string name="weather_desc_309">Drizzle rain</string>
+    <string name="weather_desc_310">Storm</string>
+    <string name="weather_desc_311">Heavy storm</string>
+    <string name="weather_desc_312">Severe storm</string>
+    <string name="weather_desc_313">Freezing rain</string>
+    <string name="weather_desc_400">Light snow</string>
+    <string name="weather_desc_401">Moderate snow</string>
+    <string name="weather_desc_402">Heavy snow</string>
+    <string name="weather_desc_403">Snowstorm</string>
+    <string name="weather_desc_404">Sleet</string>
+    <string name="weather_desc_405">Rain and snow</string>
+    <string name="weather_desc_406">Shower snow</string>
+    <string name="weather_desc_407">Snow flurry</string>
+    <string name="weather_desc_500">Mist</string>
+    <string name="weather_desc_501">Fog</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Heavy haze</string>
+    <string name="weather_desc_504">Light haze</string>
+    <string name="weather_desc_507">Sandstorm</string>
+    <string name="weather_desc_508">Heavy sandstorm</string>
+    <string name="weather_desc_unknown">UNK</string>
+    <string name="no_weather_information_available_at_the_moment">No weather information available at the moment</string>
+    <string name="navigation">Navigation</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Phone</string>
+    <string name="brower">Brower</string>
+    <string name="setting">Settings</string>
+    <string name="music">Music</string>
+    <string name="apps">Apps</string>
+    <string name="no_install_app">Unable to launch the app</string>
+    <string name="apps_no_install">The app is not installed</string>
+    <string name="no_image_available">No image available</string>
+    <string name="custom_carmodel">Custom Car Model</string>
+    <string name="select_car_model">Choose a car model</string>
+    <string name="sd_">SD card</string>
+    <string name="usb_">U-disk</string>
+    <string name="custom_">Custom</string>
+    <string name="choose_brand">Choose a brand</string>
+    <string name="choose_model">Choose car model</string>
+    <string name="route">Sailing</string>
+    <string name="continue_your_journey">Continue your journey</string>
+    <string name="weather">Weather</string>
+    <string name="immersive_audio">Immersive audio</string>
+    <string name="now_playing">Now playing</string>
+    <string name="pause_play">Pause playback</string>
+    <string name="bt">Bluetooth</string>
+    <string name="video">Video</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="gallery">Grallery</string>
+
+
+    <string-array name="wallpapers" translatable="false">
+        <item>wallpaper_00</item>
+        <item>wallpaper_01</item>
+        <item>wallpaper_02</item>
+        <item>wallpaper_03</item>
+    </string-array>
+</resources>

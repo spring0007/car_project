@@ -1,0 +1,77 @@
+<resources>
+    
+
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">未知歌曲</string>
+    <string name="music_artist">艺术家</string>
+
+    <string name="weather_desc_100">晴天</string>
+    <string name="weather_desc_101">多云</string>
+    <string name="weather_desc_102">少云</string>
+    <string name="weather_desc_103">部分晴朗</string>
+    <string name="weather_desc_104">阴天</string>
+    <string name="weather_desc_300">阵雨</string>
+    <string name="weather_desc_301">大阵雨</string>
+    <string name="weather_desc_302">雷阵雨</string>
+    <string name="weather_desc_303">强烈雷阵雨</string>
+    <string name="weather_desc_304">雷阵雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中等降雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">极端降雨</string>
+    <string name="weather_desc_309">细雨</string>
+    <string name="weather_desc_310">风暴</string>
+    <string name="weather_desc_311">暴风雨</string>
+    <string name="weather_desc_312">严重风暴</string>
+    <string name="weather_desc_313">冻雨</string>
+    <string name="weather_desc_400">轻雪</string>
+    <string name="weather_desc_401">中等降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴风雪</string>
+    <string name="weather_desc_404">冰雹</string>
+    <string name="weather_desc_405">雨雪</string>
+    <string name="weather_desc_406">阵雨雪</string>
+    <string name="weather_desc_407">小雪</string>
+    <string name="weather_desc_500">薄雾</string>
+    <string name="weather_desc_501">雾</string>
+    <string name="weather_desc_502">雾霾</string>
+    <string name="weather_desc_503">浓雾</string>
+    <string name="weather_desc_504">轻微雾霾</string>
+    <string name="weather_desc_507">沙尘暴</string>
+    <string name="weather_desc_508">强烈的沙尘暴</string>
+    <string name="weather_desc_unknown">未知</string>
+    <string name="no_weather_information_available_at_the_moment">目前没有天气信息</string>
+    <string name="navigation">导航</string>
+    <string name="radio">收音机</string>
+    <string name="phone">蓝牙电话</string>
+    <string name="brower">浏览器</string>
+    <string name="setting">设置</string>
+    <string name="music">音乐</string>
+    <string name="apps">应用</string>
+    <string name="no_install_app">无法启动应用</string>
+    <string name="apps_no_install">应用未安装</string>
+    <string name="no_image_available">暂无图片</string>
+    <string name="custom_carmodel">自定义车模</string>
+    <string name="select_car_model">选择车型</string>
+    <string name="sd_">SD卡</string>
+    <string name="usb_">U盘</string>
+    <string name="custom_">自定义</string>
+    <string name="choose_brand">选择品牌</string>
+    <string name="choose_model">选择车型</string>
+    <string name="route">航行</string>
+    <string name="continue_your_journey">继续你的旅程</string>
+    <string name="weather">天气</string>
+    <string name="immersive_audio">沉浸式音频</string>
+    <string name="now_playing">正在播放中</string>
+    <string name="pause_play">暂停播放</string>
+    <string name="bt">蓝牙</string>
+    <string name="video">视频</string>
+    <string name="bluetooth">蓝牙</string>
+    <string name="gallery">画廊</string>
+
+
+    
+</resources>
