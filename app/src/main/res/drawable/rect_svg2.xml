@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="230dp"
+    android:height="155dp"
+    android:viewportWidth="230"
+    android:viewportHeight="155">
+    
+    <!-- 底层：全圆角矩形，50% 半透明黑色 -->
+    <path
+        android:pathData="M10,0 L220,0 Q230,0 230,10 L230,145 Q230,155 220,155 L10,155 Q0,155 0,145 L0,10 Q0,0 10,0 Z"
+        android:fillColor="#0c1016"
+        android:strokeWidth="2"
+        android:strokeColor="#1a1e22" />
+</vector>
