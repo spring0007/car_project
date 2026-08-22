@@ -1510,6 +1510,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         llMusic.setMediaLibrary(mediaControl);
         //llMusic.setMediaLibrary(mediaControl.getMediaLibrary());
         llMusic.setActivity(this, llMusic);
+        mediaControl.refreshCurrentMediaState();
 
         initMediaObserverView();
     }

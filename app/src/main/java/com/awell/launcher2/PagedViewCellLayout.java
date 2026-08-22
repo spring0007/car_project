@@ -252,7 +252,7 @@ public class PagedViewCellLayout extends ViewGroup implements Page {
         destroyHardwareLayers();
         // 优化：清空页面时重置背景缓存，确保下次设置时能正确应用
         mCurrentBackgroundResId = 0;
-        LogUtil.d("removeAllViewsOnPage: reset background cache");
+        //LogUtil.d("removeAllViewsOnPage: reset background cache");
     }
 
     @Override

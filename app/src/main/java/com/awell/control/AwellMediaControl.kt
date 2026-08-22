@@ -33,6 +33,13 @@ class AwellMediaControl() {
     private var hostService: IHostPluginInterface? = null
     private var isBound = false
 
+    /**
+     * 绑定服务前插件若已请求刷新媒体状态,连接建立后补发一次,
+     * 避免切换 plugin 时 bindDataService 异步完成前状态请求被丢弃
+     */
+    @Volatile
+    private var needRefreshAfterConnected = false
+
     init {
     }
 
@@ -175,6 +182,11 @@ class AwellMediaControl() {
             hostService = IHostPluginInterface.Stub.asInterface(binder)
             isBound = true
             hostService?.registerListener(mDataChangeListener)
+            //绑定前插件若已请求刷新媒体状态,连接后补发
+            if (needRefreshAfterConnected) {
+                needRefreshAfterConnected = false
+                requestRefreshAndDeliver()
+            }
         }
 
         override fun onServiceDisconnected(componentName: ComponentName?) {
@@ -202,6 +214,75 @@ class AwellMediaControl() {
             }
             context.unbindService(serviceConnection)
         }
+    }
+
+    /**
+     * 请求宿主返回当前缓存的完整媒体状态,并统一通过 UpdateMediaDataToView 接口
+     * 按「先确定当前媒体类型 → 播放状态 → 歌曲信息 → 进度 → 电台频率 → 专辑图」的顺序
+     * 更新 musicWidget,保证切换 plugin 后立即显示正确(进度条随当前媒体类型及时更新)。
+     * 若服务尚未绑定完成,则标记待补发,连接建立后自动请求。
+     */
+    fun refreshCurrentMediaState() {
+        if (isBound) {
+            requestRefreshAndDeliver()
+        } else {
+            needRefreshAfterConnected = true
+        }
+    }
+
+    /**
+     * 向宿主请求当前媒体状态,并把结果统一通过 updateMusicView(UpdateMediaDataToView)下发。
+     */
+    private fun requestRefreshAndDeliver() {
+        try {
+            val full = hostService?.refreshCurrentMediaState() ?: return
+            deliverMediaStateToView(full)
+        } catch (e: RemoteException) {
+            Log.e(TAG, "refreshCurrentMediaState failed", e)
+        }
+    }
+
+    /**
+     * 统一通过 UpdateMediaDataToView 接口下发宿主缓存的完整媒体状态。
+     * 顺序固定:先 updateViewMusicPlay 确定 musicWidget 的 currentMedia,
+     * 后续的播放状态/歌曲信息/进度/电台频率才能通过 widget 的 currentMedia==flag 门控正确显示。
+     * 三方媒体(OTHER_MUSIC)不在 LOCAL_MEDIA_PKG 内,若走 handleMediaPlay 会被 isMediaPkg 过滤,
+     * 导致 currentMedia 无法切换到 OTHER_MUSIC、进度条等更新被丢弃,这里直接调用 updateViewMusicPlay 不受过滤。
+     */
+    private fun deliverMediaStateToView(full: Bundle) {
+        val view = updateMusicView ?: return
+
+        //1. 先确定当前媒体类型,让 widget 的 currentMedia 生效
+        full.getBundle(AwellTool.MEDIA_PLAY)?.let { mp ->
+            val pkg = mp.getString(AwellTool.VALUE_M1, mNullStr)
+            val command = mp.getString(AwellTool.VALUE_M2, mNullStr)
+            val mediaType = mp.getSafeInt(AwellTool.VALUE_M3, 3)
+            val currentMedia = mp.getSafeInt(AwellTool.VALUE_M4, MusicWidget.MUSIC)
+            mediaViewModel?.updateMediaState(mp, pkg, command, mediaType, currentMedia)
+            view.updateViewMusicPlay(mp, pkg, command, mediaType, currentMedia)
+        }
+
+        //2. 播放/暂停状态
+        full.getBundle(AwellTool.MUSIC.PLAY_STATUS)?.let { handleMusicPlayStatus(it) }
+        full.getBundle(AwellTool.BT.PLAY_STATUS)?.let { handleBTPlayStatus(it) }
+        full.getBundle(MusicWidget.OTHER_MUSIC_PLAYSTATUS)?.let { handleOtherMusicStatus(it) }
+
+        //3. 歌曲信息
+        full.getBundle(AwellTool.MUSIC.PLAY_NAME)?.let { handleMusicPlayName(it) }
+        full.getBundle(AwellTool.BT.PLAY_NAME)?.let { handleBTPlayName(it) }
+        full.getBundle(MusicWidget.OTHER_MUSIC_PLAYNAME)?.let { handleOtherMusicPlayName(it) }
+
+        //4. 播放进度(进度条)
+        full.getBundle(AwellTool.MUSIC.PLAY_TIME)?.let { handleMusicPlayTime(it) }
+        full.getBundle(AwellTool.BT.PLAY_TIME)?.let { handleBTPlayTime(it) }
+        full.getBundle(MusicWidget.OTHER_MUSIC_TIME)?.let { handleOtherMusicTime(it) }
+
+        //5. 电台频率
+        full.getBundle(AwellTool.RADIO.FREQUENCY)?.let { handleRadioFreq(it) }
+
+        //6. 专辑图片(由客户端另行解析,这里交给 updateViewMusicPlayImage)
+        full.getBundle(MusicWidget.OTHER_MUSIC_PLAY_IMAGE)?.let { handleMusicPlayImage(it) }
+        full.getBundle(AwellTool.MUSIC.PLAY_IMAGE)?.let { handleMusicPlayImage(it) }
     }
 
     /**

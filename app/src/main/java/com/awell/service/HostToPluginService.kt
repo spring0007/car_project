@@ -73,6 +73,19 @@ class HostToPluginService : Service() {
     private var mTempMediaPlay: Bundle? = null
 
     /**
+     * 切换 plugin 时,同步给新客户端的媒体状态(播放/暂停、进度、电台频率)
+     * 之前只缓存了 MEDIA_PLAY / PLAY_NAME / PLAY_IMAGE,
+     * 导致切换后 musicWidget 的播放暂停状态、进度条、电台频率显示错误
+     */
+    private var mTempMusicPlayStatus: Bundle? = null
+    private var mTempMusicPlayTime: Bundle? = null
+    private var mTempBTPlayStatus: Bundle? = null
+    private var mTempBTPlayTime: Bundle? = null
+    private var mTempOtherMusicPlayStatus: Bundle? = null
+    private var mTempOtherMusicTime: Bundle? = null
+    private var mTempRadioFreq: Bundle? = null
+
+    /**
      * 客户端注册的监听
      */
     val listeners = RemoteCallbackList<IDataChangeInterface>()
@@ -210,36 +223,18 @@ class HostToPluginService : Service() {
 
         override fun registerListener(listener: IDataChangeInterface) {
             listeners.register(listener)
-            //todo use temp value to update client data like music info album ...
-
-            mTempMediaPlay?.let {
-
-                val pkg = it.getString(AwellTool.VALUE_M1, null)
-                val musicType = when {
-                    pkg.contains("com.awell.localmusic") -> 0
-                    pkg.contains("/system/bin/gocsdk") -> 1
-                    else -> 4
-                }
-                it.putInt(AwellTool.VALUE_M4, musicType)
-                it.putString(AwellTool.VALUE_M6, "from mTempMediaPlay")
-                notifyClientDataChanged(it)
-            }
-
-            mTempMusicPlayInfo?.let {
-                it.putString(AwellTool.VALUE_M6, "from mTempMusicPlayInfo")
-                notifyClientDataChanged(it)
-            }
-
-            mTempAlbumBundle?.let {
-                it.putString(AwellTool.VALUE_M6, "from mTempAlbumBundle")
-                handleLocalMusicImageByScope(it)
-            }
-
-
+            //客户端切换时,把缓存的最新媒体状态推送给新客户端,保证 musicWidget 显示正确
+            pushCachedStateToClient()
         }
 
         override fun unregisterListener(listener: IDataChangeInterface) {
             listeners.unregister(listener)
+        }
+
+        override fun refreshCurrentMediaState(): Bundle? {
+            //客户端(新插件)切换后主动请求,返回当前缓存的完整媒体状态,
+            //由客户端(AwellMediaControl)统一通过 UpdateMediaDataToView 更新 musicWidget
+            return buildCachedStateBundle()
         }
     }
 
@@ -308,7 +303,138 @@ class HostToPluginService : Service() {
                 }
                 mTempMediaPlay = bundle.deepCopy()
             }
+
+            //播放/暂停状态与进度,切换 plugin 时需同步给新客户端
+            AwellTool.MUSIC.PLAY_STATUS -> {
+                mTempMusicPlayStatus = bundle.deepCopy()
+            }
+
+            AwellTool.MUSIC.PLAY_TIME -> {
+                mTempMusicPlayTime = bundle.deepCopy()
+            }
+
+            AwellTool.BT.PLAY_STATUS -> {
+                mTempBTPlayStatus = bundle.deepCopy()
+            }
+
+            AwellTool.BT.PLAY_TIME -> {
+                mTempBTPlayTime = bundle.deepCopy()
+            }
+
+            MusicWidget.OTHER_MUSIC_PLAYSTATUS -> {
+                mTempOtherMusicPlayStatus = bundle.deepCopy()
+            }
+
+            MusicWidget.OTHER_MUSIC_TIME -> {
+                mTempOtherMusicTime = bundle.deepCopy()
+            }
+
+            AwellTool.RADIO.FREQUENCY -> {
+                mTempRadioFreq = bundle.deepCopy()
+            }
         }
+    }
+
+    /**
+     * 把缓存的最新媒体状态按顺序重新推送给所有客户端。
+     * 客户端 registerListener 切换插件时,以及 refreshCurrentMediaState 主动请求时调用。
+     *
+     * 顺序:先 MEDIA_PLAY 确定当前媒体类型与播放状态,
+     * 再推送播放/暂停状态、歌曲信息、进度、电台频率,最后异步解析专辑图片,
+     * 保证新插件 musicWidget 显示正确(暂停时不再误显示为播放中)。
+     */
+    private fun pushCachedStateToClient() {
+        mTempMediaPlay?.let {
+            val pkg = it.getString(AwellTool.VALUE_M1, null)
+            val musicType = when {
+                pkg?.contains("com.awell.localmusic") == true -> 0
+                pkg?.contains("/system/bin/gocsdk") == true -> 1
+                else -> 4
+            }
+            it.putInt(AwellTool.VALUE_M4, musicType)
+            it.putString(AwellTool.VALUE_M6, "from mTempMediaPlay")
+            notifyClientDataChanged(it)
+        }
+
+        //播放/暂停状态
+        mTempMusicPlayStatus?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempMusicPlayStatus")
+            notifyClientDataChanged(it)
+        }
+        mTempBTPlayStatus?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempBTPlayStatus")
+            notifyClientDataChanged(it)
+        }
+        mTempOtherMusicPlayStatus?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempOtherMusicPlayStatus")
+            notifyClientDataChanged(it)
+        }
+
+        //歌曲信息
+        mTempMusicPlayInfo?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempMusicPlayInfo")
+            notifyClientDataChanged(it)
+        }
+
+        //播放进度
+        mTempMusicPlayTime?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempMusicPlayTime")
+            notifyClientDataChanged(it)
+        }
+        mTempBTPlayTime?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempBTPlayTime")
+            notifyClientDataChanged(it)
+        }
+        mTempOtherMusicTime?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempOtherMusicTime")
+            notifyClientDataChanged(it)
+        }
+
+        //电台频率
+        mTempRadioFreq?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempRadioFreq")
+            notifyClientDataChanged(it)
+        }
+
+        //专辑图片(需要异步解析图片uri)
+        mTempAlbumBundle?.let {
+            it.putString(AwellTool.VALUE_M6, "from mTempAlbumBundle")
+            handleLocalMusicImageByScope(it)
+        }
+    }
+
+    /**
+     * 把当前缓存的最新媒体状态打包成一个 Bundle 返回给客户端。
+     * 以 STATUS_ACCEPT 为 key 存放各媒体状态的子 Bundle
+     * (MEDIA_PLAY / 播放暂停状态 / 歌曲信息 / 进度 / 电台频率 / 专辑图)。
+     * 客户端 AwellMediaControl.refreshCurrentMediaState() 会按顺序
+     * 通过 UpdateMediaDataToView 接口统一更新 musicWidget。
+     */
+    private fun buildCachedStateBundle(): Bundle {
+        val full = Bundle()
+        mTempMediaPlay?.let { full.putBundle(AwellTool.MEDIA_PLAY, it) }
+        mTempMusicPlayStatus?.let { full.putBundle(AwellTool.MUSIC.PLAY_STATUS, it) }
+        mTempBTPlayStatus?.let { full.putBundle(AwellTool.BT.PLAY_STATUS, it) }
+        mTempOtherMusicPlayStatus?.let { full.putBundle(MusicWidget.OTHER_MUSIC_PLAYSTATUS, it) }
+        //歌曲信息缓存共用 mTempMusicPlayInfo,以自身的 STATUS_ACCEPT 作为 key 区分媒体类型
+        mTempMusicPlayInfo?.let { info ->
+            full.putBundle(
+                info.getString(AwellTool.STATUS_ACCEPT, AwellTool.MUSIC.PLAY_NAME),
+                info
+            )
+        }
+        mTempMusicPlayTime?.let { full.putBundle(AwellTool.MUSIC.PLAY_TIME, it) }
+        mTempBTPlayTime?.let { full.putBundle(AwellTool.BT.PLAY_TIME, it) }
+        mTempOtherMusicTime?.let { full.putBundle(MusicWidget.OTHER_MUSIC_TIME, it) }
+        mTempRadioFreq?.let { full.putBundle(AwellTool.RADIO.FREQUENCY, it) }
+        //专辑图片缓存共用 mTempAlbumBundle,以自身的 STATUS_ACCEPT 作为 key 区分媒体类型
+        mTempAlbumBundle?.let { album ->
+            full.putBundle(
+                album.getString(AwellTool.STATUS_ACCEPT, AwellTool.MUSIC.PLAY_IMAGE),
+                album
+            )
+        }
+        return full
     }
 
     /**
