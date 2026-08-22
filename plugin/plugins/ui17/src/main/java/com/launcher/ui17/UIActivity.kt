@@ -432,6 +432,7 @@ class UIActivity : Activity(), View.OnClickListener {
         musicWidget = mViewBinding.layoutMusicWidget.root
         musicWidget.setMediaLibrary(mediaControl)
         musicWidget.setActivity(this, musicWidget)
+        mediaControl.refreshCurrentMediaState()
 
     }
 

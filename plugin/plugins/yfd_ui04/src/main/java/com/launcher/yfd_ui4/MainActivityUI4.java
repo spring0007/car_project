@@ -39,7 +39,6 @@ import com.launcher.yfd_ui4.utils.WeatherTextMapper;
 import org.jetbrains.annotations.NotNull;
 
 
-
 public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
     private ActivityMainUi1Binding binding;
@@ -69,6 +68,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         musicWidget = binding.layoutMusicWidget.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        mediaControl.refreshCurrentMediaState();
 
         setContentView(binding.getRoot());
         initLongTouch();

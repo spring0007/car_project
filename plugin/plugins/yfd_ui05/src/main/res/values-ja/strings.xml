@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">アーティスト</string>
     <string name="navigation">ナビゲーション</string>
     <string name="Apps">アプリ</string>
     <string name="radio">ラジオ</string>
@@ -22,6 +22,7 @@
     <string name="settings">舞台設定</string>
     <string name="system">システム</string>
     <string name="management_the_files">ファイルの管理</string>
+    <string name="style_mode_switch">正常に切り替えられました</string>
 
     
 

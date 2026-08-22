@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
-
+        mediaControl.refreshCurrentMediaState();
         setContentView(binding.getRoot());
         contentView = binding.getRoot();
 

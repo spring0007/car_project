@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">아티스트</string>
     <string name="navigation">항해</string>
     <string name="Apps">앱</string>
     <string name="radio">라디오</string>
@@ -22,6 +22,7 @@
     <string name="settings">설정</string>
     <string name="system">시스템</string>
     <string name="management_the_files">파일 관리</string>
+    <string name="style_mode_switch">성공적으로 전환되었습니다</string>
 
     
 

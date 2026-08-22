@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Художник</string>
     <string name="navigation">Навигация</string>
     <string name="Apps">ПРИЛОЖЕНИЯ</string>
     <string name="radio">Радио</string>
@@ -22,6 +22,7 @@
     <string name="settings">Места действия</string>
     <string name="system">Система</string>
     <string name="management_the_files">Управление файлами</string>
+    <string name="style_mode_switch">Переключено успешно</string>
 
     
 

@@ -93,6 +93,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         musicWidget = binding.layoutMusicWidget.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        mediaControl.refreshCurrentMediaState();
 
         setContentView(binding.getRoot());
         initClickEvent();

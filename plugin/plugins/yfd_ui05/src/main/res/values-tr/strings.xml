@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Sanatçı</string>
     <string name="navigation">Navigasyon</string>
     <string name="Apps">UYGULAMALAR</string>
     <string name="radio">Radyo</string>
@@ -22,6 +22,7 @@
     <string name="settings">Ortamlar</string>
     <string name="system">Sistem</string>
     <string name="management_the_files">Dosyaların yönetimi</string>
+    <string name="style_mode_switch">Başarıyla geçiş yapıldı</string>
 
     
 

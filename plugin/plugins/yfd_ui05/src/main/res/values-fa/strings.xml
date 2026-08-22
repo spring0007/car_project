@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">هنرمند</string>
     <string name="navigation">ناوبری</string>
     <string name="Apps">اپلیکیشن ها</string>
     <string name="radio">رادیو</string>
@@ -22,6 +22,7 @@
     <string name="settings">محیط ها</string>
     <string name="system">سیستم</string>
     <string name="management_the_files">مدیریت فایل ها</string>
+    <string name="style_mode_switch">با موفقیت جابجا شد</string>
 
     
 

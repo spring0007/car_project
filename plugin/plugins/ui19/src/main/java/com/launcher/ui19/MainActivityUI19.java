@@ -71,6 +71,7 @@ public class MainActivityUI19 extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.layoutMusicWidget;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        mediaControl.refreshCurrentMediaState();
         setContentView(binding.getRoot());
 
         initReceiver();

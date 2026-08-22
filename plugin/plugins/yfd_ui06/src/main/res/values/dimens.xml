@@ -33,6 +33,9 @@
     <dimen name="app_grid_pad">10dp</dimen>
     <dimen name="app_item_tv_size">13sp</dimen>
     <dimen name="app_item_tv_margin">10dp</dimen>
+    <dimen name="app_item_tv_width">60dp</dimen>
+    <dimen name="ll_height">600dp</dimen>
+    <dimen name="ll_width">800dp</dimen>
 
 
 </resources>

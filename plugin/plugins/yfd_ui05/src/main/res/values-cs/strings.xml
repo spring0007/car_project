@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Umělec</string>
     <string name="navigation">Navigace</string>
     <string name="Apps">APLIKACE</string>
     <string name="radio">Rádio</string>
@@ -22,6 +22,7 @@
     <string name="settings">Prostředí</string>
     <string name="system">Systém</string>
     <string name="management_the_files">Správa souborů</string>
+    <string name="style_mode_switch">Úspěšně přepnuto</string>
 
     
 

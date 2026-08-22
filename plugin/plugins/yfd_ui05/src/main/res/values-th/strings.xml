@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">ศิลปิน</string>
     <string name="navigation">การเดินเรือ</string>
     <string name="Apps">แอป</string>
     <string name="radio">วิทยุ</string>
@@ -22,6 +22,7 @@
     <string name="settings">การตั้งค่า</string>
     <string name="system">ระบบ</string>
     <string name="management_the_files">การจัดการไฟล์</string>
+    <string name="style_mode_switch">สลับสำเร็จแล้ว</string>
 
     
 

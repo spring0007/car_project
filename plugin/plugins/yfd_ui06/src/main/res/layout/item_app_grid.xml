@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/app_grid_pad">
+    android:padding="@dimen/app_grid_pad"
+    android:layout_margin="10dp">
 
     <ImageView
         android:id="@+id/app_icon"
@@ -11,18 +12,16 @@
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop" />
 
-
-
     <TextView
         android:id="@+id/app_name"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/app_item_tv_width"
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_icon"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/app_item_tv_margin"
         android:textSize="@dimen/app_item_tv_size"
         android:textColor="@android:color/white"
-        android:maxLines="2"
+        android:lines="2"
         android:ellipsize="end"
         android:gravity="center" />
 

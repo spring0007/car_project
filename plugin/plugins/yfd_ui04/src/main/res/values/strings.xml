@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name" translatable="false">LauncherUI_C4</string><!-- app 名称 -->
+    <string name="app_name" translatable="false">LauncherUI4</string><!-- app 名称 -->
 
-    <string name="ui_key" translatable="false">LauncherUI_C4</string>
+    <string name="ui_key" translatable="false">LauncherUI4</string>
     <string name="ui_clazz" translatable="false">com.launcher.yfd_ui4.MainActivityUI4</string>
 
 

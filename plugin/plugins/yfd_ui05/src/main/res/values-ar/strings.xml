@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">فنان</string>
     <string name="navigation">الملاحة</string>
     <string name="Apps">التطبيقات</string>
     <string name="radio">الراديو</string>
@@ -22,6 +22,7 @@
     <string name="settings">الإعدادات</string>
     <string name="system">النظام</string>
     <string name="management_the_files">إدارة الملفات</string>
+    <string name="style_mode_switch">تم التبديل بنجاح</string>
 
     
 

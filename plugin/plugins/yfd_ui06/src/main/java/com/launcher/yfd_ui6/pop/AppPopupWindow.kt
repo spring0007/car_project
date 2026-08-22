@@ -3,6 +3,7 @@ package com.launcher.yfd_ui6.pop
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.provider.Settings
 import android.util.Log
@@ -11,12 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.awell.addapp.AppInfo
 import com.launcher.yfd_ui6.R
 import com.launcher.yfd_ui6.utils.IconManager
+import androidx.core.graphics.drawable.toDrawable
 
 /**
  * 自定义PopupWindow封装类
@@ -53,12 +57,10 @@ class AppPopupWindow(
      */
     private fun setupPopupWindow() {
         // 设置宽高
-        width = ViewGroup.LayoutParams.WRAP_CONTENT
-        height = ViewGroup.LayoutParams.WRAP_CONTENT
-
-        // 设置背景
-        setBackgroundDrawable(ColorDrawable(Color.BLACK))
-
+        width = ViewGroup.LayoutParams.MATCH_PARENT
+        height = ViewGroup.LayoutParams.MATCH_PARENT
+        // 清除主题默认背景，否则不透明黑背景会盖住桌面导致半透明失效
+        setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         allAppInfoList = getAllAppInfo(mContext)
 
         // 设置外部可点击
@@ -75,12 +77,22 @@ class AppPopupWindow(
         val appInfoAdapter = AppPopAdapter(mContext, allAppInfoList, this as OnPopupUpdateListener)
         rvPop.layoutManager = gridLayoutManager
         rvPop.adapter = appInfoAdapter
+        val verticalSpacing = (30 * mContext.resources.displayMetrics.density).toInt()
+        rvPop.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: android.graphics.Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = verticalSpacing
+                outRect.bottom = verticalSpacing
+            }
+        })
 
         // 设置消失监听
-        setOnDismissListener {
+        /*setOnDismissListener {
             hideBackground()
             onPopupDismissed()
-        }
+        }*/
+
+        mContentView.setOnClickListener { this.dismiss() }
+
     }
 
     /**

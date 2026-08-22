@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Καλλιτέχνης</string>
     <string name="navigation">Πλοήγηση</string>
     <string name="Apps">ΕΦΑΡΜΟΓΕΣ</string>
     <string name="radio">Ραδιόφωνο</string>
@@ -22,6 +22,7 @@
     <string name="settings">Ρυθμίσεις</string>
     <string name="system">Σύστημα</string>
     <string name="management_the_files">Διαχείριση των αρχείων</string>
+    <string name="style_mode_switch">Η εναλλαγή έγινε με επιτυχία</string>
 
     
 

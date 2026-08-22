@@ -102,6 +102,7 @@ public class MainActivityUI6 extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        mediaControl.refreshCurrentMediaState();
         dialWidgetBinding = binding.layoutDialWidget;
         dialWidget = dialWidgetBinding.dialWidgetLayout;
         dialWidget.findViews(this, dialWidget);

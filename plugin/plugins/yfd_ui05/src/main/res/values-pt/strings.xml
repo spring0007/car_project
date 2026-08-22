@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Artista</string>
     <string name="navigation">Navegação</string>
     <string name="Apps">APPS</string>
     <string name="radio">Rádio</string>
@@ -22,6 +22,7 @@
     <string name="settings">Configurações</string>
     <string name="system">Sistema</string>
     <string name="management_the_files">Gerenciamento dos arquivos</string>
+    <string name="style_mode_switch">Trocado com sucesso</string>
 
     
 

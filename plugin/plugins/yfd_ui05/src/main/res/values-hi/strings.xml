@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">कलाकार</string>
     <string name="navigation">नेविगेशन</string>
     <string name="Apps">ऐप्स</string>
     <string name="radio">रेडियो</string>
@@ -22,6 +22,7 @@
     <string name="settings">सेटिंग</string>
     <string name="system">प्रणाली</string>
     <string name="management_the_files">फ़ाइलों का प्रबंधन</string>
+    <string name="style_mode_switch">सफलतापूर्वक स्विच किया गया</string>
 
     
 

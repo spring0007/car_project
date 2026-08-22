@@ -591,6 +591,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         mediaControl = AwellMediaControl()
         mediaControl.bindDataService(this)
         mediaControl.updateMusicView = mediaImpl
+        mediaControl.refreshCurrentMediaState()
 
     }
 

@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Artis</string>
     <string name="navigation">Navigasi</string>
     <string name="Apps">APL</string>
     <string name="radio">Radio</string>
@@ -22,6 +22,7 @@
     <string name="settings">Tetapan</string>
     <string name="system">Sistem</string>
     <string name="management_the_files">Menguruskan fail</string>
+    <string name="style_mode_switch">Berjaya ditukar</string>
 
     
 

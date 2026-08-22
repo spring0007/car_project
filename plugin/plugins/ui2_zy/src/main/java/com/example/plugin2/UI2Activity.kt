@@ -251,6 +251,7 @@ class UI2Activity : Activity() {
         llMusic.setMediaLibrary(mediaControl)
 //        llMusic.setMediaNotificationListener(mMediaListener)
         llMusic.setActivity(this, llMusic)
+        mediaControl.refreshCurrentMediaState()
 
     }
 

@@ -72,6 +72,7 @@ public class MainActivityUI12 extends Activity implements View.OnClickListener {
         if (this.musicWidget != null && mediaControl != null) {
             this.musicWidget.setMediaLibrary(mediaControl);
             this.musicWidget.setActivity(this, this.musicWidget);
+            mediaControl.refreshCurrentMediaState();
         }
     }
 

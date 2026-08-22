@@ -246,6 +246,10 @@ class UIActivity : Activity(), View.OnClickListener {
 
         llMusic.setMediaLibrary(mediaControl)
         llMusic.setActivity(this, llMusic)
+
+        //切换 plugin 后主动请求宿主重推媒体状态,保证 musicWidget 显示正确
+        //(registerListener 已随绑定推送一次缓存,此处再主动刷新一次兜底)
+        mediaControl.refreshCurrentMediaState()
     }
 
     private fun findViewId() {

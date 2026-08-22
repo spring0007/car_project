@@ -258,6 +258,7 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         musicWidget = view.findViewById(R.id.music_widget_layout)
         musicWidget.setMediaLibrary(mediaControl)
         musicWidget.setActivity(requireContext(), musicWidget)
+        mediaControl.refreshCurrentMediaState()
 
     }
 

@@ -90,6 +90,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
         if (this.musicWidget != null && mediaControl != null) {
             this.musicWidget.setMediaLibrary(mediaControl);
             this.musicWidget.setActivity(this, this.musicWidget);
+            mediaControl.refreshCurrentMediaState();
         }
     }
     private void setUpViewPager() {
@@ -295,7 +296,7 @@ public class MainActivityUI5 extends Activity implements View.OnClickListener {
             }
             sharedPreferences.edit().putInt("styleMode", styleMode).apply();
             AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(styleMode).build());
-            Toast.makeText(this, "应用图标已切换成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.style_mode_switch, Toast.LENGTH_SHORT).show();
         }else if (v.getId() == R.id.iv_radio_icon) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }else if (v.getId() == R.id.iv_file_icon) {

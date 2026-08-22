@@ -9,6 +9,6 @@
     <dimen name="main_right_icon_width">374dp</dimen>
     <dimen name="weather_iv_size">174dp</dimen>
 
-    <dimen name="app_icon_padding">20dp</dimen>
+    <dimen name="app_icon_padding">10dp</dimen>
     <dimen name="music_iv_size">60dp</dimen>
 </resources>

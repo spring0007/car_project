@@ -244,6 +244,7 @@ class UIActivity : Activity(), View.OnClickListener {
 
         llMusic.setMediaLibrary(mediaControl)
         llMusic.setActivity(this, llMusic)
+        mediaControl.refreshCurrentMediaState()
     }
 
     private fun findViewId() {

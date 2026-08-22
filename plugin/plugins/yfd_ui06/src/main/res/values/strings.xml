@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name" translatable="false">LauncherUI1</string>
+    <string name="app_name" translatable="false">LauncherUI6</string>
 
-    <string name="ui_key" translatable="false">LauncherUI1</string>
+    <string name="ui_key" translatable="false">LauncherUI6</string>
     <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
     <string name="ui_clazz" translatable="false">com.launcher.yfd_ui6.UIActivity</string>
 

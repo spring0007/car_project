@@ -52,20 +52,19 @@ import com.launcher.yfd_ui6.chemo2.CarModelSource
 import com.launcher.yfd_ui6.chemo2.CarModelVersion
 import com.launcher.yfd_ui6.chemo2.CarPopupWindow
 import com.launcher.yfd_ui6.databinding.UiActivityBinding
+import com.launcher.yfd_ui6.pop.AppPopupWindow
 import com.launcher.yfd_ui6.pop.OnPopupUpdateListener
 import com.launcher.yfd_ui6.utils.IconManager
 import com.launcher.yfd_ui6.utils.WeatherIconLoader
 import com.launcher.yfd_ui6.utils.WeatherTextMapper
+import com.launcher.yfd_ui6.view.AppItemView
 import com.launcher.yfd_ui6.view.MusicWidget
 import kotlinx.coroutines.Runnable
 import java.io.File
 import java.io.FileOutputStream
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.math.abs
 
-class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,View.OnLongClickListener */ {
+class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener ,View.OnLongClickListener {
 
     private val TAG = UIActivity::class.simpleName
     private lateinit var mViewBinding: UiActivityBinding
@@ -74,12 +73,10 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
     private lateinit var musicWidget: MusicWidget
     private lateinit var freeformBg: ImageView
     private var accRecor: Boolean = false
-
     val PERMISSION_REQUEST_CODE: Int = 100
-
-
     private var handler: Handler? = null
     private var carPopupWindow: CarPopupWindow? = null
+    private var appPopupWindow: AppPopupWindow? = null
     private var startX = 0f
     private var startY = 0f
     private var viewConfiguration: ViewConfiguration? = null
@@ -139,10 +136,10 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                 .setIconSizeSame(true)
                 .setCellWidthDp(resources.getDimensionPixelSize(R.dimen.cell_width))
                 .setCellHeightDp(resources.getDimensionPixelSize(R.dimen.cell_height))
-                //.setAutoHeightGap(true)
+                .setAutoHeightGap(true)
                 .setAutoWidthGap(true)
                 .setBackgroundTheme(2)
-                .setRowCount(2)
+                .setRowCount(3)
                 .setColumnCount(5)
                 //.setPluginOtherBgName("apple_other_app3_square")
                 .build()
@@ -595,10 +592,9 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
      * AppPopupWindow 选择应用后的回调：按 flag 刷新对应槽位
      */
     override fun updateAppImage(info: AppInfo) {
-        /* val flag = info.flags
-         if (flag in 1..8) {
-             refreshAppItem(flag)
-         }*/
+         val flag = info.flags
+         refreshAppItem(flag)
+
     }
 
     private fun backgroundAlpha(alpha: Float) {
@@ -609,25 +605,18 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
 
     private fun canclePopupWindow() {
         // 关闭弹窗
-//        imagePopupWindow?.let {
-//            if (it.isShowing) {
-//                it.dismiss()
-//            }
-//            imagePopupWindow = null
-//        }
-
         carPopupWindow?.let {
             if (it.isShowing) {
                 it.dismiss()
             }
             carPopupWindow = null
         }
-        /*    appPopupWindow?.let {
-                if (it.isShowing) {
-                    it.dismiss()
-                }
-                appPopupWindow = null
-            }*/
+        appPopupWindow?.let {
+            if (it.isShowing) {
+                it.dismiss()
+            }
+            appPopupWindow = null
+        }
 
     }
 
@@ -753,6 +742,7 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
         musicWidget = mViewBinding.layoutMusicWidget.root
         musicWidget.setMediaLibrary(mediaControl)
         musicWidget.setActivity(this, musicWidget)
+        mediaControl.refreshCurrentMediaState()
 
     }
 
@@ -783,6 +773,7 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                 CommonData.ACTION_ACC_OFF -> {
                     //accRecor = true
                     hideFreeformWindow()
+                    canclePopupWindow()
                 }
 
                 CommonData.BROADCAST_MEDIA_EXIT -> {
@@ -1029,85 +1020,14 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
 
     private fun clickStartApp() {
 
-        /*mViewBinding.appItem1.setOnLongClickListener(this)
+        mViewBinding.appItem1.setOnLongClickListener(this)
         mViewBinding.appItem2.setOnLongClickListener(this)
         mViewBinding.appItem3.setOnLongClickListener(this)
         mViewBinding.appItem4.setOnLongClickListener(this)
         mViewBinding.appItem5.setOnLongClickListener(this)
         mViewBinding.appItem6.setOnLongClickListener(this)
         mViewBinding.appItem7.setOnLongClickListener(this)
-        mViewBinding.appItem8.setOnLongClickListener(this)*/
-
-        /*mViewBinding.homeAppMap.setOnClickListener {
-            val pkg =
-                Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-            when (pkg) {
-                NAVI_GAODE_PKG,
-                NAVI_GOOGLE_PKG -> systemUIClient.fullScreenFreeform()
-
-                else -> startActivity(
-                    "com.awell.navigation", "com.awell.navigation.MainActivity"
-                )
-            }
-        }
-    mViewBinding.homeAppVideo.setOnClickListener {
-            val pkg =
-                Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-
-            when (pkg) {
-                "com.google.android.youtube" -> {
-                    systemUIClient.fullScreenFreeform()
-
-                }
-
-                else -> {
-                    startActivity("com.google.android.youtube", "com.google.android.youtube.app.honeycomb.Shell\$HomeActivity")
-                }
-            }
-
-        }
-
-
-        mViewBinding.homeAppGoogleplay.setOnClickListener {
-            val pkg =
-                Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-
-            when (pkg) {
-                "com.android.vending" -> {
-                    systemUIClient.fullScreenFreeform()
-
-                }
-                else -> {
-                    startActivity("com.android.vending", "com.android.vending.AssetBrowserActivity")
-                }
-            }
-
-        }
-
-
-        mViewBinding.homeAppSetting.setOnClickListener {
-            startActivity(
-                "com.awell.carsetting", "com.awell.carsetting.MainActivity"
-            )
-        }
-
-
-
-//        mViewBinding.freeformFullScreen.setOnClickListener(this)
-//        mViewBinding.freeformFullScreen.setOnLongClickListener {
-//            cancelLongPressDetection()
-//            val mIntent = Intent()
-//            mIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//            mIntent.setPackage("com.awell.carsetting")
-//            mIntent.component =
-//                ComponentName("com.awell.carsetting", "com.awell.carsetting.MainActivity")
-//            mIntent.putExtra("SelectDefaultId", 3)
-//            mIntent.putExtra("SelectDefaultFragment", 30)
-//            startActivity(mIntent)
-//            true
-//        }
-*/
-
+        mViewBinding.appItem8.setOnLongClickListener(this)
     }
 
     @Deprecated("Deprecated in Java")
@@ -1217,7 +1137,7 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
         startWallpaper()
     }
 
-    /* override fun onLongClick(v: View?): Boolean {
+     override fun onLongClick(v: View?): Boolean {
          if (v is AppItemView) {
              val flag = v.getFlag()
              if (flag in 1..8) {
@@ -1226,21 +1146,22 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
              }
          }
          return false
-     }*/
+     }
 
     /**
      * 弹出应用选择窗口（列表 = IconManager.PACKAGE_ICON_MAP 中的应用）
      */
-//    private fun showAppSelector(flag: Int) {
-//        val popup = AppPopupWindow(this, flag)
-//        popup.setOnPopupUpdateListener(this)
-//        popup.show(mViewBinding.root, 0, 0)
-//    }
+    private fun showAppSelector(flag: Int) {
+        appPopupWindow = AppPopupWindow(this, flag)
+        appPopupWindow?.setOnPopupUpdateListener(this)
+        appPopupWindow?.show(mViewBinding.root, 0, 0)
+        //popup.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0,0)
+    }
 
     override fun onClick(v: View?) {
         LogUtil.w("onClick ${v?.id}")
         when (v?.id) {
-            mViewBinding.appItem1.id,
+            //mViewBinding.appItem1.id,
             mViewBinding.hostNavTv.id,
             mViewBinding.hostNavIv.id -> {
                 val pkg =
@@ -1264,7 +1185,7 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                 AppsCustomizeControl.showApps(this.findViewById<ViewGroup>(android.R.id.content))
             }
 
-            mViewBinding.appItem8.id,
+            //mViewBinding.appItem8.id,
             mViewBinding.hostSettingTv.id,
             mViewBinding.hostSettingIv.id -> {
                 startActivityItem("com.awell.carsetting", "com.awell.carsetting.MainActivity")
@@ -1274,13 +1195,13 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                 startActivityItem("com.awell.weather", "com.awell.weather.MainActivity")
             }
 
-            mViewBinding.appItem5.id,
+            //mViewBinding.appItem5.id,
             mViewBinding.hostMusicTv.id,
             mViewBinding.hostMusicIv.id -> {
                 startActivityItem("com.awell.localmusic", "com.awell.localmusic.MainActivity")
             }
 
-            mViewBinding.appItem4.id,
+            //mViewBinding.appItem4.id,
             mViewBinding.hostPhoneTv.id,
             mViewBinding.hostPhoneIv.id -> {
                 val pkg = Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
@@ -1297,43 +1218,23 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                     }
                 }
             }
-            /*        mViewBinding.ivRadioNext.id -> {
-                           if (ClickUtils.isFastClick()) {
-                               return
-                           }
-                           mediaControl.sendStrToHost(AwellTool.RADIO.NEXT)
-                       }
-
-                       mViewBinding.ivRadioPre.id -> {
-                           if (ClickUtils.isFastClick()) {
-                               return
-                           }
-                           mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS)
-                       }
-
-                       mViewBinding.tvRadioAmFm.id -> {
-                           if (ClickUtils.isFastClick()) {
-                               return
-                           }
-                           mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM)
-                       }*/
             mViewBinding.carIcon.id -> {
                 showCarModelSelector()
             }
 
-            mViewBinding.appItem2.id -> {
+            /*mViewBinding.appItem2.id -> {
                 startActivityItem("com.awell.radio", "com.awell.radio.MainActivity")
-            }
+            }*/
 
-            mViewBinding.appItem3.id -> {
+            /*mViewBinding.appItem3.id -> {
                 startActivityItem("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity")
-            }
+            }*/
 
-            mViewBinding.appItem6.id -> {
+            /*mViewBinding.appItem6.id -> {
                 startActivityItem("com.android.gallery3d", null)
-            }
+            }*/
 
-            mViewBinding.appItem7.id -> {
+            /*mViewBinding.appItem7.id -> {
                 val url = SystemProperties.get("persist.sys.lz.HOME_PAGE", "http://m.baidu.com")
                 val chromeIntent = Intent(Intent.ACTION_VIEW)
                 chromeIntent.addCategory(Intent.CATEGORY_BROWSABLE)
@@ -1344,6 +1245,18 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
                 if (chromeIntent.resolveActivity(getPackageManager()) != null) {
                     startActivity(chromeIntent)
                 }
+            }*/
+            mViewBinding.appItem1.id,
+            mViewBinding.appItem2.id,
+            mViewBinding.appItem3.id,
+            mViewBinding.appItem4.id,
+            mViewBinding.appItem5.id,
+            mViewBinding.appItem6.id,
+            mViewBinding.appItem7.id,
+            mViewBinding.appItem8.id -> {
+                val appView = v as AppItemView
+                val flag = appView.flag
+                startAppByFlag(flag)
             }
         }
     }
@@ -1351,10 +1264,11 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
     private fun startActivityItem(packName: String, className: String?) {
         val pkg =
             Settings.System.getString(getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME)
-        when (pkg) {
-            packName -> systemUIClient.fullScreenFreeform()
 
-            else -> startActivity(packName, className)
+        if(packName == pkg || (packName == "com.awell.navigation"&&(pkg == NAVI_GOOGLE_PKG || pkg == NAVI_GAODE_PKG))) {
+            systemUIClient.fullScreenFreeform()
+        }else{
+            startActivity(packName, className)
         }
     }
 
@@ -1408,10 +1322,10 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
      * 初始化 8 个应用快捷槽位：按序填充包名默认值（PACKAGE_ICON_MAP 前八个）、图标与名称
      */
     fun showApps() {
-        /* for (flag in 1..8) {
+         for (flag in 1..8) {
              refreshAppItem(flag)
-         }*/
-        val url = SystemProperties.get("persist.sys.lz.HOME_PAGE", "http://m.baidu.com")
+         }
+       /* val url = SystemProperties.get("persist.sys.lz.HOME_PAGE", "http://m.baidu.com")
         val chromeIntent = Intent(Intent.ACTION_VIEW)
         chromeIntent.addCategory(Intent.CATEGORY_BROWSABLE)
         chromeIntent.setData(Uri.parse(url))//
@@ -1421,35 +1335,28 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
         val name = getAppNameByPackageName(packageName)
         if (name != null) {
             mViewBinding.appItem7.appName = name
-        }
+        }*/
 
     }
 
     /**
      * 读取槽位包名（Settings 持久化，重启保留）；未配置或未安装时按 PACKAGE_ICON_MAP 前八个写入默认值
      */
-//    private fun getAppInfo(flag: Int): String? {
-//        if (flag !in 1..8) return null
-//        val saved = Settings.System.getString(contentResolver, "$APP_ICON_PREF$flag")
-//        if (saved != null && saved.isNotEmpty() && isAppInstalled(saved)) {
-//            return saved
-//        }
-//       // val default = defaultAppPackages().getOrNull(flag - 1) ?: return null
-//        val default = defaultApp[flag - 1]
-//        if (!isAppInstalled(default)) return null
-//        Settings.System.putString(contentResolver, "$APP_ICON_PREF$flag", default)
-//        return default
-//    }
+    private fun getAppInfo(flag: Int): String? {
+        if (flag !in 1..8) return null
+        val saved = Settings.System.getString(contentResolver, "$APP_ICON_PREF$flag")
+        if (saved != null && saved.isNotEmpty() && isAppInstalled(saved)) {
+            return saved
+        }
+        //val default = defaultAppPackages().getOrNull(flag - 1) ?: return null
+        val default = defaultApp[flag - 1]
+        if (!isAppInstalled(default)) return null
+        Settings.System.putString(contentResolver, "$APP_ICON_PREF$flag", default)
+        return default
+    }
+    private fun isAppInstalled(packageName: String): Boolean =
+        runCatching { packageManager.getPackageInfo(packageName, 0) }.isSuccess
 
-    /**
-     * 默认槽位包名：IconManager.PACKAGE_ICON_MAP 的前八个（map 后续扩展会自动跟随）
-     */
-//    private fun defaultAppPackages(): List<String> =
-//        IconManager.PACKAGE_ICON_MAP.keys.take(8).toList()
-//
-//    private fun isAppInstalled(packageName: String): Boolean =
-//        runCatching { packageManager.getPackageInfo(packageName, 0) }.isSuccess
-//
     private fun getAppNameByPackageName(packageName: String): String? =
         runCatching {
             packageManager.getApplicationLabel(
@@ -1461,48 +1368,49 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener /*,Vi
      * 刷新单个槽位的图标与名称（图标优先取 IconManager 主题图标，无则回退系统图标）
      */
 
-//    var defaultApp = arrayOf("com.google.android.apps.maps", "com.awell.radio","com.awell.localvideo","com.awell.bluetooth",
-//        "com.awell.localmusic","com.android.gallery3d","com.android.chrome","com.awell.carsetting")
-//    private fun refreshAppItem(flag: Int) {
-//        if (flag !in 1..8) return
-//        val pkg = getAppInfo(flag) ?: return
-//        val item = appItems[flag - 1]
-//        val icon = IconManager.getIcon(this, defaultApp[flag-1])
-//            ?: runCatching { packageManager.getApplicationIcon(pkg) }.getOrNull()
-//        if (icon != null) {
-//            item.setAppIcon(icon)
-//        }
-//        val name = getAppNameByPackageName(pkg)
-//        if (name != null) {
-//            item.setAppName(name)
-//        }
-//    }
-//
-//    /**
-//     * 根据槽位 flag 启动对应应用
-//     */
-//    private fun startAppByFlag(flag: Int) {
-//        val pkg = getAppInfo(flag) ?: return
-//        startActivity(pkg, null)
-//    }
+    var defaultApp = arrayOf("com.awell.navigation", "com.awell.radio","com.awell.localvideo","com.awell.bluetooth",
+        "com.awell.localmusic","com.android.gallery3d","com.android.chrome","com.awell.carsetting")
+    private fun refreshAppItem(flag: Int) {
+        if (flag !in 1..8) return
+        val pkg = getAppInfo(flag) ?: return
+        val item = appItems[flag - 1]
+        val icon = IconManager.getIcon(this, pkg)
+            ?: runCatching { packageManager.getApplicationIcon(pkg) }.getOrNull()
+        if (icon != null) {
+            item.setAppIcon(icon)
+        }
+        val name = getAppNameByPackageName(pkg)
+        if (name != null) {
+            item.appName = name
+        }
+    }
+
+    /**
+     * 根据槽位 flag 启动对应应用
+     */
+    private fun startAppByFlag(flag: Int) {
+        val pkg = getAppInfo(flag) ?: return
+        LogUtil.i("startAppByFlag: $pkg")
+        startActivityItem(pkg, null)
+    }
 
     /**
      * 8 个槽位视图（flag 对应下标 +1），lazy 保证在 mViewBinding 初始化后才访问
      */
-//    private val appItems: List<AppItemView> by lazy {
-//        listOf(
-//            mViewBinding.appItem1,
-//            mViewBinding.appItem2,
-//            mViewBinding.appItem3,
-//            mViewBinding.appItem4,
-//            mViewBinding.appItem5,
-//            mViewBinding.appItem6,
-//            mViewBinding.appItem7,
-//            mViewBinding.appItem8
-//        )
-//    }
-//
-//    companion object {
-//        private const val APP_ICON_PREF = "launcher_app_icon_"
-//    }
+    private val appItems: List<AppItemView> by lazy {
+        listOf(
+            mViewBinding.appItem1,
+            mViewBinding.appItem2,
+            mViewBinding.appItem3,
+            mViewBinding.appItem4,
+            mViewBinding.appItem5,
+            mViewBinding.appItem6,
+            mViewBinding.appItem7,
+            mViewBinding.appItem8
+        )
+    }
+
+    companion object {
+        private const val APP_ICON_PREF = "launcher_app_icon_"
+    }
 }

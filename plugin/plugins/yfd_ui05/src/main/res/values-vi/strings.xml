@@ -1,9 +1,9 @@
 <resources>
     <!-- app 名称 -->
-
     
     
 
+    <string name="music_artist">Nghệ sĩ</string>
     <string name="navigation">Điều hướng</string>
     <string name="Apps">ỨNG DỤNG</string>
     <string name="radio">Đài phát thanh</string>
@@ -22,6 +22,7 @@
     <string name="settings">Cài đặt</string>
     <string name="system">Hệ thống</string>
     <string name="management_the_files">Quản lý các tệp</string>
+    <string name="style_mode_switch">Đã chuyển đổi thành công</string>
 
     
 

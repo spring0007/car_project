@@ -68,6 +68,7 @@ public class MainActivityUI14 extends Activity implements View.OnClickListener {
         musicWidget = musicWidgetBinding.musicWidgetLayout;
         musicWidget.setMediaLibrary(mediaControl);
         musicWidget.setActivity(this, musicWidget);
+        mediaControl.refreshCurrentMediaState();
         setContentView(binding.getRoot());
 
         setBtstatus();
