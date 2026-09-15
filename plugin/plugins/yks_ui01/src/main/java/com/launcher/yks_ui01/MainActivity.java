@@ -213,17 +213,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
             //startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
             //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
-            if(TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg))
-                startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
-            else{
+            if (!TextUtils.isEmpty(navPkg) && getNaviApps(navPkg)) {
                 Intent intent = this.getPackageManager().getLaunchIntentForPackage(navPkg);
                 if (intent != null) {
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                } else {
-                    startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
+                    try {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        return;
+                    } catch (Exception e) {
+                        Log.w(TAG, "启动定制导航失败，可能正在更新，降级到默认应用", e);
+                    }
                 }
             }
+            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity");
         } else if (v.getId() == binding.ivApps.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == binding.ivBluetooth.getId()) {
@@ -402,11 +404,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public boolean getNaviApps(String appName) {
         try {
             ApplicationInfo appinfo = this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA);
-            return true;
+            if ((appinfo.flags & ApplicationInfo.FLAG_INSTALLED) == 0) {
+                Log.i(TAG, appName + " is install scuess.");
+                return true;
+            }
+            return false;
         } catch (PackageManager.NameNotFoundException e) {
-            //e.printStackTrace();
-            Log.i(TAG,"Exception = " + e.toString());
+            Log.i(TAG, "Exception = " + e.toString());
+            return false;
         }
-        return false;
     }
 }

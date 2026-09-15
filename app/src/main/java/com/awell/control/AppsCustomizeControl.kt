@@ -75,8 +75,9 @@ object AppsCustomizeControl {
 
         // 直接传递给 AppsCustomizePagedView 进行数据处理
         mAppsCustomizeContent?.processAppsCustomizeConfig(config)
+        mAllIsShowing = false
 
-        LogUtil.d("setPluginThemeMode: config=${config.toString()}, attributes reset immediately")
+        LogUtil.d("setPluginThemeMode: mAllIsShowing=${mAllIsShowing} config=${config.toString()}, attributes reset immediately")
     }
 
     fun setActivity(context: Context?) {
@@ -111,8 +112,10 @@ object AppsCustomizeControl {
     fun showApps(viewGroup: ViewGroup) {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
 
-        if (mAllIsShowing) {
-                LogUtil.i( "showApps: huang already show all apps=>")
+        // 仅当抽屉 View 确实还挂在父容器时才视为「已显示」并早退；
+        // 若标志因插件切换而残留为 true、但 View 已分离，则继续重新挂载，避免抽屉打不开
+        if (mAllIsShowing && mAppsCustomizeTabHost?.parent != null) {
+                LogUtil.e( "showApps: huang already show all apps=>")
             return
         }
         currentViewGroup = WeakReference(viewGroup)
@@ -208,9 +211,7 @@ object AppsCustomizeControl {
         // 这样可以确保在 plugin 切换时能够正确清理
         removeFromParent()
         restoreActivityState()
-        
-        // 强制重置状态
-        mAllIsShowing = false
+
         LogUtil.d("hideApps: apps hidden successfully")
     }
 

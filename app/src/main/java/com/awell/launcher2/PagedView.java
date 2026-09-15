@@ -819,7 +819,9 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             final int padding = getPaddingLeft() + getPaddingRight();
             final int offset = getPaddingLeft() +
                     (getMeasuredWidth() - padding - getChildWidth(index)) / 2;
-            if (mChildRelativeOffsets != null) {
+            // 越界保护：页数变少后（如隐藏应用）mCurrentPage 短暂越界时，
+            // 避免写入 mChildRelativeOffsets[index] 触发数组越界崩溃。
+            if (mChildRelativeOffsets != null && index < mChildRelativeOffsets.length) {
                 mChildRelativeOffsets[index] = offset;
             }
             return offset;
@@ -1917,6 +1919,19 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             // Set a new page as the current page if necessary
             if (currentPage > -1) {
                 setCurrentPage(Math.min(getPageCount() - 1, currentPage));
+            } else {
+                // 数据增删导致页数变少后（如隐藏应用使末尾页被移除），mCurrentPage 可能已越界
+                // （指向不存在的页），后续触摸 onInterceptTouchEvent→getRelativeChildOffset
+                // 会写 mChildRelativeOffsets[index] 数组越界崩溃
+                // （IndexOutOfBoundsException: length=N; index=N）。
+                // 这里仅做越界钳制、保留原有页位置；不调用 setCurrentPage()，
+                // 避免其内部 updateCurrentPageScroll() 把当前页强制重置回第 0 页。
+                final int pageCount = getChildCount();
+                if (pageCount == 0) {
+                    mCurrentPage = 0;
+                } else if (mCurrentPage >= pageCount) {
+                    mCurrentPage = pageCount - 1;
+                }
             }
 
             // Mark each of the pages as dirty
