@@ -105,6 +105,17 @@
 
 > 修改排序相关逻辑时,请保持「1~9 级分组优先 + 第 10 级字母序」的现状,除非明确要求改变。
 
+## 关键业务规则:宿主主题切换后的 info 刷新(近期改动)
+
+宿主 `launcher/.../host/MainActivity.java` 维护 `info`(`PluginInfo`,最后一次成功安装的插件)。**主题切换后 `info` 不会自动更新**,若直接用旧 `info` + 新 clazz 启动,会出现「旧包名 + 新类名」错配:`RePlugin.createIntent` 生成的 Intent 指向旧插件包,`onStartActivityCompleted`(`LauncherApplication.java:362`)里的 `plugin` 与 `activity` 不一致,导致假成功/假失败、界面不跳转。
+
+- **校验依据**:插件 UI Activity 类名统一为 `com.launcher.uiX.MainActivityUIX` —— **目标类名以所属插件包名为前缀**。据此判断 `info` 是否过期:`clazz.startsWith(info.getPackageName() + ".")`。
+- **统一入口校验**:`onResume` / `onNewIntent` 启动插件前先经 `infoMatchesTargetClazz(apkClazz)`;不匹配则不走缓存 `info`,改走 `initInstallThread()` → `simulateInstallExternalPlugin()` 重新解析/安装目标插件、刷新 `info` 后再启动。
+- **安装复用分支**:`simulateInstallExternalPlugin()` 命中"插件已安装"分支时,必须把 `info = existingPlugin`(**指向目标插件本身**),而非沿用残留旧 `info`;并校验 `clazz` 确实属于该插件包,否则 fall-through 继续走安装。
+- **兜底防御**:`realStartPlugin()` 启动前再校验一次 clazz 属于 info 包,不匹配直接 `scheduleRetryOrFallback()`(重试 `MAX_RETRY=3` 后降级内置桌面 `Launcher`)。
+
+> 新增/调整主题插件时,**插件 Activity 类名必须保持 `包名.` 前缀约定**(如 `com.launcher.uiX.MainActivityUIX`),否则上述 `info` 校验会失效。
+
 ## Android 设计理念(通用)
 
 - **组件化**:四大组件(Activity/Service/BroadcastReceiver/ContentProvider)各自独立,通过 **Intent 松耦合**通信;本项目的 `LauncherProvider`(ContentProvider)即用于持久化桌面数据。

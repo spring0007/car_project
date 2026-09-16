@@ -41,6 +41,7 @@ import com.awell.library.util.LogUtil
 import com.awell.library.util.SystemUIClient
 import com.awell.library.util.WeatherHelper
 import com.awell.utils.CommonData
+import com.awell.utils.FreeformUtils
 import com.awell.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.awell.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.awell.utils.FreeformUtils.OPEN_APP_TO_FREEFORM
@@ -119,7 +120,6 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener ,View
 
         initFreeformControl()
         Settings.System.putString(contentResolver, "ui_has_freeform", "true")
-
 
         AppsCustomizeControl.setPluginThemeMode(
             AppsCustomizeConfig.Builder()
@@ -244,7 +244,7 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener ,View
         LogUtil.i("onStop")
 
         cancelPendingFreeformTasks()
-        fullscreenFreeformWindow()
+        //fullscreenFreeformWindow()
         Settings.System.putString(contentResolver, "freeform_launcher_idle", "0")
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -256,6 +256,12 @@ class UIActivity : Activity(), View.OnClickListener, OnPopupUpdateListener ,View
     }
 
     private fun updateImagePosition(imageView: ImageView, reason: String) {
+        // 被"强行停止"(最近任务清除全部 / 第三方清理)时不自动拉起小窗:拉起只会冷启动
+        // 入口界面,而小窗 app 正因 service 被拆而退出,表现为"小窗先显示再闪消失"。
+        // 系统侧已对小窗包豁免 force-stop,这里只做兜底;详见 FreeformUtils.isFreeformAppForceStopped。
+        if (FreeformUtils.isFreeformAppForceStopped(this)) {
+            return
+        }
         if (imageView.width <= 0 || imageView.height <= 0) {
             LogUtil.w("reason=$reason, freeformBg 未完成布局，跳过")
             return

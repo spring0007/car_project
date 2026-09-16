@@ -55,6 +55,7 @@ import com.launcher.yfd_ui3.adapter.AppInofAdapter
 import com.launcher.yfd_ui3.adapter.AppPopAdapter
 import com.launcher.yfd_ui3.databinding.UiActivityBinding
 import com.awell.library.util.ClickUtils
+import com.awell.utils.FreeformUtils
 import com.awell.utils.FreeformUtils.NAVI_GAODE_PKG
 import com.awell.utils.FreeformUtils.NAVI_GOOGLE_PKG
 import com.awell.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
@@ -200,11 +201,11 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         super.onStop()
         LogUtil.i("onStop")
 
-        if (systemUIClient.getmFreeformMode() == 0x05) {
+        /*if (systemUIClient.getmFreeformMode() == 0x05) {
             systemUIClient.hideFreeform()
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
             systemUIClient.fullScreenFreeform()
-        }else
+        }else*/
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -217,6 +218,16 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun updateImagePosition(imageView: ImageView, reason: String) {
+        // 被"强行停止"(最近任务清除全部、第三方清理工具)时不再无条件拉起小窗:
+        // 这时拉起只会冷启动入口界面,而小窗 app 自己正因为 service 被拆而退出,
+        // 用户看到的是"小窗先显示再闪消失"。
+        // 系统侧已对小窗包豁免 force-stop(AMS.forceStopPackage / ActivityTaskSupervisor.removeTask),
+        // 这里只做兜底;返回 false 也不是死角 —— 用户从应用抽屉显式点一次小窗 app(会清掉
+        // FLAG_STOPPED)之后自动拉起即恢复。
+        if (FreeformUtils.isFreeformAppForceStopped(this)) {
+            LogUtil.w("updateImagePosition: freeform app force-stopped, skip auto start, reason=${reason}")
+            return
+        }
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
         val screenX = location[0]

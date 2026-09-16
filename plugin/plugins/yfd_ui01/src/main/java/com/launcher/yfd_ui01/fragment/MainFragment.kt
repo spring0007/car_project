@@ -48,6 +48,7 @@ import com.launcher.yfd_ui01.chemo2.CarModelVersion
 import com.launcher.yfd_ui01.chemo2.CarPopupWindow
 import com.launcher.yfd_ui01.manager.FragmentAnimation
 import com.launcher.yfd_ui01.pop.AppPopupWindow
+import com.awell.utils.FreeformUtils
 import com.awell.utils.FreeformUtils.startFreeformApp
 import com.awell.library.util.LogUtil
 import com.awell.library.util.SystemUIClient
@@ -184,6 +185,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
 
     }
     private fun updateImagePosition(imageView: ImageView, reason: String) {
+        // 被"强行停止"(最近任务清除全部 / 第三方清理)时不自动拉起小窗:拉起只会冷启动
+        // 入口界面,而小窗 app 正因 service 被拆而退出,表现为"小窗先显示再闪消失"。
+        // 系统侧已对小窗包豁免 force-stop,这里只做兜底;详见 FreeformUtils.isFreeformAppForceStopped。
+        if (FreeformUtils.isFreeformAppForceStopped(swipeActivity)) {
+            return
+        }
         Settings.System.putString(swipeActivity.contentResolver, "freeform_launcher_idle", "1")
         LogUtil.i("freeform_launcher_idle,1")
         val location = IntArray(2)
@@ -1042,7 +1049,12 @@ class MainFragment : Fragment(), View.OnTouchListener,  AppPopupWindow.OnPopupUp
         super.onStop()
         LogUtil.i("freeform_launcher_idle,0")
         cancelPendingFreeformTasks()
-        fullscreenFreeformWindow()
+        // 与其它 freeform 插件(ui15/17/22/23/24/25、yfd_ui2、yfd_ui03)保持一致:onStop 不再
+        // hideFreeform() + fullScreenFreeform()。这两步会走系统侧的"小窗自动收起"路径并清掉
+        // freeform_app_keep_visible,小窗 app 失去保活前提 → 后台被销毁 → 回桌面冷启动(小窗重建/闪一下)。
+        // 这里只把 launcher 标记为非活跃(idle=0),小窗的收起交给系统侧处理。
+        // 注意:onHiddenChanged(hidden=true) 与最近任务(recentapps)两处保留 fullscreenFreeformWindow(),
+        // 那是"打开应用列表/切最近任务"的主动收起,与离开桌面不是同一语义。
         Settings.System.putString(swipeActivity.contentResolver,"freeform_launcher_idle", "0")
 
         LogUtil.i("lqq,onStop")

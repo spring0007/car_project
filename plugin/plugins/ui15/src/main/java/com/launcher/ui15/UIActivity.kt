@@ -38,6 +38,7 @@ import com.awell.library.AwellTool
 import com.awell.utils.CommonData
 import com.awell.utils.Utils.startWallpaper
 import com.launcher.ui15.databinding.UiActivityBinding
+import com.awell.utils.FreeformUtils
 import com.awell.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME
 import com.awell.utils.FreeformUtils.startFreeformApp
 import com.awell.library.util.LogUtil
@@ -167,11 +168,11 @@ class UIActivity : Activity(), View.OnClickListener {
         super.onStop()
         LogUtil.i("onStop")
 
-        if (systemUIClient.getmFreeformMode() == 0x05) {
+        /*if (systemUIClient.getmFreeformMode() == 0x05) {
             systemUIClient.hideFreeform()
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
             systemUIClient.fullScreenFreeform()
-        } else
+        } else*/
             Settings.System.putString(contentResolver, "freeform_launcher_idle", "0");
         LogUtil.w("freeform_launcher_idle,0")
     }
@@ -183,6 +184,12 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun updateImagePosition(imageView: ImageView, reason: String) {
+        // 被"强行停止"(最近任务清除全部 / 第三方清理)时不自动拉起小窗:拉起只会冷启动
+        // 入口界面,而小窗 app 正因 service 被拆而退出,表现为"小窗先显示再闪消失"。
+        // 系统侧已对小窗包豁免 force-stop,这里只做兜底;详见 FreeformUtils.isFreeformAppForceStopped。
+        if (FreeformUtils.isFreeformAppForceStopped(this)) {
+            return
+        }
         val location = IntArray(2)
         imageView.getLocationOnScreen(location)
         val screenX = location[0]
