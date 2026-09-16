@@ -35,5 +35,5 @@
         android:singleLine="true"
         android:text="app_name"
         android:textColor="@android:color/white"
-        android:textSize="20sp" />
+        android:textSize="@dimen/app_icon_tv_size" />
 </LinearLayout>
