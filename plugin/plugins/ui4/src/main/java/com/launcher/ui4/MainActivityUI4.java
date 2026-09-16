@@ -150,20 +150,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private void initClickEvent() {
         contentView = findViewById(android.R.id.content);
         binding.hotsetAllapp.setOnClickListener(this);
-        binding.layoutRadioWidget.radioIvLayout.setOnClickListener(this);
         binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
-        binding.layoutRadioWidget.ivRadioPre.setOnClickListener(v -> {
-            if (ClickUtils.isFastClick()) {
-                return;
-            }
-            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
-        });
-        binding.layoutRadioWidget.ivRadioNext.setOnClickListener(v -> {
-            if (ClickUtils.isFastClick()) {
-                return;
-            }
-            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
-        });
+        binding.layoutRadioWidget.ivRadioPre.setOnClickListener(this);
+        binding.layoutRadioWidget.ivRadioNext.setOnClickListener(this);
+        binding.layoutRadioWidget.layoutRadioWidget.setOnClickListener(this);
 
     }
 
@@ -583,7 +573,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             appBeanList.add(bean);
         }
 
-        LogUtil.w("appBeanList size: " + appBeanList.size());
+        //LogUtil.w("appBeanList size: " + appBeanList.size());
         return appBeanList;
     }
 
@@ -642,7 +632,16 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         } else if (v.getId() == binding.layoutRadioWidget.tvRadioAmFm.getId()) {
             mediaControl.sendStrToHost(AwellTool.RADIO.SET_FMAM);
-        } else if (v.getId() == binding.layoutRadioWidget.radioIvLayout.getId()) {
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+        } else if (v.getId() ==  binding.layoutRadioWidget.ivRadioNext.getId()) {
+            if (ClickUtils.isFastClick()) {
+                return;
+            }
+            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
+        } else if (v.getId() == binding.layoutRadioWidget.layoutRadioWidget.getId()) {
             startActivity("com.awell.radio", "com.awell.radio.MainActivity");
         }
     }

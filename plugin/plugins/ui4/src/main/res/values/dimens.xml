@@ -18,7 +18,7 @@
     <dimen name="radio_icon_radius">50dp</dimen>
     <dimen name="music_widget_play_size">100dp</dimen>
     <dimen name="music_widget_next_size">50dp</dimen>
-    <dimen name="iv_radio_size">30dp</dimen>
+    <dimen name="iv_radio_size">60dp</dimen>
     <dimen name="rel_size">40dp</dimen>
     <dimen name="music_name_tx_size">36sp</dimen>
     <dimen name="music_artist_txsize">23sp</dimen>

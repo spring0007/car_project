@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/sf_radio_bg"
     android:orientation="horizontal"
-    android:id="@+id/radio_layout">
+    android:id="@+id/layout_radio_widget">
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:layout_width="@dimen/iv_radio_size"
                 android:layout_height="@dimen/iv_radio_size"
                 android:background="@drawable/sf_radio_next1"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="10dp"
                 />
             <RelativeLayout
                 android:layout_width="@dimen/rel_size"
