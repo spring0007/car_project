@@ -9,7 +9,7 @@ import android.util.Log;
  * 所有插件统一使用此版本，无需各自维护
  */
 public class LogUtil {
-    private static String TAG = "AWellLauncher";
+    private static String TAG = "launcher_host2";
 
     private static int logswitch = Integer.parseInt(SystemProperties.get("persist.sys.awell.logswitch","1"));
     private static boolean isDebuggable = (logswitch == 1);
