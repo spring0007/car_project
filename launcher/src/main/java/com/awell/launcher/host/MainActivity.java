@@ -158,7 +158,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     return;
                 }
 
-                intent.putExtra("boot", isFirstBoot);
+                // 禁止添加 putExtra("boot", ...): 定制版 replugin-host-lib 对 boot=true 的 Intent 直接 return false 拒启, 会被误判为启动失败并耗尽重试; 全工程无读取方
                 if (clearTask && !"mt6755".equals(Build.HARDWARE)) {
                     // 仅真正(重)安装后才清空旧任务: 保证加载的是本次安装的新插件
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -199,7 +199,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             return;
         }
         retryCount++;
-        LogUtil.w("scheduleRetryOrFallback: retry count=" + retryCount);
+        LogUtil.w("retry count=" + retryCount);
 
         String apkClazz = SystemProperties.get(LAUNCHER_CLAZZ, "");
         if (infoMatchesTargetClazz(apkClazz)) {
@@ -329,7 +329,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         String testApk = apkName + ".apk";
         String testApkPath = mExternalPluginPath + apkName + File.separator + testApk;
-        LogUtil.i( "startPluginActivity: huang apkName=" + apkName + ", apkClazz=" + apkClazz + ", path=" + testApkPath);
+        LogUtil.i( "huang apkName=" + apkName + ", apkClazz=" + apkClazz + ", path=" + testApkPath);
         simulateInstallExternalPlugin(testApkPath, testApk, apkClazz);
     }
 
@@ -659,10 +659,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private final LauncherApplication.PluginStartStatus pluginStartStatus = new LauncherApplication.PluginStartStatus() {
         @Override
         public void startPitActivityResult(String plugin, String activity, boolean result) {
-            LogUtil.i( "startPitActivityResult: plugin=" + plugin + ", activity=" + activity + ", result=" + result);
+            LogUtil.i( "plugin=" + plugin + ", activity=" + activity + ", result=" + result);
 
             if (result) {
-                LogUtil.i( "startPitActivityResult: plugin started successfully");
+                LogUtil.i( "plugin started successfully");
                 retryCount = 0;
                 isFirstBoot = false;
                 isInstalling.set(false);

@@ -359,11 +359,11 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         @Override
         public void onStartActivityCompleted(String plugin, String activity, boolean result) {
             // FIXME 当打开 Activity 成功时触发此逻辑，可在这里做一些 APM、打点统计等相关工作
-            LogUtil.i("onStartActivityCompleted: huang plugin =" + plugin+",activity =" + activity+",result =" + result);
+            LogUtil.i("huang plugin =" + plugin+",activity =" + activity+",result =" + result);
         
-            // 避免重复回调导致无限循环
-            // 只有在插件启动失败时才需要重试，成功时不需要再次触发
-            if (startStatus != null && !result) {
+            // 成功与失败都必须转发: 成功分支负责落地 is_first_boot=false / retryCount=0,
+            // 旧实现仅在失败时转发(成功分支成死代码), 首启标记永不落地, 实例重建后误判首启
+            if (startStatus != null) {
                 startStatus.startPitActivityResult(plugin, activity, result);
             }
             super.onStartActivityCompleted(plugin, activity, result);
@@ -371,13 +371,13 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
 
         @Override
         public void onPrepareAllocPitActivity(Intent intent) {
-            LogUtil.i("onPrepareAllocPitActivity: huang intent=>" + intent);
+            LogUtil.i("huang intent=>" + intent);
             super.onPrepareAllocPitActivity(intent);
         }
 
         @Override
         public void onPrepareStartPitActivity(Context context, Intent intent, Intent pittedIntent) {
-            LogUtil.i("onPrepareStartPitActivity: context=>" + context+" ,intent="+intent+", pittedIntent=>" + pittedIntent);
+            LogUtil.i("context=>" + context+" ,intent="+intent+", pittedIntent=>" + pittedIntent);
             // pittedIntent=>Intent { cat=[process:-2147483648,plugin:com.example.plugin_2,activity:com.example.plugin_2.UI2Activity,container:com.awell.launcher.loader.a.ActivityN1NRNTS5,counter:0]
             // cmp=com.awell.launcher/.loader.a.ActivityN1NRNTS5 (has extras) }
 
