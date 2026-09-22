@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -179,16 +180,17 @@ public class Utils {
 
 
     // 不需要显示的应用
-    public static List<String>  notDisplayedPackageName = Arrays.asList(
+    public static List<String>  notDisplayedPackageName = new ArrayList<>(Arrays.asList(
             /*"com.google.android.googlequicksearchbox",*/"com.google.android.apps.googleassistant",
             "com.android.gallery3d","com.google.android.healthconnect.controller","com.awell.service",
             "com.android.traceur","com.awell.platformservice","com.debug.loggerui"
-    );
+
+    ));
 
     /**
      * 需要显示的应用
      */
-    public static List<String> needToShowPackageName = Arrays.asList(
+    public static List<String> needToShowPackageName = new ArrayList<>(Arrays.asList(
             "com.awell.carsetting", "com.android.browser",
 //            "com.android.dialer", "com.android.calculator2","com.android.calendar",
             "com.android.deskclock", "com.mediatek.filemanager",
@@ -198,7 +200,15 @@ public class Utils {
 //            "com.android.chrome","com.google.android.youtube","com.google.android.apps.maps","com.android.vending",
             "com.awell.canbus", "com.tima.carnet.vt", "com.android.mms", "com.zjinnova.zlink",
             "com.awell.eqselect", "com.awell.awellmanual"
-    );
+    ));
+
+    private static final boolean ADD_EXTRA_PACKAGE = true;
+
+    public static boolean CanBusDisplay(){
+        return false;
+
+    }
+
     /**
      * 需要显示的应用
      */
@@ -316,93 +326,6 @@ public class Utils {
      * 保存加载的插件文件路径
      */
     private static String pluginApkFilePath = null;
-
-    /**
-     * 需要更换应用icon的资源文件
-     */
-//    public static final int mHomeIcon[] = {
-//            R.drawable.sf_video
-//            , R.drawable.sf_music
-//            , R.drawable.sf_radio
-//            , R.drawable.sf_bt
-////            , R.drawable.sf_navi
-////            , R.drawable.sf_iphone
-////            , R.drawable.sf_jisuanqi
-//            , R.drawable.sf_liulanqi
-////            , R.drawable.sf_rili       //
-////            , R.drawable.sf_luyinji     //
-////            , R.drawable.sf_shizhong    //
-////            , R.drawable.sf_tuku        //
-//            , R.drawable.sf_wjgl
-//            , R.drawable.sf_download
-//            , R.drawable.sf_shezhi
-//            , R.drawable.sf_wjsr
-//            , R.drawable.kuwoyinyue
-//            , R.drawable.sf_jhq
-//            , R.drawable.sf_yuanche
-//            , R.drawable.sf_yuanche
-//            , R.drawable.sf_message
-//            , R.drawable.sf_navi
-//            , R.drawable.sf_ggvoice
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_manual
-//            , R.drawable.sf_googlemap
-//            , R.drawable.sf_youtube
-//            , R.drawable.sf_playstore
-//            , R.drawable.sf_safri
-////            , R.drawable.sf_ggvoice
-//            , R.drawable.sf_store
-//            , R.drawable.sf_gg
-//            , R.drawable.sf_kugou
-//            , R.drawable.sf_aiqitv
-//            , R.drawable.sf_qqyinyue
-//            , R.drawable.sf_tenxuntv
-//
-//    };
-
-    /**
-     * 需要更换应用icon的资源文件
-     */
-//    public static final int mHomeIcon2[] = {
-//            R.drawable.sf_video
-//            , R.drawable.sf_music
-//            , R.drawable.sf_radio
-//            , R.drawable.sf_bt
-////            , R.drawable.h_navi
-//            , R.drawable.sf_iphone
-//            , R.drawable.sf_jisuanqi
-//            , R.drawable.sf_liulanqi
-////            , R.drawable.h_rili       //
-////            , R.drawable.h_luyinji     //
-////            , R.drawable.h_shizhong    //
-////            , R.drawable.h_tuku        //
-//            , R.drawable.sf_wjgl
-//            , R.drawable.sf_download
-//            , R.drawable.sf_shezhi
-//            , R.drawable.sf_wjsr
-//            , R.drawable.kuwoyinyue
-//            , R.drawable.sf_jhq
-//            , R.drawable.sf_yuanche
-//            , R.drawable.sf_yuanche
-//            , R.drawable.sf_message
-//            , R.drawable.sf_navi
-//            , R.drawable.sf_ggvoice
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_zlink
-//            , R.drawable.sf_manual
-//            , R.drawable.sf_googlemap
-//            , R.drawable.sf_youtube
-//            , R.drawable.sf_playstore
-//            , R.drawable.sf_safri
-//            , R.drawable.sf_ggvoice
-//            , R.drawable.sf_store
-//            , R.drawable.sf_gg
-//            , R.drawable.sf_kugou
-//
-//    };
 
     public static final Set<String> mAppLevel_1 = Set.of(
             "com.awell.localmusic"
@@ -681,6 +604,75 @@ public class Utils {
         startActivity(null, getmAppContext(), chooser, "startWallpaper");
         //startActivityForResult(chooser, REQUEST_PICK_WALLPAPER);
 
+    }
+
+    /**
+     * 获取手机已安装应用列表
+     *
+     * @param context
+     * @param isFilterSystem 是否过滤系统应用
+     * @return
+     */
+    public static ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
+        ArrayList<AppInfo> appBeanList = new ArrayList<>();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        PackageManager packageManager = context.getPackageManager();
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+
+        // 获取所有输入法包名
+        Set<String> imePackages = new HashSet<>();
+        Intent imeIntent = new Intent("android.view.InputMethod");
+        List<ResolveInfo> imeServices = packageManager.queryIntentServices(imeIntent, 0);
+        for (ResolveInfo ri : imeServices) {
+            imePackages.add(ri.serviceInfo.packageName);
+        }
+
+        // 获取所有launcher包名（CATEGORY_HOME）
+        Set<String> launcherPackages = new HashSet<>();
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
+        List<ResolveInfo> homeActivities = packageManager.queryIntentActivities(homeIntent, 0);
+        for (ResolveInfo ri : homeActivities) {
+            launcherPackages.add(ri.activityInfo.packageName);
+        }
+
+        if(!CanBusDisplay() && !notDisplayedPackageName.contains("com.awell.canbus"))
+            notDisplayedPackageName.add("com.awell.canbus");
+
+        List<String> noNeedToShow = notDisplayedPackageName;
+
+        // 首先从resolveInfos提取包名并获取PackageInfo，然后去重，再过滤
+        List<PackageInfo> appList = new ArrayList<>();
+        Set<String> processedPackages = new HashSet<>();
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            String pkgName = resolveInfo.activityInfo.packageName;
+            if (processedPackages.contains(pkgName)) continue;
+            processedPackages.add(pkgName);
+            try {
+                PackageInfo pkgInfo = packageManager.getPackageInfo(pkgName, 0);
+                // 过滤条件
+                if (!imePackages.contains(pkgName) && !launcherPackages.contains(pkgName) && !noNeedToShow.contains(pkgName)) {
+                    appList.add(pkgInfo);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                // ignore
+            }
+        }
+
+        // 也可以像Kotlin那样先收集再过滤，但这里直接过滤。
+        for (PackageInfo p : appList) {
+            AppInfo bean = new AppInfo();
+            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
+            bean.setPackage_name(p.applicationInfo.packageName);
+            bean.setFlags(p.applicationInfo.flags);
+            appBeanList.add(bean);
+        }
+
+        LogUtil.w("appBeanList size: " + appBeanList.size());
+        return appBeanList;
     }
 }
 

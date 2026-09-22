@@ -1663,6 +1663,12 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         AppInfo bean = null;
         PackageManager packageManager = ctx.getPackageManager();
         List<PackageInfo> list = packageManager.getInstalledPackages(0);
+        List<String> needToShow = Utils.needToShowPackageName;
+        if(!Utils.CanBusDisplay()){
+            if(needToShow.contains("com.awell.canbus"))
+                needToShow.remove("com.awell.canbus");
+        }
+
         for (PackageInfo p : list) {
             bean = new AppInfo();
             int randome = new Random().nextInt(5);
@@ -1672,7 +1678,7 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
             bean.setPackage_name(pckaName);
             int flags = p.applicationInfo.flags;
             bean.setFlags(flags);
-            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && Utils.needToShowPackageName.contains(pckaName)) {
+            if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 && needToShow.contains(pckaName)) {
                 appBeanList.add(bean);
             } else if ((flags & android.content.pm.ApplicationInfo.FLAG_SYSTEM) == 0 && !Utils.filterAppPackageName.contains(pckaName)) {
                 appBeanList.add(bean);

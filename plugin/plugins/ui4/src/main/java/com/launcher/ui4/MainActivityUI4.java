@@ -467,7 +467,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         popupWindow.setOutsideTouchable(true);
         //popupWindow.setFocusable(true);
 
-        allAppInfoList = getAllAppInfo(this, false);
+        allAppInfoList = Utils.getAllAppInfo(this, false);
 
         RecyclerView rvPop = view.findViewById(R.id.rv_pop_allapp);
         AppPopAdapter appInofAdapter = new AppPopAdapter(this, allAppInfoList, addSelectAppCallback);
@@ -511,71 +511,6 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         return appList;
     }
 
-    /**
-     * 获取手机已安装应用列表
-     *
-     * @param context
-     * @param isFilterSystem 是否过滤系统应用
-     * @return
-     */
-    private ArrayList<AppInfo> getAllAppInfo(Context context, boolean isFilterSystem) {
-        ArrayList<AppInfo> appBeanList = new ArrayList<>();
-
-        Intent intent = new Intent(Intent.ACTION_MAIN, null);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
-
-        // 获取所有输入法包名
-        Set<String> imePackages = new HashSet<>();
-        Intent imeIntent = new Intent("android.view.InputMethod");
-        List<ResolveInfo> imeServices = packageManager.queryIntentServices(imeIntent, 0);
-        for (ResolveInfo ri : imeServices) {
-            imePackages.add(ri.serviceInfo.packageName);
-        }
-
-        // 获取所有launcher包名（CATEGORY_HOME）
-        Set<String> launcherPackages = new HashSet<>();
-        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-        homeIntent.addCategory(Intent.CATEGORY_HOME);
-        List<ResolveInfo> homeActivities = packageManager.queryIntentActivities(homeIntent, 0);
-        for (ResolveInfo ri : homeActivities) {
-            launcherPackages.add(ri.activityInfo.packageName);
-        }
-
-        List<String> noNeedToShow = Utils.notDisplayedPackageName;
-
-        // 首先从resolveInfos提取包名并获取PackageInfo，然后去重，再过滤
-        List<PackageInfo> appList = new ArrayList<>();
-        Set<String> processedPackages = new HashSet<>();
-        for (ResolveInfo resolveInfo : resolveInfos) {
-            String pkgName = resolveInfo.activityInfo.packageName;
-            if (processedPackages.contains(pkgName)) continue;
-            processedPackages.add(pkgName);
-            try {
-                PackageInfo pkgInfo = packageManager.getPackageInfo(pkgName, 0);
-                // 过滤条件
-                if (!imePackages.contains(pkgName) && !launcherPackages.contains(pkgName) && !noNeedToShow.contains(pkgName)) {
-                    appList.add(pkgInfo);
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                // ignore
-            }
-        }
-
-        // 也可以像Kotlin那样先收集再过滤，但这里直接过滤。
-        for (PackageInfo p : appList) {
-            AppInfo bean = new AppInfo();
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString());
-            bean.setPackage_name(p.applicationInfo.packageName);
-            bean.setFlags(p.applicationInfo.flags);
-            appBeanList.add(bean);
-        }
-
-        //LogUtil.w("appBeanList size: " + appBeanList.size());
-        return appBeanList;
-    }
 
     @Override
     public void onBackPressed() {
@@ -868,7 +803,7 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     private void refreshAppListAsync() {
         // 1. 后台：获取所有已安装应用
-        ArrayList<AppInfo> freshAllList = getAllAppInfo(this, false);
+        ArrayList<AppInfo> freshAllList = Utils.getAllAppInfo(this, false);
         allAppInfoList = freshAllList;
 
         // 2. 后台：从 SP 加载保存的应用

@@ -2436,6 +2436,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     public void setApps(ArrayList<ApplicationInfo> list) {
         mApps.clear();
         String[] excludePackageArray = getContext().getResources().getStringArray(R.array.excludePackageList);
+        if(!Utils.CanBusDisplay() && !Arrays.asList(excludePackageArray).contains("com.awell.canbus")) {
+            excludePackageArray = Arrays.copyOf(excludePackageArray, excludePackageArray.length + 1);
+            excludePackageArray[excludePackageArray.length - 1] = "com.awell.canbus";
+        }
         List<String> excludePackageList = Arrays.asList(excludePackageArray);
         for (ApplicationInfo a : list) {
             //Log.d(TAG, "setApps--getPackageName=" + a.componentName.getPackageName());

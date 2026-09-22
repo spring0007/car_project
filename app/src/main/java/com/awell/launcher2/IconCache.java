@@ -181,7 +181,7 @@ public class IconCache {
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(mHomePackageName_lehang)));
 
 
-    public final int mHomePackageIcon_116_lehang_2[] = {
+ /*   public final int mHomePackageIcon_116_lehang_2[] = {
             R.drawable.sf_video
             , R.drawable.sf_music
             , R.drawable.sf_radio
@@ -350,7 +350,7 @@ public class IconCache {
             , R.drawable.sf_theme_yellow
             , R.drawable.sf_usb_video_output_yellow
             , R.drawable.sf_weather_yellow
-    };
+    };*/
 
     private final Bitmap mDefaultIcon;
     private final Context mContext;
