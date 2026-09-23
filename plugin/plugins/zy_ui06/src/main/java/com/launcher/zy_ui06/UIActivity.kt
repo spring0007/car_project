@@ -46,6 +46,7 @@ import com.awell.launcher2.IconCache
 import com.awell.launcher2.MediaNotificationListener
 import com.awell.library.AwellTool
 import com.awell.utils.CommonData
+import com.awell.utils.Utils
 import com.awell.utils.Utils.startWallpaper
 import com.launcher.zy_ui06.adapter.AppPopAdapter
 import com.launcher.zy_ui06.control.StyleParser
@@ -826,7 +827,12 @@ class UIActivity : Activity(), View.OnClickListener {
             } catch (e: PackageManager.NameNotFoundException) {
                 null
             }
-        }.distinctBy { it.packageName }.filter { it.packageName !in needToBlockApps }
+        }.distinctBy { it.packageName }.filter {
+            // canbus 显示开关(persist.sys.awell.canbus.display)关闭时弹窗里也要隐藏;
+            // 每次构建列表都重新读属性, 保证重新打开弹窗能拿到最新状态
+            it.packageName !in needToBlockApps &&
+                    !(it.packageName == "com.awell.canbus" && !Utils.CanBusDisplay())
+        }
 
         LogUtil.w("appList size: ${appList.size}")
 
