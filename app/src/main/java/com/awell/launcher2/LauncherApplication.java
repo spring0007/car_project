@@ -40,6 +40,7 @@ import com.awell.impl.ModelImpl;
 import com.awell.launcher.library.R;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.utils.LogUtil;
+import com.awell.utils.Utils;
 import com.qihoo360.replugin.RePluginApplication;
 import com.qihoo360.replugin.RePluginCallbacks;
 import com.qihoo360.replugin.RePluginConfig;
@@ -113,6 +114,51 @@ public class LauncherApplication extends RePluginApplication implements ViewMode
         mModel.prewarmIconCache();
         mModel.startLoader(true, -1);
         AppsCustomizeControl.INSTANCE.initialize(this, mModel, mIconCache);
+        refreshAppListIfCanBusDisplayChanged("app-init");
+    }
+
+    private Boolean mLastCanBusDisplay = null;
+
+    public static void checkCanBusDisplayChanged(Context context) {
+        LauncherApplication app = null;
+        if (context != null && context.getApplicationContext() instanceof LauncherApplication) {
+            app = (LauncherApplication) context.getApplicationContext();
+        } else if (mAppContext instanceof LauncherApplication) {
+            // 插件主题传进来的可能是 RePlugin 包装过的 Context, 取不到宿主 Application -> 用进程内实例兜底
+            app = (LauncherApplication) mAppContext;
+        }
+        if (app == null) {
+            LogUtil.w("checkCanBusDisplayChanged: LauncherApplication not found, ctx=" + context);
+            return;
+        }
+        app.refreshAppListIfCanBusDisplayChanged("ui-check");
+    }
+
+    public void refreshAppListIfCanBusDisplayChanged(String from) {
+        boolean current = Utils.CanBusDisplay();
+        if (mLastCanBusDisplay != null && mLastCanBusDisplay == current) {
+            return;
+        }
+        boolean isFirstCheck = (mLastCanBusDisplay == null);
+        mLastCanBusDisplay = current;
+        if (isFirstCheck) {
+            // 首次记录: 列表要么还没构建, 要么就是按当前值构建的, 不需要重载
+            LogUtil.i("canbusDisplay first check: from=" + from + ", value=" + current);
+            return;
+        }
+        refreshAppList(from + ", canbusDisplay=" + current);
+    }
+
+    private void refreshAppList(String from) {
+        if (mModel == null) {
+            LogUtil.w("refreshAppList: mModel is null, skip. from=" + from);
+            return;
+        }
+        LogUtil.i("refreshAppList: reload app list => " + from);
+        // resetLoadedState 会 stopLoaderLocked() 并把 mAllAppsLoaded 置 false;
+        // 不置 false 的话 LoaderTask 会走 onlyBindAllApps() 的缓存分支, 不会重新执行 setApps() 的过滤
+        mModel.resetLoadedState(true, false);
+        mModel.startLoader(false, -1);
     }
 
     private void initHostModule() {

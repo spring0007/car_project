@@ -214,6 +214,19 @@
             <intent-filter>
                 <action android:name="android.intent.action.USER_INITIALIZE" />
             </intent-filter>
+        </receiver>
+        <!-- CanBus 应用显示开关(persist.sys.awell.canbus.display)变更。
+             必须静态注册: 宿主进程被回收后, 只有静态注册的 receiver 才能被系统拉起来投递广播。
+             Android 8.0+ 静态 receiver 收不到隐式广播, 发送方必须 setPackage("com.awell.launcher.host")
+             或显式指定组件; 发送方是外部 APK(非同一签名), 所以这里不加 permission,
+             receiver 本身按属性当前值判断, 是幂等的。 -->
+        <receiver
+            android:name="com.awell.launcher2.CanBusDisplayReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.launcher.canbus.display.change" />
+            </intent-filter>
         </receiver> <!-- The settings provider contains Home's data, like the workspace favorites -->
         <provider
             android:name="com.awell.launcher2.LauncherProvider"

@@ -12,6 +12,7 @@ import com.awell.launcher2.ApplicationInfo
 import com.awell.launcher2.AppsCustomizePagedView
 import com.awell.launcher2.AppsCustomizeTabHost
 import com.awell.launcher2.IconCache
+import com.awell.launcher2.LauncherApplication
 import com.awell.launcher2.LauncherModel
 import com.awell.launcher2.PluginIconManager
 import com.awell.ui.AppsCustomizeIndicatorPanel
@@ -111,6 +112,9 @@ object AppsCustomizeControl {
 
     fun showApps(viewGroup: ViewGroup) {
         if (!mIsInitialized) throw IllegalStateException("Apps control not initialized")
+
+        // 兜底检查 canbus 显示开关(persist.sys.awell.canbus.display):
+        LauncherApplication.checkCanBusDisplayChanged(mAppContext)
 
         // 仅当抽屉 View 确实还挂在父容器时才视为「已显示」并早退；
         // 若标志因插件切换而残留为 true、但 View 已分离，则继续重新挂载，避免抽屉打不开

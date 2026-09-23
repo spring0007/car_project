@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Parcelable;
+import android.os.SystemProperties;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -205,8 +206,8 @@ public class Utils {
     private static final boolean ADD_EXTRA_PACKAGE = true;
 
     public static boolean CanBusDisplay(){
-        return false;
-
+        String logSwitch = SystemProperties.get("persist.sys.awell.canbus.display", "0");
+        return "0".equals(logSwitch);
     }
 
     /**
@@ -639,10 +640,13 @@ public class Utils {
             launcherPackages.add(ri.activityInfo.packageName);
         }
 
-        if(!CanBusDisplay() && !notDisplayedPackageName.contains("com.awell.canbus"))
-            notDisplayedPackageName.add("com.awell.canbus");
-
-        List<String> noNeedToShow = notDisplayedPackageName;
+        // canbus 开关是双向的: 属性变成"不显示"时隐藏, 变回"显示"时必须能恢复
+        List<String> noNeedToShow = new ArrayList<>(notDisplayedPackageName);
+        if (CanBusDisplay()) {
+            noNeedToShow.remove("com.awell.canbus");
+        } else if (!noNeedToShow.contains("com.awell.canbus")) {
+            noNeedToShow.add("com.awell.canbus");
+        }
 
         // 首先从resolveInfos提取包名并获取PackageInfo，然后去重，再过滤
         List<PackageInfo> appList = new ArrayList<>();
@@ -671,7 +675,7 @@ public class Utils {
             appBeanList.add(bean);
         }
 
-        LogUtil.w("appBeanList size: " + appBeanList.size());
+        LogUtil.w("appBeanList size: " + appBeanList.size() + ", canbusDisplay=" + CanBusDisplay());
         return appBeanList;
     }
 }

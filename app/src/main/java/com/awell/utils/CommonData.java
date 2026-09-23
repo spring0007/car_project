@@ -63,6 +63,14 @@ public class CommonData {
     public static final String ACTION_SPEED_UNIT_CHANGE = "CANBUS_CHANGE_SPEED_Unit";
 
     /**
+     * CanBus 应用显示开关变更广播
+     * 属性 persist.sys.awell.canbus.display 变化后由设置方发送，
+     * launcher 收到后重新加载应用列表（详见 Utils.CanBusDisplay()）
+     */
+    public static final String ACTION_CANBUS_DISPLAY_CHANGE = "android.launcher.canbus.display.change";
+    public static final String EXTRA_CANBUS_DISPLAY = "canbus_display";
+
+    /**
      * 顶部 Activity 变更广播
      */
     public static final String ACTION_TOP_SESSION_CHANGE = "top_session_package_change";

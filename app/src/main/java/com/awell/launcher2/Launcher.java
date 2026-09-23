@@ -1663,10 +1663,9 @@ public final class Launcher extends AppCompatActivity implements View.OnClickLis
         AppInfo bean = null;
         PackageManager packageManager = ctx.getPackageManager();
         List<PackageInfo> list = packageManager.getInstalledPackages(0);
-        List<String> needToShow = Utils.needToShowPackageName;
+        List<String> needToShow = new ArrayList<>(Utils.needToShowPackageName);
         if(!Utils.CanBusDisplay()){
-            if(needToShow.contains("com.awell.canbus"))
-                needToShow.remove("com.awell.canbus");
+            needToShow.remove("com.awell.canbus");
         }
 
         for (PackageInfo p : list) {
