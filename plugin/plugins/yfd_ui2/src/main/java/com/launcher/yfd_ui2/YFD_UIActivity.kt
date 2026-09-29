@@ -491,7 +491,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         popupWindow.windowLayoutType = TYPE_APPLICATION_OVERLAY
         view.setOnClickListener { popupWindow.dismiss() }
 
-        allAppInfoList = getAllAppInfo(this, false)
+        allAppInfoList = Utils.getAllAppInfo(this, false)
 
         val rvPop = view.findViewById<RecyclerView>(R.id.rv_pop_allapp)
         val gridLayoutManager = GridLayoutManager(this, 2)
@@ -1024,61 +1024,6 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
         }
     }
 
-    private fun getAllAppInfo(context: Context, isFilterSystem: Boolean): ArrayList<AppInfo> {
-        val appBeanList: ArrayList<AppInfo> = ArrayList()
-
-        val intent = Intent(Intent.ACTION_MAIN, null).apply {
-            addCategory(Intent.CATEGORY_LAUNCHER)
-        }
-
-        val packageManager = context.packageManager
-        val resolveInfos = packageManager.queryIntentActivities(intent, 0)
-        // 获取所有输入法包名
-        val imePackages = mutableSetOf<String>()
-        val imeIntent = Intent("android.view.InputMethod")
-        val imeServices = packageManager.queryIntentServices(imeIntent, 0)
-        imeServices.forEach { imePackages.add(it.serviceInfo.packageName) }
-
-        // 获取所有launcher包名（CATEGORY_HOME）
-        val launcherPackages = mutableSetOf<String>()
-        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        val homeActivities = packageManager.queryIntentActivities(homeIntent, 0)
-        homeActivities.forEach { launcherPackages.add(it.activityInfo.packageName) }
-
-        val noNeedToShow = Utils.notDisplayedPackageName
-
-        val appList: List<PackageInfo> = resolveInfos.mapNotNull { resolveInfo ->
-            try {
-                packageManager.getPackageInfo(resolveInfo.activityInfo.packageName, 0)
-            } catch (e: PackageManager.NameNotFoundException) {
-                null
-            }
-        }.distinctBy { it.packageName }
-            .filter { pkgInfo ->
-            val pkg = pkgInfo.packageName
-            !imePackages.contains(pkg) && !launcherPackages.contains(pkg) && !noNeedToShow.contains(pkg)
-        }
-
-        //LogUtil.w("appList size: ${appList.size}")
-
-        for (p in appList) {
-            //val packageName = p.applicationInfo.packageName
-            //val flags = p.applicationInfo.flags
-            //LogUtil.i("packageName=${p.applicationInfo.packageName}")
-            val bean = AppInfo()
-            //bean.setIcon(IconManager.getAppIcon(context, packageName))
-            bean.setLabel(packageManager.getApplicationLabel(p.applicationInfo).toString())
-            bean.setPackage_name( p.applicationInfo.packageName)
-            bean.setFlags(p.applicationInfo.flags)
-            appBeanList.add(bean)
-
-        }
-
-        LogUtil.w("appBeanList size: ${appBeanList.size}")
-        return appBeanList
-    }
-
-
     /**
      * 重写只为长按弹出壁纸选择
      */
@@ -1203,7 +1148,7 @@ class YFD_UIActivity : Activity(), View.OnClickListener {
 
     private fun refreshAppListAsync() {
         // 1. 后台：获取所有已安装应用
-        val freshAllList: ArrayList<AppInfo> = getAllAppInfo(this, false)
+        val freshAllList: ArrayList<AppInfo> = Utils.getAllAppInfo(this, false)
         allAppInfoList = freshAllList
 
         // 2. 后台：从 SP 加载保存的应用

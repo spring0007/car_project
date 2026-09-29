@@ -65,7 +65,7 @@ public class IconPkgMap {
         PACKAGE_ICON_MAP_DEFAULT.put("com.awell.themesetting", R.drawable.sf_theme);
         PACKAGE_ICON_MAP_DEFAULT.put("com.ms.ms2160", R.drawable.sf_usb_video_output);
         PACKAGE_ICON_MAP_DEFAULT.put("com.awell.weather", R.drawable.sf_weather);
-        PACKAGE_ICON_MAP_DEFAULT.put(AIR_NAME, R.drawable.ic_air_app);
+        PACKAGE_ICON_MAP_DEFAULT.put(AIR_NAME, R.drawable.ic_air_app2);
 
         // 暗色主题图标映射
         PACKAGE_ICON_MAP_DARK.put("com.awell.localvideo", R.drawable.sf_video_dark);
