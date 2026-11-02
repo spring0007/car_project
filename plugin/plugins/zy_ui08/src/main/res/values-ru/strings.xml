@@ -16,5 +16,6 @@
     <string name="navigation">Навигация</string>
     <string name="radio">Радио</string>
     <string name="music_title">Музыка</string>
+    <string name="link">Связь с телефоном</string>
 
 </resources>

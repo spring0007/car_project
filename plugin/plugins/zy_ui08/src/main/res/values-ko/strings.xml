@@ -16,5 +16,6 @@
     <string name="navigation">내비게이션</string>
     <string name="radio">라디오</string>
     <string name="music_title">음악</string>
+    <string name="link">휴대폰 연결</string>
 
 </resources>

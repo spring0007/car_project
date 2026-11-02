@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="music_play_size">65dp</dimen>
+    <dimen name="host_width">52dp</dimen>
+    <dimen name="host_height">52dp</dimen>
+    <dimen name="host_tv_size">24sp</dimen>
+    <dimen name="host_tv_margin_top">15dp</dimen>
+    <dimen name="sf_tv_size">24sp</dimen>
+    <dimen name="sf_tv_size_fmampm">19sp</dimen>
+    <dimen name="sf_tv_size_freq" >46sp</dimen>
+    <dimen name="song_art_bg_size">196dp</dimen>
+    <dimen name="music_name_size">24sp</dimen>
+    <dimen name="music_artist_size">17sp</dimen>
+
+    <item name="host_width_percent" type="dimen" format="float">0.167</item>
+</resources>

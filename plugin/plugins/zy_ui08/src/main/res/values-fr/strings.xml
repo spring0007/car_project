@@ -16,5 +16,6 @@
     <string name="navigation">Navigation</string>
     <string name="radio">Radio</string>
     <string name="music_title">Musique</string>
+    <string name="link">Connexion au téléphone</string>
 
 </resources>

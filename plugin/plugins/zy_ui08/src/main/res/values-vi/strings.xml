@@ -16,5 +16,6 @@
     <string name="navigation">Dẫn đường</string>
     <string name="radio">Radio</string>
     <string name="music_title">Nhạc</string>
+    <string name="link">Kết nối điện thoại</string>
 
 </resources>

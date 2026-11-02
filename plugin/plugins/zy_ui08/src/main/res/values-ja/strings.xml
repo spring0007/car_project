@@ -16,5 +16,6 @@
     <string name="navigation">ナビゲーション</string>
     <string name="radio">ラジオ</string>
     <string name="music_title">音楽</string>
+    <string name="link">電話連携</string>
 
 </resources>

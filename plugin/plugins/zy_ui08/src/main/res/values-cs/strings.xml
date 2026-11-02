@@ -16,5 +16,6 @@
     <string name="navigation">Navigace</string>
     <string name="radio">Rádio</string>
     <string name="music_title">Hudba</string>
+    <string name="link">Propojení telefonu</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,6 +33,7 @@ import com.awell.launcher2.IconCache;
 import com.awell.library.AwellTool;
 import com.awell.library.util.ClickUtils;
 import com.awell.utils.CommonData;
+import com.awell.utils.LogUtil;
 import com.launcher.zy_ui08.databinding.ActivityMainBinding;
 import com.launcher.zy_ui08.databinding.MusicWidgetBinding;
 
@@ -72,7 +74,6 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         initReceiver();
         initLongTouch();
 
-        clickApp();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             handler.removeMessages(SPEEDHOME);
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
@@ -81,24 +82,6 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(0).build());
     }
 
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "lifedate onResume");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "lifedate onPause");
-        super.onPause();
-    }
-
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "lifedate onStop");
-        super.onStop();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -251,27 +234,12 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.hideApps();
     }
 
-    private void clickApp() {
-//        binding.hotsetAllapp.setOnClickListener(this);
-//        binding.hotsetNavApp.setOnClickListener(this);
-//        binding.hotsetMusicApp.setOnClickListener(this);
-//        binding.hotsetSettingApp.setOnClickListener(this);
-//		binding.hotsetVideoApp.setOnClickListener(this);
-//        binding.timeBgIv.setOnClickListener(this);
-//        binding.timeHour.setOnClickListener(this);
-//        binding.layoutRadioWidget.radioLayout.setOnClickListener(this);
-//        binding.layoutRadioWidget.ivRadioPre.setOnClickListener(this);
-//        binding.layoutRadioWidget.ivRadioNext.setOnClickListener(this);
-//        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
-//        binding.btBgIv.setOnClickListener(this);
-  //      binding.layoutDialWidget.analogClockView.setOnClickListener(this);
-//        binding.layoutRadioWidget.tvRadioAmFm.setOnClickListener(this);
-    }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == binding.llHostHome.getId()) {
+        if (v.getId() == binding.llHostLink.getId()) {
           //  AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+            startActivity("com.zjinnova.zlink","com.zjinnova.android.zlink.features.main.MainActivity");
         }else if (v.getId() == binding.llHostAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == binding.llHostNav.getId() || v.getId() == binding.ivNavigationBg.getId()) {
@@ -292,16 +260,6 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
         }else if(v.getId() == binding.ivRadioBg.getId()){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
-        /*}else if (v.getId() == binding.layoutRadioWidget.ivRadioNext.getId()){
-            if (ClickUtils.isFastClick()) {
-                return;
-            }
-            mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
-        }else if(v.getId() == binding.layoutRadioWidget.ivRadioPre.getId()){
-            if (ClickUtils.isFastClick()) {
-                return;
-            }
-            mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);*/
         }else if (v.getId() == binding.llHostSetting.getId()){
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
         }else if (v.getId() == binding.llHostPhone.getId()){
@@ -343,44 +301,49 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
     private final AwellMediaControl.UpdateMediaDataToView mediaImpl = new AwellMediaControl.UpdateMediaDataToView() {
         @Override
         public void updateViewMusicPlay(@NotNull Bundle bundle, @NotNull String pkg, @NotNull String command, int mediaType, int currentMedia) {
-            if (!"com.awell.radio".equals(pkg)) {
+            if ("com.awell.localmusic".equals(pkg) ) {
                 musicWidget.switchMediaController(pkg, command, mediaType, currentMedia);
             }
         }
 
         @Override
         public void updateViewPlayStatus(@NotNull Bundle bundle, boolean status, int type) {
-            musicWidget.setCurMusicState(status, type);
+            if (type == MusicWidget.MUSIC) {
+                musicWidget.setCurMusicState(status, type);
+            }
 
         }
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
+           /* runOnUiThread(() -> {
+                String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
+                Uri uri = null;
+                if (uriStr != null) {
+                    Uri parsedUri = Uri.parse(uriStr);
+                    if (parsedUri.getScheme() != null) {
+                        uri = parsedUri;
+                    }
+                }
+                LogUtil.i("updateViewMusicPlayImage: huang uri=>" + uri);
+                musicWidget.loadAlbumArtByUri(uri);
+            });*/
 
         }
 
         @Override
         public void updateViewPlayInfo(@NotNull Bundle bundle, @NotNull String songName, @NotNull String singerName, @NotNull String album, int type) {
-            musicWidget.setMusicNameTextView(songName, type);
-            musicWidget.setArtistNameTextView(singerName, type);
+            if(MusicWidget.MUSIC != type)
+                return;
+
             if ("NO_MUSIC_LIST".equals(songName)
                     && "NO_MUSIC_LIST".equals(singerName)
-                    && "NO_MUSIC_LIST".equals(album)) {
+                    && "NO_MUSIC_LIST".equals(album)){
                 musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.MUSIC);
                 musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.MUSIC);
-            }
-
-            if (MusicWidget.OTHER_MUSIC == type) {
-                if (!TextUtils.isEmpty(songName)) {
-                    musicWidget.setMusicNameTextView(songName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setMusicNameTextView(getResources().getString(R.string.click_play_music), MusicWidget.OTHER_MUSIC);
-                }
-                if (!TextUtils.isEmpty(singerName)) {
-                    musicWidget.setArtistNameTextView(singerName, MusicWidget.OTHER_MUSIC);
-                } else {
-                    musicWidget.setArtistNameTextView(getResources().getString(R.string.music_artist), MusicWidget.OTHER_MUSIC);
-                }
+            }else {
+                musicWidget.setMusicNameTextView(songName, type);
+                musicWidget.setArtistNameTextView(singerName, type);
             }
         }
 

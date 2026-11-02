@@ -20,6 +20,7 @@
     <string name="navigation">Navigation</string>
     <string name="radio">Radio</string>
     <string name="music_title">Music</string>
+    <string name="link">PHONE LINK</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>

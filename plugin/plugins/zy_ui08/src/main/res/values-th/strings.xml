@@ -16,5 +16,6 @@
     <string name="navigation">นำทาง</string>
     <string name="radio">วิทยุ</string>
     <string name="music_title">เพลง</string>
+    <string name="link">เชื่อมต่อโทรศัพท์</string>
 
 </resources>

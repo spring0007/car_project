@@ -16,5 +16,6 @@
     <string name="navigation">Πλοήγηση</string>
     <string name="radio">Ραδιόφωνο</string>
     <string name="music_title">Μουσική</string>
+    <string name="link">Σύνδεση τηλεφώνου</string>
 
 </resources>
