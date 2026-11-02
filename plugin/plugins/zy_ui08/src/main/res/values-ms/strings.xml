@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="click_play_music">Tajuk Lagu</string>
+    <string name="music_artist">Artis</string>
+    <string name="unknown">tidak diketahui</string>
+
+    <string name="home">Laman Utama</string>
+    <string name="navi">Navigasi</string>
+    <string name="all_app">Aplikasi</string>
+    <string name="phone">Telefon</string>
+    <string name="music">Muzik</string>
+    <string name="settings">Tetapan</string>
+    <string name="allapp">Aplikasi</string>
+    <string name="eq">EQ</string>
+    <string name="sound_console">Konsol Bunyi</string>
+    <string name="navigation">Navigasi</string>
+    <string name="radio">Radio</string>
+    <string name="music_title">Muzik</string>
+
+</resources>

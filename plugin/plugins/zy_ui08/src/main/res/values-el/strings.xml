@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="click_play_music">Τίτλος τραγουδιού</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="unknown">άγνωστο</string>
+
+    <string name="home">Αρχική</string>
+    <string name="navi">Πλοήγηση</string>
+    <string name="all_app">Εφαρμογές</string>
+    <string name="phone">Τηλέφωνο</string>
+    <string name="music">Μουσική</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="allapp">Εφαρμογές</string>
+    <string name="eq">EQ</string>
+    <string name="sound_console">Κονσόλα ήχου</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="music_title">Μουσική</string>
+
+</resources>

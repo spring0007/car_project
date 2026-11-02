@@ -1,0 +1,130 @@
+<com.launcher.zy_ui08.MusicWidget xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_music_widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sf_music_bg">
+
+        <TextView
+            android:id="@+id/music_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/harmonyos_sans_sc_light"
+            android:text="@string/music_title"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/music_name_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.06"
+            app:layout_constraintWidth_percent="0.85" />
+
+
+        <ImageView
+            android:id="@+id/img_song_art_bg"
+            android:layout_width="@dimen/song_art_bg_size"
+            android:layout_height="@dimen/song_art_bg_size"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ablum_bg"
+            app:layout_constraintBottom_toTopOf="@+id/music_ll_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_title" />
+
+        <LinearLayout
+            android:id="@+id/music_ll_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/music_ll_control"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img_song_art_bg"
+            app:layout_constraintWidth_percent="0.8">
+
+            <com.awell.launcher2.EarqueeTextView
+                android:id="@+id/music_widget_music_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:fontFamily="@font/harmonyos_sans_sc_light"
+                android:gravity="center_horizontal"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:text="@string/click_play_music"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/music_name_size" />
+
+            <com.awell.launcher2.EarqueeTextView
+                android:id="@+id/music_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:fontFamily="@font/harmonyos_sans_sc_light"
+                android:gravity="center_horizontal"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:text="@string/music_artist"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/music_artist_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/music_ll_control"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.91"
+            app:layout_constraintWidth_percent="0.60">
+
+            <ImageView
+                android:id="@+id/music_widget_pre"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
+                android:src="@drawable/sf_music_pre" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/music_widget_play"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
+                android:src="@drawable/sf_music_bofang" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/music_widget_next"
+                android:layout_width="@dimen/music_play_size"
+                android:layout_height="@dimen/music_play_size"
+                android:src="@drawable/sf_music_next" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/music_widget_seekbars"
+            android:layout_width="0dp"
+            android:layout_height="23dp"
+            android:progressDrawable="@drawable/progress_drawable"
+            android:thumb="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_ll_control"
+            app:layout_constraintWidth_percent="0.86"
+            tools:ignore="MissingConstraints" />
+
+</com.launcher.zy_ui08.MusicWidget>
