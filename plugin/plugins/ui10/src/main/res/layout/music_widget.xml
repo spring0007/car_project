@@ -3,30 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/music_widget_layout"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:context=".MainActivityUI10"
-    tools:ignore="MissingDefaultResource">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_name_layout_music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/sf_music_bg"
-            android:layout_width="@dimen/time_bg_width"
-            android:layout_height="@dimen/time_bg_height"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
             android:src="@drawable/sf_time_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <!-- 专辑封面:宽度 = 卡片宽度 32.1%,高度按 178:170 推导 -->
         <ImageView
             android:id="@+id/img_song_art_bg"
-            android:layout_width="@dimen/music_album_width"
-            android:layout_height="@dimen/music_album_height"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
             android:src="@drawable/ablum_bg"
+            app:layout_constraintDimensionRatio="178:170"
+            app:layout_constraintWidth_percent="0.321"
             app:layout_constraintStart_toStartOf="@+id/sf_music_bg"
             app:layout_constraintEnd_toEndOf="@+id/sf_music_bg"
             app:layout_constraintHorizontal_bias="0.1"

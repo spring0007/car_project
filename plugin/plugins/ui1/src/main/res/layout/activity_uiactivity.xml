@@ -66,8 +66,8 @@
     <ImageView
         android:id="@+id/hotset_bg"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.21"
         android:scaleType="fitXY"
         android:src="@drawable/hotseat_bg"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -12,4 +12,5 @@
     <dimen name="music_layout_start">20dp</dimen>
     <dimen name="music_album_width">178dp</dimen>
     <dimen name="music_album_height">170dp</dimen>
+    <dimen name="host_tv_size">24sp</dimen>
 </resources>

@@ -7,105 +7,127 @@
     android:layout_height="match_parent"
     tools:context=".MainActivityUI10">
 
+    <!-- 时间卡片背景:宽度 = 屏宽 43.3%,高度按 554:212 推导 -->
     <ImageView
         android:id="@+id/time_bg_iv"
-        android:layout_width="@dimen/time_bg_width"
-        android:layout_height="@dimen/time_bg_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/sf_time_bg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintDimensionRatio="554:212"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="@dimen/time_start_ratio"
-        app:layout_constraintVertical_bias="0.3"/>
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintWidth_percent="0.433" />
 
+    <!-- 左侧时钟底板:宽度 = 屏宽 15.3%,高度按 196:144 推导 -->
     <ImageView
         android:id="@+id/time_bg_left_iv"
-        android:layout_width="@dimen/time_bg_inner_width"
-        android:layout_height="@dimen/time_bg_inner_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/time_bg"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
+        app:layout_constraintDimensionRatio="196:144"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="@dimen/time_inner_start_ratio"
-        app:layout_constraintVertical_bias="0.31"/>
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
+        app:layout_constraintVertical_bias="0.385"
+        app:layout_constraintWidth_percent="0.153" />
 
+    <!-- 右侧时钟底板,宽度同上 -->
     <ImageView
         android:id="@+id/time_bg_right_iv"
-        android:layout_width="@dimen/time_bg_inner_width"
-        android:layout_height="@dimen/time_bg_inner_height"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
         android:src="@drawable/time_bg"
-        app:layout_constraintStart_toEndOf="@+id/time_bg_left_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
+        app:layout_constraintDimensionRatio="196:144"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintVertical_bias="0.31"/>
+        app:layout_constraintStart_toEndOf="@+id/time_bg_left_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
+        app:layout_constraintVertical_bias="0.385"
+        app:layout_constraintWidth_percent="0.153" />
 
     <TextClock
         android:id="@+id/time_hour"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:format12Hour="h"
         android:format24Hour="HH"
+        android:gravity="center"
         android:text="00:00"
         android:textColor="@android:color/black"
         android:textSize="@dimen/time_text_size"
-        app:layout_constraintStart_toStartOf="@+id/time_bg_left_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_left_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_left_iv"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_left_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_bg_left_iv" />
+        app:layout_constraintStart_toStartOf="@+id/time_bg_left_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_left_iv" />
 
     <TextClock
         android:id="@+id/time_minute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:format12Hour="mm"
         android:format24Hour="mm"
+        android:gravity="center"
+        android:textSize="@dimen/time_text_size"
         android:text="00:00"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/time_text_size"
-        app:layout_constraintStart_toStartOf="@+id/time_bg_right_iv"
+        app:layout_constraintBottom_toBottomOf="@+id/time_bg_right_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_right_iv"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_right_iv"
-        app:layout_constraintBottom_toBottomOf="@+id/time_bg_right_iv"/>
+        app:layout_constraintStart_toStartOf="@+id/time_bg_right_iv"
+        app:layout_constraintTop_toTopOf="@+id/time_bg_right_iv" />
 
     <TextClock
         android:id="@+id/date"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:format12Hour="yyyy/MM/dd"
         android:format24Hour="yyyy/MM/dd"
         android:text="2020年5月18日"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textSize="@dimen/host_tv_size"
+        android:singleLine="true"
+        android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="@+id/time_bg_left_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_left_iv"
         app:layout_constraintTop_toBottomOf="@+id/time_bg_left_iv"/>
 
     <TextClock
         android:id="@+id/weekday"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:format12Hour="EEEE"
         android:format24Hour="EEEE"
         android:text="星期五"
+        android:singleLine="true"
+        android:gravity="center_horizontal"
         android:textColor="@android:color/white"
-        android:textSize="24sp"
+        android:textSize="@dimen/host_tv_size"
         app:layout_constraintStart_toStartOf="@+id/time_bg_right_iv"
         app:layout_constraintEnd_toEndOf="@+id/time_bg_right_iv"
         app:layout_constraintTop_toBottomOf="@+id/time_bg_right_iv" />
 
-    <!-- music layout -->
-    <include layout="@layout/music_widget"
+    <!-- music layout:与时间卡片等宽等高,位于时间卡片右侧 -->
+    <include
+        layout="@layout/music_widget"
         android:id="@+id/layout_music_widget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/music_layout_start"
+        app:layout_constraintDimensionRatio="554:212"
         app:layout_constraintStart_toEndOf="@+id/time_bg_iv"
         app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
         app:layout_constraintBottom_toBottomOf="@+id/time_bg_iv"
-        android:layout_marginStart="@dimen/music_layout_start"/>
+        app:layout_constraintWidth_percent="0.43" />
+
 
     <ImageView
         android:id="@+id/hotset_nav_app"
@@ -114,9 +136,8 @@
         android:src="@drawable/sf_navi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/hotset_radio_app"
-        app:layout_constraintTop_toTopOf="@+id/time_bg_iv"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.7"/>
+        app:layout_constraintTop_toBottomOf="@+id/time_bg_iv"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/hotset_navi_tv"
@@ -126,7 +147,7 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_nav_app"
         app:layout_constraintEnd_toEndOf="@+id/hotset_nav_app"
         app:layout_constraintTop_toBottomOf="@+id/hotset_nav_app"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
     <ImageView
         android:id="@+id/hotset_radio_app"
@@ -146,7 +167,7 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_radio_app"
         app:layout_constraintEnd_toEndOf="@+id/hotset_radio_app"
         app:layout_constraintTop_toBottomOf="@+id/hotset_radio_app"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
     <ImageView
         android:id="@+id/hotset_music_app"
@@ -166,7 +187,7 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_music_app"
         app:layout_constraintEnd_toEndOf="@+id/hotset_music_app"
         app:layout_constraintTop_toBottomOf="@+id/hotset_music_app"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
     <ImageView
         android:id="@+id/hotset_video_app"
@@ -186,7 +207,7 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_video_app"
         app:layout_constraintEnd_toEndOf="@+id/hotset_video_app"
         app:layout_constraintTop_toBottomOf="@+id/hotset_video_app"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
     <ImageView
         android:id="@+id/hotset_btapp"
@@ -206,7 +227,7 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_btapp"
         app:layout_constraintEnd_toEndOf="@+id/hotset_btapp"
         app:layout_constraintTop_toBottomOf="@+id/hotset_btapp"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
     <ImageView
         android:id="@+id/hotset_allapp"
@@ -226,6 +247,6 @@
         app:layout_constraintStart_toStartOf="@+id/hotset_allapp"
         app:layout_constraintEnd_toEndOf="@+id/hotset_allapp"
         app:layout_constraintTop_toBottomOf="@+id/hotset_allapp"
-        android:textSize="24sp"/>
+        android:textSize="@dimen/host_tv_size"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
