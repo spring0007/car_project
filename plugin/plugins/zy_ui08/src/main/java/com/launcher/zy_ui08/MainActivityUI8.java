@@ -237,10 +237,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == binding.llHostLink.getId()) {
-          //  AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
-            startActivity("com.zjinnova.zlink","com.zjinnova.android.zlink.features.main.MainActivity");
-        }else if (v.getId() == binding.llHostAllapp.getId()) {
+         if (v.getId() == binding.llHostAllapp.getId()) {
             AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
         }else if (v.getId() == binding.llHostNav.getId() || v.getId() == binding.ivNavigationBg.getId()) {
             String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
@@ -258,7 +255,7 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             }
         }else if ( v.getId() == binding.llHostMusic.getId() ){
             startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
-        }else if(v.getId() == binding.ivRadioBg.getId()){
+        }else if(v.getId() == binding.ivRadioBg.getId() || v.getId() == binding.llHostRadio.getId()){
             startActivity("com.awell.radio", "com.awell.radio.AwellFmActivity");
         }else if (v.getId() == binding.llHostSetting.getId()){
             startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");

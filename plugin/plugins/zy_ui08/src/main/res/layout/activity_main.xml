@@ -263,40 +263,13 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
-        android:id="@+id/ll_host_link"
-        style="@style/host_ll_style"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
-        app:layout_constraintWidth_percent="@dimen/host_width_percent">
-
-        <ImageView
-            android:id="@+id/hotseat_link"
-            android:layout_width="@dimen/host_width"
-            android:layout_height="@dimen/host_height"
-            android:duplicateParentState="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/host_link" />
-
-        <TextView
-            style="@style/host_tv_style"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/link" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/ll_host_nav"
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_music"
-        app:layout_constraintStart_toEndOf="@+id/ll_host_link"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
         app:layout_constraintWidth_percent="@dimen/host_width_percent">
 
@@ -322,7 +295,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/ll_host_phone"
+        app:layout_constraintEnd_toStartOf="@+id/ll_host_radio"
         app:layout_constraintStart_toEndOf="@+id/ll_host_nav"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
         app:layout_constraintWidth_percent="@dimen/host_width_percent">
@@ -344,13 +317,42 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_host_radio"
+        style="@style/host_ll_style"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toEndOf="@+id/ll_host_music"
+        app:layout_constraintEnd_toStartOf="@+id/ll_host_phone"
+        app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
+        app:layout_constraintWidth_percent="@dimen/host_width_percent">
+
+        <ImageView
+            android:id="@+id/hotseat_radio"
+            android:layout_width="@dimen/host_width"
+            android:layout_height="@dimen/host_height"
+            android:duplicateParentState="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/host_radio" />
+
+        <TextView
+            style="@style/host_tv_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/radio_title" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/ll_host_phone"
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_allapp"
-        app:layout_constraintStart_toEndOf="@+id/ll_host_music"
+        app:layout_constraintStart_toEndOf="@+id/ll_host_radio"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
         app:layout_constraintWidth_percent="@dimen/host_width_percent">
 

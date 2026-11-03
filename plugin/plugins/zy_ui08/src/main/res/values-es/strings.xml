@@ -15,6 +15,7 @@
     <string name="sound_console">Consola de sonido</string>
     <string name="navigation">Navegación</string>
     <string name="radio">Radio</string>
+    <string name="radio_title">Radio</string>
     <string name="music_title">Música</string>
     <string name="link">Conexión del teléfono</string>
 

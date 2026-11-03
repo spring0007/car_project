@@ -15,6 +15,7 @@
     <string name="sound_console">音效控制台</string>
     <string name="navigation">导航</string>
     <string name="radio">收音机</string>
+    <string name="radio_title">收音机</string>
     <string name="music_title">音乐</string>
     <string name="link">手机互联</string>
 
