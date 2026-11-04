@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,6 +37,7 @@ import com.awell.utils.CommonData;
 import com.awell.utils.LogUtil;
 import com.launcher.zy_ui08.databinding.ActivityMainBinding;
 import com.launcher.zy_ui08.databinding.MusicWidgetBinding;
+import com.launcher.zy_ui8.IconManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -79,7 +81,24 @@ public class MainActivityUI8 extends Activity implements View.OnClickListener {
             handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
         }
         AppsCustomizeControl.INSTANCE.setActivity(this);
-        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder().setThemeMode(0).build());
+        AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder()
+                .setThemeMode(0xff)
+                .setRefresh(false)
+                .setAutoWidthGap(true)
+                .setColumnCount(5)
+                .setIconSizeSame(true)
+                .setIconOffsetY((int) getResources().getDimension(R.dimen.app_icon_offset_y))
+                .setIconTextPadding((int) getResources().getDimension(R.dimen.app_icon_padding))
+                .setIconMap(IconManager.INSTANCE.getPackageIconMap())
+                .setBackgroundTheme(4)
+                .setIndicatorPanel(4)
+                .setPluginPackageName("com.launcher.zy_ui08")
+                .setIconSize((int) getResources().getDimension(R.dimen.app_icon_size))
+                .setFontColor(0xFFF4F4F4)
+                .setFontSizeSp((int) getResources().getDimension(R.dimen.font_size_sp)) // 20
+                .setCellHeightDp((int) getResources().getDimension(R.dimen.app_cell_height))
+                .setCellWidthDp((int) getResources().getDimension(R.dimen.app_cell_width))
+                .build());
     }
 
 
