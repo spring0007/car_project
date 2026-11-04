@@ -40,7 +40,7 @@ import android.content.Context
  *     8, 3,                  // layout: columnCount, rowCount
  *     14, Color.WHITE,       // font: fontSizeSp, fontColor
  *     -1, -1,                // cell: cellWidthDp, cellHeightDp (不修改)
- *     true, null,            // gap: autoWidthGap=true, autoHeightGap=null (不修改)
+ *     true, true,            // gap: autoWidthGap=true, autoHeightGap=true (自动均分)
  *     1                      // theme: backgroundTheme
  * );
  *
@@ -90,8 +90,8 @@ data class AppsCustomizeConfig(
     val iconCropHeight: Int = 0, // 图标剪裁高度
 
     // ========== 间距配置 ==========
-    val autoWidthGap: Boolean = false,    // 水平间距是否自动调整，false 表示不修改
-    val autoHeightGap: Boolean = false,   // 垂直间距是否自动调整，false 表示不修改
+    val autoWidthGap: Boolean = true,    // 水平间距是否自动调整，默认 true：X 轴等分布局铺满宽度；false 使用 XML 固定间距
+    val autoHeightGap: Boolean = true,   // 垂直间距是否自动调整，默认 true：Y 轴自动均分；false 使用 XML 固定间距
     val iconGapX: Int = 0, // 图标水平间距（像素）
     val iconGapY: Int = 0, // 图标垂直间距（像素）
 
@@ -241,15 +241,15 @@ data class AppsCustomizeConfig(
         
         /**
          * 水平间距是否自动调整
-         * null 表示不修改
+         * 默认 true：X 轴等分布局，列间距与左右两端留白一致并铺满宽度
          */
-        private var autoWidthGap: Boolean = false
-        
+        private var autoWidthGap: Boolean = true
+
         /**
          * 垂直间距是否自动调整
-         * false 表示不修改
+         * 默认 true：Y 轴自动均分
          */
-        private var autoHeightGap: Boolean = false
+        private var autoHeightGap: Boolean = true
 
         /**
          * 图标水平间距（像素）

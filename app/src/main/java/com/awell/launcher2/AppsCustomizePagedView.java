@@ -311,8 +311,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     // Previews & outlines
     ArrayList<AppsCustomizeAsyncTask> mRunningTasks;
     private static final int sPageSleepDelay = 200;
-    private static final int defaultAppColumnCount = 7;//默认每行显示的应用图标数量
+    private static final int defaultAppColumnCount = 7;//每行最多显示的应用图标数量（上限，实际列数由屏宽和默认列间距估算）
     private static final int defaultAppRowCount = 2;//默认每列显示的应用图标数量
+    // 估算列数时使用的默认 X 轴列间距（dp）：XML 中 pageLayoutWidthGap 未配置（-1dp）时的兜底值
+    private static final int defaultAppWidthGapDp = 20;
     private Runnable mInflateWidgetRunnable = null;
     private Runnable mBindWidgetRunnable = null;
     static final int WIDGET_NO_CLEANUP_REQUIRED = -1;
@@ -489,6 +491,10 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
             return R.drawable.rect_svg; //zy_ui3
         }else if (themeId == 2)
             return R.drawable.rect_svg2;//yfd_ui6
+        else if (themeId == 3)
+            return R.drawable.bg_theme28;//ui28
+        else if (themeId == 4)
+            return R.drawable.zy_ui08_bg;//ui28
         return 0;
     }
 
@@ -690,21 +696,30 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         LogUtil.d("onDataReady: using DEFAULT layout, maxCellCountY=" + maxCellCountY + ", mMaxAppCellCountY=" + mMaxAppCellCountY);*/
 
         // 处理页面间距：如果配置对象存在但未设置，则使用从 XML 读取的原始默认值
-        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoWidthGap()) {
-            mCustomPageLayoutWidthGap = -1;
-        } else {
+        if (mAppsCustomizeConfig != null && !mAppsCustomizeConfig.getAutoWidthGap()) {
             mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
+        } else {
+
+            mCustomPageLayoutWidthGap = -1;
         }
 
-        //if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
-            mCustomPageLayoutHeightGap = -1;
-        /*} else {
+        if (mAppsCustomizeConfig != null && !mAppsCustomizeConfig.getAutoHeightGap()) {
             mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
-        }*/
+        } else {
+            mCustomPageLayoutHeightGap = -1;
+        }
         LogUtil.d("onDataReady: config applied - mCustomPageLayoutWidthGap=" + mCustomPageLayoutWidthGap
                 + ", mCustomPageLayoutHeightGap=" + mCustomPageLayoutHeightGap);
 
-        mWidgetSpacingLayout.setGap(mCustomPageLayoutWidthGap, mCustomPageLayoutHeightGap);
+        // 列数估算必须使用「默认列间距」而不是 -1：
+        // estimateCellHSpan() 的公式是 (可用宽度 + gap) / (cellWidth + gap)，
+        // gap 为 -1 时相当于直接按 cell 宽度硬除，1280x720 会算出 7 列；
+        // 用 XML 默认列间距（values-sw720dp-land = 38dp）参与估算，1280x720 得到 6 列。
+        // defaultAppColumnCount(7) 仅作为上限，实际列数 = min(上限, 估算值)。
+        int estimateWidthGap = mPageLayoutWidthGap > 0
+                ? mPageLayoutWidthGap
+                : (int) (defaultAppWidthGapDp * getResources().getDisplayMetrics().density);
+        mWidgetSpacingLayout.setGap(estimateWidthGap, mCustomPageLayoutHeightGap);
         mWidgetSpacingLayout.setPadding(mPageLayoutPaddingLeft, mPageLayoutPaddingTop, mPageLayoutPaddingRight, mPageLayoutPaddingBottom);
         
         // 如果设置了自定义 Cell 尺寸，则直接设置到 PagedViewCellLayout
@@ -724,6 +739,8 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
         mWidgetSpacingLayout.calculateCellCount(width, height, maxCellCountX, maxWidgetCellCountY);
         mCellCountX = mWidgetSpacingLayout.getCellCountX();
         mCellCountY = mWidgetSpacingLayout.getCellCountY();
+        // 恢复实际间距配置：autoWidthGap 时仍由 setupPage() 按剩余空间自动均分
+        mWidgetSpacingLayout.setGap(mCustomPageLayoutWidthGap, mCustomPageLayoutHeightGap);
         updatePageCounts();
 
         // Force a measure to update recalculate the gaps
@@ -1361,30 +1378,40 @@ public class AppsCustomizePagedView extends PagedViewWithDraggableItems implemen
     }
 
     private void setupPage(PagedViewCellLayout layout) {
-        if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoWidthGap()) {
-            if(mAppsCustomizeConfig.getCellWidthDp() > 0){
-                // ========== autoWidthGap：等分布局，铺满全屏 ==========
-                int cellWidth = mAppsCustomizeConfig.getCellWidthDp();
-                int hSpace = getMeasuredWidth() - mPageLayoutPaddingLeft - mPageLayoutPaddingRight;
-                int totalCellWidth = mCellCountX * cellWidth;
-                int freeSpace = hSpace - totalCellWidth;
-                if (freeSpace > 0) {
-                    // 公式：(可用宽度 - item宽度 * item个数) / item个数
-                    mCustomPageLayoutWidthGap = freeSpace / mCellCountX;
-                    //LogUtil.d("autoWidthGap: hSpace=" + hSpace + ", cellWidth=" + cellWidth
-                    //        + ", mCellCountX=" + mCellCountX + ", gap=" + mCustomPageLayoutWidthGap);
-                }
-            }else
-                mCustomPageLayoutWidthGap = -1;
+        // autoWidthGap：X 轴等分布局。按「列数 + 1」均分整屏宽度（列间 N-1 个间隙，左右两端各 1 个）。
+        // 页面宽度是内容宽度，PagedView 会把页面水平居中，居中偏移正好等于首列左侧的间距，
+        // 所以这里用整屏宽度（不减页面 padding）计算，左右留白才能与列间距一致。
+        // 未设置 cellWidthDp 时用页面当前的单元格宽度（默认值或已应用的自定义值）。
+        if (mAppsCustomizeConfig == null || mAppsCustomizeConfig.getAutoWidthGap()) {
+            int cellWidth = layout.getCellWidth();
+            int hSpace = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+            int freeSpace = hSpace - (mCellCountX * cellWidth);
+            mCustomPageLayoutWidthGap = (mCellCountX > 0 && freeSpace > 0)
+                    ? freeSpace / (mCellCountX+1)
+                    : -1;
         } else {
+            // 关闭自动间距时使用 XML 中配置的固定间距
             mCustomPageLayoutWidthGap = mPageLayoutWidthGap;
+
+
+//            int cellWidth = mAppsCustomizeConfig.getCellWidthDp();
+//            int hSpace = getMeasuredWidth() - mPageLayoutPaddingLeft - mPageLayoutPaddingRight;
+//            int totalCellWidth = mCellCountX * cellWidth;
+//            int freeSpace = hSpace - totalCellWidth;
+//            if (freeSpace > 0) {
+//                // 公式：(可用宽度 - item宽度 * item个数) / item个数
+//                mCustomPageLayoutWidthGap = freeSpace / mCellCountX;
+//                //LogUtil.d("autoWidthGap: hSpace=" + hSpace + ", cellWidth=" + cellWidth
+//                //        + ", mCellCountX=" + mCellCountX + ", gap=" + mCustomPageLayoutWidthGap);
+//            }
+
         }
 
-        //if (mAppsCustomizeConfig != null && mAppsCustomizeConfig.getAutoHeightGap()) {
-            mCustomPageLayoutHeightGap = -1;
-        /*} else {
+        if (mAppsCustomizeConfig != null && !mAppsCustomizeConfig.getAutoHeightGap()) {
             mCustomPageLayoutHeightGap = mPageLayoutHeightGap;
-          }*/
+        } else {
+            mCustomPageLayoutHeightGap = -1;
+        }
        // LogUtil.d("setupPage: mCustomWidthGap=" + mCustomPageLayoutWidthGap + ", mCustomHeightGap=" + mCustomPageLayoutHeightGap);
 
         // 如果是自定义样式且设置了自定义 Cell 尺寸，则应用到每个页面

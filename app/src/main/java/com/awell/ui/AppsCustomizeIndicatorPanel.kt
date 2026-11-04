@@ -56,6 +56,20 @@ class AppsCustomizeIndicatorPanel(context: Context) : View(context) {
 //                mBmpSelect = bmpDraw.bitmap
 //
 //            }
+            3 -> { //ui28
+                val bmp = resources.getDrawable(R.drawable.ui28_dot2) as BitmapDrawable
+                mBmpBackground = bmp.bitmap
+                val bmpDraw = resources.getDrawable(R.drawable.ui28_dot1) as BitmapDrawable
+                mBmpSelect = bmpDraw.bitmap
+
+            }
+            4 -> { //ui28
+                val bmp = resources.getDrawable(R.drawable.zy_ui08_dot2) as BitmapDrawable
+                mBmpBackground = bmp.bitmap
+                val bmpDraw = resources.getDrawable(R.drawable.zy_ui08_dot1) as BitmapDrawable
+                mBmpSelect = bmpDraw.bitmap
+
+            }
             else -> {
                 val bmp = resources.getDrawable(R.drawable.dot_nor3) as BitmapDrawable
                 mBmpBackground = bmp.bitmap
