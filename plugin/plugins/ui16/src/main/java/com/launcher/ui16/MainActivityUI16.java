@@ -188,7 +188,7 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
                             Log.e(TAG, "unit Data = " + unitData);
                             if (unitData == 0) {
                                 binding.carSpeedTv.setText(speed_km + "");
-                                binding.carSpeedUnitTv.setText("km/h");
+                                binding.carSpeedUnitTv.setText("KM/h");
                             } else if (unitData == 1) {
                                 binding.carSpeedTv.setText(speed_mile + "");
                                 binding.carSpeedUnitTv.setText("mph");
@@ -201,14 +201,12 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
 //                                }
 //                            }
                             mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
-                            // GPS 实际上报间隔(minTime 下限+低速距离阈值)可达 2~5 秒,
-                            // 2 秒超时会在正常行驶时把速度清成 0(每 2 秒跳 0),改为 3 秒安全网
                             mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
                         }
                         break;
                     case MSG_CLEAR_SPEED:
-                        binding.carSpeedTv.setText("" + 0);
-//                        if (animationDrawableTwo != null) {
+                        binding.carSpeedTv.setText("0");
+//                       if (animationDrawableTwo != null) {
 //                            animationDrawableTwo.stop();
 //                        }
                         break;
@@ -235,7 +233,7 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
         Log.e(TAG, "unit Data = " + unitData);
         if (binding.carSpeedUnitTv != null) {
             if (unitData == 0) {
-                binding.carSpeedUnitTv.setText("km/h");
+                binding.carSpeedUnitTv.setText("KM/h");
             } else if (unitData == 1) {
                 binding.carSpeedUnitTv.setText("mph");
             }
@@ -352,6 +350,10 @@ public class MainActivityUI16 extends Activity implements View.OnClickListener {
         AppsCustomizeControl.INSTANCE.setActivity(null);
         unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.hideApps();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
         cleanListener();
         try {
             mediaControl.unBindDataService(this);
