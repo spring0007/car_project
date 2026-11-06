@@ -43,6 +43,7 @@ object IconManager {
         "com.awell.weather" to "zy_ui8_weather",
         "com.awell.eqselect" to "zy_ui8_jhq",
         "com.ms.ms2160" to "zy_ui8_wjsr",
+        "cn.kuwo.kwmusiccar" to "zy_ui8_kuwo",
         ".AwellCanbusAirView" to "zy_ui8_air"
     )
 

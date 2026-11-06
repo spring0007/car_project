@@ -12,6 +12,12 @@
     <dimen name="song_art_bg_size">156dp</dimen>
     <dimen name="music_name_size">19sp</dimen>
     <dimen name="music_artist_size">14sp</dimen>
+    <dimen name="app_icon_offset_y">24dp</dimen>
+    <dimen name="app_icon_padding">12dp</dimen>
+    <dimen name="app_icon_size">61dp</dimen>
+    <dimen name="font_size_sp">19sp</dimen>
+    <dimen name="app_cell_height">148dp</dimen>
+    <dimen name="app_cell_width">136dp</dimen>
 
     <item name="host_width_percent" type="dimen" format="float">0.167</item>
 </resources>
