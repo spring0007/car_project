@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="tv_apps_style" >
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#ff101C36</item>
+        <item name="android:textSize">@dimen/tv_apps_size</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:onClick">onClick</item>
+    </style>
+
+
+
+
+
+
+
+    <style name="tv_style">
+        <item name="android:textSize">@dimen/tv_left_title_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+
+    </style>
+
+
+
+    <style name="tv_sub_title_style">
+        <item name="android:gravity">center_horizontal|start</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">@dimen/tv_sub_title_size</item>
+
+    </style>
+    <style name="tv_sub_title_style1">
+        <item name="android:gravity">center_horizontal|start</item>
+        <item name="android:textColor">#f26869</item>
+        <item name="android:textSize">@dimen/tv_sub_title_size</item>
+
+    </style>
+
+    <style name="tv_sub_title_style2">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">50sp</item>
+
+    </style>
+
+    <dimen name="tv_left_title_size">20sp</dimen>
+</resources>
