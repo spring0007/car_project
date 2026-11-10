@@ -2,6 +2,7 @@ package com.launcher.ui01;
 
 import static com.awell.utils.Utils.startWallpaper;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,9 +12,14 @@ import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -31,7 +37,10 @@ import com.awell.control.AppsCustomizeConfig;
 import com.awell.control.AppsCustomizeControl;
 import com.awell.control.AwellMediaControl;
 import com.awell.launcher2.IconCache;
+import com.awell.library.AwellTool;
+import com.awell.library.util.ClickUtils;
 import com.awell.utils.CommonData;
+import com.awell.utils.LogUtil;
 import com.launcher.ui01.databinding.ActivityMainBinding;
 import com.awell.library.util.WeatherHelper;
 import com.launcher.ui01.utils.IconManager;
@@ -48,8 +57,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private AwellMediaControl mediaControl;
     private int PERMISSION_REQUEST_CODE = 100;
     private Boolean isWeatherTimerRunning = false;
-    private boolean accRecor;
-    private static final String BTSTATUS = "awell_bt_status";
+    private final int MSG_UPDATE_SPEED = 1;
+    private final int MSG_CLEAR_SPEED = 2;
+    private Handler mHandlerSpeed = null;
+    private boolean accRecor = false;
+    private final int SPEEDHOME = 20;
+	private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
     private Runnable  weatherRefreshRunnable = new Runnable() {
         @Override
         public void run() {
@@ -96,7 +110,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //        binding.itemWeather.setOnClickListener(this);
 
         //setBtstatus();
+		
         initReceiver();
+	
+		initLocationListener();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            handler.removeMessages(SPEEDHOME);
+            handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+        }
+		updateSpeedUnitText();
         AppsCustomizeControl.INSTANCE.setActivity(this);
         AppsCustomizeControl.INSTANCE.setPluginThemeMode(new AppsCustomizeConfig.Builder()
                 .setThemeMode(0xff)
@@ -118,6 +141,142 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .build());
 
         binding.getRoot().postDelayed(this::checkAndRequestPermission, 50);
+    }
+	
+
+    private void initLocationListener() {
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationListener = new LocationListener() {
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+
+            @Override
+            public void onLocationChanged(Location location) {
+
+                if (location != null && location.hasSpeed()) {
+
+                    int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
+                    int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
+                    Log.i(TAG, "onLocationChanged: float speed = " + speed);
+                    Log.i(TAG, "onLocationChanged: float speedMile = " + speedMile);
+
+
+                    Message msg = mHandlerSpeed.obtainMessage();
+                    msg.what = MSG_UPDATE_SPEED;
+                    msg.arg1 = speed;
+                    msg.arg2 = speedMile;
+                    mHandlerSpeed.sendMessage(msg);
+                }
+            }
+        };
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            if (requestCode == 0x10 ) {
+                handler.removeMessages(SPEEDHOME);
+                handler.sendEmptyMessageDelayed(SPEEDHOME, 1000);
+            }else if (requestCode == PERMISSION_REQUEST_CODE) {
+                loadWeatherData();
+            }
+        }
+    }
+
+    private void initLongTouch() {
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                Log.i(TAG, "handlerNew msg.what = " + msg.what);
+                switch (msg.what) {
+                    case 100:
+                        break;
+                    case SPEEDHOME:
+                        speedhome();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        viewConfiguration = ViewConfiguration.get(this);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private void speedhome() {
+        Log.i(TAG, "speed come in");
+        mHandlerSpeed = new Handler() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MSG_UPDATE_SPEED:
+                        int speed_km = msg.arg1;
+                        int speed_mile = msg.arg2;
+                        Log.i(TAG, "accRecor = " + accRecor);
+                        if (!accRecor) {
+                            byte[] unit = new byte[1];
+                            CommonData.readDataToMeta(unit, 0x84);
+                            int unitData = unit[0];
+                            Log.e(TAG, "unit Data = " + unitData);
+                            if (unitData == 0) {
+                                binding.carSpeedTv.setText(speed_km + "");
+                                binding.carSpeedUnitTv.setText("KM/h");
+                            } else if (unitData == 1) {
+                                binding.carSpeedTv.setText(speed_mile + "");
+                                binding.carSpeedUnitTv.setText("mph");
+                            }
+//                            if (animationDrawableTwo != null) {
+//                                if (speed_km > 0 || speed_mile > 0) {
+//                                    animationDrawableTwo.start();
+//                                } else {
+//                                    animationDrawableTwo.stop();
+//                                }
+//                            }
+                            mHandlerSpeed.removeMessages(MSG_CLEAR_SPEED);
+                            mHandlerSpeed.sendEmptyMessageDelayed(MSG_CLEAR_SPEED, 3000);
+                        }
+                        break;
+                    case MSG_CLEAR_SPEED:
+                        binding.carSpeedTv.setText("0");
+//                       if (animationDrawableTwo != null) {
+//                            animationDrawableTwo.stop();
+//                        }
+                        break;
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        if (mLocationManager != null) {
+            mLocationManager.requestLocationUpdates("gps", CommonData.MEMENTINE, CommonData.MAXINSTANCES, mLocationListener, mHandlerSpeed.getLooper());
+        } else {
+            Log.e(TAG, "LocationManager is null, cannot request location updates");
+        }
+    }
+
+    private void updateSpeedUnitText() {
+        byte[] unit = new byte[1];
+        CommonData.readDataToMeta(unit, 0x84);
+        int unitData = unit[0];
+        Log.e(TAG, "unit Data = " + unitData);
+        if (binding.carSpeedUnitTv != null) {
+            if (unitData == 0) {
+                binding.carSpeedUnitTv.setText("KM/h");
+            } else if (unitData == 1) {
+                binding.carSpeedUnitTv.setText("mph");
+            }
+        }
     }
 
 
@@ -151,8 +310,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                    else ivLampSwitchBg.setImageResource(com.awell.launcher.library.R.drawable.off);
                     break;
                 case CommonData.ACTION_ACC_ON:
-//                    if (ivLampSwitchBg != null)
-//                        ivLampSwitchBg.postDelayed(() -> accRecor = false, 8 * 1000);
+                    if (binding.carSpeedTv != null)
+                        binding.carSpeedTv.postDelayed(() -> accRecor = false, 8 * 1000);
                     break;
                 case CommonData.ACTION_ACC_OFF:
                     accRecor = true;
@@ -174,6 +333,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     break;
                 case CommonData.ACTION_SHOW_ALL_APP:
                     AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
+                    break;
+                case CommonData.ACTION_SPEED_UNIT_CHANGE:
+                    updateSpeedUnitText();
                     break;
                 case CommonData.ACTION_TOP_SESSION_CHANGE:
                     String sessionTopPkg = intent.getStringExtra(CommonData.EXTRA_TOP_PACKAGE);
@@ -216,16 +378,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.i(TAG, "loadWeatherData: huang info=>" + weatherInfo);
             handler.post(() -> {
                 if (weatherInfo != null) {
-                    binding.weaterTvTemp.setText(weatherInfo.temperature + " ℃");
+                    binding.weaterTvTemp.setText(weatherInfo.temperature + "℃");
                     String weather = (WeatherTextMapper.description(MainActivity.this, weatherInfo.condCode));
                     binding.weaterTvTemp.setVisibility(View.VISIBLE);
                     binding.weaterIvInfo.setVisibility(View.VISIBLE);
-                    binding.weaterTvInfo.setText(weather + "  " + weatherInfo.tempMin + "/" + weatherInfo.tempMax + "℃");
+                    binding.weaterTvInfo.setText(weather);
+                    binding.weaterTvTag.setVisibility(View.VISIBLE);
+                    binding.weaterIvTag.setVisibility(View.VISIBLE);
+                    binding.weaterTvTag.setText(weatherInfo.tempMin + "/" + weatherInfo.tempMax + "℃");
                     WeatherIconLoader.getWeatherIcon(binding.weaterIvInfo, weatherInfo.condCode);
                 }else {
                     binding.weaterTvInfo.setText(R.string.no_weather_information_available_at_the_moment);
+                    WeatherIconLoader.getWeatherIcon(binding.weaterIvInfo, "999");
                     binding.weaterTvTemp.setVisibility(View.GONE);
                     binding.weaterIvInfo.setVisibility(View.GONE);
+                    binding.weaterTvTag.setVisibility(View.GONE);
+                    binding.weaterIvTag.setVisibility(View.GONE);
                 }
             });
         }).start();
@@ -247,20 +415,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                loadWeatherData();
-            } else {
-                // 处理权限被拒绝
-                //showPermissionDeniedMessage()
-                Log.e(TAG, "onRequestPermissionsResult: not have permission==>");
-            }
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         if (!isWeatherTimerRunning) {
@@ -275,12 +429,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         handler.removeCallbacks(weatherRefreshRunnable);
         isWeatherTimerRunning = false;
     }
-
-    private void initLongTouch() {
-        handler = new Handler(Looper.getMainLooper());
-        viewConfiguration = ViewConfiguration.get(this);
-    }
-
     @Override
     public void onBackPressed() {
         AppsCustomizeControl.INSTANCE.hideApps();
@@ -299,7 +447,35 @@ public class MainActivity extends Activity implements View.OnClickListener {
         unregisterReceiver(mainReceiver);
         AppsCustomizeControl.INSTANCE.setActivity(null);
         AppsCustomizeControl.INSTANCE.hideApps();
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+
+        cleanListener();
+
         mediaControl.unBindDataService(this);
+    }
+	
+	private void cleanListener() {
+        if (mHandlerSpeed != null) {
+            mHandlerSpeed.removeCallbacksAndMessages(null);
+            mHandlerSpeed = null;
+        }
+
+        if (mLocationManager != null && mLocationListener != null) {
+            try {
+                mLocationManager.removeUpdates(mLocationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+            mLocationManager = null;
+            mLocationListener = null;
+        }
+
+        if (binding != null) {
+            binding = null;
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -307,6 +483,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Log.d(TAG, "onClick: v.getId()=" + v.getId());
         switch (v.getId()) {
+            case R.id.item_apps_nav:
             case R.id.iv_navi_bg: {
                 String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
                 //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
@@ -323,31 +500,35 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
                 break;
             }
-            case R.id.item_weather:
+            case R.id.iv_weather_bg:
                 startActivity("com.awell.weather", "com.awell.weather.MainActivity");
                 break;
-            case R.id.iv_app:
-            case R.id.tv_app:
+            case R.id.item_apps_apps:
                 AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
                 break;
-            case R.id.item_radio:
+            case R.id.iv_radio_bg:
                 startActivity("com.awell.radio", "com.awell.radio.MainActivity");
                 break;
-            case R.id.item_car:
+            case R.id.item_apps_carinfo:
                 startActivity("com.awell.canbus","com.awell.canbus.showui.MainActivity");
                 break;
-            case R.id.iv_phone:
-            case R.id.tv_phone:
-            case R.id.item_phone:
+            case R.id.item_apps_phone:
                 startActivity("com.awell.bluetooth", "com.awell.bluetooth.MainActivity");
                 break;
-            case R.id.item_video:
-                startActivity("com.awell.localvideo", "com.awell.localvideo.activity.VideoListActivity");
-                break;
-            case R.id.iv_setting:
-            case R.id.tv_setting:
-            case R.id.item_setting:
+            case R.id.item_apps_setting:
                 startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
+                break;
+            case R.id.iv_radio_pre:
+                if (ClickUtils.isFastClick()) {
+                    return;
+                }
+                mediaControl.sendStrToHost(AwellTool.RADIO.PREVIOUS);
+                break;
+            case R.id.iv_radio_next:
+                if (ClickUtils.isFastClick()) {
+                    return;
+                }
+                mediaControl.sendStrToHost(AwellTool.RADIO.NEXT);
                 break;
         }
     }
@@ -397,6 +578,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewMusicPlayImage(@NotNull Bundle bundle) {
+            runOnUiThread(() -> {
+                String uriStr = bundle.getString(AwellTool.VALUE_M1, null);
+                Uri uri = null;
+                if (uriStr != null) {
+                    Uri parsedUri = Uri.parse(uriStr);
+                    if (parsedUri.getScheme() != null) {
+                        uri = parsedUri;
+                    }
+                }
+                com.awell.library.util.LogUtil.i("updateViewMusicPlayImage: uri=>" + uri);
+                musicWidget.loadAlbumArtByUri(uri);
+            });
 
         }
 
@@ -432,7 +625,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void updateViewRadioFreq(@NotNull Bundle bundle, @NotNull String fmOrAm, @NotNull String freq, @NotNull String unit) {
+            runOnUiThread(() -> {
+                binding.layoutRadioWidget.tvRadioFreq.setText(freq);
+                binding.layoutRadioWidget.tvRadioFreqUnit.setText(unit);
+                if("FM".equals(fmOrAm)){
+                    binding.layoutRadioWidget.tvRadioFreqPre.setText("87.0");
+                    binding.layoutRadioWidget.tvRadioFreqNext.setText("108.0");
+                    binding.layoutRadioWidget.progressRadioFreqs.setProgress((int)(Float.parseFloat(freq)*10 -870));
+                    binding.layoutRadioWidget.progressRadioFreqs.setMax(210);
+                }else if("AM".equals(fmOrAm)){
+                    binding.layoutRadioWidget.tvRadioFreqPre.setText("530");
+                    binding.layoutRadioWidget.tvRadioFreqNext.setText("1700");
+                    binding.layoutRadioWidget.progressRadioFreqs.setProgress(Integer.parseInt(freq) -530);
+                    binding.layoutRadioWidget.progressRadioFreqs.setMax(1170);
+                }
 
+                LogUtil.i("updateViewRadioFreq: freq=" + freq + ", fmOrAm=" + fmOrAm + ", unit=" + unit);
+            });
         }
 
         @Override

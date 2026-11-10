@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="main_left_icon_app_size">62dp</dimen>
-    <dimen name="tv_title_size">30sp</dimen>
-    <dimen name="tv_sub_title_size">24sp</dimen>
-    <dimen name="tv_title_width_parcent">0.8</dimen>
-    <dimen name="tv_title_vertical_bias">0.10</dimen>
-    <dimen name="item_margin_start">15dp</dimen>
-    <dimen name="main_right_icon_width">374dp</dimen>
-    <dimen name="weather_iv_size">174dp</dimen>
     <dimen name="music_iv_size">60dp</dimen>
     <dimen name="app_icon_size">100dp</dimen>
     <dimen name="font_size_sp">23sp</dimen>
@@ -15,12 +7,32 @@
     <dimen name="app_cell_height">211dp</dimen>
     <dimen name="app_cell_width">193dp</dimen>
     <dimen name="app_icon_offset_y">39dp</dimen>
-
-
-
-
+    <dimen name="weather_iv_size">174dp</dimen>
     <dimen name="app_icon_width">66dp</dimen>
     <dimen name="app_icon_height">62dp</dimen>
     <dimen name="tv_apps_size">18sp</dimen>
+    <dimen name="weather_iv_tag_size">20dp</dimen>
+    <dimen name="car_width">416dp</dimen>
+    <dimen name="car_height">278dp</dimen>
+    <dimen name="time_font_size">33sp</dimen>
+    <dimen name="car_tag_width">306dp</dimen>
+    <dimen name="car_tag_height">14dp</dimen>
+    <dimen name="car_tag_margin_top">10dp</dimen>
+    <dimen name="weekday_font_size">20sp</dimen>
+    <dimen name="iv_radio_size">60dp</dimen>
+    <dimen name="tv_radio_freq_size">62sp</dimen>
+    <dimen name="tv_radio_freq_unit_size">20sp</dimen>
+    <dimen name="tv_radio_tag_size">16sp</dimen>
+    <dimen name="progress_radio_freqs_width">309dp</dimen>
+    <dimen name="progress_radio_freqs_height">16dp</dimen>
+    <dimen name="tv_radio_title_size">22sp</dimen>
+    <dimen name="music_iv_play_size">72dp</dimen>
+    <dimen name="music_ablum_width">125dp</dimen>
+    <dimen name="music_ablum_height">119dp</dimen>
+    <dimen name="music_ablum_margin">20dp</dimen>
+    <dimen name="tv_music_name_size">26sp</dimen>
+    <dimen name="tv_music_artist_size">19sp</dimen>
+    <dimen name="tv_bt_navi_size">23sp</dimen>
+    <dimen name="app_tv_width">86dp</dimen>
 
 </resources>

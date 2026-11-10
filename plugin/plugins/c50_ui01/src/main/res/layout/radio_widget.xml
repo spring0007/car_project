@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/radio_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ll_radio_tops"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.836"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/radio"
+            android:textColor="@color/tv_color"
+            android:textStyle="bold"
+            android:textSize="@dimen/tv_radio_title_size" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitXY"
+            android:src="@drawable/sf_music_arrow" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_radio_freq"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.626"
+        app:layout_constraintTop_toBottomOf="@+id/ll_radio_tops"
+        app:layout_constraintBottom_toTopOf="@+id/progress_radio_freqs"
+        android:orientation="horizontal">
+
+        <com.awell.ctrlview.FrequencyTextView
+            android:id="@+id/tv_radio_freq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:includeFontPadding="false"
+            android:text="87.5"
+            android:textColor="@color/tv_color"
+            android:textStyle="bold"
+            android:textSize="@dimen/tv_radio_freq_size" />
+        <TextView
+            android:id="@+id/tv_radio_freq_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_radio_freq"
+            android:layout_alignParentEnd="true"
+            android:text="Mhz"
+            android:textColor="@color/tv_color"
+            android:textSize="@dimen/tv_radio_freq_unit_size" />
+
+    </RelativeLayout>
+    
+    <SeekBar
+        android:id="@+id/progress_radio_freqs"
+        android:layout_width="@dimen/progress_radio_freqs_width"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_radio_freq"
+        app:layout_constraintBottom_toTopOf="@+id/ll_radio_freq"
+        android:progressDrawable="@drawable/progress_radio_freqs"
+        android:thumb="@drawable/progress_radio_freqs_thumb"
+        android:clickable="false"
+        android:focusable="false"
+        android:enabled="false"
+        android:max="210"
+        android:progress="5"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_radio_freq"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintWidth_percent="0.87"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ll_radio_button"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_radio_freq_pre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:gravity="center"
+            android:text="87.0"
+            android:textColor="@color/tv_radio_color"
+            android:textSize="@dimen/tv_radio_tag_size" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_radio_freq_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:gravity="center"
+            android:text="108.0"
+            android:textColor="@color/tv_radio_color"
+            android:textSize="@dimen/tv_radio_tag_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_radio_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_percent="0.43"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/iv_radio_pre"
+            android:layout_width="@dimen/iv_radio_size"
+            android:layout_height="@dimen/iv_radio_size"
+            android:layout_gravity="center_vertical"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/sf_music_pre" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/iv_radio_next"
+            android:layout_width="@dimen/iv_radio_size"
+            android:layout_height="@dimen/iv_radio_size"
+            android:layout_gravity="center_vertical"
+            android:onClick="onClick"
+            android:scaleType="fitXY"
+            android:src="@drawable/sf_music_next" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

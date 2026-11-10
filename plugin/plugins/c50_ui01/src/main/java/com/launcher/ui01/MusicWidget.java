@@ -1,5 +1,7 @@
 package com.launcher.ui01;
 
+import static com.awell.ctrlview.MusicWidget.getCurOrTotalTime;
+
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -102,9 +104,9 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
 
     private void findViews(Context context, View view) {
         this.mContext = context;
-        ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
-        ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
-        ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
+        //ll_control_layout_music = view.findViewById(R.id.ll_control_layout_music);
+        //ll_name_layout_music = view.findViewById(R.id.ll_name_layout_music);
+       // ll_time_layout_music = view.findViewById(R.id.ll_time_layout_music);
 
         mMusicNameTextView = view.findViewById(R.id.music_name);
 
@@ -196,8 +198,8 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
 
-   // int[] sf_music_bofangId = {R.drawable.selector_play, R.drawable.selector_play};
-   // int[] sf_music_zantingId = {R.drawable.selector_pause, R.drawable.selector_pause};
+    int[] sf_music_bofangId = {R.drawable.sf_music_bofang, R.drawable.sf_music_bofang};
+    int[] sf_music_zantingId = {R.drawable.sf_music_zanting, R.drawable.sf_music_zanting};
 
 
     @Override
@@ -339,7 +341,7 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
     }
 
     public void setArtistNameTextView(String artistName, int flag) {
-        Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
+        //Log.d(TAG, "setArtistNameTextView = " + flag + "--artistName=" + artistName + "--mArtistNameTextView=" + mArtistNameTextView);
         if (mArtistNameTextView != null && currentMedia == flag) {
             if (!TextUtils.isEmpty(artistName)) {
                 mArtistNameTextView.setText(artistName);
@@ -356,22 +358,22 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
             return;
         }
 
-//        Glide.with(this)
-//                .load(uri)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .skipMemoryCache(true)
-//                .addListener(listener)
-//                .circleCrop()
-//                .placeholder(R.drawable.ablum_default_bg)
-//                .error(R.drawable.ablum_default_bg)
-//                .into(ivLoadnim);
+        Glide.with(this)
+                .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .addListener(listener)
+                .circleCrop()
+                .placeholder(R.drawable.ablum_default_bg)
+                .error(R.drawable.ablum_default_bg)
+                .into(ivLoadnim);
 
     }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setDefaultImage() {
-       // ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
+        ivLoadnim.setImageDrawable(mContext.getDrawable(R.drawable.ablum_default_bg));
     }
 
     public void setMusicSeekBar(int curProgress, int totalProgress, int flag) {
@@ -380,17 +382,17 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
                 mBar.setMax(totalProgress);
                 mBar.setProgress(curProgress);
             }
-            if (curProgress > 0 && curProgress < 1000) {
-                stopLoadAnim();
-                startLoadAnim();
+            //if (curProgress > 0 && curProgress < 1000) {
+            //    stopLoadAnim();
+            //    startLoadAnim();
+            //}
+            if (mTotalTimeTextView != null) {
+                mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
             }
-            //if (mTotalTimeTextView != null) {
-            //    mTotalTimeTextView.setText(getCurOrTotalTime(totalProgress));
-            //}
 
-            //if (mCurTimeTextView != null) {
-            //    mCurTimeTextView.setText(getCurOrTotalTime(curProgress));
-            //}
+            if (mCurTimeTextView != null) {
+                mCurTimeTextView.setText(getCurOrTotalTime(curProgress));
+            }
         }
     }
 
@@ -412,25 +414,25 @@ public class MusicWidget extends RelativeLayout implements OnClickListener {
         if (musicState) {
             if (currentMedia <= BT && mObjectAnimator != null) {
                 Log.i(TAG, "setCurMusicState objectAnimator.isRunning()= " + mObjectAnimator.isRunning());
-                if (!mObjectAnimator.isRunning()) {
+                /*if (!mObjectAnimator.isRunning()) {
                     startLoadAnim();
                 } else {
                     resumeLoadAnim();
-                }
+                }*/
             }
-          // mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
+            mPlayStateImageView.setImageResource(sf_music_zantingId[dayNight]);
         } else {
-            pauseLoadAnim();
-           // mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
+            //pauseLoadAnim();
+            mPlayStateImageView.setImageResource(sf_music_bofangId[dayNight]);
         }
     }
 
     private void setImageIcon(int index) {
 
-        ll_time_layout_music.setVisibility(INVISIBLE);
+        //ll_time_layout_music.setVisibility(INVISIBLE);
 
-        ll_control_layout_music.setVisibility(VISIBLE);
-        ll_name_layout_music.setVisibility(VISIBLE);
+        //ll_control_layout_music.setVisibility(VISIBLE);
+        //ll_name_layout_music.setVisibility(VISIBLE);
 
     }
 

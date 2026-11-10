@@ -9,821 +9,520 @@
 
 
     <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:id="@+id/guide_top"
-        app:layout_constraintGuide_percent="0.0266"
-        />
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.0927" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_music"
-        app:layout_constraintGuide_percent="0.475"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.495" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_nav"
-        app:layout_constraintGuide_percent="0.4944"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5144" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_bottom_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/guide_top_weather"
-        app:layout_constraintGuide_percent="0.3403"
-        />
+        app:layout_constraintGuide_percent="0.3484" />
+
     <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:id="@+id/guide_top_radio"
-        app:layout_constraintGuide_percent="0.3693"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3693" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_apps"
-        app:layout_constraintGuide_percent="0.6833"
-        />
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6833" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_bottom_radio"
-        app:layout_constraintGuide_percent="0.6639"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/guide_bottom_nav"
-        app:layout_constraintGuide_percent="0.9625"
-        />
+        app:layout_constraintGuide_percent="0.6639" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:id="@+id/guide_bottom_apps"
-        app:layout_constraintGuide_percent="0.9736"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9722" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_left"
-        app:layout_constraintGuide_percent="0.0266"
-        />
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0266" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_left_music"
-        app:layout_constraintGuide_percent="0.3609"
-        />
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3609" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_left_nav"
-        app:layout_constraintGuide_percent="0.3648"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3648" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_right_radio"
-        app:layout_constraintGuide_percent="0.6773"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6773" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_right"
-        app:layout_constraintGuide_percent="0.9734"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9734" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_right_weather"
-        app:layout_constraintGuide_percent="0.6469"
-        />
-    <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/guide_right_apps"
-        app:layout_constraintGuide_percent="0.6312"
-        />
+        app:layout_constraintGuide_percent="0.6469" />
 
-<!--music-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_right_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.6312" />
+
+    <!--music-->
     <ImageView
         android:id="@+id/iv_music_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/music_bg"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guide_left"
-        app:layout_constraintEnd_toEndOf="@+id/guide_left_music"
-        app:layout_constraintTop_toTopOf="@+id/guide_top"
+        android:src="@drawable/music_bg"
         app:layout_constraintBottom_toTopOf="@+id/guide_top_music"
-        />
+        app:layout_constraintEnd_toEndOf="@+id/guide_left_music"
+        app:layout_constraintStart_toStartOf="@+id/guide_left"
+        app:layout_constraintTop_toTopOf="@+id/guide_top" />
 
 
-    <include layout="@layout/music_widget"
-            android:id="@+id/layout_music_widget"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintEnd_toEndOf="@+id/iv_music_bg"
-            app:layout_constraintStart_toStartOf="@+id/iv_music_bg"
-            app:layout_constraintTop_toTopOf="@+id/iv_music_bg"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_music_bg"
-        />
-<!--navi-->
+    <include
+        android:id="@+id/layout_music_widget"
+        layout="@layout/music_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_music_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_music_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_music_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_music_bg" />
+    <!--navi-->
     <ImageView
         android:id="@+id/iv_navi_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:onClick="onClick"
-        android:src="@drawable/navigation_bg"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guide_left"
+        android:src="@drawable/navigation_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guide_bottom_apps"
         app:layout_constraintEnd_toEndOf="@+id/guide_left_nav"
-        app:layout_constraintTop_toTopOf="@+id/guide_top_nav"
-        app:layout_constraintBottom_toTopOf="@+id/guide_bottom_nav"
-        />
+        app:layout_constraintStart_toStartOf="@+id/guide_left"
+        app:layout_constraintTop_toTopOf="@+id/guide_top_nav" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_navi_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_navi_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_navi_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_navi_bg">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.15"
+            app:layout_constraintHorizontal_bias="0.268"
+            android:text="@string/continue_your_journey"
+            android:textColor="@color/tv_radio_color"
+            android:includeFontPadding="false"
+            android:maxLines="3"
+            android:textSize="40sp" />
+
+        <Button
+            android:id="@+id/btn_navi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/nav_button_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.85"
+            android:text="@string/navigation"
+            android:textColor="@color/white"
+            android:textSize="@dimen/tv_bt_navi_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--weather-->
     <ImageView
         android:id="@+id/iv_weather_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/weather_bg"
         android:onClick="onClick"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guide_right_weather"
+        android:src="@drawable/weather_bg"
+        app:layout_constraintBottom_toTopOf="@+id/guide_bottom_weather"
         app:layout_constraintEnd_toEndOf="@+id/guide_right"
-        app:layout_constraintTop_toTopOf="@+id/guide_top"
-        app:layout_constraintBottom_toTopOf="@+id/guide_top_weather"
-        />
-<!--radio-->
+        app:layout_constraintStart_toStartOf="@+id/guide_right_weather"
+        app:layout_constraintTop_toTopOf="@+id/guide_top" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_weather_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_weather_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_weather_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_weather_bg">
+
+        <TextView
+            android:id="@+id/weater_tv_temp"
+            style="@style/weather_tv_title_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10°"
+            android:includeFontPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/weater_tv_info"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.23"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.21" />
+
+        <TextView
+            android:id="@+id/weater_tv_info"
+            style="@style/weather_tv_sub_title_style"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/no_weather_information_available_at_the_moment"
+            app:layout_constraintBottom_toTopOf="@+id/weater_tv_tag"
+            app:layout_constraintStart_toStartOf="@+id/weater_tv_temp"
+            app:layout_constraintTop_toBottomOf="@+id/weater_tv_temp"
+            app:layout_constraintWidth_percent="0.45" />
+        <ImageView
+            android:id="@+id/weater_iv_tag"
+            android:layout_width="@dimen/weather_iv_tag_size"
+            android:layout_height="@dimen/weather_iv_tag_size"
+            android:src="@drawable/weather_tag"
+            app:layout_constraintBottom_toBottomOf="@+id/weater_tv_tag"
+            app:layout_constraintStart_toStartOf="@+id/weater_tv_temp"
+            app:layout_constraintTop_toTopOf="@+id/weater_tv_tag" />
+        <TextView
+            android:id="@+id/weater_tv_tag"
+            style="@style/weather_tv_tag_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/weater_iv_tag"
+            app:layout_constraintTop_toBottomOf="@+id/weater_tv_info" />
+
+
+        <ImageView
+            android:id="@+id/weater_iv_info"
+            android:layout_width="@dimen/weather_iv_size"
+            android:layout_height="@dimen/weather_iv_size"
+            android:src="@drawable/weather_duoyun_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--radio-->
     <ImageView
         android:id="@+id/iv_radio_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/radio_bg"
         android:onClick="onClick"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guide_right_radio"
-        app:layout_constraintEnd_toEndOf="@+id/guide_right"
-        app:layout_constraintTop_toTopOf="@+id/guide_top_radio"
+        android:src="@drawable/radio_bg"
         app:layout_constraintBottom_toTopOf="@+id/guide_bottom_radio"
-        />
+        app:layout_constraintEnd_toEndOf="@+id/guide_right"
+        app:layout_constraintStart_toStartOf="@+id/guide_right_radio"
+        app:layout_constraintTop_toTopOf="@+id/guide_top_radio" />
+    <include
+        android:id="@+id/layout_radio_widget"
+        layout="@layout/radio_widget"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_radio_bg"
+        app:layout_constraintEnd_toEndOf="@+id/iv_radio_bg"
+        app:layout_constraintStart_toStartOf="@+id/iv_radio_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_radio_bg" />
+
     <!--all apps-->
     <ImageView
         android:id="@+id/iv_apps_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/icon_bg"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guide_right_apps"
-        app:layout_constraintEnd_toEndOf="@+id/guide_right"
-        app:layout_constraintTop_toTopOf="@+id/guide_top_apps"
+        android:src="@drawable/icon_bg"
         app:layout_constraintBottom_toTopOf="@+id/guide_bottom_apps"
-        />
+        app:layout_constraintEnd_toEndOf="@+id/guide_right"
+        app:layout_constraintStart_toStartOf="@+id/guide_right_apps"
+        app:layout_constraintTop_toTopOf="@+id/guide_top_apps" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="@+id/iv_apps_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_apps_bg"
         app:layout_constraintEnd_toEndOf="@+id/iv_apps_bg"
-        app:layout_constraintTop_toTopOf="@+id/iv_apps_bg"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_apps_bg">
-        
-        <ImageView
-            android:id="@+id/iv_apps_nav"
+        app:layout_constraintStart_toStartOf="@+id/iv_apps_bg"
+        app:layout_constraintTop_toTopOf="@+id/iv_apps_bg">
+
+        <LinearLayout
+            android:id="@+id/item_apps_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/item_apps_carinfo"
+            app:layout_constraintEnd_toStartOf="@+id/item_apps_music"
+            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="onClick"
-            app:layout_constraintVertical_chainStyle="spread"
-            app:layout_constraintEnd_toStartOf="@+id/iv_apps_music"
-            app:layout_constraintBottom_toTopOf="@+id/iv_apps_carinfo"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            android:src="@drawable/navigation_app"
-            />
-        <TextView
-            android:layout_width="0dp"
+            app:layout_constraintVertical_chainStyle="spread">
+
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/navigation_app" />
+
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/navigation" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_apps_music"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/navigation"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_nav"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_nav"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_nav"
-            />
-
-
-        <ImageView
-            android:id="@+id/iv_apps_music"
-            app:layout_constraintStart_toEndOf="@+id/iv_apps_nav"
-            app:layout_constraintEnd_toStartOf="@+id/iv_apps_phone"
-            app:layout_constraintTop_toTopOf="@+id/iv_apps_nav"
+            android:gravity="center_horizontal"
             android:onClick="onClick"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            android:src="@drawable/music_app"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/music"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_music"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_music"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_music"
-            />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/item_apps_nav"
+            app:layout_constraintEnd_toStartOf="@+id/item_apps_phone"
+            app:layout_constraintStart_toEndOf="@+id/item_apps_nav"
+            app:layout_constraintTop_toTopOf="@+id/item_apps_nav">
 
-        <ImageView
-            android:id="@+id/iv_apps_phone"
-            app:layout_constraintStart_toEndOf="@+id/iv_apps_music"
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/music_app" />
+
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/music" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_apps_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:onClick="onClick"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/item_apps_nav"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_apps_nav"
-            android:onClick="onClick"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            android:src="@drawable/phone_app"
-            />
-        <TextView
-            android:layout_width="0dp"
+            app:layout_constraintStart_toEndOf="@+id/item_apps_music"
+            app:layout_constraintTop_toTopOf="@+id/item_apps_nav">
+
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/phone_app" />
+
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/phone" />
+        </LinearLayout>
+
+        <!--第二行:图标 + 文字为一个整体-->
+        <LinearLayout
+            android:id="@+id/item_apps_carinfo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/phone"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_phone"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_phone"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_phone"
-            />
-
-
-        <ImageView
-            android:id="@+id/iv_apps_carinfo"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_nav"
+            android:gravity="center_horizontal"
             android:onClick="onClick"
-            app:layout_constraintEnd_toStartOf="@+id/iv_apps_setting"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            android:src="@drawable/carinfo_app"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/car_info"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_carinfo"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_carinfo"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_carinfo"
-            />
+            app:layout_constraintEnd_toEndOf="@+id/item_apps_nav"
+            app:layout_constraintStart_toStartOf="@+id/item_apps_nav"
+            app:layout_constraintTop_toBottomOf="@+id/item_apps_nav">
 
-        <ImageView
-            android:id="@+id/iv_apps_setting"
-            app:layout_constraintTop_toTopOf="@+id/iv_apps_carinfo"
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/carinfo_app" />
+
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/car_info" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_apps_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:onClick="onClick"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_apps_carinfo"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_music"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            android:src="@drawable/settings_app"
-            />
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/setting"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_setting"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_setting"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_setting"
-            />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/item_apps_carinfo"
+            app:layout_constraintEnd_toEndOf="@+id/item_apps_music"
+            app:layout_constraintStart_toStartOf="@+id/item_apps_music"
+            app:layout_constraintTop_toTopOf="@+id/item_apps_carinfo">
 
-        <ImageView
-            android:id="@+id/iv_apps_apps"
-            app:layout_constraintTop_toTopOf="@+id/iv_apps_carinfo"
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/settings_app" />
+
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/setting" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_apps_apps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:onClick="onClick"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_apps_carinfo"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_phone"
-            android:layout_width="@dimen/app_icon_width"
-            android:layout_height="@dimen/app_icon_height"
-            android:src="@drawable/all_apps"
-            />
-        <TextView
-            android:id="@+id/tv_apps_apps"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/apps"
-            style="@style/tv_apps_style"
-            app:layout_constraintEnd_toEndOf="@+id/iv_apps_apps"
-            app:layout_constraintStart_toStartOf="@+id/iv_apps_apps"
-            app:layout_constraintTop_toBottomOf="@+id/iv_apps_apps"
-            />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/item_apps_carinfo"
+            app:layout_constraintEnd_toEndOf="@+id/item_apps_phone"
+            app:layout_constraintStart_toStartOf="@+id/item_apps_phone"
+            app:layout_constraintTop_toTopOf="@+id/item_apps_carinfo">
 
+            <ImageView
+                android:layout_width="@dimen/app_icon_width"
+                android:layout_height="@dimen/app_icon_height"
+                android:src="@drawable/all_apps" />
 
-
-
+            <TextView
+                style="@style/tv_apps_style"
+                android:layout_width="@dimen/app_tv_width"
+                android:layout_height="wrap_content"
+                android:text="@string/apps" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <HorizontalScrollView-->
-<!--        android:id="@+id/horizontal_scroll"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:fillViewport="true"-->
-<!--        android:scrollbars="none"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/iv_left_bg"-->
-<!--        app:layout_constraintHeight_percent="0.8"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/guide_top"
+        app:layout_constraintStart_toStartOf="@+id/guide_left_music"
+        app:layout_constraintEnd_toEndOf="@+id/guide_right_weather"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:orientation="horizontal">-->
+        <TextView
+            android:id="@+id/car_speed_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/tv_color"
+            android:textSize="100sp"
+            android:textStyle="bold" />
 
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_navi"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_navi">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/navi"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/navigate_for_you_in_real_time"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <TextView
+            android:id="@+id/car_speed_unit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KM/h"
+            android:textColor="@color/tv_color"
+            android:textSize="24sp" />
 
 
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_music"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_music">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/music"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <include layout="@layout/music_widget"-->
-<!--                    android:id="@+id/layout_music_widget"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_video"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_video_bg">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/hd_video"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/don_t_watch_while_driving"-->
-<!--                    style="@style/tv_sub_title_style1"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_phone"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_phone_unconnected">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/telephone"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/tv_phone_sub_title"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/no_phone_connected"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_radio"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_radio">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/radio"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/the_radio_is_not_playing"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_setting"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_settings">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/setting"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/system_functions_settings"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_car"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/edit_icon_car">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/car_info"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/vehicle_information"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                android:id="@+id/item_weather"-->
-<!--                android:layout_width="@dimen/main_right_icon_width"-->
-<!--                android:layout_marginStart="@dimen/item_margin_start"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@drawable/id8_genv2_main_edit_icon_add">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/weather"-->
-<!--                    style="@style/tv_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="@dimen/tv_title_vertical_bias"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/weater_tv_info"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/no_weather_information_available_at_the_moment"-->
-<!--                    style="@style/tv_sub_title_style"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.20"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/weater_tv_temp"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    style="@style/tv_sub_title_style2"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.40"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/weater_iv_info"-->
-<!--                    android:layout_width="@dimen/weather_iv_size"-->
-<!--                    android:layout_height="@dimen/weather_iv_size"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintWidth_percent="@dimen/tv_title_width_parcent"-->
-<!--                    app:layout_constraintVertical_bias="0.7"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    />-->
-
-<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--        </LinearLayout>-->
-
-<!--    </HorizontalScrollView>-->
-
-
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_left_bg"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:src="@drawable/left_bg"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintWidth_percent="0.10" />-->
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linear_indicator"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:orientation="vertical"-->
-<!--        android:weightSum="5.5"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/iv_left_bg"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/iv_left_bg"-->
-<!--        app:layout_constraintWidth_percent="0.08"-->
-<!--        app:layout_constraintHeight_percent="0.90" >-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
+        <ImageView
+            android:layout_width="@dimen/car_width"
+            android:layout_height="@dimen/car_height"
+            android:src="@drawable/car_bg"
+            />
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="hh:mm"
+            android:format24Hour="HH:mm"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@color/tv_color"
+            android:textSize="@dimen/time_font_size"
+            />
 <!--        <ImageView-->
-<!--            android:id="@+id/iv_app"-->
-<!--            android:layout_width="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_height="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/left_icon_app" />-->
+<!--            android:layout_marginTop="@dimen/car_tag_margin_top"-->
+<!--            android:layout_marginBottom="@dimen/car_tag_margin_top"-->
+<!--            android:layout_width="@dimen/car_tag_width"-->
+<!--            android:layout_height="@dimen/car_tag_height"-->
+<!--            android:src="@drawable/car_progress" />-->
 
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
+        <TextClock
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="yyyy/MM/dd"
+            android:format24Hour="yyyy/MM/dd"
+            android:text="2020年5月18日"
+            android:textColor="@color/tv_weekday_color"
+            android:textSize="@dimen/weekday_font_size" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_app"-->
-<!--            style="@style/tv_style"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/App" />-->
+        <TextClock
+            android:id="@+id/weekday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:format12Hour="E"
+            android:format24Hour="E"
+            android:textColor="@color/tv_weekday_color"
+            android:textSize="@dimen/weekday_font_size" />
 
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
 
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_music"-->
-<!--            android:layout_width="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_height="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/left_icon_music" />-->
+    </LinearLayout>
 
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_music"-->
-<!--            style="@style/tv_style"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/music" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_phone"-->
-<!--            android:layout_width="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_height="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/left_icon_bt" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_phone"-->
-<!--            style="@style/tv_style"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/phone" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_nav"-->
-<!--            android:layout_width="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_height="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/left_icon_navi" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_nav"-->
-<!--            style="@style/tv_style"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/navigation" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_setting"-->
-<!--            android:layout_width="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_height="@dimen/main_left_icon_app_size"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/left_icon_set" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_setting"-->
-<!--            style="@style/tv_style"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/set" />-->
-
-<!--        <View-->
-<!--            android:layout_width="1dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_weight="0.5" />-->
-
-<!--    </LinearLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

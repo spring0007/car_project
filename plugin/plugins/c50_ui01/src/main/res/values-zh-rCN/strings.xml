@@ -2,10 +2,17 @@
     <!-- app 名称 -->
     <string name="click_play_music">未知歌曲</string>
     <string name="music_artist">未知艺术家</string>
-    <string name="add_app">添加</string>
-    <string name="radio">广播</string>
-    <string name="phone_connect">电话已连接</string>
-    <string name="blueth">蓝牙</string>
+    <string name="radio">收音机</string>
+    <string name="music">音乐</string>
+    <string name="phone">电话</string>
+    <string name="navigation">导航</string>
+    <string name="setting">设置</string>
+    <string name="unknown_song">未知歌曲</string>
+    <string name="no_weather_information_available_at_the_moment">目前没有天气信息</string>
+    <string name="car_info">车辆信息</string>
+    <string name="apps">应用</string>
+    <string name="continue_your_journey">继续你的旅程</string>
+
 
     <string name="weather_desc_100">晴天</string>
     <string name="weather_desc_101">多云</string>
@@ -43,30 +50,5 @@
     <string name="weather_desc_508">强烈的沙尘暴</string>
     <string name="weather_desc_unknown">未知</string>
 
-
-    <string name="App">APP</string>
-    <string name="music">音乐</string>
-    <string name="phone">蓝牙</string>
-    <string name="navigation">导航</string>
-    <string name="navi">导航</string>
-    <string name="set">设置</string>
-    <string name="setting">设置</string>
-    <string name="navigate_for_you_in_real_time">实时为您导航</string>
-    <string name="telephone">电话</string>
-    <string name="no_phone_connected">没有连接电话</string>
-    <string name="hd_video">高清视频</string>
-    <string name="don_t_watch_while_driving">开车时不要看</string>
-    <string name="the_radio_is_not_playing">收音机就像远方的朋友</string>
-    <string name="you_are_listening_to">你正在收听</string>
-    <string name="system_functions_settings">系统功能设置</string>
-    <string name="bt_music">蓝牙音乐</string>
-    <string name="unknown_song">未知歌曲</string>
-    <string name="weather">天气</string>
-    <string name="no_weather_information_available_at_the_moment">目前没有天气信息</string>
-    <string name="car_info">车辆信息</string>
-    <string name="vehicle_information">车辆信息</string>
-
-
-    
 
 </resources>

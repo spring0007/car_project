@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="yellow_fdb4">#FFFDB4</color>
+    <color name="tv_color">#101C36</color>
+    <color name="tv_weekday_color">#405A7D</color>
+    <color name="tv_radio_color">#526F8B</color>
 </resources>

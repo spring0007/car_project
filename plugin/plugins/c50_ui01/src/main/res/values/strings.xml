@@ -14,25 +14,9 @@
     <string name="car_info">Car Info</string>
     <string name="setting">Settings</string>
     <string name="apps">Apps</string>
-
-
-    <string name="phone">BLUETOOTH</string>
-    <string name="set">SET</string>
-
-    <string name="navigate_for_you_in_real_time">Navigate for you in real time</string>
-    <string name="telephone">TELEPHONE</string>
-    <string name="no_phone_connected">No phone connected</string>
-    <string name="hd_video">HD VIDEO</string>
-    <string name="don_t_watch_while_driving">Don\'t watch while driving</string>
-    <string name="the_radio_is_not_playing">The radio is like a friend from afar</string>
-    <string name="you_are_listening_to">You are listening to</string>
-    <string name="system_functions_settings">System Functions Settings</string>
-    <string name="bt_music">BT MUSIC</string>
     <string name="unknown_song">Unknown song</string>
-    <string name="weather">WEATHER</string>
     <string name="no_weather_information_available_at_the_moment">No weather information available at the moment</string>
-    <string name="car_info">CAR INFO</string>
-    <string name="vehicle_information">Vehicle Information</string>
+    <string name="continue_your_journey">Continue your journey</string>
 
     <string name="weather_desc_100">Sunny</string>
     <string name="weather_desc_101">Cloudy</string>
