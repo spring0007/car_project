@@ -12,21 +12,20 @@
     <style name="weather_tv_title_style">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/tv_color</item>
-        <item name="android:textSize">87sp</item>
+        <item name="android:textSize">@dimen/weather_tv_title_size</item>
 
     </style>
 
     <style name="weather_tv_sub_title_style">
         <item name="android:gravity">center_horizontal|start</item>
         <item name="android:textColor">@color/tv_color</item>
-        <item name="android:textSize">22sp</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:textSize">@dimen/tv_radio_title_size</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="weather_tv_tag_style">
         <item name="android:textColor">#ff516E88</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/tv_apps_size</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>

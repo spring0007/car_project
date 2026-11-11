@@ -174,7 +174,8 @@
 
         <Button
             android:id="@+id/btn_navi"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            app:layout_constraintWidth_percent="0.83"
             android:layout_height="wrap_content"
             android:background="@drawable/nav_button_bg"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -218,7 +219,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/weater_tv_info"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.23"
+            app:layout_constraintHorizontal_bias="0.15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.21" />
@@ -256,6 +257,7 @@
             android:id="@+id/weater_iv_info"
             android:layout_width="@dimen/weather_iv_size"
             android:layout_height="@dimen/weather_iv_size"
+            android:scaleType="fitXY"
             android:src="@drawable/weather_duoyun_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -378,20 +378,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Log.i(TAG, "loadWeatherData: huang info=>" + weatherInfo);
             handler.post(() -> {
                 if (weatherInfo != null) {
-                    binding.weaterTvTemp.setText(weatherInfo.temperature + "℃");
+                    binding.weaterTvTemp.setText(weatherInfo.temperature + "°");
                     String weather = (WeatherTextMapper.description(MainActivity.this, weatherInfo.condCode));
                     binding.weaterTvTemp.setVisibility(View.VISIBLE);
                     binding.weaterIvInfo.setVisibility(View.VISIBLE);
+                    binding.weaterTvInfo.setMaxLines(1);
                     binding.weaterTvInfo.setText(weather);
                     binding.weaterTvTag.setVisibility(View.VISIBLE);
                     binding.weaterIvTag.setVisibility(View.VISIBLE);
-                    binding.weaterTvTag.setText(weatherInfo.tempMin + "/" + weatherInfo.tempMax + "℃");
+                    binding.weaterTvTag.setText(weatherInfo.tempMin + "/" + weatherInfo.tempMax + "°");
                     WeatherIconLoader.getWeatherIcon(binding.weaterIvInfo, weatherInfo.condCode);
                 }else {
                     binding.weaterTvInfo.setText(R.string.no_weather_information_available_at_the_moment);
+                    binding.weaterTvInfo.setMaxLines(3);
                     WeatherIconLoader.getWeatherIcon(binding.weaterIvInfo, "999");
                     binding.weaterTvTemp.setVisibility(View.GONE);
-                    binding.weaterIvInfo.setVisibility(View.GONE);
+                    //binding.weaterIvInfo.setVisibility(View.GONE);
                     binding.weaterTvTag.setVisibility(View.GONE);
                     binding.weaterIvTag.setVisibility(View.GONE);
                 }
@@ -517,6 +519,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.item_apps_setting:
                 startActivity("com.awell.carsetting", "com.awell.carsetting.MainActivity");
+                break;
+            case R.id.item_apps_music:
+                startActivity("com.awell.localmusic", "com.awell.localmusic.MainActivity");
                 break;
             case R.id.iv_radio_pre:
                 if (ClickUtils.isFastClick()) {

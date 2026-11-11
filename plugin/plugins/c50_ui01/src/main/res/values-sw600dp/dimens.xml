@@ -34,4 +34,5 @@
     <dimen name="tv_music_artist_size">15sp</dimen>
     <dimen name="tv_bt_navi_size">18sp</dimen>
     <dimen name="app_tv_width">69dp</dimen>
+    <dimen name="weather_tv_title_size">70sp</dimen>
 </resources>
