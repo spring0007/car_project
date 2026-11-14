@@ -26,6 +26,7 @@ import android.os.Message
 import android.os.SystemProperties
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -115,6 +116,8 @@ class UIActivity : Activity(), View.OnClickListener {
         // 通过配置对象直接应用
         val savedThemeResId = getThemeResId(getSavedThemeId())
         setStyleTheme(savedThemeResId)
+        // 校验主题与壁纸是否一致（上次设壁纸失败 / 进程被杀 / prefs 丢失时自动补设）
+        syncWallpaperWithSavedTheme()
 
         initMediaMusic()
 
@@ -168,6 +171,9 @@ class UIActivity : Activity(), View.OnClickListener {
 
         // Verify all apps in the list are still installed
         verifyInstalledApps()
+
+        // 回前台再校验一次主题/壁纸一致性（例如上次设壁纸超时失败后自动补设）
+        syncWallpaperWithSavedTheme()
 
     }
 
@@ -717,10 +723,6 @@ class UIActivity : Activity(), View.OnClickListener {
 
     private fun clickStartApp() {
 
-        mViewBinding.homeAppNav.setOnClickListener {
-            startActivity("com.awell.navigation", "com.awell.navigation.MainActivity")
-        }
-
         mViewBinding.homeSwitchStyle.setOnClickListener {
             /*if (ClickUtils.isFastClickFiveSecond()) {//5秒内快速点击无效, 防止重复切换主题壁纸
                 return@setOnClickListener
@@ -865,6 +867,12 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun handleLongPressAction() {
+        // 长按进入系统壁纸选择器：壁纸从此由用户自定义，主题切换不再自动接管。
+        // 1) 作废在途的主题壁纸任务，避免它晚到把用户选的壁纸覆盖掉；
+        // 2) 打标记，避免启动/回前台的一致性校验把用户选的壁纸覆盖成主题壁纸
+        wallpaperGeneration.incrementAndGet()
+        pendingWallpaperThemeId = WALLPAPER_THEME_UNKNOWN
+        saveAppliedWallpaperThemeId(this, WALLPAPER_THEME_CUSTOM)
         startWallpaper()
     }
 
@@ -900,6 +908,25 @@ class UIActivity : Activity(), View.OnClickListener {
                 val intent = Intent(Settings.ACTION_DATE_SETTINGS)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
+            }
+            mViewBinding.homeAppNav.id,
+            mViewBinding.ivCarBg.id -> {
+                val navPkg = SystemProperties.get("persist.sys.navi.packagename", "")
+
+                //String navClazz = SystemProperties.get("persist.sys.navi.clazzname", "");
+                if (TextUtils.isEmpty(navPkg) || !getNaviApps(navPkg)) startActivity(
+                    "com.awell.navigation",
+                    "com.awell.navigation.MainActivity"
+                )
+                else {
+                    val intent = this.getPackageManager().getLaunchIntentForPackage(navPkg!!)
+                    if (intent != null) {
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                    } else {
+                        startActivity("com.awell.navigation", "com.awell.navigation.MainActivity")
+                    }
+                }
             }
         }
     }
@@ -958,7 +985,7 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private fun loadDefaultAppsInto(target: MutableList<AppInfo>, allApps: MutableList<AppInfo>) {
-        val defaultApps = arrayOf<String>("com.google.android.apps.maps", "com.awell.eqselect", "com.awell.bluetooth", "com.awell.localmusic")
+        val defaultApps = arrayOf<String>("com.google.android.apps.maps", "com.awell.eqselect", "com.awell.bluetooth", "com.awell.localmusic","cn.kuwo.kwmusiccar")
         for (packName  in defaultApps) {
             val appInfo = Utils.getAppInfoFromPackage(packName, allApps)
             if (appInfo != null) target.add(appInfo)
@@ -1122,24 +1149,31 @@ class UIActivity : Activity(), View.OnClickListener {
     companion object {
         private const val PREFS_NAME = "theme_prefs"
         private const val KEY_THEME_ID = "theme_id"  // Store simple ID (1-4), NOT resource ID
+        // 记录"哪个主题的壁纸已经真正落地"，用于启动/回前台时做一致性校验
+        private const val KEY_WALLPAPER_THEME_ID = "wallpaper_theme_id"
+        private const val WALLPAPER_THEME_UNKNOWN = -2   // 还没成功设过壁纸
+        private const val WALLPAPER_THEME_CUSTOM = -1    // 用户长按自定义过壁纸，主题不再接管
         private const val DEFAULT_THEME_ID = 0
         private const val MAX_THEME_ID = 3
-    }
-    
-    // 壁纸切换状态管理
-    private var wallpaperTaskThread: Thread? = null
-    @Volatile
-    private var isWallpaperSwitching = false  // 是否正在切换壁纸
-    private val WALLPAPER_SWITCH_TIMEOUT = 5000L  // 5秒超时
-    private val wallpaperTimeoutHandler = Handler(Looper.getMainLooper())
-    private val wallpaperTimeoutRunnable = Runnable {
-        LogUtil.w("Wallpaper switch timeout, releasing resources")
-        synchronized(this@UIActivity) {
-            if (isWallpaperSwitching) {
-                isWallpaperSwitching = false
-                LogUtil.i("Wallpaper switch timeout - resources released")
+        private const val WALLPAPER_MAX_RETRY = 1        // 设壁纸失败后的重试次数
+
+        /**
+         * 壁纸只有一个写线程：
+         * 1. 串行化，杜绝"旧任务比新任务后落地"造成的主题/壁纸错配；
+         * 2. 队列里的过期任务用 generation 直接丢弃，只保留最新一次请求。
+         * 队列放在 companion 里，Activity 重建后仍在途的任务不会被重复创建。
+         */
+        private val wallpaperExecutor: java.util.concurrent.ExecutorService =
+            java.util.concurrent.Executors.newSingleThreadExecutor { runnable ->
+                Thread(runnable, "launcher-wallpaper").apply { isDaemon = true }
             }
-        }
+
+        /** 每次请求壁纸 +1；任务启动、写壁纸前、写完之后都比对，过期即作废 */
+        private val wallpaperGeneration = java.util.concurrent.atomic.AtomicLong(0)
+
+        /** 正在排队/正在处理的目标主题，避免重复入队；放弃时清空，让一致性校验可以补设 */
+        @Volatile
+        private var pendingWallpaperThemeId = WALLPAPER_THEME_UNKNOWN
     }
 
     /**
@@ -1169,14 +1203,32 @@ class UIActivity : Activity(), View.OnClickListener {
      * Save theme ID to SharedPreferences and apply the theme
      */
     private fun saveAndApplyTheme(themeId: Int) {
-        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        prefs.edit().putInt(KEY_THEME_ID, themeId).apply()
-        // 设置系统壁纸 - 使用优化后的异步方法,支持任务取消和状态管理
-        setWallpaperByThemeIdOptimized(this, themeId)
+        saveThemeId(themeId)
+
+        // 壁纸只能异步设置：先入队（单线程串行队列），尽量缩短"主题已换、壁纸未换"的窗口
+        requestWallpaper(this, themeId)
+
+        applyThemeUi(themeId)
+        LogUtil.i("Theme switched to ID: $themeId")
+    }
+
+    /**
+     * 主题ID落盘
+     * commit() 同步落盘：apply() 是异步写，切换后插件进程被杀/重载会导致主题ID丢失，
+     * 而系统壁纸已经生效，重启后就变成"旧主题 + 新壁纸"
+     */
+    private fun saveThemeId(themeId: Int) {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putInt(KEY_THEME_ID, themeId).commit()
+    }
+
+    /**
+     * 只切换界面主题（系统属性 + 样式 + 音乐控件），不触碰壁纸；壁纸设置失败回滚时复用
+     */
+    private fun applyThemeUi(themeId: Int) {
         val uiKey = resources.getString(R.string.ui_key)
         val themeIdStr = if (themeId < 10) "0$themeId" else "$themeId"
         SystemProperties.set(uiKey, "wallpaper_$themeIdStr")
-        LogUtil.i("Theme switched to ID: $themeId")
         setStyleTheme(getThemeResId(themeId))
         // 更新音乐播放控件的主题（根据音乐状态切换不同颜色的图片）
         // 根据主题ID设置dayNight: 主题1、3,4为白色(0), 主题2为黑色(1)
@@ -1186,25 +1238,10 @@ class UIActivity : Activity(), View.OnClickListener {
 
     /**
      * Switch to next theme (cyclic: 1->2->3->4->1)
+     * 不再用布尔闸门拦截点击：壁纸任务由单线程串行执行 + generation 丢弃过期任务，
+     * 连续切换时最终落地的一定是最后一次请求的壁纸，不会出现"旧壁纸盖新主题"。
      */
     private fun switchToNextTheme() {
-        // 检查是否可以切换壁纸
-        synchronized(this@UIActivity) {
-            if (isWallpaperSwitching) {
-                LogUtil.w("Wallpaper is switching, please wait...")
-                return
-            }
-            
-            // 设置切换状态和超时定时器
-            isWallpaperSwitching = true
-            wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
-            wallpaperTimeoutHandler.postDelayed(wallpaperTimeoutRunnable, WALLPAPER_SWITCH_TIMEOUT)
-            LogUtil.i("Start wallpaper switch, timeout in ${WALLPAPER_SWITCH_TIMEOUT}ms")
-        }
-        
-        // 取消之前的壁纸设置任务
-        cancelWallpaperTask()
-        
         val currentThemeId = getSavedThemeId()
         val nextThemeId = if (currentThemeId >= MAX_THEME_ID) {
             0 // Cycle back to first theme
@@ -1213,19 +1250,41 @@ class UIActivity : Activity(), View.OnClickListener {
         }
         saveAndApplyTheme(nextThemeId)
     }
-    
+
     /**
-     * 取消当前正在执行的壁纸设置任务
+     * 读取"已经落地的壁纸主题"（WALLPAPER_THEME_UNKNOWN 表示还没成功设过）
      */
-    private fun cancelWallpaperTask() {
-        wallpaperTaskThread?.let { thread ->
-            if (thread.isAlive) {
-                LogUtil.d("Canceling previous wallpaper task")
-                // 中断线程(需要在任务中检查interrupted状态)
-                thread.interrupt()
-            }
-            wallpaperTaskThread = null
+    private fun getAppliedWallpaperThemeId(): Int {
+        return getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_WALLPAPER_THEME_ID, WALLPAPER_THEME_UNKNOWN)
+    }
+
+    /**
+     * 记录"已经落地的壁纸主题"（同步落盘，进程被杀也不会丢）
+     */
+    private fun saveAppliedWallpaperThemeId(context: Context, themeId: Int) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit().putInt(KEY_WALLPAPER_THEME_ID, themeId).commit()
+    }
+
+    /**
+     * 启动/回前台时校验主题与壁纸是否一致：
+     * 上次设壁纸失败、进程被杀、SharedPreferences 丢失等情况会在这里自动补设，
+     * 避免"主题和壁纸对不上"一直保留到用户下次手动切换。
+     * 用户长按自定义过壁纸（WALLPAPER_THEME_CUSTOM）时不做接管。
+     */
+    private fun syncWallpaperWithSavedTheme() {
+        val themeId = getSavedThemeId()
+        val appliedThemeId = getAppliedWallpaperThemeId()
+        if (appliedThemeId == WALLPAPER_THEME_CUSTOM) {
+            LogUtil.i("Wallpaper is custom, skip sync")
+            return
         }
+        if (appliedThemeId == themeId || pendingWallpaperThemeId == themeId) {
+            return
+        }
+        LogUtil.i("Wallpaper theme($appliedThemeId) != current theme($themeId), resync wallpaper")
+        requestWallpaper(this, themeId)
     }
 
     /**
@@ -1238,126 +1297,163 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     /**
-     * 优化的壁纸设置方法 - 使用WallpaperManager确保全局生效
-     * 优化点:
-     * 1. 支持任务取消(通过interrupt)
-     * 2. 使用Bitmap采样减少内存占用
-     * 3. 在关键步骤检查interrupted状态,及时退出
-     * 4. 异步执行不阻塞UI
-     * 5. 使用suggestDesiredDimensions预设置尺寸,提升设置速度
+     * 请求把某个主题的壁纸设为系统壁纸。
+     * 所有壁纸写入都走这里：单线程串行 + generation 丢弃过期任务，
+     * 保证"最后请求的那个主题"才是最终落地的那张壁纸。
      */
-    private fun setWallpaperByThemeIdOptimized(context: Context, themeId: Int) {
-       // val startTime = System.currentTimeMillis()
-        LogUtil.i("setWallpaperByThemeIdOptimized start for theme: $themeId")
-        
-        // 创建新的壁纸设置任务
-        val newTask = Thread {
-            var bitmap: Bitmap? = null
-            try {
-                val wallpaperManager = WallpaperManager.getInstance(context)
-                    
-                // 根据主题ID选择壁纸资源
-                val wallpaperResId = when (themeId) {
-                    0 -> R.drawable.wallpaper_00
-                    1 -> R.drawable.wallpaper_01
-                    2 -> R.drawable.wallpaper_02
-                    3 -> R.drawable.wallpaper_03
-                    else -> R.drawable.wallpaper_00
-                }
-
-                // 获取屏幕尺寸用于计算合适的采样率
-                val displayMetrics = context.resources.displayMetrics
-                val targetWidth = displayMetrics.widthPixels
-                val targetHeight = displayMetrics.heightPixels
-                
-                LogUtil.d("Screen size: ${targetWidth}x${targetHeight}")
-                
-                // 关键优化: 预先设置期望的壁纸尺寸,加快setBitmap速度
-                wallpaperManager.suggestDesiredDimensions(targetWidth, targetHeight)
-                    
-                // 第一步:仅获取图片原始尺寸
-                val options = BitmapFactory.Options().apply {
-                    inJustDecodeBounds = true
-                }
-                context.resources.openRawResource(wallpaperResId).use { inputStream ->
-                    BitmapFactory.decodeStream(inputStream, null, options)
-                }
-                
-                val originalWidth = options.outWidth
-                val originalHeight = options.outHeight
-                LogUtil.d("Original image size: ${originalWidth}x${originalHeight}")
-                
-                // 第二步:计算采样率
-                options.inSampleSize = calculateInSampleSize(
-                    originalWidth, originalHeight, targetWidth, targetHeight
-                )
-                options.inJustDecodeBounds = false
-                options.inPreferredConfig = Bitmap.Config.RGB_565 // 使用RGB_565减少50%内存
-                options.inDither = true // 启用抖动,改善RGB_565的画质
-                    
-              //  LogUtil.i("Sample size: ${options.inSampleSize}")
-                
-                // 第三步:解码压缩后的图片
-                bitmap = context.resources.openRawResource(wallpaperResId).use { inputStream ->
-                    BitmapFactory.decodeStream(inputStream, null, options)
-                }
-                
-                if (bitmap != null && !bitmap.isRecycled) {
-                  //  LogUtil.i("Decoded bitmap size: ${bitmap.width}x${bitmap.height}, config: ${bitmap.config}")
-                    
-                    // 第四步:设置壁纸(由于已调用suggestDesiredDimensions,此操作会更快)
-                    // 传入null表示使用整个屏幕,确保壁纸全屏显示
-                    wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
-                    
-                  //  val elapsed = System.currentTimeMillis() - startTime
-                  //  LogUtil.i("✓ Wallpaper set successfully for theme: $themeId (${originalWidth}x${originalHeight} -> ${bitmap.width}x${bitmap.height}) in ${elapsed}ms")
-                    
-                    // 壁纸切换成功，重置状态
-                    synchronized(this@UIActivity) {
-                        isWallpaperSwitching = false
-                        wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
-                        LogUtil.i("Wallpaper switched successfully, ready for next switch")
-                    }
-                } else {
-                    LogUtil.e("Failed to decode wallpaper for theme: $themeId")
-                    // 失败时也释放锁，允许重试
-                    synchronized(this@UIActivity) {
-                        isWallpaperSwitching = false
-                        wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
-                    }
-                }
-            } catch (e: InterruptedException) {
-              //  val elapsed = System.currentTimeMillis() - startTime
-              //  LogUtil.d("✗ Wallpaper task interrupted after ${elapsed}ms")
-                // 中断时释放锁
-                synchronized(this@UIActivity) {
-                    isWallpaperSwitching = false
-                    wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
-                }
-            } catch (e: Exception) {
-               // val elapsed = System.currentTimeMillis() - startTime
-               // LogUtil.e("✗ setWallpaperByThemeIdOptimized error after ${elapsed}ms: ${e.message}")
-                e.printStackTrace()
-                // 异常时释放锁，允许重试
-                synchronized(this@UIActivity) {
-                    isWallpaperSwitching = false
-                    wallpaperTimeoutHandler.removeCallbacks(wallpaperTimeoutRunnable)
-                }
-            } finally {
-                // 确保bitmap被回收
-                bitmap?.recycle()
-                // 清理任务引用
-                if (wallpaperTaskThread == Thread.currentThread()) {
-                    wallpaperTaskThread = null
-                }
+    private fun requestWallpaper(context: Context, themeId: Int) {
+        // 注意：这里必须用插件 Activity 的 Context（插件资源 0x7e 只有它能解析），
+        // 任务生命周期只有一次解码+setBitmap，结束后即释放引用
+        val generation = wallpaperGeneration.incrementAndGet()
+        pendingWallpaperThemeId = themeId
+        LogUtil.i("requestWallpaper theme=$themeId generation=$generation")
+        wallpaperExecutor.execute {
+            // 排队期间已经被更新的请求取代，直接丢弃
+            if (wallpaperGeneration.get() != generation) {
+                LogUtil.d("Drop stale wallpaper task, theme=$themeId")
+                return@execute
             }
+            applyWallpaper(context, themeId, generation, 0)
         }
-        
-        // 保存任务引用并启动
-        wallpaperTaskThread = newTask
-        newTask.start()
+    }
+
+    /**
+     * 真正设置壁纸（运行在单线程串行队列中）
+     * @param attempt 第几次尝试，失败会重试 WALLPAPER_MAX_RETRY 次
+     */
+    private fun applyWallpaper(context: Context, themeId: Int, generation: Long, attempt: Int) {
+        var bitmap: Bitmap? = null
+        try {
+            val wallpaperManager = WallpaperManager.getInstance(context)
+
+            // 根据主题ID选择壁纸资源
+            val wallpaperResId = when (themeId) {
+                0 -> R.drawable.wallpaper_00
+                1 -> R.drawable.wallpaper_01
+                2 -> R.drawable.wallpaper_02
+                3 -> R.drawable.wallpaper_03
+                else -> R.drawable.wallpaper_00
+            }
+
+            // 获取屏幕尺寸用于计算合适的采样率
+            val displayMetrics = context.resources.displayMetrics
+            val targetWidth = displayMetrics.widthPixels
+            val targetHeight = displayMetrics.heightPixels
+            LogUtil.d("Screen size: ${targetWidth}x${targetHeight}")
+
+            // 关键优化: 预先设置期望的壁纸尺寸,加快setBitmap速度
+            wallpaperManager.suggestDesiredDimensions(targetWidth, targetHeight)
+
+            // 第一步:仅获取图片原始尺寸
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            context.resources.openRawResource(wallpaperResId).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream, null, options)
+            }
+
+            val originalWidth = options.outWidth
+            val originalHeight = options.outHeight
+            LogUtil.d("Original image size: ${originalWidth}x${originalHeight}")
+
+            // 第二步:计算采样率
+            options.inSampleSize = calculateInSampleSize(
+                originalWidth, originalHeight, targetWidth, targetHeight
+            )
+            options.inJustDecodeBounds = false
+            options.inPreferredConfig = Bitmap.Config.RGB_565 // 使用RGB_565减少50%内存
+            options.inDither = true // 启用抖动,改善RGB_565的画质
+
+            // 第三步:解码压缩后的图片
+            bitmap = context.resources.openRawResource(wallpaperResId).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream, null, options)
+            }
+
+            if (bitmap == null || bitmap.isRecycled) {
+                retryWallpaper(context, themeId, generation, attempt, "decode failed")
+                return
+            }
+
+            // 解码期间用户可能又切了主题：过期任务作废，绝不用旧壁纸覆盖新主题
+            if (wallpaperGeneration.get() != generation) {
+                LogUtil.d("Drop stale wallpaper task before setBitmap, theme=$themeId")
+                return
+            }
+
+            // 第四步:设置壁纸(由于已调用suggestDesiredDimensions,此操作会更快)
+            // 传入null表示使用整个屏幕,确保壁纸全屏显示
+            wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
+
+            if (wallpaperGeneration.get() != generation) {
+                // setBitmap 期间又来了新的切换请求，最终状态由最新任务负责，这里不记录
+                LogUtil.i("Wallpaper $themeId applied but superseded, newer task will take over")
+                return
+            }
+
+            // 记录"已落地的壁纸主题"，供启动/回前台做一致性校验
+            saveAppliedWallpaperThemeId(context, themeId)
+            pendingWallpaperThemeId = WALLPAPER_THEME_UNKNOWN
+            LogUtil.i("Wallpaper switched successfully, theme=$themeId")
+        } catch (e: Exception) {
+            LogUtil.e("setWallpaper error, theme=$themeId, attempt=$attempt, msg=${e.message}")
+            e.printStackTrace()
+            retryWallpaper(context, themeId, generation, attempt, e.message ?: "unknown")
+        } finally {
+            // 确保bitmap被回收
+            bitmap?.recycle()
+        }
+    }
+
+    /**
+     * 设置壁纸失败时重试；过期任务不重试（新请求会覆盖它）
+     */
+    private fun retryWallpaper(
+        context: Context,
+        themeId: Int,
+        generation: Long,
+        attempt: Int,
+        reason: String
+    ) {
+        if (wallpaperGeneration.get() != generation) {
+            LogUtil.d("Wallpaper task superseded, skip retry, theme=$themeId")
+            return
+        }
+        if (attempt >= WALLPAPER_MAX_RETRY) {
+            // 放弃重试：不写 KEY_WALLPAPER_THEME_ID，启动/回前台时的一致性校验会自动补设
+            pendingWallpaperThemeId = WALLPAPER_THEME_UNKNOWN
+            LogUtil.e("Give up setting wallpaper for theme=$themeId, reason=$reason")
+            // 壁纸最终没设上，把界面主题回滚到"上一次真正落地的那套壁纸"，保证看到的是一套
+            rollbackThemeIfNeeded(context, themeId)
+            return
+        }
+        LogUtil.w("Retry setting wallpaper for theme=$themeId, reason=$reason")
+        wallpaperExecutor.execute {
+            if (wallpaperGeneration.get() != generation) {
+                return@execute
+            }
+            applyWallpaper(context, themeId, generation, attempt + 1)
+        }
     }
     
+    /**
+     * 壁纸最终没设上时，把界面主题回滚到"上一次真正落地的那套壁纸"对应的主题，
+     * 避免长时间停在"主题和壁纸对不上"的状态。
+     * 只有用户没有再切主题时才回滚；自定义壁纸(-1)/未知状态(-2)不参与回滚。
+     */
+    private fun rollbackThemeIfNeeded(context: Context, failedThemeId: Int) {
+        val activity = context as? UIActivity ?: return
+        activity.runOnUiThread {
+            if (activity.isFinishing || activity.isDestroyed) return@runOnUiThread
+            // 期间用户又切了主题，交给最新一次切换处理
+            if (activity.getSavedThemeId() != failedThemeId) return@runOnUiThread
+            val appliedThemeId = activity.getAppliedWallpaperThemeId()
+            if (appliedThemeId < 0 || appliedThemeId == failedThemeId) return@runOnUiThread
+            LogUtil.w("Rollback theme $failedThemeId -> $appliedThemeId (wallpaper set failed)")
+            activity.saveThemeId(appliedThemeId)
+            activity.applyThemeUi(appliedThemeId)
+        }
+    }
+
     /**
      * 计算Bitmap采样率
      * @return 采样率,必须是2的幂次方(1, 2, 4, 8...)
@@ -1377,6 +1473,17 @@ class UIActivity : Activity(), View.OnClickListener {
         }
         
         return inSampleSize
+    }
+    fun getNaviApps(appName: String): Boolean {
+        try {
+            val appinfo =
+                this.getPackageManager().getApplicationInfo(appName, PackageManager.GET_META_DATA)
+            return true
+        } catch (e: PackageManager.NameNotFoundException) {
+            //e.printStackTrace();
+            LogUtil.i("getNaviApps,Exception = $e")
+        }
+        return false
     }
 
 }

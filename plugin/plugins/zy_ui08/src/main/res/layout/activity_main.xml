@@ -13,42 +13,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.0265" />
+        app:layout_constraintGuide_percent="0.0215" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4266" />
+        app:layout_constraintGuide_percent="0.4216" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.4313" />
+        app:layout_constraintGuide_percent="0.431" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7961" />
+        app:layout_constraintGuide_percent="0.7958" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.8102" />
+        app:layout_constraintGuide_percent="0.8052" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9836" />
+        app:layout_constraintGuide_percent="0.9786" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top"
@@ -255,19 +255,12 @@
         android:src="@drawable/bottom_line"
         app:layout_constraintTop_toTopOf="@+id/guideline_bottom" />
 
-    <ImageView
-        android:id="@+id/bottom_line_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:src="@drawable/bottom_line"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
     <LinearLayout
         android:id="@+id/ll_host_nav"
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_music"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
@@ -294,7 +287,7 @@
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_radio"
         app:layout_constraintStart_toEndOf="@+id/ll_host_nav"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
@@ -321,7 +314,7 @@
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toEndOf="@+id/ll_host_music"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_phone"
@@ -350,7 +343,7 @@
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_allapp"
         app:layout_constraintStart_toEndOf="@+id/ll_host_radio"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
@@ -377,7 +370,7 @@
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ll_host_setting"
         app:layout_constraintStart_toEndOf="@+id/ll_host_phone"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"
@@ -404,7 +397,7 @@
         style="@style/host_ll_style"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_line_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ll_host_allapp"
         app:layout_constraintTop_toBottomOf="@id/bottom_line_top"

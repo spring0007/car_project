@@ -121,6 +121,40 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_easy_connect_small"
         app:layout_constraintWidth_percent="0.2" />
 
+
+    <ImageView
+        android:id="@+id/iv_navi_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/nav_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_navi_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_navi_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_navi_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_navi_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/navigation"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v3"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_navi_small"
+        app:layout_constraintWidth_percent="0.2"
+        android:visibility="gone"
+        />
+
+
     <!--gallery - 第一行第四个-->
     <ImageView
         android:id="@+id/iv_video_input_small"

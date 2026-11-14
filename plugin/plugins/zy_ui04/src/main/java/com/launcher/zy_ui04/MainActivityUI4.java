@@ -5,9 +5,11 @@ import static com.awell.utils.Utils.startWallpaper;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,9 +46,13 @@ import java.util.List;
 public class MainActivityUI4 extends Activity implements View.OnClickListener {
     private final String TAG = MainActivityUI4.class.getSimpleName();
     private ActivityMainBinding binding;
+    private ViewPagerAdapter adapter;
     private List<PageData> pageDataList;
     private MusicWidget musicWidget;
     private AwellMediaControl mediaControl;
+
+    // ZLink（EasyConnect）包名
+    private static final String ZLINK_PACKAGE = "com.zjinnova.zlink";
 
     // 页面组常量
     private static final int PAGE_GROUP_DEFAULT = 0;  // 默认组（viewpager_1, viewpager_2）
@@ -101,6 +107,16 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // ZLink 可用 -> 显示 EasyConnect(ZLink) 入口、隐藏导航入口；不可用 -> 反过来
+        if (adapter != null) {
+            adapter.setZlinkUsable(isAppUsable(this, ZLINK_PACKAGE));
+        }
+
+    }
+
     /**
      * 加载页面组状态
      */
@@ -139,7 +155,9 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             pageDataList.add(new PageData(R.layout.viewpager_4));
         }
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(pageDataList, this);
+        adapter = new ViewPagerAdapter(pageDataList, this);
+        // 创建适配器时就按 ZLink 是否可用设置入口显隐，避免新页面先闪一下
+        adapter.setZlinkUsable(isAppUsable(this, ZLINK_PACKAGE));
         binding.viewpager.setAdapter(adapter);
         binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -318,6 +336,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
                 startActivity("com.zjinnova.zlink","com.zjinnova.android.zlink.features.main.MainActivity");
 
                 break;
+            case R.id.iv_navi_big:
+            case R.id.tv_navi_big:
+            case R.id.iv_navi_small:
+            case R.id.tv_navi_small:
             case R.id.host_nav_iv:
             case R.id.host_nav_tv: {
                 String navPkg = SystemProperties.get("persist.sys.navi.packagename", "");
@@ -629,5 +651,20 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             Log.i(TAG, "Exception = " + e.toString());
         }
         return false;
+    }
+
+    public static boolean isAppUsable(Context context, String packageName) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo info = pm.getPackageInfo(packageName, PackageManager.MATCH_DISABLED_COMPONENTS);
+            int state = pm.getApplicationEnabledSetting(packageName);
+            return info.applicationInfo != null
+                    && info.applicationInfo.enabled
+                    && state != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    && state != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                    && state != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
