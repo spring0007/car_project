@@ -15,8 +15,8 @@ android {
         applicationId "com.awell.launcher.host"
         minSdk 26
         targetSdk 34
-        versionCode 13  //20260416
-        versionName "1.13"
+        versionCode 14  //20261118
+        versionName "1.14"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

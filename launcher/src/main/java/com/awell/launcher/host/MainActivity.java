@@ -436,8 +436,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
+        // RePlugin 加载插件 dex 时会把已安装 APK 置为只读, 异常退出会残留 0444,
+        // 之后同版本覆盖安装必抛 "Destination ... exists but is read-only"; 安装前先修复
+        repairInstalledPluginApk(targetPkg);
+
         info = null;
-        
+
         try {
             // 尝试安装插件
             LogUtil.i( "huang start install, path=" + pluginFilePath + ", size=" + copiedFile.length());
@@ -526,12 +530,70 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     /**
-     * 判断“已安装插件”对应的 apk 是否仍是当前 /system 源上的那一份(内容层面粗校验, 此处用文件大小)。
-     * 目的: OTA v1→v2 升级后外层文件名仍为 LauncherUI1.apk, 但内部包名/类名/代码已换代。
-     * 若仅靠文件名命中就复用, 会加载到 OTA 前的旧插件; 源文件大小变了即视为需要重装最新版。
+     * 修复被 RePlugin 置为只读的已安装插件 APK。
+     *
+     * RePlugin 的 Loader.loadDex() 在创建插件 ClassLoader 前会 File.setWritable(false),
+     * 加载完成后再 setWritable(true); 但恢复动作不在 finally 中, 若进程在加载期间被强杀
+     * (车机掉电/force-stop) 或 createPluginClassLoader 抛异常, 已安装 APK 会永久停留在 0444。
+     * 之后同版本覆盖安装时 PluginManagerServer.updateNow() -> move() -> FileUtils.copyFile()
+     * 会因 "Destination ... exists but is read-only" 失败, 导致该主题永远切换不过去
+     * (版本号相同才会走 move 覆盖分支; 其他主题的旧 APK 可写或不存在, 所以不受影响)。
+     *
+     * 这里在 install 前主动修复权限: 非 owner 时 setWritable 可能失败, 此时直接删除旧 APK
+     * (父目录属于本应用, 删除不受文件只读位影响), 由 RePlugin 重新落盘。
+     * 插件正在运行时不动文件, 避免破坏已加载的 dex。
+     */
+    private void repairInstalledPluginApk(@Nullable String targetPkg) {
+        if (targetPkg == null) return;
+
+        PluginInfo installed = null;
+        try {
+            installed = findPluginByPackage(targetPkg);
+        } catch (Exception e) {
+            LogUtil.e("repairInstalledPluginApk: find plugin failed, pkg=" + targetPkg, e);
+            return;
+        }
+        if (installed == null || installed.getPath() == null) {
+            return;
+        }
+
+        try {
+            if (RePlugin.isPluginRunning(installed.getName())) {
+                // 插件已加载(例如正在显示的主题), 此时不能删/改它的 dex 源文件
+                return;
+            }
+        } catch (Exception e) {
+            LogUtil.w("repairInstalledPluginApk: isPluginRunning failed: " + e.getMessage());
+        }
+
+        File apk = new File(installed.getPath());
+        if (!apk.exists() || apk.canWrite()) {
+            return;
+        }
+
+        LogUtil.w("repairInstalledPluginApk: read-only apk found, path=" + apk);
+        if (apk.setWritable(true)) {
+            LogUtil.i("repairInstalledPluginApk: made writable, path=" + apk);
+            return;
+        }
+        if (apk.delete()) {
+            LogUtil.w("repairInstalledPluginApk: setWritable failed, deleted stale apk=" + apk);
+        } else {
+            LogUtil.e("repairInstalledPluginApk: cannot repair read-only apk=" + apk);
+        }
+    }
+
+    /**
+     * 判断“已安装插件”是否就是当前 /system 源上的那一份。
+     *
+     * 主判据用 versionCode(RePlugin 的 PluginInfo.getVersion() 就是 APK 的 versionCode):
+     *   - 源 versionCode > 已安装 → 需要重装(OTA v1→v2、外层文件名不变的场景);
+     *   - 源 versionCode < 已安装 → 已安装的更新, 直接复用(RePlugin 不支持降级, 强装会 VERIFY_VER_FAIL);
+     *   - versionCode 相同 → 再比文件大小, 识别“同版本重新打包”(开发期最常见的改动方式)。
+     * 同时校验源 APK 的内部包名, 防止外层文件名复用、内部已换成另一个插件的情况。
      */
     private boolean isPluginApkCurrent(PluginInfo pi, File sourceApk) {
-        if (pi == null || sourceApk == null || !sourceApk.exists()) {
+        if (pi == null || sourceApk == null || !sourceApk.exists() || sourceApk.length() < 1024) {
             return false;
         }
         String apkPath = pi.getPath();
@@ -539,14 +601,47 @@ public class MainActivity extends Activity implements View.OnClickListener {
             return false;
         }
         File installedApk = new File(apkPath);
-        if (!installedApk.exists()) return false;
-        // 先比较大小快速判断，若大小相同再比较 MD5（可选）
-        if (installedApk.length() != sourceApk.length()) return false;
-        // 如果不希望增加耗时，可只比较大小；若想更可靠，取消注释以下代码：
-        //String installedMd5 = getFileMD5(installedApk);
-        //String sourceMd5 = getFileMD5(sourceApk);
-        //return installedMd5 != null && installedMd5.equals(sourceMd5);
-        return true; // 只比较大小
+        if (!installedApk.exists() || installedApk.length() < 1024) {
+            return false;
+        }
+
+        // 1) 版本号是插件是否换代的主判据
+        PackageInfo sourceInfo = null;
+        try {
+            sourceInfo = getPackageManager()
+                    .getPackageArchiveInfo(sourceApk.getAbsolutePath(), 0);
+        } catch (Exception e) {
+            LogUtil.e("isPluginApkCurrent: read source package info failed", e);
+        }
+        if (sourceInfo == null) {
+            // 源 APK 解析失败 → 不能认定“已是最新”, 交给安装流程校验并报错
+            return false;
+        }
+        if (!Objects.equals(pi.getPackageName(), sourceInfo.packageName)) {
+            LogUtil.w("isPluginApkCurrent: package changed, installed=" + pi.getPackageName()
+                    + ", source=" + sourceInfo.packageName);
+            return false;
+        }
+        if (sourceInfo.versionCode > pi.getVersion()) {
+            LogUtil.w("isPluginApkCurrent: source newer, installed=" + pi.getVersion()
+                    + ", source=" + sourceInfo.versionCode + ", pkg=" + sourceInfo.packageName);
+            return false;
+        }
+        if (sourceInfo.versionCode < pi.getVersion()) {
+            LogUtil.w("isPluginApkCurrent: installed newer than source, reuse installed. installed="
+                    + pi.getVersion() + ", source=" + sourceInfo.versionCode);
+            return true;
+        }
+
+        // 2) 版本号相同再比大小: 版本号没变但 APK 被重新打包时, 大小变化即视为有更新
+        if (installedApk.length() != sourceApk.length()) {
+            LogUtil.w("isPluginApkCurrent: same version but size differs, installed="
+                    + installedApk.length() + ", source=" + sourceApk.length());
+            return false;
+        }
+        // 若需要更强的同版本内容校验(同版本且同大小), 可在此比较 MD5:
+        //return Objects.equals(getFileMD5(installedApk), getFileMD5(sourceApk));
+        return true;
     }
 
     private String getFileMD5(File file) {
