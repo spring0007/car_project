@@ -367,6 +367,8 @@ class UIActivity : Activity(), View.OnClickListener {
 
         AppsCustomizeControl.setActivity(null)
         cancelLongPressDetection()
+        themeBgClearRunnable?.let { mViewBinding.rlMainLayout.removeCallbacks(it) }
+        themeBgClearRunnable = null
         AppsCustomizeControl.hideApps()
         unregisterCustomerListener()
         try {
@@ -845,6 +847,8 @@ class UIActivity : Activity(), View.OnClickListener {
     }
 
     private var longPressRunnable: Runnable? = null
+    /** 主题背景过渡移除任务，切换主题时先取消上一个，避免提前清掉新背景 */
+    private var themeBgClearRunnable: Runnable? = null
 
     private fun startLongPressDetection() {
         cancelLongPressDetection()
@@ -1128,10 +1132,16 @@ class UIActivity : Activity(), View.OnClickListener {
         mViewBinding.layoutRadioLayout.tvRadioFreq.setTextColor(color)
         mViewBinding.layoutRadioLayout.tvRadioAmFm.setTextColor(color)
 
-      /*  val themeBgResId = StyleParser.getResourceIdFromStyle(this, styleResId, R.attr.ui_theme_bg)
+        val themeBgResId = StyleParser.getResourceIdFromStyle(this, styleResId, R.attr.ui_theme_bg)
         if (themeBgResId != 0) {
-            mViewBinding.rlMainLayout.setBackgroundResource(themeBgResId)
-        }*/
+            // 主题背景只做过渡：先铺上，1 秒后移除，露出真正的壁纸
+            val rootView = mViewBinding.rlMainLayout
+            themeBgClearRunnable?.let { rootView.removeCallbacks(it) }
+            val clearRunnable = Runnable { rootView.background = null }
+            themeBgClearRunnable = clearRunnable
+            rootView.setBackgroundResource(themeBgResId)
+            rootView.postDelayed(clearRunnable, 1000)
+        }
         
         // 更新应用列表中文本的颜色
         if (::appInfoAdapter.isInitialized) {

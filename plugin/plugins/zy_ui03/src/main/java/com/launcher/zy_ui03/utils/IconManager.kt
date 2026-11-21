@@ -62,6 +62,7 @@ object IconManager {
        // "com.awell.keylight" to R.drawable.sf_color_light_circle,
         "com.awell.keystudy" to R.drawable.sf_training_circle,
         "com.awell.themesetting" to R.drawable.sf_theme_circle,
+        "cn.kuwo.kwmusiccar" to R.drawable.sf_kuwo_circle,
        // "com.ms.ms2160" to R.drawable.sf_usb_video_output_circle,
        // "com.awell.weather" to R.drawable.sf_weather_circle
     )
@@ -268,6 +269,7 @@ object IconManager {
         // "com.awell.keylight" to "sf_color_light_circle",
         "com.awell.keystudy" to "sf_training_circle",
         "com.awell.themesetting" to "sf_theme_circle",
+        "cn.kuwo.kwmusiccar" to "sf_kuwo_circle"
         // "com.ms.ms2160" to "sf_usb_video_output_circle",
         // "com.awell.weather" to "sf_weather_circle"
     )
