@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">未知歌曲</string>
+    <string name="music_artist">藝術家</string>
+
+
+    <string name="weather_desc_100">晴天</string>
+    <string name="weather_desc_101">多雲</string>
+    <string name="weather_desc_102">少雲</string>
+    <string name="weather_desc_103">部分晴朗</string>
+    <string name="weather_desc_104">陰天</string>
+    <string name="weather_desc_300">陣雨</string>
+    <string name="weather_desc_301">大陣雨</string>
+    <string name="weather_desc_302">雷陣雨</string>
+    <string name="weather_desc_303">強烈雷陣雨</string>
+    <string name="weather_desc_304">雷陣雨伴冰雹</string>
+    <string name="weather_desc_305">小雨</string>
+    <string name="weather_desc_306">中等降雨</string>
+    <string name="weather_desc_307">大雨</string>
+    <string name="weather_desc_308">極端降雨</string>
+    <string name="weather_desc_309">細雨</string>
+    <string name="weather_desc_310">風暴</string>
+    <string name="weather_desc_311">暴風雨</string>
+    <string name="weather_desc_312">嚴重風暴</string>
+    <string name="weather_desc_313">凍雨</string>
+    <string name="weather_desc_400">輕雪</string>
+    <string name="weather_desc_401">中等降雪</string>
+    <string name="weather_desc_402">大雪</string>
+    <string name="weather_desc_403">暴風雪</string>
+    <string name="weather_desc_404">冰雹</string>
+    <string name="weather_desc_405">雨雪</string>
+    <string name="weather_desc_406">陣雨雪</string>
+    <string name="weather_desc_407">小雪</string>
+    <string name="weather_desc_500">薄霧</string>
+    <string name="weather_desc_501">霧</string>
+    <string name="weather_desc_502">霧霾</string>
+    <string name="weather_desc_503">濃霧</string>
+    <string name="weather_desc_504">輕微霧霾</string>
+    <string name="weather_desc_507">沙塵暴</string>
+    <string name="weather_desc_508">強烈的沙塵暴</string>
+    <string name="weather_desc_unknown">未知</string>
+    <string name="no_weather_information_available_at_the_moment">目前沒有天氣資訊</string>
+    <string name="navigation">導航</string>
+    <string name="radio">收音機</string>
+    <string name="phone">藍牙電話</string>
+    <string name="brower">瀏覽器</string>
+    <string name="setting">設置</string>
+    <string name="music">音樂</string>
+    <string name="apps">應用</string>
+    <string name="no_install_app">無法啟動應用</string>
+    <string name="apps_no_install">應用未安裝</string>
+
+    
+</resources>

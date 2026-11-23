@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Lagu Tidak Diketahui</string>
+    <string name="music_artist">Artis</string>
+
+
+    <string name="weather_desc_100">Hari-hari cerah</string>
+    <string name="weather_desc_101">Mendung</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Sebahagiannya cerah</string>
+    <string name="weather_desc_104">Mendung</string>
+    <string name="weather_desc_300">Pancuran mandian</string>
+    <string name="weather_desc_301">Hujan lebat</string>
+    <string name="weather_desc_302">Ribut petir</string>
+    <string name="weather_desc_303">Ribut petir yang kuat</string>
+    <string name="weather_desc_304">Ribut petir dengan hujan batu</string>
+    <string name="weather_desc_305">Hujan ringan</string>
+    <string name="weather_desc_306">Hujan sederhana</string>
+    <string name="weather_desc_307">Hujan lebat</string>
+    <string name="weather_desc_308">Hujan yang melampau</string>
+    <string name="weather_desc_309">Gerimis</string>
+    <string name="weather_desc_310">ribut</string>
+    <string name="weather_desc_311">Ribut</string>
+    <string name="weather_desc_312">Ribut teruk</string>
+    <string name="weather_desc_313">Hujan beku</string>
+    <string name="weather_desc_400">Salji ringan</string>
+    <string name="weather_desc_401">salji sederhana</string>
+    <string name="weather_desc_402">Salji lebat</string>
+    <string name="weather_desc_403">Ribut salji</string>
+    <string name="weather_desc_404">Hujan Es</string>
+    <string name="weather_desc_405">Hujan dan salji</string>
+    <string name="weather_desc_406">Mandi dan hujan salji</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Kabus</string>
+    <string name="weather_desc_501">kabus</string>
+    <string name="weather_desc_502">Jerebu</string>
+    <string name="weather_desc_503">Kabus tebal</string>
+    <string name="weather_desc_504">Sedikit jerebu</string>
+    <string name="weather_desc_507">Ribut pasir</string>
+    <string name="weather_desc_508">Ribut pasir yang sengit</string>
+    <string name="weather_desc_unknown">Tidak diketahui</string>
+    <string name="no_weather_information_available_at_the_moment">Pada masa ini tiada maklumat cuaca</string>
+    <string name="navigation">Navigasi</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Telefon Bluetooth</string>
+    <string name="brower">Pelayar</string>
+    <string name="setting">Tetapan</string>
+    <string name="music">Muzik</string>
+    <string name="apps">Permohonan</string>
+    <string name="no_install_app">Tidak dapat melancarkan apl</string>
+    <string name="apps_no_install">Apl tidak dipasang</string>
+
+    
+</resources>

@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">알려지지 않은 노래</string>
+    <string name="music_artist">예술가</string>
+
+
+    <string name="weather_desc_100">맑은 날들</string>
+    <string name="weather_desc_101">흐림</string>
+    <string name="weather_desc_102">샤오윈</string>
+    <string name="weather_desc_103">부분적으로 맑음</string>
+    <string name="weather_desc_104">흐림</string>
+    <string name="weather_desc_300">샤워실</string>
+    <string name="weather_desc_301">폭우</string>
+    <string name="weather_desc_302">뇌우</string>
+    <string name="weather_desc_303">강한 뇌우</string>
+    <string name="weather_desc_304">우박이 내린 뇌우</string>
+    <string name="weather_desc_305">가벼운 비</string>
+    <string name="weather_desc_306">중간 정도의 강우량</string>
+    <string name="weather_desc_307">폭우</string>
+    <string name="weather_desc_308">극심한 강우량</string>
+    <string name="weather_desc_309">이슬비</string>
+    <string name="weather_desc_310">폭풍</string>
+    <string name="weather_desc_311">폭풍</string>
+    <string name="weather_desc_312">심각한 폭풍</string>
+    <string name="weather_desc_313">얼음비</string>
+    <string name="weather_desc_400">가벼운 눈</string>
+    <string name="weather_desc_401">적당한 눈 내림</string>
+    <string name="weather_desc_402">폭설</string>
+    <string name="weather_desc_403">블리자드</string>
+    <string name="weather_desc_404">우박</string>
+    <string name="weather_desc_405">비와 눈</string>
+    <string name="weather_desc_406">소나기와 눈 소나기</string>
+    <string name="weather_desc_407">샤오쉐</string>
+    <string name="weather_desc_500">안개</string>
+    <string name="weather_desc_501">안개</string>
+    <string name="weather_desc_502">헤이즈</string>
+    <string name="weather_desc_503">짙은 안개</string>
+    <string name="weather_desc_504">약간의 안개</string>
+    <string name="weather_desc_507">모래폭풍</string>
+    <string name="weather_desc_508">강렬한 모래폭풍</string>
+    <string name="weather_desc_unknown">미상</string>
+    <string name="no_weather_information_available_at_the_moment">현재 날씨 정보는 없습니다</string>
+    <string name="navigation">항해</string>
+    <string name="radio">라디오</string>
+    <string name="phone">블루투스 폰</string>
+    <string name="brower">브라우저</string>
+    <string name="setting">설정</string>
+    <string name="music">음악</string>
+    <string name="apps">적용 방법</string>
+    <string name="no_install_app">앱을 실행할 수 없습니다</string>
+    <string name="apps_no_install">앱은 설치되어 있지 않습니다</string>
+
+    
+</resources>

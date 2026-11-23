@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Άγνωστο τραγούδι</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+
+
+    <string name="weather_desc_100">Ηλιόλουστες μέρες</string>
+    <string name="weather_desc_101">Νεφελώδης</string>
+    <string name="weather_desc_102">Σαογιούν</string>
+    <string name="weather_desc_103">Μερικώς ηλιοφάνεια</string>
+    <string name="weather_desc_104">Νεφελώδης</string>
+    <string name="weather_desc_300">Ντους</string>
+    <string name="weather_desc_301">Ισχυρές βροχές</string>
+    <string name="weather_desc_302">Καταιγίδες</string>
+    <string name="weather_desc_303">Ισχυρές καταιγίδες</string>
+    <string name="weather_desc_304">Καταιγίδες με χαλάζι</string>
+    <string name="weather_desc_305">Ασθενής βροχή</string>
+    <string name="weather_desc_306">Μέτριες βροχοπτώσεις</string>
+    <string name="weather_desc_307">Δυνατή βροχή</string>
+    <string name="weather_desc_308">Ακραίες βροχοπτώσεις</string>
+    <string name="weather_desc_309">Ψιλόβροχο</string>
+    <string name="weather_desc_310">καταιγίδα</string>
+    <string name="weather_desc_311">Καταιγίδα</string>
+    <string name="weather_desc_312">Ισχυρές καταιγίδες</string>
+    <string name="weather_desc_313">Παγωμένη βροχή</string>
+    <string name="weather_desc_400">Ελαφρύ χιόνι</string>
+    <string name="weather_desc_401">Μέτρια χιονόπτωση</string>
+    <string name="weather_desc_402">Έντονη χιονόπτωση</string>
+    <string name="weather_desc_403">Χιονοθύελλα</string>
+    <string name="weather_desc_404">Χαλάζι</string>
+    <string name="weather_desc_405">Βροχή και χιόνι</string>
+    <string name="weather_desc_406">Βροχές και χιονοπτώσεις</string>
+    <string name="weather_desc_407">Σιαοξούε</string>
+    <string name="weather_desc_500">Ομίχλη</string>
+    <string name="weather_desc_501">ομίχλη</string>
+    <string name="weather_desc_502">Ομίχλη</string>
+    <string name="weather_desc_503">Πυκνή ομίχλη</string>
+    <string name="weather_desc_504">Ελαφριά ομίχλη</string>
+    <string name="weather_desc_507">Αμμοθύελλα</string>
+    <string name="weather_desc_508">Έντονες αμμοθύελλες</string>
+    <string name="weather_desc_unknown">Άγνωστο</string>
+    <string name="no_weather_information_available_at_the_moment">Προς το παρόν δεν υπάρχουν πληροφορίες για τον καιρό</string>
+    <string name="navigation">Πλοήγηση</string>
+    <string name="radio">Ραδιόφωνο</string>
+    <string name="phone">Τηλέφωνο Bluetooth</string>
+    <string name="brower">Πρόγραμμα περιήγησης</string>
+    <string name="setting">Ρυθμίσεις</string>
+    <string name="music">Μουσική</string>
+    <string name="apps">Εφαρμογή</string>
+    <string name="no_install_app">Δεν είναι δυνατή η εκκίνηση της εφαρμογής</string>
+    <string name="apps_no_install">Η εφαρμογή δεν είναι εγκατεστημένη</string>
+
+    
+</resources>

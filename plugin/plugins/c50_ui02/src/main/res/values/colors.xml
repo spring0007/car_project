@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="radio_color">#415E72</color>
+
+    <color name="tv_app_name_color">#4d4d4e</color>
+    <color name="music_artist_text_color">#cdcdcd</color>
+    <color name="music_name_text_color">#ffffff</color>
+    <color name="bottom_bg_color">#f5f8fb</color>
+</resources>

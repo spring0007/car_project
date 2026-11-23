@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Lagu Tidak Dikenal</string>
+    <string name="music_artist">Artis</string>
+
+
+    <string name="weather_desc_100">Hari-hari cerah</string>
+    <string name="weather_desc_101">Berawan</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Sebagian cerah</string>
+    <string name="weather_desc_104">Berawan</string>
+    <string name="weather_desc_300">Pancuran</string>
+    <string name="weather_desc_301">Hujan lebat</string>
+    <string name="weather_desc_302">Badai petir</string>
+    <string name="weather_desc_303">Badai petir yang kuat</string>
+    <string name="weather_desc_304">Badai petir dengan hujan es</string>
+    <string name="weather_desc_305">Hujan ringan</string>
+    <string name="weather_desc_306">Curah hujan sedang</string>
+    <string name="weather_desc_307">Hujan lebat</string>
+    <string name="weather_desc_308">Curah hujan ekstrem</string>
+    <string name="weather_desc_309">Gerimis</string>
+    <string name="weather_desc_310">badai</string>
+    <string name="weather_desc_311">Badai</string>
+    <string name="weather_desc_312">Badai parah</string>
+    <string name="weather_desc_313">Hujan beku</string>
+    <string name="weather_desc_400">Salju tipis</string>
+    <string name="weather_desc_401">hujan salju sedang</string>
+    <string name="weather_desc_402">Hujan salju lebat</string>
+    <string name="weather_desc_403">Badai salju</string>
+    <string name="weather_desc_404">Hujan es</string>
+    <string name="weather_desc_405">Hujan dan salju</string>
+    <string name="weather_desc_406">Pancuran dan hujan salju</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Kabut</string>
+    <string name="weather_desc_501">kabut</string>
+    <string name="weather_desc_502">Kabut</string>
+    <string name="weather_desc_503">Kabut tebal</string>
+    <string name="weather_desc_504">Sedikit kabut</string>
+    <string name="weather_desc_507">Badai pasir</string>
+    <string name="weather_desc_508">Badai pasir yang intens</string>
+    <string name="weather_desc_unknown">Tidak diketahui</string>
+    <string name="no_weather_information_available_at_the_moment">Saat ini tidak ada informasi cuaca</string>
+    <string name="navigation">Navigasi</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Telepon Bluetooth</string>
+    <string name="brower">Peramban</string>
+    <string name="setting">Pengaturan</string>
+    <string name="music">Musik</string>
+    <string name="apps">Aplikasi</string>
+    <string name="no_install_app">Tidak dapat meluncurkan aplikasi</string>
+    <string name="apps_no_install">Aplikasi tidak diinstal</string>
+
+    
+</resources>

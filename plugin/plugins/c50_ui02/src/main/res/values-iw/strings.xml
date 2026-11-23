@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">שיר לא ידוע</string>
+    <string name="music_artist">אמן</string>
+
+
+    <string name="weather_desc_100">ימים שטופי שמש</string>
+    <string name="weather_desc_101">מעונן</string>
+    <string name="weather_desc_102">שאויון</string>
+    <string name="weather_desc_103">חלקית שמשי</string>
+    <string name="weather_desc_104">מעונן</string>
+    <string name="weather_desc_300">מקלחות</string>
+    <string name="weather_desc_301">גשמים כבדים</string>
+    <string name="weather_desc_302">סופות רעמים</string>
+    <string name="weather_desc_303">סופות רעמים חזקות</string>
+    <string name="weather_desc_304">סופות רעמים עם ברד</string>
+    <string name="weather_desc_305">גשם קל</string>
+    <string name="weather_desc_306">משקעים מתונים</string>
+    <string name="weather_desc_307">גשם כבד</string>
+    <string name="weather_desc_308">גשמים קיצוניים</string>
+    <string name="weather_desc_309">טפטוף</string>
+    <string name="weather_desc_310">סערה</string>
+    <string name="weather_desc_311">סערה</string>
+    <string name="weather_desc_312">סופות קשות</string>
+    <string name="weather_desc_313">גשם קפוא</string>
+    <string name="weather_desc_400">שלג קל</string>
+    <string name="weather_desc_401">שלג בינוני</string>
+    <string name="weather_desc_402">שלג כבד</string>
+    <string name="weather_desc_403">סופת שלגים</string>
+    <string name="weather_desc_404">שלום</string>
+    <string name="weather_desc_405">גשם ושלג</string>
+    <string name="weather_desc_406">גשמים ושלג</string>
+    <string name="weather_desc_407">שיאושואה</string>
+    <string name="weather_desc_500">ערפל</string>
+    <string name="weather_desc_501">ערפל</string>
+    <string name="weather_desc_502">ערפל</string>
+    <string name="weather_desc_503">ערפל כבד</string>
+    <string name="weather_desc_504">ערפל קל</string>
+    <string name="weather_desc_507">סופת חול</string>
+    <string name="weather_desc_508">סופות חול עזות</string>
+    <string name="weather_desc_unknown">לא ידוע</string>
+    <string name="no_weather_information_available_at_the_moment">כרגע אין מידע על מזג האוויר</string>
+    <string name="navigation">ניווט</string>
+    <string name="radio">רדיו</string>
+    <string name="phone">טלפון בלוטות\'</string>
+    <string name="brower">דפדפן</string>
+    <string name="setting">הגדרות</string>
+    <string name="music">מוזיקה</string>
+    <string name="apps">יישום</string>
+    <string name="no_install_app">לא ניתן להפעיל את האפליקציה</string>
+    <string name="apps_no_install">האפליקציה לא מותקנת</string>
+
+    
+</resources>

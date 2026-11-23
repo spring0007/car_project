@@ -1,0 +1,61 @@
+<resources>
+    
+    <!--persist.sys.launcher.key 保存的值 目录和apk文件名引用-->
+    <!--system/priv-app/ 目录值和apk名的值-->
+    <!--主题app和系统会使用到-->
+    
+    <!--persist.sys.launcher.clazz 保存的值 用于启动插件的Activity-->
+    
+
+    <string name="click_play_music">Chanson inconnue</string>
+    <string name="music_artist">Artiste</string>
+
+
+    <string name="weather_desc_100">Journées ensoleillées</string>
+    <string name="weather_desc_101">Nuageux</string>
+    <string name="weather_desc_102">Shaoyun</string>
+    <string name="weather_desc_103">Partiellement ensoleillé</string>
+    <string name="weather_desc_104">Nuageux</string>
+    <string name="weather_desc_300">Averses</string>
+    <string name="weather_desc_301">Fortes averses</string>
+    <string name="weather_desc_302">Orages</string>
+    <string name="weather_desc_303">De forts orages</string>
+    <string name="weather_desc_304">Orages avec grêle</string>
+    <string name="weather_desc_305">Pluie légère</string>
+    <string name="weather_desc_306">Précipitations modérées</string>
+    <string name="weather_desc_307">Fortes pluies</string>
+    <string name="weather_desc_308">Précipitations extrêmes</string>
+    <string name="weather_desc_309">Bruine</string>
+    <string name="weather_desc_310">tempête</string>
+    <string name="weather_desc_311">Tempête</string>
+    <string name="weather_desc_312">Tempêtes violentes</string>
+    <string name="weather_desc_313">Pluie verglaçante</string>
+    <string name="weather_desc_400">Légère neige</string>
+    <string name="weather_desc_401">chutes de neige modérées</string>
+    <string name="weather_desc_402">Fortes chutes de neige</string>
+    <string name="weather_desc_403">Blizzard</string>
+    <string name="weather_desc_404">Grêle</string>
+    <string name="weather_desc_405">Pluie et neige</string>
+    <string name="weather_desc_406">Averses et averses de neige</string>
+    <string name="weather_desc_407">Xiaoxue</string>
+    <string name="weather_desc_500">Brume</string>
+    <string name="weather_desc_501">Brouillard</string>
+    <string name="weather_desc_502">Haze</string>
+    <string name="weather_desc_503">Brouillard dense</string>
+    <string name="weather_desc_504">Légère brume</string>
+    <string name="weather_desc_507">Tempête de sable</string>
+    <string name="weather_desc_508">Tempêtes de sable intenses</string>
+    <string name="weather_desc_unknown">Inconnu</string>
+    <string name="no_weather_information_available_at_the_moment">Il n’existe actuellement aucune information météo</string>
+    <string name="navigation">Navigation</string>
+    <string name="radio">Radio</string>
+    <string name="phone">Téléphone Bluetooth</string>
+    <string name="brower">Navigateur</string>
+    <string name="setting">Décors</string>
+    <string name="music">Musique</string>
+    <string name="apps">Application</string>
+    <string name="no_install_app">Impossible de lancer l’application</string>
+    <string name="apps_no_install">L’application n’est pas installée</string>
+
+    
+</resources>
