@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time">زمان</string>
+    <string name="music">موسیقی</string>
+    <string name="click_play_music">عنوان آهنگ</string>
+    <string name="music_artist">هنرمند</string>
+    <string name="unknown">ناشناخته</string>
+    <string name="app_not_installed">برنامه نصب نشده است</string>
+    <string name="cannot_launch_app">امکان اجرای برنامه وجود ندارد</string>
+</resources>

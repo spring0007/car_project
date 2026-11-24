@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time">الوقت</string>
+    <string name="music">الموسيقى</string>
+    <string name="click_play_music">عنوان الأغنية</string>
+    <string name="music_artist">الفنان</string>
+    <string name="unknown">غير معروف</string>
+    <string name="app_not_installed">التطبيق غير مثبت</string>
+    <string name="cannot_launch_app">تعذر تشغيل التطبيق</string>
+</resources>

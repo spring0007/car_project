@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time">समय</string>
+    <string name="music">संगीत</string>
+    <string name="click_play_music">गाने का शीर्षक</string>
+    <string name="music_artist">कलाकार</string>
+    <string name="unknown">अज्ञात</string>
+    <string name="app_not_installed">ऐप इंस्टॉल नहीं है</string>
+    <string name="cannot_launch_app">ऐप लॉन्च नहीं किया जा सकता</string>
+</resources>

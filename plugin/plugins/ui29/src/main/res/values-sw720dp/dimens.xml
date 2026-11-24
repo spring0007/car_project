@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 字体大小 -->
+    <dimen name="time_title_size">24sp</dimen>
+    <dimen name="time_value_size">90sp</dimen>
+    <dimen name="tv_title_size">24sp</dimen>
+    <dimen name="date_text_size">30sp</dimen>
+    <dimen name="tv_music_name_size">26sp</dimen>
+    <dimen name="music_widget_logo_size">212dp</dimen>
+    <dimen name="icon_width">92dp</dimen>
+    <dimen name="icon_height">92dp</dimen>
+    <dimen name="time_icon_width">30dp</dimen>
+    <dimen name="music_play_width">82dp</dimen>
+    <dimen name="music_play_height">82dp</dimen>
+    <dimen name="weekday_margin_top">10dp</dimen>
+    <dimen name="tv_unit_size">26sp</dimen>
+    <dimen name="tv_speed_size">80sp</dimen>
+    <dimen name="music_widget_margin_top">10dp</dimen>
+    <dimen name="music_widget_top">20dp</dimen>
+
+</resources>

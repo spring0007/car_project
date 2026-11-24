@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="time">Hora</string>
+    <string name="music">Música</string>
+    <string name="click_play_music">Título da música</string>
+    <string name="music_artist">Artista</string>
+    <string name="unknown">Desconhecido</string>
+    <string name="app_not_installed">Aplicação não instalada</string>
+    <string name="cannot_launch_app">Não foi possível iniciar a aplicação</string>
+</resources>
