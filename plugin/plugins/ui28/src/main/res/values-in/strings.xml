@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Ketuk untuk memutar</string>
+    <string name="music_artist">Artis</string>
+    <string name="app_not_installed">Aplikasi tidak terpasang</string>
+    <string name="cannot_launch_app">Tidak dapat meluncurkan aplikasi</string>
+</resources>

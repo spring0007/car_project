@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">탭하여 재생</string>
+    <string name="music_artist">아티스트</string>
+    <string name="app_not_installed">앱이 설치되지 않았습니다</string>
+    <string name="cannot_launch_app">앱을 실행할 수 없습니다</string>
+</resources>

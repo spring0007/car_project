@@ -3,12 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/music_widget_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/img_song_art_bg"
@@ -113,5 +108,4 @@
                 android:src="@drawable/sf_music_next" />
 
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.launcher.ui29.MusicWidget>

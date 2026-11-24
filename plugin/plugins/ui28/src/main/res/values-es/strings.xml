@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Toca para reproducir</string>
+    <string name="music_artist">Artista</string>
+    <string name="app_not_installed">Aplicación no instalada</string>
+    <string name="cannot_launch_app">No se puede iniciar la aplicación</string>
+</resources>

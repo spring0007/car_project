@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Πατήστε για αναπαραγωγή</string>
+    <string name="music_artist">Καλλιτέχνης</string>
+    <string name="app_not_installed">Η εφαρμογή δεν είναι εγκατεστημένη</string>
+    <string name="cannot_launch_app">Δεν είναι δυνατή η εκκίνηση της εφαρμογής</string>
+</resources>

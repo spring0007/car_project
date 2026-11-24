@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Nhấn để phát</string>
+    <string name="music_artist">Nghệ sĩ</string>
+    <string name="app_not_installed">Ứng dụng chưa được cài đặt</string>
+    <string name="cannot_launch_app">Không thể khởi chạy ứng dụng</string>
+</resources>

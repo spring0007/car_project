@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">タップして再生</string>
+    <string name="music_artist">アーティスト</string>
+    <string name="app_not_installed">アプリがインストールされていません</string>
+    <string name="cannot_launch_app">アプリを起動できません</string>
+</resources>
