@@ -127,10 +127,10 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_apps_bg"
         app:layout_constraintBottom_toBottomOf="@+id/iv_apps_bg"
         android:gravity="center_horizontal">
-        <View
-            android:layout_width="1dp"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="1"
             />
 
 
@@ -141,10 +141,10 @@
             android:onClick="onClick"
             android:src="@drawable/ic_navigation"
            />
-        <View
-            android:layout_width="1dp"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="3"
             />
 
         <ImageView
@@ -154,10 +154,10 @@
             android:onClick="onClick"
             android:src="@drawable/ic_bt_phone"
             />
-        <View
-            android:layout_width="1dp"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="3"
             />
         <ImageView
             android:id="@+id/hotset_settings"
@@ -165,10 +165,10 @@
             android:layout_height="@dimen/host_cell_size"
             android:onClick="onClick"
             android:src="@drawable/ic_settings" />
-        <View
-            android:layout_width="1dp"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="3"
             />
         <ImageView
             android:id="@+id/hotset_allapp"
@@ -176,15 +176,15 @@
             android:layout_height="@dimen/host_cell_size"
             android:onClick="onClick"
             android:src="@drawable/hotset_all_app" />
-        <View
-            android:layout_width="1dp"
+        <Space
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             />
 
 
 
-        <ImageView
+       <!-- <ImageView
             android:id="@+id/hotset_change"
             android:layout_width="@dimen/host_cell_size"
             android:layout_height="@dimen/host_cell_size"
@@ -195,7 +195,7 @@
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            />
+            />-->
     </LinearLayout>
     
     <ImageView

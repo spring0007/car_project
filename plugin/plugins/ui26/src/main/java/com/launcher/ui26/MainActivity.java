@@ -91,8 +91,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private LocationListener mLocationListener;
     private View contentView;
 
-    private List<ConstraintSet> constraintSetList = new ArrayList<>();
-    private int currentIndex = 0;
+    //private List<ConstraintSet> constraintSetList = new ArrayList<>();
+    //private int currentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +112,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(binding.getRoot());
         contentView = binding.getRoot();
 
-        // 加载三种布局方案（从 xml 文件）
-        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_1));
-        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_2));
-        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_3));
-
-        // 初始应用第一套方案（不带动画，直接设置）
-        constraintSetList.get(0).applyTo(binding.getRoot());
+//        // 加载三种布局方案（从 xml 文件）
+//        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_1));
+//        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_2));
+//        constraintSetList.add(loadConstraintSet(R.xml.constraint_set_3));
+//
+//        // 初始应用第一套方案（不带动画，直接设置）
+//        constraintSetList.get(0).applyTo(binding.getRoot());
 		initReceiver();
         initLongTouch();
         initAddAppView();
@@ -159,14 +159,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 	    private void initLocationListener() {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationListener = new LocationListener() {
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-            public void onProviderEnabled(String provider) {
-            }
+            public void onProviderEnabled(String provider) {}
 
-            public void onProviderDisabled(String provider) {
-            }
+            public void onProviderDisabled(String provider) {}
 
             @Override
             public void onLocationChanged(Location location) {
@@ -175,9 +172,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                     int speed = (int) (location.getSpeed() * 3.6);// m/s ---> km/h
                     int speedMile = (int) (speed / 1.6093);// km/h  ---> miles/h
-                    LogUtil.i( "onLocationChanged: float speed = " + speed);
-                    LogUtil.i( "onLocationChanged: float speedMile = " + speedMile);
-
+                    LogUtil.i( "onLocationChanged: float speed = " + speed + ", speedMile = " + speedMile);
 
                     Message msg = mHandlerSpeed.obtainMessage();
                     msg.what = MSG_UPDATE_SPEED;
@@ -375,9 +370,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         boolean isStartCommand = "start".equals(value2);
         boolean isStopCommand = "stop".equals(value2);
         boolean isValidPackage = !TextUtils.isEmpty(value1);
-        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:value1=" + value1 + " --oldPlayingPackage=" + oldPlayingPackage + "--value2=" + value2);
-        //Log.i(TAG, "handleMediaPlaybackResult-- MUSIC_MEDIA_PLAY:isValidPackage=" + isValidPackage + " --isStartCommand=" + isStartCommand + "-isStopCommand=" + isStopCommand);
-
 
         // 处理停止播放的情况
         //if (isValidPackage && isStopCommand) {
@@ -540,27 +532,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public List<PackageInfo> getAppList(PackageManager packageManager, List<ResolveInfo> resolveInfos) {
-        List<PackageInfo> appList = new ArrayList<>();
-        Set<String> processed = new HashSet<>();
-
-        for (ResolveInfo resolveInfo : resolveInfos) {
-            String packageName = resolveInfo.activityInfo.packageName;
-            if (processed.contains(packageName)) {
-                continue;
-            }
-
-            try {
-                PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
-                appList.add(packageInfo);
-                processed.add(packageName);
-            } catch (PackageManager.NameNotFoundException e) {
-                // 忽略异常
-            }
-        }
-        return appList;
-    }
-
     @Override
     public void onBackPressed() {
         AppsCustomizeControl.INSTANCE.hideApps();
@@ -614,7 +585,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         LogUtil.i("onClick : "+v.getId());
         switch(v.getId()){
-            case R.id.hotset_change:
+            /*case R.id.hotset_change:
                 // 切换到下一个方案（循环切换）
                 currentIndex = (currentIndex + 1) % constraintSetList.size();
                 // 开始过渡动画（动画时长默认300ms，可自定义）
@@ -627,7 +598,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 TransitionManager.beginDelayedTransition(binding.getRoot() , transitionSet);
                 // 应用新的约束集
                 constraintSetList.get(currentIndex).applyTo(binding.getRoot());
-                break;
+                break;*/
             case R.id.hotset_allapp:
                 AppsCustomizeControl.INSTANCE.showApps(findViewById(android.R.id.content));
                 break;
@@ -790,7 +761,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     };
-
 
     private boolean isEventConsumedByChild = false;
     private boolean isLongPressPossible = false;
