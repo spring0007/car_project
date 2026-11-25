@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="ll_width">800dp</dimen>
+    <dimen name="app_icon_width">90dp</dimen>
+    <dimen name="app_icon_height">160dp</dimen>
+    <dimen name="app_icon_margin">20dp</dimen>
+    <dimen name="app_icon_tv_width">90dp</dimen>
+    <dimen name="app_icon_tv_margin">10dp</dimen>
+    <dimen name="app_icon_tv_size">20sp</dimen>
+
+    <dimen name="recycle_app_icon_size">90dp</dimen>
+    <dimen name="music_name_tx_size">32sp</dimen>
+    <dimen name="music_artist_txsize">24sp</dimen>
+    <dimen name="music_widget_size">82dp</dimen>
+    <dimen name="hotset_width">82dp</dimen>
+    <dimen name="car_speed_unit_tv_text_size">36sp</dimen>
+    <dimen name="car_speed_tv_text_size">80sp</dimen>
+    <dimen name="time_tv_size">60sp</dimen>
+    <dimen name="time_clock_width">166dp</dimen>
+    <dimen name="date_tv_size">26sp</dimen>
+    <dimen name="weekday_tv_size">32sp</dimen>
+    <dimen name="font_size">32sp</dimen>
+    <dimen name="icon_size">146dp</dimen>
+    <dimen name="text_padding">10dp</dimen>
+
+</resources>

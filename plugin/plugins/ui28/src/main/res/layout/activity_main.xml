@@ -88,7 +88,6 @@
         android:id="@+id/time_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:onClick="onTimeClick"
         app:layout_constraintStart_toStartOf="@+id/guideline_left"
         app:layout_constraintEnd_toEndOf="@id/guideline_left1"
         app:layout_constraintTop_toTopOf="@id/guideline_top"
@@ -115,7 +114,6 @@
             android:layout_height="wrap_content"
             android:format12Hour="EEEE"
             android:format24Hour="EEEE"
-            android:text="星期五"
             android:textColor="@android:color/black"
             android:textSize="@dimen/weekday_tv_size"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +125,6 @@
             android:layout_height="wrap_content"
             android:format12Hour="yyyy-MM-dd"
             android:format24Hour="yyyy-MM-dd"
-            android:text="2020年5月18日"
             android:textColor="@android:color/black"
             android:textSize="@dimen/date_tv_size"
             app:layout_constraintStart_toStartOf="parent"
@@ -231,7 +228,7 @@
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="@+id/iv_app_icon"
         app:layout_constraintTop_toTopOf="@+id/iv_app_icon"
-        app:layout_constraintStart_toEndOf="@+id/iv_app_icon"
+        app:layout_constraintStart_toStartOf="@+id/iv_app_icon"
         app:layout_constraintBottom_toBottomOf="@+id/iv_app_icon"/>
    <ImageView
        android:id="@+id/bottom_iv"

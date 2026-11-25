@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_item2"
-    android:orientation="vertical"
     android:layout_width="@dimen/app_icon_width"
     android:layout_height="@dimen/app_icon_height"
     android:layout_marginLeft="@dimen/app_icon_margin"
@@ -24,9 +23,9 @@
         android:layout_below="@+id/iv_app_icon2"
         android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:lines="2"
+        android:maxLines="2"
         android:ellipsize="end"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:textSize="@dimen/app_icon_tv_size"
         android:layout_marginTop="@dimen/app_icon_tv_margin" />
 

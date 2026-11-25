@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
-
-
-    <dimen name="car_speed_radio">0.03</dimen>
-    <dimen name="music_widget_radio">0.3</dimen>
-    <dimen name="rv_width">600dp</dimen>
-    <dimen name="rel_size">40dp</dimen>
-    <dimen name="radio_tv_size">24sp</dimen>
-    <dimen name="ll_height">600dp</dimen>
     <dimen name="ll_width">800dp</dimen>
     <dimen name="app_icon_width">90dp</dimen>
     <dimen name="app_icon_height">160dp</dimen>
@@ -19,8 +10,6 @@
     <dimen name="app_icon_tv_size">20sp</dimen>
 
     <dimen name="recycle_app_icon_size">90dp</dimen>
-    <dimen name="app_icon_bg_size">90dp</dimen>
-    <dimen name="recycle_app_width">110dp</dimen>
     <dimen name="music_name_tx_size">32sp</dimen>
     <dimen name="music_artist_txsize">24sp</dimen>
     <dimen name="music_widget_size">82dp</dimen>
@@ -31,6 +20,8 @@
     <dimen name="time_clock_width">166dp</dimen>
     <dimen name="date_tv_size">26sp</dimen>
     <dimen name="weekday_tv_size">32sp</dimen>
-
+    <dimen name="font_size">32sp</dimen>
+    <dimen name="icon_size">146dp</dimen>
+    <dimen name="text_padding">10dp</dimen>
 
 </resources>

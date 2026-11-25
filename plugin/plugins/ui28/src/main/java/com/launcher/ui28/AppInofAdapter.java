@@ -2,114 +2,65 @@ package com.launcher.ui28;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.awell.addapp.AddSelectAppCallback;
 import com.awell.addapp.AppInfo;
 import com.awell.addapp.ShowPopupI;
-import com.awell.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHolder> {
 
-    private Context mContext;
+    // 首页最多 6 格:6 个应用,或 5 个应用 + 1 个添加按钮
+    private static final int MAX_ITEM_COUNT = 6;
+    private static final String PLACEHOLDER_PACKAGE = "placeholder_mismatch";
 
-    private List<AppInfo> contentList = new ArrayList<>();
+    private final List<AppInfo> contentList = new ArrayList<>();
+    private final ShowPopupI showPopupI;
+    private final AddSelectAppCallback addSelectAppCallback;
 
-    public void setContentList(List<AppInfo> contentList) {
-        this.contentList.clear();
-        this.contentList.addAll(contentList);
-        notifyDataSetChanged();
-    }
-
-    private ShowPopupI showPopupI;
-    private AddSelectAppCallback addSelectAppCallback;
-
-    public AppInofAdapter(Context context, List<AppInfo> contentList, ShowPopupI showPopupI, AddSelectAppCallback addSelectAppCallback) {
-        this.contentList.addAll(contentList);
-        this.mContext = context;
+    public AppInofAdapter(List<AppInfo> contentList, ShowPopupI showPopupI,
+                          AddSelectAppCallback addSelectAppCallback) {
         this.showPopupI = showPopupI;
         this.addSelectAppCallback = addSelectAppCallback;
+        setContentList(contentList);
+    }
+
+    public void setContentList(List<AppInfo> list) {
+        int count = Math.min(list.size(), MAX_ITEM_COUNT);
+        List<AppInfo> limited = new ArrayList<>(list.subList(0, count));
+        contentList.clear();
+        contentList.addAll(limited);
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item, parent, false);
-        return  new ViewHolder(view);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.layout_app_rv_item, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         AppInfo appInfo = contentList.get(position);
-        if (appInfo == null) return;
-
-        if ("placeholder_mismatch".equals(appInfo.package_name)){
-            holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
-        }else {
-            Integer iconResId = ImageManager.mHomePackName.get(appInfo.package_name);
-            Drawable icon_bg = iconResId != null ? ResourcesCompat.getDrawable(mContext.getResources(), iconResId, null) : null;
-            if (icon_bg != null) {
-                holder.iv_app_icon.setImageDrawable(icon_bg);
-            } else {
-
-                try {
-                    PackageManager pm = mContext.getPackageManager();
-                    Drawable icon = pm.getApplicationIcon(appInfo.package_name);
-                    holder.iv_app_icon.setImageDrawable(icon);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                   // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
-                }
-            }
+        if (appInfo == null) {
+            return;
         }
-        LogUtil.i("onBindViewHolder: " + appInfo.package_name);
-        //holder.tv_app_name.setText(appInfo.getLabel());
-        //holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
-
-        holder.iv_app_layout.setOnLongClickListener(view -> {
-            contentList.remove(position);
-            notifyDataSetChanged();
-            addSelectAppCallback.removeAppInfo(appInfo.package_name);
-            return true;
-        });
-
-        holder.iv_app_layout.setOnClickListener(vie -> {
-            if (appInfo == null || appInfo.package_name == null) return;
-            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
-            if (intent != null) {
-                mContext.startActivity(intent);
-            }
-        });
-
-        if (position == contentList.size() - 1) {
-            holder.iv_app_layout.setOnClickListener(vie -> {
-                showPopupI.showPopup();
-            });
-
-            holder.iv_app_layout.setOnLongClickListener(view -> false);
-
-//            Log.e("getwidth"," width = " + holder.ll_item.getLayoutParams().width);
-            /*RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(65,65);
-            layoutParams.setMargins(32,30,0,0);
-            holder.iv_app_icon.setLayoutParams(layoutParams);*/
+        if (PLACEHOLDER_PACKAGE.equals(appInfo.package_name)) {
+            holder.ivAppIcon.setImageResource(R.drawable.sf_app_add_icon);
+        } else {
+            ImageManager.loadIcon(holder.itemView.getContext(), holder.ivAppIcon, appInfo.package_name);
         }
-
     }
 
     @Override
@@ -117,21 +68,46 @@ public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHold
         return contentList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private AppInfo getAppInfo(int position) {
+        return position >= 0 && position < contentList.size() ? contentList.get(position) : null;
+    }
 
-        private RelativeLayout iv_app_layout;
-        private LinearLayout ll_item;
-        private ImageView iv_app_icon, iv_app_icon_bg;
-        private TextView tv_app_name;
-//        private ImageView iv_app_icon_bg;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView ivAppIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ll_item = itemView.findViewById(R.id.ll_item);
-            iv_app_icon = itemView.findViewById(R.id.iv_app_icon);
-            tv_app_name = itemView.findViewById(R.id.tv_app_name);
-            iv_app_icon_bg = itemView.findViewById(R.id.iv_app_icon_bg);
-            iv_app_layout = itemView.findViewById(R.id.app_layout);
+            ivAppIcon = itemView.findViewById(R.id.iv_app_icon);
+            View clickView = itemView.findViewById(R.id.app_layout);
+
+            clickView.setOnClickListener(v -> {
+                AppInfo appInfo = getAppInfo(getAdapterPosition());
+                if (appInfo == null) {
+                    return;
+                }
+                if (PLACEHOLDER_PACKAGE.equals(appInfo.package_name)) {
+                    showPopupI.showPopup();
+                } else {
+                    openApp(itemView.getContext(), appInfo.package_name);
+                }
+            });
+
+            clickView.setOnLongClickListener(v -> {
+                AppInfo appInfo = getAppInfo(getAdapterPosition());
+                if (appInfo == null || PLACEHOLDER_PACKAGE.equals(appInfo.package_name)) {
+                    return false;
+                }
+                addSelectAppCallback.removeAppInfo(appInfo.package_name);
+                return true;
+            });
+        }
+    }
+
+    private static void openApp(Context context, String packageName) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (intent != null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     }
 }
