@@ -186,5 +186,66 @@
 
     <!--  第二行  -->
 
+    <!--gallery - 第二行第一个（第一页图库入口被抖音占用时显示）-->
+    <ImageView
+        android:id="@+id/iv_gallery_small_page2"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/gallery_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_gallery_small_page2"
+        app:layout_constraintEnd_toEndOf="@+id/tv_gallery_small_page2"
+        app:layout_constraintStart_toStartOf="@+id/tv_gallery_small_page2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/tv_gallery_small_page2"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gallery"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_gallery_small_page2"
+        app:layout_constraintWidth_percent="0.2"
+        android:visibility="gone" />
+
+    <!--chrome - 第二行第二个（第一页浏览器入口被汽水音乐占用时显示）-->
+    <ImageView
+        android:id="@+id/iv_chrome_small_page2"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/chrome_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_chrome_small_page2"
+        app:layout_constraintEnd_toEndOf="@+id/tv_chrome_small_page2"
+        app:layout_constraintStart_toStartOf="@+id/tv_chrome_small_page2"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/tv_chrome_small_page2"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/chrome"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_v2"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_chrome_small_page2"
+        app:layout_constraintWidth_percent="0.2"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

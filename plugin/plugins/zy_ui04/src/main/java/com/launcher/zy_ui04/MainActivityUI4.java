@@ -53,6 +53,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
 
     // ZLink（EasyConnect）包名
     private static final String ZLINK_PACKAGE = "com.zjinnova.zlink";
+    // 抖音车机版包名
+    private static final String DOUYIN_PACKAGE = "com.ss.android.ugc.aweme";
+    // 汽水音乐车机版包名
+    private static final String QISHUI_PACKAGE = "com.luna.music.car";
 
     // 页面组常量
     private static final int PAGE_GROUP_DEFAULT = 0;  // 默认组（viewpager_1, viewpager_2）
@@ -113,6 +117,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         // ZLink 可用 -> 显示 EasyConnect(ZLink) 入口、隐藏导航入口；不可用 -> 反过来
         if (adapter != null) {
             adapter.setZlinkUsable(isAppUsable(this, ZLINK_PACKAGE));
+            // mt6755：抖音/汽水音乐存在 -> 替换第一页的图库/浏览器入口，并挪到第二页显示
+            adapter.setDouyinQishuiUsable(
+                    isAppUsable(this, DOUYIN_PACKAGE),
+                    isAppUsable(this, QISHUI_PACKAGE));
         }
 
     }
@@ -158,6 +166,10 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
         adapter = new ViewPagerAdapter(pageDataList, this);
         // 创建适配器时就按 ZLink 是否可用设置入口显隐，避免新页面先闪一下
         adapter.setZlinkUsable(isAppUsable(this, ZLINK_PACKAGE));
+        // 抖音/汽水音乐入口显隐同样在绑定前设置，避免新页面先闪一下
+        adapter.setDouyinQishuiUsable(
+                isAppUsable(this, DOUYIN_PACKAGE),
+                isAppUsable(this, QISHUI_PACKAGE));
         binding.viewpager.setAdapter(adapter);
         binding.viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -296,6 +308,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             case R.id.tv_gallery_big:
             case R.id.iv_gallery_small:
             case R.id.tv_gallery_small:
+            case R.id.iv_gallery_small_page2:
+            case R.id.tv_gallery_small_page2:
                 startActivity("com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity");
                 break;
             case R.id.iv_filemanager_big:
@@ -308,6 +322,8 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             case R.id.tv_chrome_big:
             case R.id.iv_chrome_small:
             case R.id.tv_chrome_small:
+            case R.id.iv_chrome_small_page2:
+            case R.id.tv_chrome_small_page2:
                 String url = SystemProperties.get("persist.sys.lz.HOME_PAGE", "http://m.baidu.com");
                 Intent chromeIntent = new Intent(Intent.ACTION_VIEW);
                 chromeIntent.addCategory(Intent.CATEGORY_BROWSABLE);
@@ -335,6 +351,14 @@ public class MainActivityUI4 extends Activity implements View.OnClickListener {
             case R.id.tv_easy_connect_small:
                 startActivity("com.zjinnova.zlink","com.zjinnova.android.zlink.features.main.MainActivity");
 
+                break;
+            case R.id.iv_douyin_small:
+            case R.id.tv_douyin_small:
+                startActivity(DOUYIN_PACKAGE,"com.ss.android.ugc.aweme.carplay.main.CarPlayMainActivity");
+                break;
+            case R.id.iv_qishui_small:
+            case R.id.tv_qishui_small:
+                startActivity(QISHUI_PACKAGE, "com.luna.music.car.app.framework.ui.MainActivity");
                 break;
             case R.id.iv_navi_big:
             case R.id.tv_navi_big:

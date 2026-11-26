@@ -152,6 +152,41 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_gallery_small"
         app:layout_constraintWidth_percent="0.2" />
 
+<!--douyin - mt6755 且抖音应用存在时显示，替换同位置的图库-->
+
+    <ImageView
+        android:id="@+id/iv_douyin_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/douyin_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_douyin_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_douyin_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_douyin_small"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_douyin_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/douyin"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_douyin_small"
+        app:layout_constraintWidth_percent="0.2"
+        android:visibility="gone"
+        />
+
+
     <!--  第二行  -->
 
     <!-- bt music - 第二行第一个 -->
@@ -268,4 +303,37 @@
         app:layout_constraintStart_toStartOf="@+id/guideline_v3"
         app:layout_constraintTop_toBottomOf="@+id/iv_chrome_small"
         app:layout_constraintWidth_percent="0.2" />
+
+    <!-- qishui - mt6755 且汽水音乐存在时显示，替换同位置的浏览器 -->
+    <ImageView
+        android:id="@+id/iv_qishui_small"
+        android:layout_width="@dimen/iv_icon_small_width"
+        android:layout_height="@dimen/iv_icon_small_height"
+        android:importantForAccessibility="no"
+        android:onClick="onClick"
+        android:scaleType="fitXY"
+        android:src="@drawable/qishui_small"
+        app:layout_constraintBottom_toTopOf="@+id/tv_qishui_small"
+        app:layout_constraintEnd_toEndOf="@+id/tv_qishui_small"
+        app:layout_constraintStart_toStartOf="@+id/tv_qishui_small"
+        app:layout_constraintTop_toBottomOf="@+id/guideline_horizontal"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_qishui_small"
+        style="@style/small_title_tv_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/qishui"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_v3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_qishui_small"
+        app:layout_constraintWidth_percent="0.2"
+        android:visibility="gone"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

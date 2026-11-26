@@ -19,7 +19,8 @@
     <string name="bluetooth_phone">蓝牙电话</string>
     <string name="audio_input">音频输入</string>
     <string name="video_input">视频输入</string>
-    
+    <string name="douyin">抖音</string>
+    <string name="qishui">汽水音乐</string>
     <string name="easy_connect">手机互联</string>
     <string name="eq">音效</string>
 

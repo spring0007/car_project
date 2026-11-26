@@ -23,6 +23,8 @@
     <string name="easy_connect" >Easy Connect</string>
     <string name="zlink" translatable="false" >ZLINK</string>
     <string name="eq">EQ</string>
+    <string name="douyin" >TikTok</string>
+    <string name="qishui">Soda Music</string>
 
     <string-array name="wallpapers" translatable="false">
         <item>wallpaper_00</item>
