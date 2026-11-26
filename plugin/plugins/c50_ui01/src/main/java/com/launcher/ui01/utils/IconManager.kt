@@ -42,6 +42,7 @@ object IconManager {
         "com.awell.weather" to "apple_weather_square",
         "com.awell.eqselect" to "apple_jhq_square",
         "com.ms.ms2160" to "apple_wjsr_square",
+        "cn.kuwo.kwmusiccar" to "apple_kuwoyinyue",
         ".AwellCanbusAirView" to "apple_air"
     )
 

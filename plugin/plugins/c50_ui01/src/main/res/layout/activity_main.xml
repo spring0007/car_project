@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.0927" />
+        app:layout_constraintGuide_percent="0.0427" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_music"
@@ -34,28 +34,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3484" />
+        app:layout_constraintGuide_percent="0.3134" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3693" />
+        app:layout_constraintGuide_percent="0.3343" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_top_apps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6833" />
+        app:layout_constraintGuide_percent="0.6683" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_bottom_radio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6639" />
+        app:layout_constraintGuide_percent="0.6489" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_bottom_apps"
@@ -181,6 +181,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.85"
+            android:clickable="false"
             android:text="@string/navigation"
             android:textColor="@color/white"
             android:textSize="@dimen/tv_bt_navi_size"

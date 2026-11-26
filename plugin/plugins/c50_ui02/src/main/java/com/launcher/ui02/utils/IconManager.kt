@@ -21,7 +21,7 @@ object IconManager {
         "com.awell.carsetting" to "apple_yuanche_square",
         "com.awell.backcar" to "apple_wjsr_square",
         "cn.kuwo.kwmusiccar" to "apple_kuwo_square",
-        "com.awell.eqselect" to "apple_dsp_square",
+        "com.awell.eqselect" to "apple_jhq_square",
         "com.awell.canbus" to "apple_shezhi_square",
         "com.awell.canbus2" to "apple_shezhi_square",
         "com.autonavi.amapauto" to "apple_gaode_square",
@@ -39,7 +39,9 @@ object IconManager {
         "com.awell.keylight" to "apple_color_light_square",
         "com.awell.keystudy" to "apple_training_square",
         "com.awell.themesetting" to "apple_theme_square",
-        "com.ms.ms2160" to "apple_wjsr_square"
+        "com.ms.ms2160" to "apple_wjsr_square",
+        "com.awell.weather" to "apple_weather_square",
+        "cn.kuwo.kwmusiccar" to "apple_kugou_square",
     )
 
     /**
