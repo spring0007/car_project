@@ -1,0 +1,152 @@
+package com.launcher.ui30.adapter;
+
+
+import static com.awell.utils.FreeformUtils.SETTINGS_FREEFORM_APP_PACKAGE_NAME;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.provider.Settings;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.awell.addapp.AddSelectAppCallback;
+import com.awell.addapp.AppInfo;
+import com.awell.addapp.ShowPopupI;
+import com.launcher.ui30.R;
+import com.launcher.ui30.utils.IconManager;
+import com.awell.library.util.SystemUIClient;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppInofAdapter extends RecyclerView.Adapter<AppInofAdapter.ViewHolder> {
+
+    private Context mContext;
+
+    private final List<AppInfo> contentList = new ArrayList<>();
+    private SystemUIClient systemUIClient;
+
+    public void setContentList(List<AppInfo> contentList) {
+        this.contentList.clear();
+        this.contentList.addAll(contentList);
+        notifyDataSetChanged();
+    }
+
+    private final ShowPopupI showPopupI;
+    private final AddSelectAppCallback addSelectAppCallback;
+
+    public AppInofAdapter(Context context, List<AppInfo> contentList, ShowPopupI showPopupI,
+                          AddSelectAppCallback addSelectAppCallback) {
+        this.contentList.addAll(contentList);
+        this.mContext = context;
+        this.showPopupI = showPopupI;
+        this.addSelectAppCallback = addSelectAppCallback;
+    }
+
+    public void setSystemUIClient(SystemUIClient systemUIClient) {
+        this.systemUIClient = systemUIClient;
+    }
+
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_app_rv_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        AppInfo appInfo = contentList.get(position);
+        if (appInfo == null) return;
+        if ("placeholder_mismatch".equals(appInfo.package_name)){
+            holder.iv_app_icon.setImageResource(R.drawable.sf_app_add_icon);
+        }else {
+            Drawable icon_bg = IconManager.INSTANCE.getAppIcon(mContext,appInfo.package_name);
+            if (icon_bg != null) {
+                holder.iv_app_icon.setImageDrawable(icon_bg);
+            } else {
+                try {
+                    PackageManager pm = mContext.getPackageManager();
+                    Drawable icon = pm.getApplicationIcon(appInfo.package_name);
+                    holder.iv_app_icon.setImageDrawable(icon);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    // holder.iv_app_icon.setImageResource(R.drawable.sf_app_navi);
+                }
+            }
+        }
+        //holder.tv_app_name.setText(appInfo.getLabel());
+        holder.iv_app_icon_bg.setBackground(appInfo.getIcon_bg());
+
+        holder.iv_app_layout.setOnLongClickListener(view -> {
+            contentList.remove(position);
+            notifyDataSetChanged();
+            addSelectAppCallback.removeAppInfo(appInfo.package_name);
+            return true;
+        });
+
+        holder.iv_app_layout.setOnClickListener(vie -> {
+            if (appInfo == null || appInfo.package_name == null) return;
+            Intent intent = mContext.getPackageManager().getLaunchIntentForPackage(appInfo.package_name);
+            String pkg = Settings.System.getString(mContext.getContentResolver(), SETTINGS_FREEFORM_APP_PACKAGE_NAME);
+
+            if (pkg != null && appInfo.package_name.contains(pkg)) {
+                systemUIClient.fullScreenFreeform();
+            } else {
+				if (intent != null) {
+                	mContext.startActivity(intent);
+				}
+            }
+
+        });
+
+        if (position == contentList.size() - 1) {
+            holder.iv_app_layout.setOnClickListener(vie -> {
+                showPopupI.showPopup();
+            });
+
+            holder.iv_app_layout.setOnLongClickListener(view -> false);
+
+//            Log.e("getwidth"," width = " + holder.ll_item.getLayoutParams().width);
+            /*RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(65,65);
+            layoutParams.setMargins(32,30,0,0);
+            holder.iv_app_icon.setLayoutParams(layoutParams);*/
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return contentList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        private RelativeLayout iv_app_layout;
+        private LinearLayout ll_item;
+        private ImageView iv_app_icon, iv_app_icon_bg;
+       // private TextView tv_app_name;
+//        private ImageView iv_app_icon_bg;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ll_item = itemView.findViewById(R.id.ll_item);
+            iv_app_icon = itemView.findViewById(R.id.iv_app_icon);
+            //tv_app_name = itemView.findViewById(R.id.tv_app_name);
+            iv_app_icon_bg = itemView.findViewById(R.id.iv_app_icon_bg);
+            iv_app_layout = itemView.findViewById(R.id.app_layout);
+        }
+    }
+}

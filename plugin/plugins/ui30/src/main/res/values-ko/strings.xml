@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">음악 없음</string>
+    <string name="no_install_app">앱을 실행할 수 없습니다</string>
+    <string name="apps_no_install">앱이 설치되어 있지 않습니다</string>
+</resources>

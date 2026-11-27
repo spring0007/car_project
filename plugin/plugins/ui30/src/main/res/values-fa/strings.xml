@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">موسیقی وجود ندارد</string>
+    <string name="no_install_app">امکان اجرای برنامه وجود ندارد</string>
+    <string name="apps_no_install">برنامه نصب نشده است</string>
+</resources>

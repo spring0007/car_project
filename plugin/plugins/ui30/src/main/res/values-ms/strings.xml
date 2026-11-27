@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Tiada muzik</string>
+    <string name="no_install_app">Tidak dapat melancarkan aplikasi</string>
+    <string name="apps_no_install">Aplikasi tidak dipasang</string>
+</resources>

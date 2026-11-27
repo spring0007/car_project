@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">暂无音乐</string>
+    <string name="no_install_app">无法启动应用</string>
+    <string name="apps_no_install">应用尚未安装</string>
+
+</resources>

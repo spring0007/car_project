@@ -1,0 +1,90 @@
+<com.launcher.ui30.view.MusicWidget xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_music_widget"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_song_art_bg"
+        android:layout_width="@dimen/img_song_art_bg_size"
+        android:layout_height="@dimen/img_song_art_bg_size"
+        android:scaleType="fitXY"
+        android:src="@drawable/ablum_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+
+    <com.awell.launcher2.EarqueeTextView
+        android:id="@+id/music_widget_music_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        app:layout_constraintWidth_percent="0.7"
+        android:fontFamily="@font/harmonyos_sans_sc_regular"
+        android:gravity="center_horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:text="@string/click_play_music"
+        android:textColor="@color/white"
+        android:textSize="@dimen/music_artist_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/ll_control_layout_music"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_song_art_bg" />
+
+    <LinearLayout
+        android:id="@+id/ll_control_layout_music"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/music_control_margin_bottom"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <ImageView
+            android:id="@+id/music_widget_pre"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:layout_gravity="center"
+            android:src="@drawable/sf_radio_pre"
+            tools:ignore="ContentDescription" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/music_widget_play"
+            android:layout_width="@dimen/iv_music_play_size"
+            android:layout_height="@dimen/iv_music_play_size"
+            android:src="@drawable/sf_music_bofang"
+            tools:ignore="ContentDescription" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/music_widget_next"
+            android:layout_width="@dimen/iv_radio_image_size"
+            android:layout_height="@dimen/iv_radio_image_size"
+            android:src="@drawable/sf_radio_next"
+            tools:ignore="ContentDescription" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</com.launcher.ui30.view.MusicWidget>

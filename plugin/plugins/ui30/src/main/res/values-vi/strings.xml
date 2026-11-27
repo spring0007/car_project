@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Không có nhạc</string>
+    <string name="no_install_app">Không thể khởi chạy ứng dụng</string>
+    <string name="apps_no_install">Ứng dụng chưa được cài đặt</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Sem música</string>
+    <string name="no_install_app">Não foi possível iniciar a aplicação</string>
+    <string name="apps_no_install">Aplicação não instalada</string>
+</resources>

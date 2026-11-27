@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">कोई संगीत नहीं</string>
+    <string name="no_install_app">ऐप लॉन्च नहीं किया जा सकता</string>
+    <string name="apps_no_install">ऐप इंस्टॉल नहीं है</string>
+</resources>

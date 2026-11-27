@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">ไม่มีเพลง</string>
+    <string name="no_install_app">ไม่สามารถเปิดแอปได้</string>
+    <string name="apps_no_install">แอปยังไม่ได้ติดตั้ง</string>
+</resources>

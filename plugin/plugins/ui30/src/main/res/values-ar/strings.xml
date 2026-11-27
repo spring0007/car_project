@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">لا توجد موسيقى</string>
+    <string name="no_install_app">تعذر تشغيل التطبيق</string>
+    <string name="apps_no_install">التطبيق غير مثبت</string>
+</resources>

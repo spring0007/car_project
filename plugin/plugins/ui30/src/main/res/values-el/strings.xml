@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="click_play_music">Δεν υπάρχει μουσική</string>
+    <string name="no_install_app">Δεν είναι δυνατή η εκκίνηση της εφαρμογής</string>
+    <string name="apps_no_install">Η εφαρμογή δεν είναι εγκατεστημένη</string>
+</resources>

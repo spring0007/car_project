@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="gpsSpeed_size">46sp</dimen>
+    <dimen name="gpsSpeedUnit_size">26sp</dimen>
+    <dimen name="app_name_text_size">20sp</dimen>
+    <dimen name="tv_app_margin_top">10dp</dimen>
+    <dimen name="ll_height">600dp</dimen>
+    <dimen name="ll_width">800dp</dimen>
+    <dimen name="app_icon_width">90dp</dimen>
+    <dimen name="app_icon_height">160dp</dimen>
+    <dimen name="app_icon_margin">20dp</dimen>
+    <dimen name="app_icon_tv_width">90dp</dimen>
+    <dimen name="app_icon_tv_margin">10dp</dimen>
+    <dimen name="app_icon_tv_size">20sp</dimen>
+
+    <dimen name="text_26sp">26sp</dimen>
+    <dimen name="text_42sp">42sp</dimen>
+    <dimen name="host_cell_size">60dp</dimen>
+    <dimen name="iv_radio_image_size">60dp</dimen>
+    <dimen name="iv_music_play_size">85dp</dimen>
+    <dimen name="img_song_art_bg_size">224dp</dimen>
+    <dimen name="music_artist_text_size">24sp</dimen>
+    <dimen name="music_control_margin_bottom">15dp</dimen>
+    <dimen name="iv_radio_icon_width">120dp</dimen>
+    <dimen name="iv_radio_icon_height">123dp</dimen>
+    <dimen name="recycle_app_icon_size">88dp</dimen>
+    <dimen name="app_icon_bg_size">88dp</dimen>
+    <dimen name="space_item">42dp</dimen>
+    <dimen name="app_icon_size">140dp</dimen>
+    <dimen name="text_padding">15dp</dimen>
+
+</resources>
