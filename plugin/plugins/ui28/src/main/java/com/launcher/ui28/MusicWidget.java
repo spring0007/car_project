@@ -224,7 +224,6 @@ public class MusicWidget extends ConstraintLayout implements OnClickListener {
      * 根据当前播放状态切换按钮图标与跑马灯
      */
     private void setCurMusicState(boolean musicState) {
-        LogUtil.i( "setCurMusicState: " + musicState);
         setTextEarquee(musicState);
         if (mPlayStateImageView == null  || musicState == this.musicState) {
             return;
